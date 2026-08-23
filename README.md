@@ -11,6 +11,7 @@ An intuitive, high-performance visual TikZ editor tailored for electronic schema
 ### 1. ⚡ Transient Direct DOM Drag Optimization (160+ FPS)
 - **Problem in Original**: Every pixel of element movement triggered full-pipeline AST parsing, geometry re-calculation, and React virtual DOM reconciliation, resulting in 20~30 FPS lag and jitter on complex schematics.
 - **Solution**: Engineered a direct DOM transform transient interaction layer (inspired by Visio & Draw.io). During mouse drags, high-overhead parser pipelines are completely bypassed for butter-smooth **160+ FPS** rendering, with single-transaction atomic AST commits upon mouse release.
+- 💡 **Pro-Tip for Ultra-Smooth Free Dragging**: When moving components across densely populated circuits and seeking the ultimate unrestricted, silky-smooth drag experience, right-click the canvas and uncheck **`Snapping -> Snap to Object Points`** (or hold `Ctrl`/`Cmd` temporarily). Re-check it when routing wires for precise pin咬合 magnetic lock!
 
 ### 2. 🔗 Real-Time Elastic Wire-Follow Kinetics (120 FPS)
 - **Problem in Original**: Moving a transistor or component broke all connected wires, requiring tedious manual re-routing.
@@ -60,6 +61,7 @@ An intuitive, high-performance visual TikZ editor tailored for electronic schema
 | **`W` / `A` / `S` / `D`** | Direct Orientation | Instant switch to Up / Left / Down / Right variant |
 | **`Space` + Drag** | Canvas Pan | Smooth infinite canvas panning |
 | **`Ctrl` + Scroll** | Canvas Zoom | Fluid zoom centered at cursor |
+| **`Ctrl` (Hold)** | Bypass Snapping | Temporarily disable all magnetic snapping during drag for free placement |
 
 ---
 
