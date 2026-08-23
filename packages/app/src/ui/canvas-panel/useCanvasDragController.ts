@@ -993,11 +993,13 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
           pointerWorld: world,
           zoom: drag.snapContext?.zoom ?? 1,
           nodeAnchorTargets,
-          matrixCellAnchorHints
+          matrixCellAnchorHints,
+          previousSnappedAnchor: drag.activeEndpointAnchor
         });
         drag.activeEndpointAnchor = endpointAnchorOverlay.snappedAnchor;
         if (endpointAnchorOverlay.snappedAnchor) {
           nextWorld = endpointAnchorOverlay.snappedAnchor.world;
+          snapped.lines = [];
         } else if (!ctrlOrMeta && source) {
           try {
             const parsed = parseTikzForEdit(source);
