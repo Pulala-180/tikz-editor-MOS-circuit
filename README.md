@@ -1,42 +1,42 @@
-ï»¿# TikZ Editor (MOS Circuit & High-Performance Edition)
+# TikZ Editor (MOS Circuit & High-Performance Edition)
 
-> ðŸ’¡ **Upstream Attribution**: This project is an enhanced, performance-optimized, and schematic-specialized fork of the original open-source [**tikz-editor by Dominik Peters**](https://github.com/DominikPeters/tikz-editor).
+> ?? **Upstream Attribution**: This project is an enhanced, performance-optimized, and schematic-specialized fork of the original open-source [**tikz-editor by Dominik Peters**](https://github.com/DominikPeters/tikz-editor).
 
 An intuitive, high-performance visual TikZ editor tailored for electronic schematics (especially MOS analog/digital circuits) and general scientific illustrations, featuring real-time bidirectional AST synchronization, 160+ FPS transient DOM kinetics, elastic wire follow, and precision pin snapping.
 
 ---
 
-## ðŸš€ Key Enhancements & Adaptive Designs (vs. Original Project)
+## ?? Key Enhancements & Adaptive Designs (vs. Original Project)
 
-### 1. âš¡ Transient Direct DOM Drag Optimization (160+ FPS)
+### 1. ? Transient Direct DOM Drag Optimization (160+ FPS)
 - **Problem in Original**: Every pixel of element movement triggered full-pipeline AST parsing, geometry re-calculation, and React virtual DOM reconciliation, resulting in 20~30 FPS lag and jitter on complex schematics.
 - **Solution**: Engineered a direct DOM transform transient interaction layer (inspired by Visio & Draw.io). During mouse drags, high-overhead parser pipelines are completely bypassed for butter-smooth **160+ FPS** rendering, with single-transaction atomic AST commits upon mouse release.
-- ðŸ’¡ **Pro-Tip for Ultra-Smooth Free Dragging**: When moving components across densely populated circuits and seeking the ultimate unrestricted, silky-smooth drag experience, right-click the canvas and uncheck **`Snapping -> Snap to Object Points`** (or hold `Ctrl`/`Cmd` temporarily). Re-check it when routing wires for precise pin-magnetic lock!
+- ?? **Pro-Tip for Ultra-Smooth Free Dragging**: When moving components across densely populated circuits and seeking the ultimate unrestricted, silky-smooth drag experience, right-click the canvas and uncheck **`Snapping -> Snap to Object Points`** (or hold `Ctrl`/`Cmd` temporarily). Re-check it when routing wires for precise pin-magnetic lock!
 
-### 2. ðŸ”— Real-Time Elastic Wire-Follow Kinetics (120 FPS)
+### 2. ?? Real-Time Elastic Wire-Follow Kinetics (120 FPS)
 - **Problem in Original**: Moving a transistor or component broke all connected wires, requiring tedious manual re-routing.
 - **Solution**: Built an intelligent topology wire-follow engine. Moving any component dynamically stretches, translates, and folds attached wire segments in real time (120 FPS), preserving circuit topology effortlessly.
 
-### 3. ðŸŽ¯ Precision Point-to-Point Snapping & $\otimes$ Coincident Indicator
+### 3. ?? Precision Point-to-Point Snapping & $\otimes$ Coincident Indicator
 - **Problem in Original**: Canvas grid snap overshadowed component pin snaps, often leading to 0.05cm offsets and false/broken connections.
 - **Solution**:
   - Implemented a tiered snapping priority engine: `Object Pin Points > Alignment Guides > Grid Points`.
   - Added a dedicated $\otimes$ (circumscribed circle) coincident visual indicator with sticky hysteresis, locking pin-to-pin connections with absolute precision.
 
-### 4. ðŸ“ Consecutive Orthogonal Wire Engine (Hotkey `M`)
+### 4. ?? Consecutive Orthogonal Wire Engine (Hotkey `M`)
 - **Problem in Original**: Lack of intuitive orthogonal wiring logic matching standard electronic schematic conventions.
 - **Solution**: Created a multi-click consecutive orthogonal wiring tool (Hotkey `M`). Each click creates an anchor corner, supporting 4-directional orthogonal expansion using standard TikZ `\draw[thick, line cap=round] (x1,y1) -- (x2,y2);` syntax.
 
-### 5. ðŸ”„ Full 8-Variant Polarity Matrix & Dual-Axis Mirror System
+### 5. ?? Full 8-Variant Polarity Matrix & Dual-Axis Mirror System
 - **Problem in Original**: Flipping components left Voltage/Current source polarities static, and MOS gate/drain/source orientations were difficult to mirror.
 - **Solution**:
   - **`X` / `V`**: X-axis vertical symmetry (Top $\leftrightarrow$ Bottom, Drain $\leftrightarrow$ Source, $\pm$ polarities inverted, current arrows flipped).
   - **`Y` / `H`**: Y-axis horizontal symmetry (Left $\leftrightarrow$ Right, Gate orientation flipped, $\pm$ polarities inverted).
-  - **`R`**: 90Â° clockwise rotation.
+  - **`R`**: 90¡ã clockwise rotation.
   - **`W` / `A` / `S` / `D`**: Instant directional orientation (Up / Left / Down / Right).
   - Built a comprehensive **8-variant polarity matrix** for Voltage and Current Sources (4 directions $\times$ 2 anchor pins).
 
-### 6. ðŸ”Œ Standard MOS Schematic Component Library
+### 6. ?? Standard MOS Schematic Component Library
 - Integrated standardized TikZ templates for:
   - **nMOS & pMOS Transistors** (standard pin geometry, isolated labels)
   - **Resistors** ($R_D$) & **Capacitors**
@@ -44,85 +44,85 @@ An intuitive, high-performance visual TikZ editor tailored for electronic schema
   - **GND** & **VDD** Power Rails
   - **IO Ports** ($V_{in}, V_{out}$) & **Dot Nodes** (connection points)
 
-### 7. ðŸ›¡ï¸ Robust Client-Side Bundling
+### 7. ??? Robust Client-Side Bundling
 - Eliminated browser bundle dependencies on Node.js native modules (`node:fs`), preventing Vite HMR crashes and white-screen build bugs.
 - Comprehensive unit test coverage with 24/24 passing suites.
 
 ---
 
-## âŒ¨ï¸ Complete Shortcut Keys Cheatsheet (å¿«æ·é”®å…¨æ™¯é€ŸæŸ¥è¡¨)
+## ?? Complete Shortcut Keys Cheatsheet (¿ì½Ý¼üÈ«¾°ËÙ²é±í)
 
-### 1. ðŸ”Œ Component Quick-Insert (é€‰æ‹©æ¨¡å¼ä¸‹ä¸€é”®å‘¼å‡ºå…ƒä»¶)
+### 1. ?? Component Quick-Insert (Ñ¡ÔñÄ£Ê½ÏÂÒ»¼üºô³öÔª¼þ)
 
 | Key | Component | Description |
 |:---|:---|:---|
-| **`Z`** | **nMOS** Transistor | æ”¾ç½® nMOS æ™¶ä½“ç®¡ï¼ˆé»˜è®¤æ …æžåœ¨å·¦ï¼‰ |
-| **`Q`** | **pMOS** Transistor | æ”¾ç½® pMOS æ™¶ä½“ç®¡ï¼ˆé»˜è®¤æ …æžåœ¨å·¦ï¼‰ |
-| **`R`** | **Resistor** ($R_D$) | æ”¾ç½®ç”µé˜»ï¼ˆé»˜è®¤ç«–ç›´å½¢æ€ï¼‰ |
-| **`C`** | **Capacitor** | æ”¾ç½®ç”µå®¹ |
-| **`E` / `I`** | **Current Source** | æ”¾ç½®ç”µæµæºï¼ˆ8 æ€å¯é€‰ï¼‰ |
-| **`U` / `V`** | **Voltage Source** | æ”¾ç½®ç”µåŽ‹æºï¼ˆ8 æ€å¯é€‰ï¼‰ |
-| **`A`** | **Current Arrow** | æ”¾ç½®ç”µæµæ–¹å‘æŒ‡ç¤ºç®­å¤´ |
-| **`G`** | **GND** | æ”¾ç½®æŽ¥åœ°ç«¯ï¼ˆæ ‡å‡†ä¸‰çº¿é€’å‡æŽ¥åœ°ç¬¦å·ï¼‰ |
-| **`T`** | **IO Port** (Terminal) | æ”¾ç½®è¾“å…¥/è¾“å‡ºç«¯å£ ($V_{in}, V_{out}$) |
-| **`D`** | **Dot Node** (â—) | æ”¾ç½®å®žå¿ƒè¿žæŽ¥é»‘ç‚¹èŠ‚ç‚¹ |
-| **`V + D`** | **VDD** Power Rail | æ”¾ç½® VDD ç”µæºç¬¦å· |
-| **`W`** | **Wire Lead** | æ”¾ç½®å•æ®µå¼•å‡ºå¯¼çº¿ |
-| **`M`** | **Orthogonal Wire Tool** | å¯åŠ¨å¤šæ®µè¿žç»­æ­£äº¤æŠ˜çº¿å¸ƒçº¿å·¥å…· |
-| **`N`** | **General Node** | æ”¾ç½®æ ‡å‡† TikZ æ–‡æœ¬/å‡ ä½•èŠ‚ç‚¹ |
+| **`Z`** | **nMOS** Transistor | ·ÅÖÃ nMOS ¾§Ìå¹Ü£¨Ä¬ÈÏÕ¤¼«ÔÚ×ó£© |
+| **`Q`** | **pMOS** Transistor | ·ÅÖÃ pMOS ¾§Ìå¹Ü£¨Ä¬ÈÏÕ¤¼«ÔÚ×ó£© |
+| **`R`** | **Resistor** ($R_D$) | ·ÅÖÃµç×è£¨Ä¬ÈÏÊúÖ±ÐÎÌ¬£© |
+| **`C`** | **Capacitor** | ·ÅÖÃµçÈÝ |
+| **`E` / `I`** | **Current Source** | ·ÅÖÃµçÁ÷Ô´£¨8 Ì¬¿ÉÑ¡£© |
+| **`U` / `V`** | **Voltage Source** | ·ÅÖÃµçÑ¹Ô´£¨8 Ì¬¿ÉÑ¡£© |
+| **`A`** | **Current Arrow** | ·ÅÖÃµçÁ÷·½ÏòÖ¸Ê¾¼ýÍ· |
+| **`G`** | **GND** | ·ÅÖÃ½ÓµØ¶Ë£¨±ê×¼ÈýÏßµÝ¼õ½ÓµØ·ûºÅ£© |
+| **`T`** | **IO Port** (Terminal) | ·ÅÖÃÊäÈë/Êä³ö¶Ë¿Ú ($V_{in}, V_{out}$) |
+| **`D`** | **Dot Node** (¡ñ) | ·ÅÖÃÊµÐÄÁ¬½ÓºÚµã½Úµã |
+| **`V + D`** | **VDD** Power Rail | ·ÅÖÃ VDD µçÔ´·ûºÅ |
+| **`W`** | **Wire Lead** | ·ÅÖÃµ¥¶ÎÒý³öµ¼Ïß |
+| **`M`** | **Orthogonal Wire Tool** | Æô¶¯¶à¶ÎÁ¬ÐøÕý½»ÕÛÏß²¼Ïß¹¤¾ß |
+| **`N`** | **General Node** | ·ÅÖÃ±ê×¼ TikZ ÎÄ±¾/¼¸ºÎ½Úµã |
 
 ---
 
-### 2. ðŸ”„ Component Placement & Orientation Tweaks (æ”¾ç½®é¢„è§ˆä¸­å®žæ—¶å¾®è°ƒ)
+### 2. ?? Component Placement & Orientation Tweaks (·ÅÖÃÔ¤ÀÀÖÐÊµÊ±Î¢µ÷)
 
 | Key | Action | Description |
 |:---|:---|:---|
-| **`X` / `V`** | **Vertical Mirror (X-Axis)** | æ²¿ X è½´åž‚ç›´é•œåƒï¼ˆTop $\leftrightarrow$ Bottomï¼ŒD $\leftrightarrow$ Sï¼Œæ­£è´Ÿæžå¯¹è°ƒï¼Œç®­å¤´æŽ‰å¤´ï¼‰ |
-| **`Y` / `H`** | **Horizontal Mirror (Y-Axis)** | æ²¿ Y è½´æ°´å¹³é•œåƒï¼ˆLeft $\leftrightarrow$ Rightï¼Œæ …æžå¼€å£ç¿»è½¬ï¼Œæ­£è´Ÿæžå·¦å³ç¿»è½¬ï¼‰ |
-| **`R`** | **Rotate 90Â°** | é¡ºæ—¶é’ˆ 90Â° è¿žè´¯æ—‹è½¬ï¼ˆä¸Š $\to$ å³ $\to$ ä¸‹ $\to$ å·¦ï¼‰ |
-| **`W` / `A` / `S` / `D`** | **Direct Direction** | ä¸€é”®å®šå‘åˆ° ä¸Š / å·¦ / ä¸‹ / å³ é¢„è®¾å½¢æ€ |
-| **`G`** *(in MOS mode)* | **Gate Anchor** | å°† MOS æ”¾ç½®å¸é™„é”šç‚¹åˆ‡æ¢åˆ°**æ …æž (Gate)** |
-| **`D`** *(in MOS mode)* | **Drain Anchor** | å°† MOS æ”¾ç½®å¸é™„é”šç‚¹åˆ‡æ¢åˆ°**æ¼æž (Drain)** |
-| **`S`** *(in MOS mode)* | **Source Anchor** | å°† MOS æ”¾ç½®å¸é™„é”šç‚¹åˆ‡æ¢åˆ°**æºæž (Source)** |
-| **`A` / `D`** *(in IO mode)* | **$V_{in}$ Port** | åˆ‡æ¢ä¸º $V_{in}$ ç«¯å£ï¼ˆå·¦å¼€ / å³å¼€ï¼‰ |
-| **`W` / `S`** *(in IO mode)* | **$V_{out}$ Port** | åˆ‡æ¢ä¸º $V_{out}$ ç«¯å£ï¼ˆå·¦å¼€ / å³å¼€ï¼‰ |
+| **`X` / `V`** | **Vertical Mirror (X-Axis)** | ÑØ X Öá´¹Ö±¾µÏñ£¨Top $\leftrightarrow$ Bottom£¬D $\leftrightarrow$ S£¬Õý¸º¼«¶Ôµ÷£¬¼ýÍ·µôÍ·£© |
+| **`Y` / `H`** | **Horizontal Mirror (Y-Axis)** | ÑØ Y ÖáË®Æ½¾µÏñ£¨Left $\leftrightarrow$ Right£¬Õ¤¼«¿ª¿Ú·­×ª£¬Õý¸º¼«×óÓÒ·­×ª£© |
+| **`R`** | **Rotate 90¡ã** | Ë³Ê±Õë 90¡ã Á¬¹áÐý×ª£¨ÉÏ $\to$ ÓÒ $\to$ ÏÂ $\to$ ×ó£© |
+| **`W` / `A` / `S` / `D`** | **Direct Direction** | Ò»¼ü¶¨Ïòµ½ ÉÏ / ×ó / ÏÂ / ÓÒ Ô¤ÉèÐÎÌ¬ |
+| **`G`** *(in MOS mode)* | **Gate Anchor** | ½« MOS ·ÅÖÃÎü¸½ÃªµãÇÐ»»µ½**Õ¤¼« (Gate)** |
+| **`D`** *(in MOS mode)* | **Drain Anchor** | ½« MOS ·ÅÖÃÎü¸½ÃªµãÇÐ»»µ½**Â©¼« (Drain)** |
+| **`S`** *(in MOS mode)* | **Source Anchor** | ½« MOS ·ÅÖÃÎü¸½ÃªµãÇÐ»»µ½**Ô´¼« (Source)** |
+| **`A` / `D`** *(in IO mode)* | **$V_{in}$ Port** | ÇÐ»»Îª $V_{in}$ ¶Ë¿Ú£¨×ó¿ª / ÓÒ¿ª£© |
+| **`W` / `S`** *(in IO mode)* | **$V_{out}$ Port** | ÇÐ»»Îª $V_{out}$ ¶Ë¿Ú£¨×ó¿ª / ÓÒ¿ª£© |
 
 ---
 
-### 3. ðŸŽ¨ Element Selection & Canvas Editing (ç”»å¸ƒå…ƒç´ æ“ä½œ)
+### 3. ?? Element Selection & Canvas Editing (»­²¼ÔªËØ²Ù×÷)
 
 | Shortcut | Function | Description |
 |:---|:---|:---|
-| **`X` / `V`** | **Vertical Flip** | å¯¹é€‰ä¸­å…ƒä»¶åšåž‚ç›´é•œåƒå¯¹ç§° |
-| **`Y` / `H`** | **Horizontal Flip** | å¯¹é€‰ä¸­å…ƒä»¶åšæ°´å¹³é•œåƒå¯¹ç§° |
-| **`R`** | **Rotate 90Â°** | å¯¹é€‰ä¸­å…ƒä»¶è¿›è¡Œ 90Â° æ—‹è½¬ |
-| **`Delete` / `Backspace`** | **Delete** | åˆ é™¤é€‰ä¸­çš„å…ƒä»¶æˆ–è¿žçº¿ |
-| **`Ctrl` + `D`** | **Duplicate** | åŽŸä½å¤åˆ¶é€‰ä¸­å…ƒç´  |
-| **`Ctrl` + `C` / `Ctrl` + `V`** | **Copy / Paste** | å‰ªè´´æ¿å¤åˆ¶ / ç²˜è´´ |
-| **`Ctrl` + `Z`** | **Undo** | æ’¤é”€ä¸Šä¸€æ­¥æ“ä½œ |
-| **`Ctrl` + `Shift` + `Z`** *(or `Ctrl`+`Y`)* | **Redo** | é‡åšæ“ä½œ |
-| **`Ctrl` + `G`** | **Group** | å°†é€‰ä¸­å…ƒç´ æ‰“ç»„æˆç»„ (Scope) |
-| **`Ctrl` + `Shift` + `G`** | **Ungroup** | è§£é™¤é€‰ä¸­å…ƒç´ çš„åˆ†ç»„ |
-| **`Ctrl` + `]` / `Ctrl` + `[`** | **Layer Order** | å›¾å±‚ä¸Šç§»ä¸€å±‚ / ä¸‹ç§»ä¸€å±‚ |
-| **`Arrow Keys (â†‘ â†“ â† â†’)`** | **Nudge** | æŒ‰ 0.05cm æ­¥é•¿å¾®è°ƒä½ç½®ï¼ˆé…åˆ `Shift` é”®åŠ é€Ÿï¼‰ |
+| **`X` / `V`** | **Vertical Flip** | ¶ÔÑ¡ÖÐÔª¼þ×ö´¹Ö±¾µÏñ¶Ô³Æ |
+| **`Y` / `H`** | **Horizontal Flip** | ¶ÔÑ¡ÖÐÔª¼þ×öË®Æ½¾µÏñ¶Ô³Æ |
+| **`R`** | **Rotate 90¡ã** | ¶ÔÑ¡ÖÐÔª¼þ½øÐÐ 90¡ã Ðý×ª |
+| **`Delete` / `Backspace`** | **Delete** | É¾³ýÑ¡ÖÐµÄÔª¼þ»òÁ¬Ïß |
+| **`Ctrl` + `D`** | **Duplicate** | Ô­Î»¸´ÖÆÑ¡ÖÐÔªËØ |
+| **`Ctrl` + `C` / `Ctrl` + `V`** | **Copy / Paste** | ¼ôÌù°å¸´ÖÆ / Õ³Ìù |
+| **`Ctrl` + `Z`** | **Undo** | ³·ÏúÉÏÒ»²½²Ù×÷ |
+| **`Ctrl` + `Shift` + `Z`** *(or `Ctrl`+`Y`)* | **Redo** | ÖØ×ö²Ù×÷ |
+| **`Ctrl` + `G`** | **Group** | ½«Ñ¡ÖÐÔªËØ´ò×é³É×é (Scope) |
+| **`Ctrl` + `Shift` + `G`** | **Ungroup** | ½â³ýÑ¡ÖÐÔªËØµÄ·Ö×é |
+| **`Ctrl` + `]` / `Ctrl` + `[`** | **Layer Order** | Í¼²ãÉÏÒÆÒ»²ã / ÏÂÒÆÒ»²ã |
+| **`Arrow Keys (¡ü ¡ý ¡û ¡ú)`** | **Nudge** | °´ 0.05cm ²½³¤Î¢µ÷Î»ÖÃ£¨ÅäºÏ `Shift` ¼ü¼ÓËÙ£© |
 
 ---
 
-### 4. ðŸ” Viewport & Snapping Controls (è§†å£æ¼«æ¸¸ä¸Žç£å¸æŽ§åˆ¶)
+### 4. ?? Viewport & Snapping Controls (ÊÓ¿ÚÂþÓÎÓë´ÅÎü¿ØÖÆ)
 
 | Shortcut / Interaction | Function | Description |
 |:---|:---|:---|
-| **`Space` + Left Drag** | **Canvas Pan** | æŠ“æ‰‹æ¼«æ¸¸ï¼Œé¡ºç•…å¹³ç§»æ— é™ç”»å¸ƒ |
-| **Middle Click Drag** | **Canvas Pan** | é¼ æ ‡ä¸­é”®æ‹–æ‹½å¹³ç§»ç”»å¸ƒ |
-| **`Ctrl` + Mouse Wheel** | **Canvas Zoom** | ä»¥é¼ æ ‡æŒ‡é’ˆä¸ºä¸­å¿ƒå¹³æ»‘æ— çº§ç¼©æ”¾ |
-| **`Ctrl` + `0`** | **Zoom 100%** | é‡ç½®ä¸º 1:1 å®žé™…æ¯”ä¾‹ |
-| **`Ctrl` + `1`** | **Zoom to Fit** | è‡ªé€‚åº”å…¨å›¾ç¼©æ”¾ |
-| **`Ctrl` (Hold during drag)** | **Bypass Snap** | æ‹–æ‹½æ—¶ä¸´æ—¶å®Œå…¨å…³é—­ç£å¸ï¼Œè‡ªç”±å¾®è°ƒä½ç½® |
-| **`Escape`** | **Cancel / Select** | å–æ¶ˆå½“å‰å¸ƒçº¿æˆ–å·¥å…·ï¼Œè¿”å›žé€‰æ‹©æ¨¡å¼ |
+| **`Space` + Left Drag** | **Canvas Pan** | ×¥ÊÖÂþÓÎ£¬Ë³³©Æ½ÒÆÎÞÏÞ»­²¼ |
+| **Middle Click Drag** | **Canvas Pan** | Êó±êÖÐ¼üÍÏ×§Æ½ÒÆ»­²¼ |
+| **`Ctrl` + Mouse Wheel** | **Canvas Zoom** | ÒÔÊó±êÖ¸ÕëÎªÖÐÐÄÆ½»¬ÎÞ¼¶Ëõ·Å |
+| **`Ctrl` + `0`** | **Zoom 100%** | ÖØÖÃÎª 1:1 Êµ¼Ê±ÈÀý |
+| **`Ctrl` + `1`** | **Zoom to Fit** | ×ÔÊÊÓ¦È«Í¼Ëõ·Å |
+| **`Ctrl` (Hold during drag)** | **Bypass Snap** | ÍÏ×§Ê±ÁÙÊ±ÍêÈ«¹Ø±Õ´ÅÎü£¬×ÔÓÉÎ¢µ÷Î»ÖÃ |
+| **`Escape`** | **Cancel / Select** | È¡Ïûµ±Ç°²¼Ïß»ò¹¤¾ß£¬·µ»ØÑ¡ÔñÄ£Ê½ |
 
 ---
 
-## ðŸ› ï¸ Quick Start
+## ??? Quick Start
 
 ### Prerequisites
 - Node.js >= 18.0.0
@@ -132,8 +132,8 @@ An intuitive, high-performance visual TikZ editor tailored for electronic schema
 
 ```bash
 # Clone the repository
-git clone git@github.com:Pulala-180/tikz-editor-personalized.git
-cd tikz-editor-personalized
+git clone git@github.com:Pulala-180/tikz-editor-MOS-circuit.git
+cd tikz-editor-MOS-circuit
 
 # Install monorepo dependencies
 npm install
@@ -146,5 +146,5 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ---
 
-## ðŸ“„ License
+## ?? License
 MIT (Inherited from original [DominikPeters/tikz-editor](https://github.com/DominikPeters/tikz-editor))
