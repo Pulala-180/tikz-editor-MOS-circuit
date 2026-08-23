@@ -34,11 +34,15 @@ export function rotateCircuitToolMode(mode: ToolMode): ToolMode | null {
 
   // 4. 电压源 / 交流小信号源 (Voltage Source)
   if (mode.startsWith("addVoltageSource")) {
-    if (mode === "addVoltageSource" || mode === "addVoltageSource_V_Top") return "addVoltageSource_H_Right";
-    if (mode === "addVoltageSource_H_Right") return "addVoltageSource_V_Bottom";
-    if (mode === "addVoltageSource_V_Bottom") return "addVoltageSource_H_Left";
-    if (mode === "addVoltageSource_H_Left") return "addVoltageSource_V_Top";
-    return "addVoltageSource_V_Top";
+    if (mode === "addVoltageSource" || mode === "addVoltageSource_Up_Top" || mode === "addVoltageSource_V_Top") return "addVoltageSource_Right_Right";
+    if (mode === "addVoltageSource_Right_Right" || mode === "addVoltageSource_H_Right") return "addVoltageSource_Down_Bottom";
+    if (mode === "addVoltageSource_Down_Bottom" || mode === "addVoltageSource_V_Bottom") return "addVoltageSource_Left_Left";
+    if (mode === "addVoltageSource_Left_Left" || mode === "addVoltageSource_H_Left") return "addVoltageSource_Up_Top";
+    if (mode === "addVoltageSource_Up_Bottom") return "addVoltageSource_Right_Left";
+    if (mode === "addVoltageSource_Right_Left") return "addVoltageSource_Down_Top";
+    if (mode === "addVoltageSource_Down_Top") return "addVoltageSource_Left_Right";
+    if (mode === "addVoltageSource_Left_Right") return "addVoltageSource_Up_Bottom";
+    return "addVoltageSource_Up_Top";
   }
 
   // 5. 电流源 (Current Source)
@@ -47,6 +51,10 @@ export function rotateCircuitToolMode(mode: ToolMode): ToolMode | null {
     if (mode === "addCurrentSource_Right_Right" || mode === "addCurrentSource_H_Right") return "addCurrentSource_Down_Bottom";
     if (mode === "addCurrentSource_Down_Bottom" || mode === "addCurrentSource_V_Bottom") return "addCurrentSource_Left_Left";
     if (mode === "addCurrentSource_Left_Left" || mode === "addCurrentSource_H_Left") return "addCurrentSource_Up_Top";
+    if (mode === "addCurrentSource_Up_Bottom") return "addCurrentSource_Right_Left";
+    if (mode === "addCurrentSource_Right_Left") return "addCurrentSource_Down_Top";
+    if (mode === "addCurrentSource_Down_Top") return "addCurrentSource_Left_Right";
+    if (mode === "addCurrentSource_Left_Right") return "addCurrentSource_Up_Bottom";
     return "addCurrentSource_Up_Top";
   }
 
@@ -137,24 +145,26 @@ export function flipCircuitToolModeHorizontal(mode: ToolMode): ToolMode | null {
   }
   // 5. 电压源
   if (mode.startsWith("addVoltageSource")) {
-    if (mode === "addVoltageSource_H_Left") return "addVoltageSource_H_Right";
-    if (mode === "addVoltageSource_H_Right") return "addVoltageSource_H_Left";
-    return "addVoltageSource_H_Left";
+    if (mode === "addVoltageSource_Left_Left") return "addVoltageSource_Right_Left";
+    if (mode === "addVoltageSource_Right_Left" || mode === "addVoltageSource_H_Left") return "addVoltageSource_Left_Left";
+    if (mode === "addVoltageSource_Left_Right") return "addVoltageSource_Right_Right";
+    if (mode === "addVoltageSource_Right_Right" || mode === "addVoltageSource_H_Right") return "addVoltageSource_Left_Right";
+    return "addVoltageSource_Right_Left";
   }
   // 6. 电流源
   if (mode.startsWith("addCurrentSource")) {
-    if (mode === "addCurrentSource_Left_Left") return "addCurrentSource_Right_Right";
-    if (mode === "addCurrentSource_Right_Right") return "addCurrentSource_Left_Left";
-    if (mode === "addCurrentSource_Left_Right") return "addCurrentSource_Right_Left";
-    if (mode === "addCurrentSource_Right_Left") return "addCurrentSource_Left_Right";
+    if (mode === "addCurrentSource_Left_Left") return "addCurrentSource_Right_Left";
+    if (mode === "addCurrentSource_Right_Left" || mode === "addCurrentSource_H_Left") return "addCurrentSource_Left_Left";
+    if (mode === "addCurrentSource_Left_Right") return "addCurrentSource_Right_Right";
+    if (mode === "addCurrentSource_Right_Right" || mode === "addCurrentSource_H_Right") return "addCurrentSource_Left_Right";
     return "addCurrentSource_Left_Left";
   }
   // 7. 电流箭头
   if (mode.startsWith("addCurrentArrow")) {
-    if (mode === "addCurrentArrow_Left_Left") return "addCurrentArrow_Right_Right";
-    if (mode === "addCurrentArrow_Right_Right") return "addCurrentArrow_Left_Left";
-    if (mode === "addCurrentArrow_Left_Right") return "addCurrentArrow_Right_Left";
-    if (mode === "addCurrentArrow_Right_Left") return "addCurrentArrow_Left_Right";
+    if (mode === "addCurrentArrow_Left_Left") return "addCurrentArrow_Right_Left";
+    if (mode === "addCurrentArrow_Right_Left" || mode === "addCurrentArrow_H_Left") return "addCurrentArrow_Left_Left";
+    if (mode === "addCurrentArrow_Left_Right") return "addCurrentArrow_Right_Right";
+    if (mode === "addCurrentArrow_Right_Right" || mode === "addCurrentArrow_H_Right") return "addCurrentArrow_Left_Right";
     return "addCurrentArrow_Left_Left";
   }
   // 8. GND
@@ -212,24 +222,26 @@ export function flipCircuitToolModeVertical(mode: ToolMode): ToolMode | null {
   }
   // 5. 电压源
   if (mode.startsWith("addVoltageSource")) {
-    if (mode === "addVoltageSource_V_Top") return "addVoltageSource_V_Bottom";
-    if (mode === "addVoltageSource_V_Bottom") return "addVoltageSource_V_Top";
-    return "addVoltageSource_V_Top";
+    if (mode === "addVoltageSource_Up_Top" || mode === "addVoltageSource_V_Top" || mode === "addVoltageSource") return "addVoltageSource_Down_Top";
+    if (mode === "addVoltageSource_Down_Top") return "addVoltageSource_Up_Top";
+    if (mode === "addVoltageSource_Up_Bottom" || mode === "addVoltageSource_V_Bottom") return "addVoltageSource_Down_Bottom";
+    if (mode === "addVoltageSource_Down_Bottom") return "addVoltageSource_Up_Bottom";
+    return "addVoltageSource_Up_Top";
   }
   // 6. 电流源
   if (mode.startsWith("addCurrentSource")) {
-    if (mode === "addCurrentSource_Up_Top") return "addCurrentSource_Down_Bottom";
-    if (mode === "addCurrentSource_Down_Bottom") return "addCurrentSource_Up_Top";
-    if (mode === "addCurrentSource_Up_Bottom") return "addCurrentSource_Down_Top";
-    if (mode === "addCurrentSource_Down_Top") return "addCurrentSource_Up_Bottom";
+    if (mode === "addCurrentSource_Up_Top" || mode === "addCurrentSource_V_Top" || mode === "addCurrentSource") return "addCurrentSource_Down_Top";
+    if (mode === "addCurrentSource_Down_Top") return "addCurrentSource_Up_Top";
+    if (mode === "addCurrentSource_Up_Bottom" || mode === "addCurrentSource_V_Bottom") return "addCurrentSource_Down_Bottom";
+    if (mode === "addCurrentSource_Down_Bottom") return "addCurrentSource_Up_Bottom";
     return "addCurrentSource_Up_Top";
   }
   // 7. 电流箭头
   if (mode.startsWith("addCurrentArrow")) {
-    if (mode === "addCurrentArrow_Up_Top") return "addCurrentArrow_Down_Bottom";
-    if (mode === "addCurrentArrow_Down_Bottom") return "addCurrentArrow_Up_Top";
-    if (mode === "addCurrentArrow_Up_Bottom") return "addCurrentArrow_Down_Top";
-    if (mode === "addCurrentArrow_Down_Top") return "addCurrentArrow_Up_Bottom";
+    if (mode === "addCurrentArrow_Up_Top" || mode === "addCurrentArrow_V_Top" || mode === "addCurrentArrow") return "addCurrentArrow_Down_Top";
+    if (mode === "addCurrentArrow_Down_Top") return "addCurrentArrow_Up_Top";
+    if (mode === "addCurrentArrow_Up_Bottom" || mode === "addCurrentArrow_V_Bottom") return "addCurrentArrow_Down_Bottom";
+    if (mode === "addCurrentArrow_Down_Bottom") return "addCurrentArrow_Up_Bottom";
     return "addCurrentArrow_Up_Top";
   }
   // 8. GND
