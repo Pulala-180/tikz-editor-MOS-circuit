@@ -299,6 +299,11 @@ export type RoundedLineToolDraft = {
   startWorld: WorldPoint;
 };
 
+export type OrthoWireToolDraft = {
+  currentWorld: WorldPoint;
+  startAnchor?: NodeAnchorTarget | null;
+};
+
 export type FreehandToolDraft = {
   points: WorldPoint[];
   minSampleDistanceWorld: number;

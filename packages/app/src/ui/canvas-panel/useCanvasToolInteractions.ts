@@ -29,7 +29,8 @@ import type {
   SnapDebugLogInput,
   StateSetter,
   ValueSetter,
-  RoundedLineToolDraft
+  RoundedLineToolDraft,
+  OrthoWireToolDraft
 } from "./types";
 
 export type UseCanvasToolInteractionsArgs = {
@@ -84,6 +85,8 @@ export type UseCanvasToolInteractionsArgs = {
   freehandDraft: FreehandToolDraft | null;
   roundedLineDraft: RoundedLineToolDraft | null;
   setRoundedLineDraft: StateSetter<RoundedLineToolDraft | null>;
+  orthoWireDraft: OrthoWireToolDraft | null;
+  setOrthoWireDraft: StateSetter<OrthoWireToolDraft | null>;
   parseOptions: CanvasEditParseOptions;
 };
 
@@ -402,6 +405,57 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
           dispatch({ type: "SET_TOOL_MODE", mode: "select" });
           setToolCursorWorld(null);
           setSnapLines([]);
+          return;
+        }
+
+        if (toolMode === "addOrthoWire") {
+          const activeDraft = args.orthoWireDraft;
+          if (!activeDraft) {
+            args.setOrthoWireDraft({
+              currentWorld: resolvedStart,
+              startAnchor: startEndpointAnchor
+            });
+            setSnapLines(startSnapResult.lines);
+            return;
+          }
+
+          const dx = Math.abs(resolvedStart.x - activeDraft.currentWorld.x);
+          const dy = Math.abs(resolvedStart.y - activeDraft.currentWorld.y);
+          const nextPoint: WorldPoint = dx >= dy
+            ? worldPoint(pt(resolvedStart.x), pt(activeDraft.currentWorld.y))
+            : worldPoint(pt(activeDraft.currentWorld.x), pt(resolvedStart.y));
+
+          if (Math.abs(nextPoint.x - activeDraft.currentWorld.x) < 1e-3 && Math.abs(nextPoint.y - activeDraft.currentWorld.y) < 1e-3) {
+            return;
+          }
+
+          const x1Cm = (activeDraft.currentWorld.x / 28.4527559).toFixed(2);
+          const y1Cm = (activeDraft.currentWorld.y / 28.4527559).toFixed(2);
+          const x2Cm = (nextPoint.x / 28.4527559).toFixed(2);
+          const y2Cm = (nextPoint.y / 28.4527559).toFixed(2);
+          const snippet = `\\draw[thick, line cap=round] (${x1Cm},${y1Cm}) -- (${x2Cm},${y2Cm});\n`;
+
+          applyActionWithFeedback({
+            kind: "pasteStatements",
+            snippets: [snippet],
+            delta: worldPoint(pt(0), pt(0))
+          });
+
+          if (startEndpointAnchor && (!activeDraft.startAnchor || startEndpointAnchor.nodeSourceId !== activeDraft.startAnchor.nodeSourceId)) {
+            args.setOrthoWireDraft(null);
+            dispatch({ type: "SET_TOOL_MODE", mode: "select" });
+            setToolCursorWorld(null);
+            setSnapLines([]);
+            setNodeAnchorOverlay(null);
+            return;
+          }
+
+          args.setOrthoWireDraft({
+            currentWorld: nextPoint,
+            startAnchor: startEndpointAnchor
+          });
+          setToolCursorWorld(nextPoint);
+          setSnapLines(startSnapResult.lines);
           return;
         }
 

@@ -16,7 +16,7 @@ import {
 } from "./path-tool";
 import { resolveFreehandPreviewSegments } from "./freehand-tool";
 import { buildAnchoredGridPreviewLines } from "./panel-helpers";
-import type { CanvasSnapshot, DragState, FreehandToolDraft, PathToolDraft, PendingBezier } from "./types";
+import type { CanvasSnapshot, DragState, FreehandToolDraft, OrthoWireToolDraft, PathToolDraft, PendingBezier, RoundedLineToolDraft } from "./types";
 import type { ToolPreview } from "./overlays";
 import { buildCircuitPreview } from "./circuit-preview-builder";
 
@@ -41,6 +41,7 @@ export type UseCanvasDerivedStateArgs = {
   pendingBezier: PendingBezier | null;
   bezierBendDraft: Extract<DragState, { kind: "tool-bezier-bend" }> | null;
   roundedLineDraft: RoundedLineToolDraft | null;
+  orthoWireDraft: OrthoWireToolDraft | null;
   canvasTransform: CanvasTransform;
 };
 
@@ -79,6 +80,24 @@ export function useCanvasDerivedState(args: UseCanvasDerivedStateArgs) {
         const from = worldToSvgPoint(args.roundedLineDraft.startWorld, svgResult.viewBox);
         const to = worldToSvgPoint(toolCursorWorld, svgResult.viewBox);
         return { kind: "line", x1: from.x, y1: from.y, x2: to.x, y2: to.y, arrow: false };
+      }
+      if (toolCursorWorld) {
+        const point = worldToSvgPoint(toolCursorWorld, svgResult.viewBox);
+        return { kind: "cursor", x: point.x, y: point.y };
+      }
+      return null;
+    }
+
+    if (toolMode === "addOrthoWire") {
+      if (args.orthoWireDraft && toolCursorWorld) {
+        const from = worldToSvgPoint(args.orthoWireDraft.currentWorld, svgResult.viewBox);
+        const to = worldToSvgPoint(toolCursorWorld, svgResult.viewBox);
+        const dx = Math.abs(to.x - from.x);
+        const dy = Math.abs(to.y - from.y);
+        const nextSvg = dx >= dy
+          ? { x: to.x, y: from.y }
+          : { x: from.x, y: to.y };
+        return { kind: "line", x1: from.x, y1: from.y, x2: nextSvg.x, y2: nextSvg.y, arrow: false };
       }
       if (toolCursorWorld) {
         const point = worldToSvgPoint(toolCursorWorld, svgResult.viewBox);
@@ -305,23 +324,6 @@ export function useCanvasDerivedState(args: UseCanvasDerivedStateArgs) {
         x2: end.x,
         y2: end.y,
         arrow: toolDraft.toolMode === "addArrow"
-      };
-    }
-
-    if (toolDraft.toolMode === "addOrthoWire") {
-      const dx = Math.abs(end.x - start.x);
-      const dy = Math.abs(end.y - start.y);
-      let d: string;
-      if (dx >= dy) {
-        const midX = (start.x + end.x) / 2;
-        d = `M ${start.x.toFixed(2)},${start.y.toFixed(2)} L ${midX.toFixed(2)},${start.y.toFixed(2)} L ${midX.toFixed(2)},${end.y.toFixed(2)} L ${end.x.toFixed(2)},${end.y.toFixed(2)}`;
-      } else {
-        const midY = (start.y + end.y) / 2;
-        d = `M ${start.x.toFixed(2)},${start.y.toFixed(2)} L ${start.x.toFixed(2)},${midY.toFixed(2)} L ${end.x.toFixed(2)},${midY.toFixed(2)} L ${end.x.toFixed(2)},${end.y.toFixed(2)}`;
-      }
-      return {
-        kind: "path",
-        d
       };
     }
 

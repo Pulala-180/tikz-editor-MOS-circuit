@@ -134,6 +134,7 @@ PendingAddedSelection,
 PendingBezier,
 PendingTouchViewport,
 RoundedLineToolDraft,
+OrthoWireToolDraft,
 SnapDebugLogInput,
 SourceBoundsMap
 } from "./types";
@@ -891,6 +892,7 @@ export const CanvasPanel = memo(function CanvasPanel({
   const [pathSegmentDraft, setPathSegmentDraft] = useState<Extract<DragState, { kind: "tool-path-segment" }> | null>(null);
   const [toolDraft, setToolDraft] = useState<Extract<DragState, { kind: "tool-create" }> | null>(null);
   const [roundedLineDraft, setRoundedLineDraft] = useState<RoundedLineToolDraft | null>(null);
+  const [orthoWireDraft, setOrthoWireDraft] = useState<OrthoWireToolDraft | null>(null);
   const [bezierBendDraft, setBezierBendDraft] = useState<Extract<DragState, { kind: "tool-bezier-bend" }> | null>(null);
   const [pendingBezier, setPendingBezier] = useState<PendingBezier | null>(null);
   const [marqueeDraft, setMarqueeDraft] = useState<Extract<DragState, { kind: "marquee" }> | null>(null);
@@ -1753,6 +1755,8 @@ export const CanvasPanel = memo(function CanvasPanel({
     pathSegmentDraft,
     pendingBezier,
     bezierBendDraft,
+    roundedLineDraft,
+    orthoWireDraft,
     canvasTransform
   });
 
@@ -3103,6 +3107,8 @@ export const CanvasPanel = memo(function CanvasPanel({
     freehandDraft,
     roundedLineDraft,
     setRoundedLineDraft,
+    orthoWireDraft,
+    setOrthoWireDraft,
     parseOptions: editParseOptions,
     magnifierState
   });
@@ -3139,6 +3145,8 @@ export const CanvasPanel = memo(function CanvasPanel({
     setToolCursorWorld,
     setSnapLines,
     setToolDraft,
+    setRoundedLineDraft,
+    setOrthoWireDraft,
     setBezierBendDraft,
     setPendingBezier,
     textEditingSession,
@@ -3346,6 +3354,10 @@ export const CanvasPanel = memo(function CanvasPanel({
 
     if (toolMode !== "addRoundedLine") {
       setRoundedLineDraft(null);
+    }
+
+    if (toolMode !== "addOrthoWire") {
+      setOrthoWireDraft(null);
     }
 
     closeTextEditingSession();
