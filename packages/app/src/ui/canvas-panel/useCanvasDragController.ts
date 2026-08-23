@@ -395,7 +395,7 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
           : { snappedPoint: world, offset: undefined, lines: [] as SnapLine[] };
         let nextRawWorld = snapped.snappedPoint ?? world;
         let endpointAnchorOverlay: NodeAnchorOverlayState | null = null;
-        if (drag.toolMode === "addLine" || drag.toolMode === "addArrow") {
+        if (drag.toolMode === "addLine" || drag.toolMode === "addArrow" || drag.toolMode === "addOrthoWire") {
           endpointAnchorOverlay = resolveEndpointAnchorSnap({
             pointerWorld: world,
             zoom: drag.snapContext?.zoom ?? 1,
@@ -1185,7 +1185,7 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
         setDragTooltip(null);
         const rawFinalWorld = world ?? drag.rawCurrentWorld;
         const finalEndpointAnchor =
-          drag.toolMode === "addLine" || drag.toolMode === "addArrow"
+          drag.toolMode === "addLine" || drag.toolMode === "addArrow" || drag.toolMode === "addOrthoWire"
             ? world
               ? resolveEndpointAnchorSnap({
                   pointerWorld: world,
@@ -1221,7 +1221,7 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
             DEFAULT_GRID_TOOL_STEP_PT
           );
         }
-        if (finalEndpointAnchor && (drag.toolMode === "addLine" || drag.toolMode === "addArrow")) {
+        if (finalEndpointAnchor && (drag.toolMode === "addLine" || drag.toolMode === "addArrow" || drag.toolMode === "addOrthoWire")) {
           finalWorld = finalEndpointAnchor.world;
         }
         setSnapLines(snapped.lines);
@@ -1246,7 +1246,7 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
           fillColor: creationFillColor
         });
         const template =
-          rawTemplate.kind === "line"
+          rawTemplate.kind === "line" || rawTemplate.kind === "orthoWire"
             ? {
                 ...rawTemplate,
                 ...(drag.startEndpointAnchor
@@ -1258,7 +1258,7 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
                       }
                     }
                   : {}),
-                ...(rawTemplate.to && finalEndpointAnchor
+                ...(finalEndpointAnchor
                   ? {
                       toAnchor: {
                         nodeName: finalEndpointAnchor.nodeName,

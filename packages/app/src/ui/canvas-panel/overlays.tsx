@@ -511,7 +511,8 @@ export function ToolPreviewOverlay({
         <path
           d={toolPreview.d}
           data-testid="canvas-tool-preview-path"
-          className={css.toolPreviewFill}
+          className={css.toolPreviewStroke}
+          fill="none"
           strokeWidth={handleStrokeWidth}
         />
       )}
