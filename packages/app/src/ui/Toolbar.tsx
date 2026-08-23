@@ -1534,12 +1534,12 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
   };
 
   const insertVdd = () => {
-    const coord = getPlacementCoord("-0.55", "3.43");
+    const coord = getPlacementCoord("0", "0");
     const drawCode = `\\begin{scope}[shift={(${coord.x},${coord.y})}]
-    \\draw[ultra thick] (-0.55,0) -- (1.3,0);
-    \\node[draw=none] at (1.6,-0.22) {$V_{DD}$};
-    \\draw[thick, line cap=round] (0.4,-0.22) -- (0.4,-0.0);
-    \\coordinate (node_VDD.bottom) at (0.4,-0.22);
+    \\coordinate (node_VDD.bottom) at (0,0);
+    \\draw[thick, line cap=round] (0,0) -- (0,0.22);
+    \\draw[ultra thick] (-0.95,0.22) -- (0.9,0.22);
+    \\node[draw=none] at (1.2,0.22) {$V_{DD}$};
   \\end{scope}`;
     const lastEnd = source.lastIndexOf("\\end{tikzpicture}");
     if (lastEnd === -1) {
@@ -1576,13 +1576,13 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
   };
 
   const insertGnd = () => {
-    const coord = getPlacementCoord("0.2", "0.05");
+    const coord = getPlacementCoord("0", "0");
     const drawCode = `\\begin{scope}[shift={(${coord.x},${coord.y})}]
-    \\draw[ultra thick] (0.03,-0.16) -- (0.37,-0.16);
-    \\draw[ultra thick] (0.09,-0.3) -- (0.31,-0.3);
-    \\draw[ultra thick] (0.12,-0.44) -- (0.28,-0.44);
-    \\draw[thick, line cap=round] (0.2,-0.16) -- (0.2,0.05);
-    \\coordinate (node_GND.top) at (0.2,0.05);
+    \\coordinate (node_GND.top) at (0,0);
+    \\draw[thick, line cap=round] (0,0) -- (0,-0.21);
+    \\draw[ultra thick] (-0.17,-0.21) -- (0.17,-0.21);
+    \\draw[ultra thick] (-0.11,-0.35) -- (0.11,-0.35);
+    \\draw[ultra thick] (-0.08,-0.49) -- (0.08,-0.49);
   \\end{scope}`;
     const lastEnd = source.lastIndexOf("\\end{tikzpicture}");
     if (lastEnd === -1) {

@@ -705,8 +705,7 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
               const scopeX = (parseFloat(xCm) - 0.15).toFixed(2);
               snippet = `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (0.85,-0.30) {$V_{out}$};\n    \\draw[thick, line cap=round] (0.6,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.15,0);\n    \\coordinate (node_IOx.port) at (0.15,0);\n  \\end{scope}`;
             } else if (toolMode === "addVDD") {
-              const topY = (parseFloat(yCm) + 0.22).toFixed(2);
-              snippet = `\\draw[thick, line cap=round] (${xCm},${yCm}) -- (${xCm},${topY});\n  \\begin{scope}[shift={(${xCm},${topY})}]\n    \\coordinate (node_VDD.bottom) at (0,0);\n    \\draw[ultra thick] (-0.95,0) -- (0.9,0);\n    \\node[draw=none] at (1.2,0) {$V_{DD}$};\n  \\end{scope}`;
+              snippet = `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_VDD.bottom) at (0,0);\n    \\draw[thick, line cap=round] (0,0) -- (0,0.22);\n    \\draw[ultra thick] (-0.95,0.22) -- (0.9,0.22);\n    \\node[draw=none] at (1.2,0.22) {$V_{DD}$};\n  \\end{scope}`;
             } else if (toolMode === "addCapacitor" || toolMode === "addCapacitor_H_Left") {
               snippet = `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Cx.l) at (0,0);\n    \\draw[thick, line cap=round] (0,0) -- (0.2,0);\n    \\draw[ultra thick] (0.2,-0.25) -- (0.2,0.25);\n    \\draw[ultra thick] (0.36,-0.25) -- (0.36,0.25);\n    \\draw[thick, line cap=round] (0.36,0) -- (0.56,0);\n    \\coordinate (node_Cx.r) at (0.56,0);\n    \\node at (0.2,0.52) {$C_{gd}$};\n  \\end{scope}`;
             } else if (toolMode === "addCapacitor_H_Right") {
@@ -716,17 +715,13 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
             } else if (toolMode === "addCapacitor_V_Bottom") {
               snippet = `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Cx.b) at (0,0);\n    \\draw[thick, line cap=round] (0,0) -- (0,0.2);\n    \\draw[ultra thick] (-0.25,0.2) -- (0.25,0.2);\n    \\draw[ultra thick] (-0.25,0.36) -- (0.25,0.36);\n    \\draw[thick, line cap=round] (0,0.36) -- (0,0.56);\n    \\coordinate (node_Cx.t) at (0,0.56);\n    \\node at (0.52,0.28) {$C_{gd}$};\n  \\end{scope}`;
             } else if (toolMode === "addGND" || toolMode === "addGND_V_Top") {
-              const botY = (parseFloat(yCm) - 0.21).toFixed(2);
-              snippet = `\\draw[thick, line cap=round] (${xCm},${yCm}) -- (${xCm},${botY});\n  \\begin{scope}[shift={(${xCm},${botY})}]\n    \\coordinate (node_GND.top) at (0,0);\n    \\draw[ultra thick] (-0.17,0) -- (0.17,0);\n    \\draw[ultra thick] (-0.11,-0.14) -- (0.11,-0.14);\n    \\draw[ultra thick] (-0.08,-0.28) -- (0.08,-0.28);\n  \\end{scope}`;
+              snippet = `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_GND.top) at (0,0);\n    \\draw[thick, line cap=round] (0,0) -- (0,-0.21);\n    \\draw[ultra thick] (-0.17,-0.21) -- (0.17,-0.21);\n    \\draw[ultra thick] (-0.11,-0.35) -- (0.11,-0.35);\n    \\draw[ultra thick] (-0.08,-0.49) -- (0.08,-0.49);\n  \\end{scope}`;
             } else if (toolMode === "addGND_V_Bottom") {
-              const topY = (parseFloat(yCm) + 0.21).toFixed(2);
-              snippet = `\\draw[thick, line cap=round] (${xCm},${yCm}) -- (${xCm},${topY});\n  \\begin{scope}[shift={(${xCm},${topY})}]\n    \\coordinate (node_GND.bottom) at (0,0);\n    \\draw[ultra thick] (-0.17,0) -- (0.17,0);\n    \\draw[ultra thick] (-0.11,0.14) -- (0.11,0.14);\n    \\draw[ultra thick] (-0.08,0.28) -- (0.08,0.28);\n  \\end{scope}`;
+              snippet = `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_GND.bottom) at (0,0);\n    \\draw[thick, line cap=round] (0,0) -- (0,0.21);\n    \\draw[ultra thick] (-0.17,0.21) -- (0.17,0.21);\n    \\draw[ultra thick] (-0.11,0.35) -- (0.11,0.35);\n    \\draw[ultra thick] (-0.08,0.49) -- (0.08,0.49);\n  \\end{scope}`;
             } else if (toolMode === "addGND_H_Left") {
-              const rightX = (parseFloat(xCm) + 0.21).toFixed(2);
-              snippet = `\\draw[thick, line cap=round] (${xCm},${yCm}) -- (${rightX},${yCm});\n  \\begin{scope}[shift={(${rightX},${yCm})}]\n    \\coordinate (node_GND.l) at (0,0);\n    \\draw[ultra thick] (0,-0.17) -- (0,0.17);\n    \\draw[ultra thick] (0.14,-0.11) -- (0.14,0.11);\n    \\draw[ultra thick] (0.28,-0.08) -- (0.28,0.08);\n  \\end{scope}`;
+              snippet = `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_GND.l) at (0,0);\n    \\draw[thick, line cap=round] (0,0) -- (0.21,0);\n    \\draw[ultra thick] (0.21,-0.17) -- (0.21,0.17);\n    \\draw[ultra thick] (0.35,-0.11) -- (0.35,0.11);\n    \\draw[ultra thick] (0.49,-0.08) -- (0.49,0.08);\n  \\end{scope}`;
             } else if (toolMode === "addGND_H_Right") {
-              const leftX = (parseFloat(xCm) - 0.21).toFixed(2);
-              snippet = `\\draw[thick, line cap=round] (${xCm},${yCm}) -- (${leftX},${yCm});\n  \\begin{scope}[shift={(${leftX},${yCm})}]\n    \\coordinate (node_GND.r) at (0,0);\n    \\draw[ultra thick] (0,-0.17) -- (0,0.17);\n    \\draw[ultra thick] (-0.14,-0.11) -- (-0.14,0.11);\n    \\draw[ultra thick] (-0.28,-0.08) -- (-0.28,0.08);\n  \\end{scope}`;
+              snippet = `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_GND.r) at (0,0);\n    \\draw[thick, line cap=round] (0,0) -- (-0.21,0);\n    \\draw[ultra thick] (-0.21,-0.17) -- (-0.21,0.17);\n    \\draw[ultra thick] (-0.35,-0.11) -- (-0.35,0.11);\n    \\draw[ultra thick] (-0.49,-0.08) -- (-0.49,0.08);\n  \\end{scope}`;
             } else if (toolMode === "addCurrentSource_Right_Left" || toolMode === "addCurrentSource_H_Left") {
               snippet = `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Ix.l) at (0,0);\n    \\draw[thick] (0,0) -- (0.15,0);\n    \\draw[thick] (0.4,0) circle (0.25cm);\n    \\draw[-{Triangle[length=1.8mm, width=1.7mm]}, thick] (0.25,0) -- (0.55,0);\n    \\node[above=0.15cm] at (0.4,0.25) {\\normalsize $i$};\n    \\draw[thick, line cap=round] (0.65,0) -- (0.8,0);\n    \\coordinate (node_Ix.r) at (0.8,0);\n  \\end{scope}`;
             } else if (toolMode === "addCurrentSource_Right_Right" || toolMode === "addCurrentSource_H_Right") {
