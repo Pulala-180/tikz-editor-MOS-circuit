@@ -7,7 +7,8 @@ import css from "./SettingsModal.module.css";
 type CategoryId = "general" | "editor" | "canvas";
 
 const MATHJAX_FONTS: { value: MathJaxFont; label: string }[] = [
-  { value: "mathjax-newcm",   label: "New Computer Modern (default)" },
+  { value: "arial-bold",      label: "Arial Bold (IEEE Circuit / Sans-Serif)" },
+  { value: "mathjax-newcm",   label: "New Computer Modern" },
   { value: "mathjax-asana",   label: "Asana Math" },
   { value: "mathjax-bonum",   label: "Gyre Bonum" },
   { value: "mathjax-dejavu",  label: "DejaVu" },

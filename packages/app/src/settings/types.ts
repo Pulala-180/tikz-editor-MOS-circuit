@@ -27,6 +27,7 @@ export type CanvasSettings = {
 };
 
 export type MathJaxFont =
+  | "arial-bold"
   | "mathjax-newcm"
   | "mathjax-asana"
   | "mathjax-bonum"
@@ -90,6 +91,6 @@ export const DEFAULT_SETTINGS: AppSettings = {
     accuracy: "approximate"
   },
   rendering: {
-    mathJaxFont: "mathjax-newcm"
+    mathJaxFont: "arial-bold"
   }
 };

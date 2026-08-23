@@ -3,6 +3,27 @@ import type { EditorPlatform } from "./types.js";
 type MemoryStorage = Map<string, string>;
 
 function createFallbackPlatform(): EditorPlatform {
+  if (typeof localStorage !== "undefined") {
+    return {
+      id: "browser-local-storage",
+      persistence: {
+        load: (key) => {
+          try {
+            return localStorage.getItem(key);
+          } catch {
+            return null;
+          }
+        },
+        save: (key, value) => {
+          try {
+            localStorage.setItem(key, value);
+          } catch {
+            // ignore
+          }
+        }
+      }
+    };
+  }
   const storage: MemoryStorage = new Map();
   return {
     id: "fallback-memory",

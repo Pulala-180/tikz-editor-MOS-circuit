@@ -45,7 +45,7 @@ export function buildCircuitPreview(
     x2: number,
     y2: number,
     ultraThick = false,
-    linecap: "round" | "butt" = "round"
+    linecap: "round" | "butt" = "butt"
   ): CircuitPreviewPath => {
     const p1 = p(x1, y1);
     const p2 = p(x2, y2);
@@ -62,7 +62,7 @@ export function buildCircuitPreview(
     return {
       d,
       strokeWidth: ultraThick ? 1.6 : 0.8,
-      strokeLinecap: "round"
+      strokeLinecap: "butt"
     };
   };
 

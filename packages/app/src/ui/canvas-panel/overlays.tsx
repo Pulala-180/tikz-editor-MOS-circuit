@@ -293,8 +293,8 @@ export function ToolPreviewOverlay({
               stroke={path.fill === "currentColor" ? "none" : "currentColor"}
               fill={path.fill === "currentColor" ? "currentColor" : "none"}
               strokeWidth={path.strokeWidth ?? 0.8}
-              strokeLinecap={path.strokeLinecap ?? "round"}
-              strokeLinejoin="round"
+              strokeLinecap={path.strokeLinecap ?? "butt"}
+              strokeLinejoin="miter"
             />
           ))}
           {toolPreview.data.texts?.map((t, idx) => (
@@ -309,7 +309,8 @@ export function ToolPreviewOverlay({
               stroke="none"
               style={{
                 userSelect: "none",
-                fontFamily: "'STIX Two Text', 'Times New Roman', Cambria, serif"
+                fontFamily: "Arial, sans-serif",
+                fontWeight: "bold"
               }}
             >
               <tspan fontStyle={t.italic === false ? "normal" : "italic"}>{t.main}</tspan>

@@ -14,23 +14,46 @@ export const useEditorStore = create<EditorStore>((set) => ({
   ...makeInitialState(loadWorkspaceSeed() ?? undefined),
   dispatch: (action: EditorAction) => { set((state) => {
     const next = editorReducer(state, action);
-    if (shouldSaveWorkspace(state, next)) {
+    if (shouldSaveWorkspaceImmediately(state, next)) {
       const workspaceState = workspaceStateFromEditorState(next);
       persistWorkspaceNow(workspaceState);
+    } else if (shouldScheduleWorkspaceSave(state, next)) {
+      const workspaceState = workspaceStateFromEditorState(next);
+      scheduleWorkspaceSave(workspaceState);
     }
     return next;
   }); }
 }));
 
-function shouldSaveWorkspace(previous: EditorState, next: EditorState): boolean {
-  return (
+function shouldSaveWorkspaceImmediately(previous: EditorState, next: EditorState): boolean {
+  if (
     previous.workspaceVersion !== next.workspaceVersion ||
     previous.tabOrder !== next.tabOrder ||
     previous.activeDocumentId !== next.activeDocumentId ||
     previous.recentDocumentIds !== next.recentDocumentIds ||
     Object.keys(previous.documents).length !== Object.keys(next.documents).length ||
     documentsSavedStatusChanged(previous.documents, next.documents)
-  );
+  ) {
+    return true;
+  }
+  if (typeof window === "undefined" && shouldScheduleWorkspaceSave(previous, next)) {
+    return true;
+  }
+  return false;
+}
+
+function shouldScheduleWorkspaceSave(previous: EditorState, next: EditorState): boolean {
+  if (previous.documents === next.documents) {
+    return false;
+  }
+  for (const id of Object.keys(next.documents)) {
+    const prevDoc = previous.documents[id];
+    const nextDoc = next.documents[id];
+    if (!prevDoc || persistedDocumentChanged(prevDoc, nextDoc)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function documentsSavedStatusChanged(

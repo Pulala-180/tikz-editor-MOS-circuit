@@ -15,6 +15,7 @@ export { emitSvg, emitSvgModel, serializeSvgModel, serializeSvgModelAsync, diffS
 export { renderTikzToSvg, renderTikzToSvgAsync } from "./render/index.js";
 export { capabilityMatrix, FEATURE_IDS } from "./capabilities/index.js";
 export { createMathJaxNodeTextEngine, setWorkerFontLoader } from "./text/mathjax-engine.js";
+export { createArialNodeTextEngine, parseLatexForArial } from "./text/arial-engine.js";
 export type { MathJaxFont } from "./text/mathjax-engine.js";
 export { collectSymbols, resolveDocHoverTarget } from "./completion/index.js";
 export {

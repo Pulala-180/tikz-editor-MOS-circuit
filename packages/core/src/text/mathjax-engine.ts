@@ -67,6 +67,7 @@ type FontSwitchRule = {
 };
 
 export type MathJaxFont =
+  | "arial-bold"
   | "mathjax-newcm"
   | "mathjax-asana"
   | "mathjax-bonum"
@@ -158,6 +159,10 @@ export function setWorkerFontLoader(loader: WorkerFontLoader): void {
 
 export async function createMathJaxNodeTextEngine(options?: { font?: MathJaxFont }): Promise<NodeTextEngine> {
   const font = options?.font ?? DEFAULT_FONT;
+  if (font === "arial-bold") {
+    const { createArialNodeTextEngine } = await import("./arial-engine.js");
+    return createArialNodeTextEngine();
+  }
   if (hasBrowserDomGlobals() && font !== activeBrowserFont) {
     activeBrowserFont = font;
     sharedEnginePromise = null;
@@ -449,6 +454,14 @@ async function initializeWorkerRuntimeOnce(): Promise<MathJaxRuntime> {
     }
   };
 
+  tex2svg(
+    "\\newcommand{\\textsc}[1]{\\style{font-family: serif; font-variant-caps: small-caps}{#1}}" +
+      "\\newcommand{\\textsubscript}[1]{\\style{vertical-align: -0.35ex; font-size: 70%}{#1}}" +
+      "\\newcommand{\\textsuperscript}[1]{\\style{vertical-align: 0.35ex; font-size: 70%}{#1}}" +
+      "\\newcommand{\\textup}[1]{\\mathrm{#1}}",
+    { display: false }
+  );
+
   const warmup = tex2svg("\\mbox{0}", { display: false });
   if (!runtime.startup?.adaptor?.firstChild(warmup)) {
     throw new Error("MathJax worker runtime did not produce SVG output.");
@@ -508,7 +521,10 @@ function createMathJaxConfig(): Record<string, unknown> {
     },
     tex: {
       macros: {
-        textsc: ["\\style{font-variant-caps: small-caps}{#1}", 1]
+        textsc: ["\\style{font-variant-caps: small-caps}{#1}", 1],
+        textsubscript: ["\\style{vertical-align: -0.35ex; font-size: 70%}{#1}", 1],
+        textsuperscript: ["\\style{vertical-align: 0.35ex; font-size: 70%}{#1}", 1],
+        textup: ["\\mathrm{#1}", 1]
       },
       packages: {
         "[+]": ["color", "html"],
@@ -600,7 +616,10 @@ function configureBrowserMathJaxGlobal(font: MathJaxFont): void {
       ...existingTex,
       macros: {
         ...existingTexMacros,
-        textsc: ["\\style{font-family: serif; font-variant-caps: small-caps}{#1}", 1]
+        textsc: ["\\style{font-family: serif; font-variant-caps: small-caps}{#1}", 1],
+        textsubscript: ["\\style{vertical-align: -0.35ex; font-size: 70%}{#1}", 1],
+        textsuperscript: ["\\style{vertical-align: 0.35ex; font-size: 70%}{#1}", 1],
+        textup: ["\\mathrm{#1}", 1]
       },
       packages: {
         ...existingTexPackages,
