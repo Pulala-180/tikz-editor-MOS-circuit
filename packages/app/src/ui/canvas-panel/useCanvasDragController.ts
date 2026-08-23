@@ -24,7 +24,7 @@ import {
   type SnapLine
 } from "tikz-editor/edit/snapping";
 import { parseTikzForEdit } from "tikz-editor/edit/parse-options";
-import { findVddRails } from "tikz-editor/edit/actions/wire-follow";
+import { findAttachedWiresForTransientDrag, findVddRails } from "tikz-editor/edit/actions/wire-follow";
 import type { SceneElement } from "tikz-editor/semantic/types";
 import type { WorldPoint, WorldVector } from "../coords/types";
 import { applyMatrix, applyMatrixToVector, inverseMatrix } from "tikz-editor/semantic/transform";
@@ -138,17 +138,25 @@ function getDraggedDomElements(
 }
 
 function resetTransientDomTransforms(drag: DragState | null) {
-  if (drag && drag.kind === "element" && drag.transientDomElements && drag.initialTransforms) {
-    for (const el of drag.transientDomElements) {
-      const base = drag.initialTransforms.get(el);
-      if (base != null) {
-        el.setAttribute("transform", base);
-      } else {
-        el.removeAttribute("transform");
+  if (drag && drag.kind === "element") {
+    if (drag.transientDomElements && drag.initialTransforms) {
+      for (const el of drag.transientDomElements) {
+        const base = drag.initialTransforms.get(el);
+        if (base != null) {
+          el.setAttribute("transform", base);
+        } else {
+          el.removeAttribute("transform");
+        }
       }
+      drag.transientDomElements = undefined;
+      drag.initialTransforms = undefined;
     }
-    drag.transientDomElements = undefined;
-    drag.initialTransforms = undefined;
+    if (drag.transientAttachedWires) {
+      for (const wire of drag.transientAttachedWires) {
+        wire.element.setAttribute("d", wire.initialD);
+      }
+      drag.transientAttachedWires = undefined;
+    }
   }
 }
 
@@ -953,6 +961,39 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
           for (const el of drag.transientDomElements) {
             drag.initialTransforms.set(el, el.getAttribute("transform"));
           }
+
+          if (svgLayerHostRef?.current && svgResultRef.current?.viewBox) {
+            const scopeIds = drag.elementIds.filter((id) => scopeOverlay.scopesById.has(id));
+            const attachedWires = findAttachedWiresForTransientDrag(
+              snapshotSource || source,
+              snapshotEditHandles,
+              drag.elementIds,
+              scopeIds
+            );
+            const transientWires: NonNullable<Extract<DragState, { kind: "element" }>["transientAttachedWires"]> = [];
+            for (const wire of attachedWires) {
+              let escaped = wire.wireSourceId;
+              try {
+                escaped = typeof CSS !== "undefined" && typeof CSS.escape === "function" ? CSS.escape(escaped) : escaped.replace(/"/g, '\\"');
+              } catch {
+                escaped = escaped.replace(/"/g, '\\"');
+              }
+              const pathEl = svgLayerHostRef.current.querySelector<SVGPathElement>(`path[data-source-id="${escaped}"]`);
+              if (pathEl) {
+                const initialD = pathEl.getAttribute("d") ?? "";
+                const staticSvg = worldToSvgPoint(wire.staticEndpointWorld, svgResultRef.current.viewBox);
+                const movingSvg = worldToSvgPoint(wire.movingEndpointWorld, svgResultRef.current.viewBox);
+                transientWires.push({
+                  element: pathEl,
+                  initialD,
+                  staticSvg,
+                  movingSvg,
+                  movingEndpointIndex: wire.movingEndpointIndex
+                });
+              }
+            }
+            drag.transientAttachedWires = transientWires;
+          }
         }
 
         const svgDx = totalDelta.x;
@@ -963,6 +1004,17 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
             ? `${base} translate(${svgDx} ${svgDy})`
             : `translate(${svgDx} ${svgDy})`;
           el.setAttribute("transform", transformValue);
+        }
+
+        if (drag.transientAttachedWires) {
+          for (const wire of drag.transientAttachedWires) {
+            const curMovingX = wire.movingSvg.x + svgDx;
+            const curMovingY = wire.movingSvg.y + svgDy;
+            const newD = wire.movingEndpointIndex === 0
+              ? `M ${curMovingX.toFixed(2)},${curMovingY.toFixed(2)} L ${wire.staticSvg.x.toFixed(2)},${wire.staticSvg.y.toFixed(2)}`
+              : `M ${wire.staticSvg.x.toFixed(2)},${wire.staticSvg.y.toFixed(2)} L ${curMovingX.toFixed(2)},${curMovingY.toFixed(2)}`;
+            wire.element.setAttribute("d", newD);
+          }
         }
 
         return;

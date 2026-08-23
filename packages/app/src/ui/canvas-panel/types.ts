@@ -124,6 +124,13 @@ export type DragState =
       lastMoveFormatPrecision?: "default" | "fine" | "coarse";
       transientDomElements?: Element[];
       initialTransforms?: Map<Element, string | null>;
+      transientAttachedWires?: Array<{
+        element: SVGPathElement;
+        initialD: string;
+        staticSvg: { x: number; y: number };
+        movingSvg: { x: number; y: number };
+        movingEndpointIndex: 0 | 1;
+      }>;
       movementAxis?: "x" | "y" | "orthogonal" | null;
       adornmentDrag?: {
         ownerPoint: WorldPoint;
