@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, type MouseEvent as ReactMouseEvent, type MutableRefObject, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
-import { clientPoint, px, pt, worldBounds, worldVector } from "tikz-editor/coords/index";
+import { clientPoint, px, pt, worldBounds, worldVector } from "tikz-editor";
 import {
   buildSnapContext,
   collectOpenPathEndpointSourceIds,
