@@ -80,7 +80,7 @@ export type MathJaxFont =
   | "mathjax-termes"
   | "mathjax-tex";
 
-const DEFAULT_FONT: MathJaxFont = "mathjax-newcm";
+const DEFAULT_FONT: MathJaxFont = "arial-bold";
 const MIDLINE_FROM_BASELINE_RATIO = 0.215;
 const MATHJAX_PARAGRAPH_PT_PER_WIDTH_UNIT = 10;
 const MATHJAX_PARAGRAPH_WIDTH_UNIT_STEP = 0.001;
