@@ -1,56 +1,56 @@
-﻿# TikZ Editor (MOS Circuit & High-Performance Edition)
+﻿# TikZ Editor（MOS 电路与高性能定制版）
 
-> 💡 **Upstream Attribution**: This project is an enhanced, performance-optimized, and schematic-specialized fork of the original open-source [**tikz-editor by Dominik Peters**](https://github.com/DominikPeters/tikz-editor).
+> 💡 **上游致谢**：本项目基于 Dominik Peters 的开源项目 [**tikz-editor**](https://github.com/DominikPeters/tikz-editor) 进行了深度重构、性能动力学优化与电路专业化适配。
 
-An intuitive, high-performance visual TikZ editor tailored for electronic schematics (especially MOS analog/digital circuits) and general scientific illustrations, featuring real-time bidirectional AST synchronization, 160+ FPS transient DOM kinetics, elastic wire follow, and precision pin snapping.
-
----
-
-## 🚀 Key Enhancements & Adaptive Designs (vs. Original Project)
-
-### 1. ⚡ Transient Direct DOM Drag Optimization (160+ FPS)
-- **Problem in Original**: Every pixel of element movement triggered full-pipeline AST parsing, geometry re-calculation, and React virtual DOM reconciliation, resulting in 20~30 FPS lag and jitter on complex schematics.
-- **Solution**: Engineered a direct DOM transform transient interaction layer (inspired by Visio & Draw.io). During mouse drags, high-overhead parser pipelines are completely bypassed for butter-smooth **160+ FPS** rendering, with single-transaction atomic AST commits upon mouse release.
-- 💡 **Pro-Tip for Ultra-Smooth Free Dragging**: When moving components across densely populated circuits and seeking the ultimate unrestricted, silky-smooth drag experience, right-click the canvas and uncheck **`Snapping -> Snap to Object Points`** (or hold `Ctrl`/`Cmd` temporarily). Re-check it when routing wires for precise pin-magnetic lock!
-
-### 2. 🔗 Real-Time Elastic Wire-Follow Kinetics (120 FPS)
-- **Problem in Original**: Moving a transistor or component broke all connected wires, requiring tedious manual re-routing.
-- **Solution**: Built an intelligent topology wire-follow engine. Moving any component dynamically stretches, translates, and folds attached wire segments in real time (120 FPS), preserving circuit topology effortlessly.
-
-### 3. 🎯 Precision Point-to-Point Snapping & $\otimes$ Coincident Indicator
-- **Problem in Original**: Canvas grid snap overshadowed component pin snaps, often leading to 0.05cm offsets and false/broken connections.
-- **Solution**:
-  - Implemented a tiered snapping priority engine: `Object Pin Points > Alignment Guides > Grid Points`.
-  - Added a dedicated $\otimes$ (circumscribed circle) coincident visual indicator with sticky hysteresis, locking pin-to-pin connections with absolute precision.
-
-### 4. 📐 Consecutive Orthogonal Wire Engine (Hotkey `M`)
-- **Problem in Original**: Lack of intuitive orthogonal wiring logic matching standard electronic schematic conventions.
-- **Solution**: Created a multi-click consecutive orthogonal wiring tool (Hotkey `M`). Each click creates an anchor corner, supporting 4-directional orthogonal expansion using standard TikZ `\draw[thick, line cap=round] (x1,y1) -- (x2,y2);` syntax.
-
-### 5. 🔄 Full 8-Variant Polarity Matrix & Dual-Axis Mirror System
-- **Problem in Original**: Flipping components left Voltage/Current source polarities static, and MOS gate/drain/source orientations were difficult to mirror.
-- **Solution**:
-  - **`X` / `V`**: X-axis vertical symmetry (Top $\leftrightarrow$ Bottom, Drain $\leftrightarrow$ Source, $\pm$ polarities inverted, current arrows flipped).
-  - **`Y` / `H`**: Y-axis horizontal symmetry (Left $\leftrightarrow$ Right, Gate orientation flipped, $\pm$ polarities inverted).
-  - **`R`**: 90° clockwise rotation.
-  - **`W` / `A` / `S` / `D`**: Instant directional orientation (Up / Left / Down / Right).
-  - Built a comprehensive **8-variant polarity matrix** for Voltage and Current Sources (4 directions $\times$ 2 anchor pins).
-
-### 6. 🔌 Standard MOS Schematic Component Library
-- Integrated standardized TikZ templates for:
-  - **nMOS & pMOS Transistors** (standard pin geometry, isolated labels)
-  - **Resistors** ($R_D$) & **Capacitors**
-  - **Voltage Sources** & **Current Sources** (full 8-state polarities)
-  - **GND** & **VDD** Power Rails
-  - **IO Ports** ($V_{in}, V_{out}$) & **Dot Nodes** (connection points)
-
-### 7. 🛡️ Robust Client-Side Bundling
-- Eliminated browser bundle dependencies on Node.js native modules (`node:fs`), preventing Vite HMR crashes and white-screen build bugs.
-- Comprehensive unit test coverage with 24/24 passing suites.
+TikZ Editor 是一款直观、高性能的可视化 TikZ 编辑器，专为**电子原理图（尤其是 MOS 模拟/数字集成电路）**及通用科技论文插图量身定制。具备实时双向 AST 同步、160+ FPS 瞬态 DOM 动力学渲染、弹性导线拓扑跟随以及引脚纳米级精准磁吸等核心特性。
 
 ---
 
-## 🎨 Toolbar & Custom Component Extension (个性化定制工具栏与元件库指南)
+## 🚀 核心适配性设计与深度优化（对比原版）
+
+### 1. ⚡ 瞬态 DOM 极速拖拽引擎（160+ FPS）
+- **原版痛点**：拖拽移动元件时，鼠标每位移 1 像素都会触发全量 AST 解析、几何运算与 React 虚拟 DOM 重渲染，导致 20~30 FPS 的明显卡顿与拖影。
+- **优化方案**：设计了直连 DOM Transform 的瞬态交互层（借鉴 Visio 与 Draw.io 顶级架构）。在鼠标拖拽过程中完全绕过高开销的解析管道，实现 **160+ FPS 极限丝滑拖拽**；仅在松开鼠标时原子化提交单一 AST 事务。
+- 💡 **极致丝滑拖拽秘籍**：当在元件密集的复杂电路上大范围移动元件、追求无拘无束的极致丝滑手感时，只需在画布空白处**右键单击**并取消勾选 **`Snapping -> Snap to Object Points`**（或在拖拽时按住 `Ctrl`/`Cmd` 临时绕过磁吸）。连线时重新勾选，即可获得完美的引脚磁吸锁定！
+
+### 2. 🔗 实时高刷新弹性导线跟随系统（120 FPS）
+- **原版痛点**：移动晶体管或电阻时，相连的导线不会跟随，拓扑瞬间破裂，必须手动重连。
+- **优化方案**：构建了智能拓扑导线追踪引擎 (`wire-follow.ts`)。移动任何元件时，相连导线在 120 FPS 瞬态下**实时弹性拉伸、平移和折叠**，元件移动到哪，导线就粘到哪，电路拓扑永不破损。
+
+### 3. 🎯 阶梯吸附优先级与 $\otimes$ 严格同点咬合锁
+- **原版痛点**：画布网格吸附优先级过高，经常强行吸附到邻近网格，导致元件引脚与导线端点经常相差 0.05cm 虚接。
+- **优化方案**：
+  - 建立了阶梯吸附决策树：`元件引脚端点 (Point Snap) > 参考对齐线 (Guide Snap) > 网格刻度 (Grid Snap)`；
+  - 引入专用的 **$\otimes$（圆圈十字）同点咬合高亮符号**与**粘滞滞后算法**，只有空间坐标严格重叠时触发锁定，确保电路连线 100% 物理咬合。
+
+### 4. 📐 连续正交折线布线工具（快捷键 `M`）
+- **原版痛点**：缺乏标准的电路折线布线逻辑，多段连线语法复杂且不利于后期局部微调。
+- **优化方案**：全新打造 **`M` 键连续正交布线工具**。每点击一次生成一个拐角节点，支持上下左右 4 向正交自动延伸，底层严格使用标准 `\draw[thick, line cap=round] (x1,y1) -- (x2,y2);` 独立线段语法，各段均可独立微调且拓扑锁死。
+
+### 5. 🔄 完整 8 态极性矩阵与 X/Y 双轴镜像系统
+- **原版痛点**：原版电源/信号源正负极固定，翻转时极性与箭头不掉头；MOS 管栅极朝向与 D/S 极难以直观翻转。
+- **优化方案**：
+  - **`X` / `V` 键**：关于 X 轴做垂直镜像（Top $\leftrightarrow$ Bottom，D 极与 S 极对调，电压源正负极上下颠倒，电流源箭头上下掉头）；
+  - **`Y` / `H` 键**：关于 Y 轴做水平镜像（Left $\leftrightarrow$ Right，Gate 栅极开口朝向翻转，正负极左右翻转）；
+  - **`R` 键**：90° 顺时针连贯旋转；
+  - **`W` / `A` / `S` / `D` 键**：上/左/下/右一键直达指定朝向；
+  - 为电压源 (Voltage Source) 和电流源 (Current Source) 打造完整的 **8 态全极性矩阵**（4 方向 $\times$ 2 端锚点）。
+
+### 6. 🔌 MOS 模拟/数字电路标准元件库
+- 规范集成了标准电路元件库的 TikZ 模板：
+  - **nMOS & pMOS 晶体管**（标准引脚间距、独立 Label、标准栅极隔离）
+  - **电阻** ($R_D$) 与 **电容**
+  - **电压源** 与 **电流源**（支持完整 8 态极性）
+  - **接地端** (GND) 与 **电源轨** (VDD)
+  - **输入输出端口** ($V_{in}, V_{out}$) 与 **实心黑点节点** (Dot Node)
+
+### 7. 🛡️ 纯净前端打包与浏览器环境加固
+- 彻底剔除了核心库中对 Node.js 原生模块 (`node:fs`) 的运行时依赖，根除了 Vite 打包与开发环境下的白屏崩溃 Bug；
+- 24/24 自动化单元测试全绿灯通过。
+
+---
+
+## 🎨 个性化定制工具栏与自定义元件库指南
 
 本项目采用高度模块化的分层设计，开发者只需 4 步即可轻松扩展自定义电路元件或工具栏按钮：
 
@@ -88,7 +88,7 @@ function MyComponentIcon({ size = 20 }: { size?: number }) {
 // 在 TOOL_BUTTONS 数组中添加：
 {
   mode: "addMyComponent",
-  label: "My Component",
+  label: "我的自定义元件",
   icon: MyComponentIcon,
   shortcut: "K" // 自定义一键呼出快捷键
 }
@@ -122,68 +122,68 @@ if (toolMode === "addMyComponent") {
 
 ---
 
-## ⌨️ Circuit Shortcut Keys Cheatsheet (电路设计快捷键速查表)
+## ⌨️ 电路设计快捷键速查表
 
-### 1. 🔌 Component Quick-Insert (选择模式下一键呼出元件)
+### 1. 🔌 元件一键呼出快捷键（选择模式下直接单键呼出）
 
-| Key | Component | Description |
+| 按键 | 对应元件 | 说明 |
 |:---|:---|:---|
-| **`Z`** | **nMOS** Transistor | 放置 nMOS 晶体管（默认栅极在左） |
-| **`Q`** | **pMOS** Transistor | 放置 pMOS 晶体管（默认栅极在左） |
-| **`R`** | **Resistor** ($R_D$) | 放置电阻（默认竖直形态） |
-| **`C`** | **Capacitor** | 放置电容 |
-| **`E` / `I`** | **Current Source** | 放置电流源（8 态可选） |
-| **`U` / `V`** | **Voltage Source** | 放置电压源（8 态可选） |
-| **`A`** | **Current Arrow** | 放置电流方向指示箭头 |
-| **`G`** | **GND** | 放置接地端（标准三线递减接地符号） |
-| **`T`** | **IO Port** (Terminal) | 放置输入/输出端口 ($V_{in}, V_{out}$) |
-| **`D`** | **Dot Node** (●) | 放置实心连接黑点节点 |
-| **`V + D`** | **VDD** Power Rail | 放置 VDD 电源符号 |
-| **`W`** | **Wire Lead** | 放置单段引出导线 |
-| **`M`** | **Orthogonal Wire Tool** | 启动多段连续正交折线布线工具 |
-| **`N`** | **General Node** | 放置标准 TikZ 文本/几何节点 |
+| **`Z`** | **nMOS** 晶体管 | 放置 nMOS 晶体管（默认栅极在左） |
+| **`Q`** | **pMOS** 晶体管 | 放置 pMOS 晶体管（默认栅极在左） |
+| **`R`** | **电阻** ($R_D$) | 放置电阻（默认竖直形态） |
+| **`C`** | **电容** | 放置电容（默认竖直形态） |
+| **`E` / `I`** | **电流源** (Current Source) | 放置电流源（8 态可选） |
+| **`U` / `V`** | **电压源** (Voltage Source) | 放置电压源（8 态可选） |
+| **`A`** | **电流指示箭头** | 放置电流方向指示箭头 |
+| **`G`** | **接地端** (GND) | 放置接地端（标准三线递减接地符号） |
+| **`T`** | **IO 端口** (Terminal) | 放置输入/输出端口 ($V_{in}, V_{out}$) |
+| **`D`** | **实心连接黑点** (●) | 放置实心连接黑点节点 |
+| **`V + D`** | **VDD 电源轨** | 放置 VDD 电源符号 |
+| **`W`** | **单段引线** (Wire Lead) | 放置单段引出导线 |
+| **`M`** | **正交折线布线工具** | 启动多段连续正交折线布线工具 |
+| **`N`** | **通用 TikZ 节点** | 放置标准 TikZ 文本/几何节点 |
 
 ---
 
-### 2. 🔄 Component Placement & Orientation Tweaks (放置预览中实时微调)
+### 2. 🔄 元件放置预览实时微调键（鼠标附带元件移动时按键）
 
-| Key | Action | Description |
+| 按键 | 功能 | 说明 |
 |:---|:---|:---|
-| **`X` / `V`** | **Vertical Mirror (X-Axis)** | 沿 X 轴垂直镜像（Top $\leftrightarrow$ Bottom，D $\leftrightarrow$ S，正负极对调，箭头掉头） |
-| **`Y` / `H`** | **Horizontal Mirror (Y-Axis)** | 沿 Y 轴水平镜像（Left $\leftrightarrow$ Right，栅极开口翻转，正负极左右翻转） |
-| **`R`** | **Rotate 90°** | 顺时针 90° 连贯旋转（上 $\to$ 右 $\to$ 下 $\to$ 左） |
-| **`W` / `A` / `S` / `D`** | **Direct Direction** | 一键定向到 上 / 左 / 下 / 右 预设形态 |
-| **`G`** *(in MOS mode)* | **Gate Anchor** | 将 MOS 放置吸附锚点切换到**栅极 (Gate)** |
-| **`D`** *(in MOS mode)* | **Drain Anchor** | 将 MOS 放置吸附锚点切换到**漏极 (Drain)** |
-| **`S`** *(in MOS mode)* | **Source Anchor** | 将 MOS 放置吸附锚点切换到**源极 (Source)** |
-| **`A` / `D`** *(in IO mode)* | **$V_{in}$ Port** | 切换为 $V_{in}$ 端口（左开 / 右开） |
-| **`W` / `S`** *(in IO mode)* | **$V_{out}$ Port** | 切换为 $V_{out}$ 端口（左开 / 右开） |
+| **`X` / `V`** | **垂直镜像翻转 (X轴)** | 沿 X 轴垂直镜像（Top $\leftrightarrow$ Bottom，D $\leftrightarrow$ S，正负极对调，箭头掉头） |
+| **`Y` / `H`** | **水平镜像翻转 (Y轴)** | 沿 Y 轴水平镜像（Left $\leftrightarrow$ Right，栅极开口翻转，正负极左右翻转） |
+| **`R`** | **顺时针 90° 旋转** | 顺时针 90° 连贯旋转（上 $\to$ 右 $\to$ 下 $\to$ 左） |
+| **`W` / `A` / `S` / `D`** | **4向直达朝向** | 一键定向到 上 / 左 / 下 / 右 预设形态 |
+| **`G`** *(MOS模式下)* | **切到 Gate 栅极锚点** | 将 MOS 放置吸附锚点切换到**栅极 (Gate)** |
+| **`D`** *(MOS模式下)* | **切到 Drain 漏极锚点** | 将 MOS 放置吸附锚点切换到**漏极 (Drain)** |
+| **`S`** *(MOS模式下)* | **切到 Source 源极锚点** | 将 MOS 放置吸附锚点切换到**源极 (Source)** |
+| **`A` / `D`** *(IO模式下)* | **$V_{in}$ 端口左右朝向** | 切换为 $V_{in}$ 端口（左开 / 右开） |
+| **`W` / `S`** *(IO模式下)* | **$V_{out}$ 端口左右朝向** | 切换为 $V_{out}$ 端口（左开 / 右开） |
 
 ---
 
-## 🛠️ Quick Start
+## 🛠️ 快速上手与本地运行
 
-### Prerequisites
+### 环境要求
 - Node.js >= 18.0.0
 - npm >= 9.0.0
 
-### Installation & Run
+### 安装与启动
 
 ```bash
-# Clone the repository
+# 1. 克隆本仓库
 git clone git@github.com:Pulala-180/tikz-editor-MOS-circuit.git
 cd tikz-editor-MOS-circuit
 
-# Install monorepo dependencies
+# 2. 安装 Monorepo 所有依赖包
 npm install
 
-# Start development server with HMR
+# 3. 启动本地热重载开发服务器
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+启动完成后，在浏览器打开 [http://localhost:5173](http://localhost:5173) 即可开始绘制！
 
 ---
 
-## 📄 License
-MIT (Inherited from original [DominikPeters/tikz-editor](https://github.com/DominikPeters/tikz-editor))
+## 📄 开源许可证
+本项目遵循 MIT 开源许可证（继承自原版 [DominikPeters/tikz-editor](https://github.com/DominikPeters/tikz-editor)）。
