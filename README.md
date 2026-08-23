@@ -1,5 +1,7 @@
 ﻿# TikZ Editor (MOS Circuit & High-Performance Edition)
 
+> 💡 **Upstream Attribution**: This project is an enhanced, performance-optimized, and schematic-specialized fork of the original open-source [**tikz-editor by Dominik Peters**](https://github.com/DominikPeters/tikz-editor).
+
 An intuitive, high-performance visual TikZ editor tailored for electronic schematics (especially MOS analog/digital circuits) and general scientific illustrations, featuring real-time bidirectional AST synchronization, 160+ FPS transient DOM kinetics, elastic wire follow, and precision pin snapping.
 
 ---
@@ -86,4 +88,4 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 ---
 
 ## 📄 License
-MIT
+MIT (Inherited from original [DominikPeters/tikz-editor](https://github.com/DominikPeters/tikz-editor))
