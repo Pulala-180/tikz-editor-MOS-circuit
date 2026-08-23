@@ -34,7 +34,7 @@
       \draw[thick, line cap=round, line join=round] (-0.40,0.2) -- (-0.73,0.2) -- (-0.73,0.5);
       \draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, thick, line cap=round] (-0.40,-0.2) -- (-0.70,-0.2);
       \draw[thick, line cap=round] (-0.73,-0.21) -- (-0.73,-0.5);
-      \node[node font=\sffamily\bfseries] at (-0.98,0) {$M_1$};
+      \node[node font=\sffamily\bfseries] at (-0.98,0) {$M_2$};
       \coordinate (node_Mx2.d) at (-0.73,0.5);
       \coordinate (node_Mx2.s) at (-0.73,-0.5);
     \end{scope}
@@ -75,7 +75,7 @@
       \draw[ultra thick] (-0.08,-0.28) -- (0.08,-0.28);
     \end{scope}
 
-  \draw[thick, line cap=round] (0.85,2.50) -- (0.85,3.05);
+  \draw[thick, line cap=round] (0.85,2.50) -- (0.85,3.25);
 
   \draw[thick, line cap=round] (3.15,2.50) -- (3.15,3.3);
 
@@ -87,7 +87,7 @@
       \draw[thick, line cap=round, line join=round] (0.33,0.3) -- (0,0.3) -- (0,0);
       \draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, thick, line cap=round] (0,0.7) -- (0.30,0.7);
       \draw[thick, line cap=round] (0,1.0) -- (0,0.7);
-      \node[node font=\sffamily\bfseries] at (-0.31,0.5) {$M_1$};
+      \node[node font=\sffamily\bfseries] at (-0.31,0.5) {$M_3$};
       \coordinate (node_Mx3.g) at (0.73,0.5);
       \coordinate (node_Mx3.s) at (0,1.0);
     \end{scope}
@@ -100,7 +100,7 @@
       \draw[thick, line cap=round, line join=round] (-0.33,0.3) -- (0,0.3) -- (0,0);
       \draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, thick, line cap=round] (0,0.7) -- (-0.30,0.7);
       \draw[thick, line cap=round] (0,1.22) -- (0,0.7);
-      \node[node font=\sffamily\bfseries] at (0.31,0.5) {$M_1$};
+      \node[node font=\sffamily\bfseries] at (0.31,0.5) {$M_4$};
       \coordinate (node_Mx4.g) at (-0.73,0.5);
       \coordinate (node_Mx4.s) at (0,1.0);
     \end{scope}
@@ -109,11 +109,11 @@
 
   \draw[thick, fill=black] (2,3.8) circle (0.06);
 
-  \draw[thick, line cap=round] (2,3.8) -- (2,3.05);
+  \draw[thick, line cap=round] (2,3.8) -- (2,3.25);
 
-  \draw[thick, line cap=round] (2,3.05) -- (0.85,3.05);
+  \draw[thick, line cap=round] (2,3.25) -- (0.85,3.25);
 
-  \draw[thick, fill=black] (0.85,3.05) circle (0.06);
+  \draw[thick, fill=black] (0.85,3.25) circle (0.06);
 
   \draw[thick, line cap=round] (0.85,4.30) -- (0.85,4.52);
     \begin{scope}[shift={(0.85,4.52)}]
@@ -150,4 +150,6 @@
     \end{scope}
 
   \draw[thick, line cap=round] (0.85,3.07) -- (0.85,3.37);
+
+  \draw[thick, fill=black] (3.15,3.00) circle (0.06);
 \end{tikzpicture}

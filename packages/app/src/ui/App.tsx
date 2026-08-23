@@ -540,10 +540,31 @@ export function App() {
       return false;
     }
 
+    // Direct save for Sketch files in their original folder
+    if (
+      mode === "save" &&
+      (doc.sketchRelPath || (!doc.fileRef && !doc.title.startsWith("Untitled")))
+    ) {
+      const relPath = doc.sketchRelPath ?? (doc.title.endsWith(".tex") || doc.title.endsWith(".tikz") ? doc.title : `${doc.title}.tex`);
+      if (typeof import.meta !== "undefined" && import.meta.hot) {
+        import.meta.hot.send?.("sketch:save", {
+          title: doc.title,
+          source: doc.source,
+          relPath
+        });
+      }
+      dispatch({ type: "MARK_DOCUMENT_SAVED", documentId, lastKnownDiskSource: doc.source });
+      return true;
+    }
+
+    const defaultName = doc.title
+      ? (doc.title.endsWith(".tex") || doc.title.endsWith(".tikz") ? doc.title : `${doc.title}.tex`)
+      : "tikz-document.tex";
+
     const result = await files.saveText(doc.source, {
       mode,
       fileRef: doc.fileRef,
-      suggestedName: doc.fileRef?.name ?? "tikz-document.tex"
+      suggestedName: doc.fileRef?.name ?? defaultName
     });
     if (result.status === "saved") {
       dispatch({ type: "MARK_DOCUMENT_SAVED", documentId, fileRef: result.fileRef });
@@ -1872,12 +1893,13 @@ export function App() {
       setPendingClose(null);
       for (const documentId of closeCtx.dirtyDocumentIds) {
         const doc = documents[documentId];
-        if (doc?.fileRef == null) {
-          const docName = doc?.title.endsWith(".tex") ? doc?.title : `${doc?.title}.tex`;
+        // Only delete auto-generated temporary Untitled drafts, never delete named sketch documents or existing files
+        if (doc?.fileRef == null && doc?.title.startsWith("Untitled")) {
+          const docName = doc.title.endsWith(".tex") ? doc.title : `${doc.title}.tex`;
           if (typeof import.meta !== "undefined" && import.meta.hot) {
             import.meta.hot.send?.("sketch:delete", {
               id: documentId,
-              title: doc?.title ?? "Untitled",
+              title: doc.title,
               name: docName,
               relPath: docName
             });
@@ -1891,14 +1913,15 @@ export function App() {
     setPendingClose(null);
     for (const documentId of closeCtx.dirtyDocumentIds) {
       const doc = documents[documentId];
-      if (doc?.fileRef != null) {
+      if (!doc) continue;
+      if (doc.fileRef != null || doc.sketchRelPath || !doc.title.startsWith("Untitled")) {
         await saveDocument(documentId, "save");
       } else {
         const saved = await saveDocument(documentId, "save-as");
         if (saved) {
           setPendingPostSaveDraft({
             documentId,
-            documentTitle: doc?.title ?? "Untitled",
+            documentTitle: doc.title ?? "Untitled",
             closeIntent: closeCtx.intent
           });
           return;
@@ -1912,7 +1935,7 @@ export function App() {
   function handlePostSaveDraftDecision(deleteDraft: boolean): void {
     if (!pendingPostSaveDraft) return;
     const { documentId, documentTitle, closeIntent } = pendingPostSaveDraft;
-    if (deleteDraft) {
+    if (deleteDraft && documentTitle.startsWith("Untitled")) {
       const docName = documentTitle.endsWith(".tex") ? documentTitle : `${documentTitle}.tex`;
       if (typeof import.meta !== "undefined" && import.meta.hot) {
         import.meta.hot.send?.("sketch:delete", {

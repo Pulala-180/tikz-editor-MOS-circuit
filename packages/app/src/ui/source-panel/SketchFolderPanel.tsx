@@ -97,7 +97,13 @@ export function SketchFolderPanel() {
       if (existing) {
         dispatch({ type: "SWITCH_DOCUMENT", documentId: existing.id });
       } else {
-        dispatch({ type: "NEW_DOCUMENT", source: data.content, title: baseTitle });
+        dispatch({
+          type: "NEW_DOCUMENT",
+          source: data.content,
+          title: baseTitle,
+          isExternal: false,
+          sketchRelPath: data.relPath
+        });
       }
     };
 

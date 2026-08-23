@@ -222,6 +222,7 @@ export type DocumentSession = {
   focusedScopeId: string | null;
   activeHandleId: string | null;
   fileRef: DocumentFileRef | null;
+  sketchRelPath?: string | null;
   savedSource: string;
   dirty: boolean;
   diskRevision: FileRevision | null;
@@ -392,7 +393,7 @@ export type EditorAction =
   // Document
   | { type: "CODE_EDITED"; source: string }
   | { type: "SET_ACTIVE_FIGURE"; figureId: string | null; documentId?: string }
-  | { type: "NEW_DOCUMENT"; source?: string; title?: string; isExternal?: boolean }
+  | { type: "NEW_DOCUMENT"; source?: string; title?: string; isExternal?: boolean; sketchRelPath?: string | null }
   | { type: "SWITCH_DOCUMENT"; documentId: string }
   | { type: "CLOSE_DOCUMENT"; documentId?: string }
   | { type: "RENAME_DOCUMENT"; documentId?: string; title: string }

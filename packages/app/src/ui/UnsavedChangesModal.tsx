@@ -12,13 +12,16 @@ export function UnsavedChangesModal({
   isExternal?: boolean;
   onChoose: (decision: UnsavedChangesDecision) => void;
 }) {
+  const isAllUntitled = documentTitles.every((title) => title.startsWith("Untitled"));
   const label = isExternal
     ? (documentTitles.length === 1
         ? `文档 "${documentTitles[0]}" 为外部打开的文件。请选择保存到原文件、转存备份到 Sketch 草稿库，或取消：`
         : `${documentTitles.length} 个外部文档有未保存修改。请选择保存、转存到 Sketch 或取消：`)
     : (documentTitles.length === 1
-        ? `文档 "${documentTitles[0]}" 尚未保存到指定文件夹。请选择保存到您的电脑文件夹，或直接删除本地文件：`
-        : `${documentTitles.length} 个文档尚未保存。请选择保存或直接删除：`);
+        ? (isAllUntitled
+            ? `临时草稿 "${documentTitles[0]}" 尚未保存到电脑。请选择保存到您的电脑文件夹，或直接删除临时草稿：`
+            : `文档 "${documentTitles[0]}" 存在未保存的修改。请选择保存修改，或放弃本次修改：`)
+        : `${documentTitles.length} 个文档存在未保存修改。请选择保存或放弃修改：`);
 
   return (
     <Modal
@@ -29,7 +32,7 @@ export function UnsavedChangesModal({
       dataTestId="unsaved-changes-modal"
     >
       <Modal.Header
-        title={isExternal ? "关闭前确认：是否保存外部文件？" : "关闭前确认：保存还是删除？"}
+        title={isExternal ? "关闭前确认：是否保存外部文件？" : (isAllUntitled ? "关闭前确认：保存还是删除？" : "关闭前确认：是否保存修改？")}
         titleId="unsaved-changes-title"
       />
       <Modal.Body>
@@ -67,7 +70,7 @@ export function UnsavedChangesModal({
             onClick={() => { onChoose("discard"); }}
             data-testid="unsaved-discard"
           >
-            直接删除 (Delete)
+            {isAllUntitled ? "删除草稿 (Delete)" : "放弃修改 (Discard)"}
           </Modal.DangerButton>
         )}
 
@@ -75,7 +78,7 @@ export function UnsavedChangesModal({
           onClick={() => { onChoose("save"); }}
           data-testid="unsaved-save"
         >
-          {isExternal ? "保存到原文件 (Save)" : "选择位置保存 (Save)"}
+          {isExternal ? "保存到原文件 (Save)" : (isAllUntitled ? "选择位置保存 (Save)" : "保存更改 (Save)")}
         </Modal.PrimaryButton>
       </Modal.Footer>
     </Modal>

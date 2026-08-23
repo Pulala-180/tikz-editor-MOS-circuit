@@ -325,7 +325,8 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
       const untitledCount = Object.values(workspace.documents).filter((doc) => doc.fileRef == null).length + 1;
       const next = createDocumentSession({
         source: action.source ?? DEFAULT_SOURCE,
-        title: action.title ?? `Untitled ${untitledCount}`
+        title: action.title ?? `Untitled ${untitledCount}`,
+        sketchRelPath: action.sketchRelPath ?? null
       });
       workspace = {
         ...workspace,

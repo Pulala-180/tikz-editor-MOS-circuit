@@ -95,6 +95,7 @@ type RuntimeInput = {
   historyIndex: number;
   historyLength: number;
   activeDocumentId: string;
+  documentTitle?: string;
   tabCount: number;
   dirty: boolean;
   fileRef: DocumentFileRef | null;
@@ -164,6 +165,7 @@ export function createEditorCommandRuntime(input: RuntimeInput): EditorCommandRu
     historyIndex,
     historyLength,
     activeDocumentId,
+    documentTitle,
     tabCount,
     dirty,
     fileRef,
@@ -448,8 +450,11 @@ export function createEditorCommandRuntime(input: RuntimeInput): EditorCommandRu
         if (!saveText) {
           return;
         }
+        const fallbackName = documentTitle
+          ? (documentTitle.endsWith(".tex") || documentTitle.endsWith(".tikz") ? documentTitle : `${documentTitle}.tex`)
+          : "tikz-document.tex";
         void saveText(source, {
-          suggestedName: fileRef?.name ?? "tikz-document.tex",
+          suggestedName: fileRef?.name ?? fallbackName,
           fileRef,
           mode: "save"
         }).then((result) => {
@@ -475,8 +480,11 @@ export function createEditorCommandRuntime(input: RuntimeInput): EditorCommandRu
         if (!saveText) {
           return;
         }
+        const fallbackName = documentTitle
+          ? (documentTitle.endsWith(".tex") || documentTitle.endsWith(".tikz") ? documentTitle : `${documentTitle}.tex`)
+          : "tikz-document.tex";
         void saveText(source, {
-          suggestedName: fileRef?.name ?? "tikz-document.tex",
+          suggestedName: fileRef?.name ?? fallbackName,
           fileRef,
           mode: "save-as"
         }).then((result) => {
@@ -1141,6 +1149,7 @@ export function useEditorCommandRuntime(
   const historyIndex = useEditorStore((s) => s.historyIndex);
   const historyLength = useEditorStore((s) => s.history.length);
   const activeDocumentId = useEditorStore((s) => s.activeDocumentId);
+  const documentTitle = useEditorStore((s) => s.documents[s.activeDocumentId]?.title);
   const tabCount = useEditorStore((s) => s.tabOrder.length);
   const dirty = useEditorStore((s) => s.documents[s.activeDocumentId]?.dirty ?? false);
   const fileRef = useEditorStore((s) => s.documents[s.activeDocumentId]?.fileRef ?? null);
@@ -1218,6 +1227,7 @@ export function useEditorCommandRuntime(
         historyIndex,
         historyLength,
         activeDocumentId,
+        documentTitle,
         tabCount,
         dirty,
         fileRef,

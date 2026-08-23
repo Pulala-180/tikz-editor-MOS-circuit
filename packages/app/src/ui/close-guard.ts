@@ -14,7 +14,7 @@ export function collectDirtyDocumentIdsForIntent(
 ): string[] {
   const isDocUnsavedDraft = (doc?: DocumentSession): boolean => {
     if (!doc) return false;
-    return Boolean(doc.dirty || doc.fileRef == null);
+    return Boolean(doc.dirty);
   };
 
   if (intent.kind === "close-document") {

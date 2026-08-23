@@ -69,6 +69,7 @@ export function createDocumentSession(params: {
   title?: string;
   activeFigureId?: string | null;
   fileRef?: DocumentFileRef | null;
+  sketchRelPath?: string | null;
   diskRevision?: FileRevision | null;
   lastKnownDiskSource?: string | null;
   externalChangeStatus?: ExternalChangeStatus;
@@ -100,6 +101,7 @@ export function createDocumentSession(params: {
     focusedScopeId: null,
     activeHandleId: null,
     fileRef: params.fileRef ?? null,
+    sketchRelPath: params.sketchRelPath ?? null,
     savedSource: params.source,
     dirty: false,
     diskRevision: params.diskRevision ?? null,
