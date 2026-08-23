@@ -1,0 +1,218 @@
+{
+  "/tikz/matrix of nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/matrix of nodes</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Conceptually, this key adds <code>\\node{</code> at the beginning and <code>};</code> at the end of each cell and sets the <code>anchor</code> of the node to <code>base</code>. Furthermore, it adds the option <code>name</code> option to each node, where the name is set to ⟨<i>matrix name</i>⟩<code>-</code>⟨<i>row number</i>⟩<code>-</code>⟨<i>column number</i>⟩. For example, if the matrix has the name <code>my matrix</code>, then the node in the upper left cell will get the name <code>my matrix-1-1</code>. </p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/matrix:of:nodes",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/matrix%3Aof%3Anodes"
+  },
+  "matrix of nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/matrix of nodes</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Conceptually, this key adds <code>\\node{</code> at the beginning and <code>};</code> at the end of each cell and sets the <code>anchor</code> of the node to <code>base</code>. Furthermore, it adds the option <code>name</code> option to each node, where the name is set to ⟨<i>matrix name</i>⟩<code>-</code>⟨<i>row number</i>⟩<code>-</code>⟨<i>column number</i>⟩. For example, if the matrix has the name <code>my matrix</code>, then the node in the upper left cell will get the name <code>my matrix-1-1</code>. </p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/matrix:of:nodes",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/matrix%3Aof%3Anodes"
+  },
+  "/tikz/matrix of math nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/matrix of math nodes</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This style is almost the same as the previous style, only <code>$</code> is added at the beginning and at the end of each node, so math mode will be switched on in all nodes. </p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/matrix:of:math:nodes",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/matrix%3Aof%3Amath%3Anodes"
+  },
+  "matrix of math nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/matrix of math nodes</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This style is almost the same as the previous style, only <code>$</code> is added at the beginning and at the end of each node, so math mode will be switched on in all nodes. </p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/matrix:of:math:nodes",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/matrix%3Aof%3Amath%3Anodes"
+  },
+  "/tikz/nodes in empty cells": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/nodes in empty cells=</kbd>⟨<i>true or false</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> When set to <code>true</code>, a node (with empty contents) is put in empty cells. Normally, empty cells are just, well, empty. The style can be used together with both a <code>matrix of nodes</code> and a <code>matrix of math nodes</code>. </p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/nodes:in:empty:cells",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/nodes%3Ain%3Aempty%3Acells"
+  },
+  "nodes in empty cells": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/nodes in empty cells=</kbd>⟨<i>true or false</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> When set to <code>true</code>, a node (with empty contents) is put in empty cells. Normally, empty cells are just, well, empty. The style can be used together with both a <code>matrix of nodes</code> and a <code>matrix of math nodes</code>. </p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/nodes:in:empty:cells",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/nodes%3Ain%3Aempty%3Acells"
+  },
+  "/tikz/left delimiter": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/left delimiter=</kbd>⟨<i>delimiter</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option can be given to a any node that has the standard anchors <code>north</code>, <code>south</code> and so on. The ⟨<i>delimiter</i>⟩ can be any delimiter that is acceptable to TeX’s <code>\\left</code> command. </p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/left:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/left%3Adelimiter"
+  },
+  "left delimiter": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/left delimiter=</kbd>⟨<i>delimiter</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option can be given to a any node that has the standard anchors <code>north</code>, <code>south</code> and so on. The ⟨<i>delimiter</i>⟩ can be any delimiter that is acceptable to TeX’s <code>\\left</code> command. </p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/left:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/left%3Adelimiter"
+  },
+  "/tikz/every delimiter": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every delimiter</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This style is executed for every delimiter. You can use it to shift or color delimiters or do whatever.</p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/every:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/every%3Adelimiter"
+  },
+  "every delimiter": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every delimiter</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This style is executed for every delimiter. You can use it to shift or color delimiters or do whatever.</p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/every:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/every%3Adelimiter"
+  },
+  "/tikz/every left delimiter": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every left delimiter</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This style is additionally executed for every left delimiter.</p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/every:left:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/every%3Aleft%3Adelimiter"
+  },
+  "every left delimiter": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every left delimiter</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This style is additionally executed for every left delimiter.</p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/every:left:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/every%3Aleft%3Adelimiter"
+  },
+  "/tikz/right delimiter": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/right delimiter=</kbd>⟨<i>delimiter</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works as above.</p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/right:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/right%3Adelimiter"
+  },
+  "right delimiter": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/right delimiter=</kbd>⟨<i>delimiter</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works as above.</p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/right:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/right%3Adelimiter"
+  },
+  "/tikz/every right delimiter": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every right delimiter</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>Works as above.</p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/every:right:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/every%3Aright%3Adelimiter"
+  },
+  "every right delimiter": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every right delimiter</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>Works as above.</p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/every:right:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/every%3Aright%3Adelimiter"
+  },
+  "/tikz/above delimiter": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/above delimiter=</kbd>⟨<i>delimiter</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>This option allows you to add a delimiter above the node. It is implemented by rotating a left delimiter.</p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/above:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/above%3Adelimiter"
+  },
+  "above delimiter": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/above delimiter=</kbd>⟨<i>delimiter</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>This option allows you to add a delimiter above the node. It is implemented by rotating a left delimiter.</p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/above:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/above%3Adelimiter"
+  },
+  "/tikz/every above delimiter": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every above delimiter</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>Works as above.</p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/every:above:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/every%3Aabove%3Adelimiter"
+  },
+  "every above delimiter": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every above delimiter</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>Works as above.</p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/every:above:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/every%3Aabove%3Adelimiter"
+  },
+  "/tikz/below delimiter": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/below delimiter=</kbd>⟨<i>delimiter</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works as above.</p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/below:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/below%3Adelimiter"
+  },
+  "below delimiter": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/below delimiter=</kbd>⟨<i>delimiter</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works as above.</p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/below:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/below%3Adelimiter"
+  },
+  "/tikz/every below delimiter": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every below delimiter</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>Works as above.</p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/every:below:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/every%3Abelow%3Adelimiter"
+  },
+  "every below delimiter": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every below delimiter</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>Works as above.</p>",
+    "page": "library-matrix",
+    "anchor": "pgf./tikz/every:below:delimiter",
+    "href": "https://tikz.dev/library-matrix#pgf./tikz/every%3Abelow%3Adelimiter"
+  }
+}

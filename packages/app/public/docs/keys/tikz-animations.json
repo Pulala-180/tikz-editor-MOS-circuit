@@ -1,0 +1,1037 @@
+{
+  "animations": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>animations</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usetikzlibrary{animations} % LaTeX and plain TeX</kbd><br> <kbd>\\usetikzlibrary[animations] % ConTeXt</kbd><br> <br> This library must be loaded in order to use animations with TikZ. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf.animations",
+    "href": "https://tikz.dev/tikz-animations#pgf.animations"
+  },
+  "/tikz/animate": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate=</kbd>⟨<i>animation specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> You must place all specifications of animations inside uses of <code>animate</code>. You can, and usually should, place the specification of all timelines of a single picture inside a single use of this key since it will reset the time and the fork time (explained in Section 26.2.6). You can, however, use this key several times, in principle. Note that if you animate the same attribute of the same object in two different uses of <code>animate</code>, two separate timelines will result (and complicated rules are used to determine which one “wins” in case they specify conflicting values for the attribute at different times). </p><p> The key can be used at all places where a TikZ key is used; typically you will use it with a <code>{scope}</code> environment, inside the options of a node, or directly with the <code>\\tikz</code> command: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate"
+  },
+  "animate": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate=</kbd>⟨<i>animation specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> You must place all specifications of animations inside uses of <code>animate</code>. You can, and usually should, place the specification of all timelines of a single picture inside a single use of this key since it will reset the time and the fork time (explained in Section 26.2.6). You can, however, use this key several times, in principle. Note that if you animate the same attribute of the same object in two different uses of <code>animate</code>, two separate timelines will result (and complicated rules are used to determine which one “wins” in case they specify conflicting values for the attribute at different times). </p><p> The key can be used at all places where a TikZ key is used; typically you will use it with a <code>{scope}</code> environment, inside the options of a node, or directly with the <code>\\tikz</code> command: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate"
+  },
+  "/tikz/animate/entry": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/entry</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Each time this key is used in the options of <code>animate</code>, TikZ checks whether the five keys <code>object</code>, <code>attribute</code>, <code>id</code>, <code>time</code>, and <code>value</code> are set. If one of them is not set, nothing happens. (The <code>id</code> key is set to the value <code>default</code> by default, all other keys must be set explicitly.) </p><p> If all of these keys are set, a <em>time–value</em> pair is created and added to the timeline of attribute of the object. Additionally, all options starting with <code>/tikz/animate/options/</code>, which also influence the timeline like <code>begin on</code>, are also added to the timeline of the object–attribute pair. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/entry",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/entry"
+  },
+  "entry": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/entry</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Each time this key is used in the options of <code>animate</code>, TikZ checks whether the five keys <code>object</code>, <code>attribute</code>, <code>id</code>, <code>time</code>, and <code>value</code> are set. If one of them is not set, nothing happens. (The <code>id</code> key is set to the value <code>default</code> by default, all other keys must be set explicitly.) </p><p> If all of these keys are set, a <em>time–value</em> pair is created and added to the timeline of attribute of the object. Additionally, all options starting with <code>/tikz/animate/options/</code>, which also influence the timeline like <code>begin on</code>, are also added to the timeline of the object–attribute pair. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/entry",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/entry"
+  },
+  "/tikz/animate/object": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/object=</kbd>⟨<i>list of objects</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The ⟨<i>list of objects</i>⟩ is a comma-separated list of strings of the form ⟨<i>object</i>⟩<code>.</code>⟨<i>type</i>⟩. All of the objects in the list are selected as to-be-animate object for the next use of the <code>entry</code> key. The objects referred to by ⟨<i>object</i>⟩ will be the <em>next</em> objects with the <code>name</code> key set to ⟨<i>object</i>⟩. You can apply the <code>name</code> key to nodes (where you can also use the special parentheses-syntax and put the name in parentheses, it has the same effect), but also to scopes and paths. (The <code>name path</code> key is not the same as <code>name</code>; it is an older key from the intersections package and not related.) </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/object",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/object"
+  },
+  "object": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/object=</kbd>⟨<i>list of objects</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The ⟨<i>list of objects</i>⟩ is a comma-separated list of strings of the form ⟨<i>object</i>⟩<code>.</code>⟨<i>type</i>⟩. All of the objects in the list are selected as to-be-animate object for the next use of the <code>entry</code> key. The objects referred to by ⟨<i>object</i>⟩ will be the <em>next</em> objects with the <code>name</code> key set to ⟨<i>object</i>⟩. You can apply the <code>name</code> key to nodes (where you can also use the special parentheses-syntax and put the name in parentheses, it has the same effect), but also to scopes and paths. (The <code>name path</code> key is not the same as <code>name</code>; it is an older key from the intersections package and not related.) </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/object",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/object"
+  },
+  "/tikz/animate/attribute": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/attribute=</kbd>⟨<i>list of attributes</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The list of attributes must be a comma-separated list of attribute names. The timelines specified later will apply to all of these attributes (and to all objects previously selected using <code>object</code>). Possible attributes include colors, positions, line width, but even the paths themselves. The exact list of possible attributes is documented in Section 26.4. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/attribute",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/attribute"
+  },
+  "attribute": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/attribute=</kbd>⟨<i>list of attributes</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The list of attributes must be a comma-separated list of attribute names. The timelines specified later will apply to all of these attributes (and to all objects previously selected using <code>object</code>). Possible attributes include colors, positions, line width, but even the paths themselves. The exact list of possible attributes is documented in Section 26.4. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/attribute",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/attribute"
+  },
+  "/tikz/animate/id": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/id=</kbd>⟨<i>id</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>default</kbd>)",
+    "snippetHtml": "<p> Timelines are use to defined how the values of an attribute of an object change over time. In many cases, you will have at most one timeline for each object–attribute pair, but, sometimes, you may wish to have more than one timeline for the same object and the same attribute. For instance, you might have a timeline that specifies a changing <code>shift</code> of a node in some direction and, at the same time, another timeline that specifies an additional <code>shift</code> in some other direction(s). The problem is that there is only one <code>shift</code> attribute and it would be difficult to compute the joint effect of the two timelines. </p><p> For this purpose, timelines are actually identified not only by the object–attribute pair but, in reality, by the triple consisting of the object, the attribute, and the value of this key. We can now specify two separate timelines: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/id",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/id"
+  },
+  "id": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/id=</kbd>⟨<i>id</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>default</kbd>)",
+    "snippetHtml": "<p> Timelines are use to defined how the values of an attribute of an object change over time. In many cases, you will have at most one timeline for each object–attribute pair, but, sometimes, you may wish to have more than one timeline for the same object and the same attribute. For instance, you might have a timeline that specifies a changing <code>shift</code> of a node in some direction and, at the same time, another timeline that specifies an additional <code>shift</code> in some other direction(s). The problem is that there is only one <code>shift</code> attribute and it would be difficult to compute the joint effect of the two timelines. </p><p> For this purpose, timelines are actually identified not only by the object–attribute pair but, in reality, by the triple consisting of the object, the attribute, and the value of this key. We can now specify two separate timelines: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/id",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/id"
+  },
+  "/tikz/animate/time": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/time=</kbd>⟨<i>time</i>⟩<code>later</code>",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets the time for the next time–value pair in a call of <code>entry</code> to ⟨<i>time</i>⟩ plus the current fork time. The text <code>later</code> is optional. Both “fork times” and the optional <code>later</code> will be explained in a moment. </p><p> <b>Time Parsing.</b> The ⟨<i>time</i>⟩ is parsed using the command <code>\\pgfparsetime</code>, which is essentially the same as the usual math parser of TikZ, and the result is interpreted as a time in seconds. Thus, a ⟨<i>time</i>⟩ of <code>2+3</code> means “5 seconds” and a ⟨<i>time</i>⟩ of <code>2*(2.1)</code> means “4.2 seconds”. (You could even specify silly times like <code>1in</code>, which results in the time “72.27 seconds”. Please do not do that.) The “essentially” refers to the fact that some extras are installed when the time parser is running: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/time",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/time"
+  },
+  "time": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/time=</kbd>⟨<i>time</i>⟩<code>later</code>",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets the time for the next time–value pair in a call of <code>entry</code> to ⟨<i>time</i>⟩ plus the current fork time. The text <code>later</code> is optional. Both “fork times” and the optional <code>later</code> will be explained in a moment. </p><p> <b>Time Parsing.</b> The ⟨<i>time</i>⟩ is parsed using the command <code>\\pgfparsetime</code>, which is essentially the same as the usual math parser of TikZ, and the result is interpreted as a time in seconds. Thus, a ⟨<i>time</i>⟩ of <code>2+3</code> means “5 seconds” and a ⟨<i>time</i>⟩ of <code>2*(2.1)</code> means “4.2 seconds”. (You could even specify silly times like <code>1in</code>, which results in the time “72.27 seconds”. Please do not do that.) The “essentially” refers to the fact that some extras are installed when the time parser is running: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/time",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/time"
+  },
+  "/tikz/animate/fork": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/fork=</kbd>⟨<i>t</i>⟩",
+    "defaultHtml": "(default <kbd>0s later</kbd>)",
+    "snippetHtml": "<p> Sets the fork time for the local scope to ⟨<i>t</i>⟩ and sets the current time to <code>0s</code>. In this scope, when you use “absolute” times like <code>0s</code> or <code>2s</code>, you actually refer to later times that have started as ⟨<i>t</i>⟩. </p><p> One application of forks is in the definition of keys that add a certain part to a longer animation. Consider for instance the definition of a <code>highlight</code> key: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/fork",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/fork"
+  },
+  "fork": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/fork=</kbd>⟨<i>t</i>⟩",
+    "defaultHtml": "(default <kbd>0s later</kbd>)",
+    "snippetHtml": "<p> Sets the fork time for the local scope to ⟨<i>t</i>⟩ and sets the current time to <code>0s</code>. In this scope, when you use “absolute” times like <code>0s</code> or <code>2s</code>, you actually refer to later times that have started as ⟨<i>t</i>⟩. </p><p> One application of forks is in the definition of keys that add a certain part to a longer animation. Consider for instance the definition of a <code>highlight</code> key: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/fork",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/fork"
+  },
+  "/tikz/animate/remember": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/remember=</kbd>⟨<i>macroname</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key stores the current time (the time of the last use of the <code>time</code> key) globally in the macro ⟨<i>macroname</i>⟩. This time will include the offset of the fork time: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/remember",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/remember"
+  },
+  "remember": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/remember=</kbd>⟨<i>macroname</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key stores the current time (the time of the last use of the <code>time</code> key) globally in the macro ⟨<i>macroname</i>⟩. This time will include the offset of the fork time: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/remember",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/remember"
+  },
+  "/tikz/animate/resume": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/resume=</kbd>⟨<i>absolute time</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The ⟨<i>absolute time</i>⟩ is evaluated using <code>\\pgfparsetime</code> and, then, the current time is set to the resulting time minus the fork time. When the ⟨<i>absolute time</i>⟩ is a macro previously set using <code>remember</code>, the net effect of this is that we return to the exact “moment” in the global time line when <code>remember</code> was used. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/resume",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/resume"
+  },
+  "resume": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/resume=</kbd>⟨<i>absolute time</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The ⟨<i>absolute time</i>⟩ is evaluated using <code>\\pgfparsetime</code> and, then, the current time is set to the resulting time minus the fork time. When the ⟨<i>absolute time</i>⟩ is a macro previously set using <code>remember</code>, the net effect of this is that we return to the exact “moment” in the global time line when <code>remember</code> was used. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/resume",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/resume"
+  },
+  "/tikz/animate/value": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/value=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key sets the value of the next time–value pair created by <code>entry</code> to ⟨<i>value</i>⟩. The syntax of the ⟨<i>value</i>⟩ is not fixed, it depends on the type of the attribute. For instance, for an attribute like <code>opacity</code> the ⟨<i>value</i>⟩ must be an expression that can be evaluated to a number between 0 and 1; for the attribute <code>color</code> the ⟨<i>value</i>⟩ must, instead, be a color; and so on. Take care that when a value contains a comma, you must surround it by braces as in <code>\"{(1,1)}\"</code>. </p><p> The allowed texts for the ⟨<i>value</i>⟩ is always the same as the one you would pass to the TikZ option of the same name. For instance, since the TikZ option <code>shift</code> expects a coordinate, you use coordinates as ⟨<i>value</i>⟩ with the usual TikZ syntax (including all sorts of extensions, the animation system calls the standard TikZ parsing routines). The same is true of dimensions, scalar values, colors, and so on. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/value",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/value"
+  },
+  "value": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/value=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key sets the value of the next time–value pair created by <code>entry</code> to ⟨<i>value</i>⟩. The syntax of the ⟨<i>value</i>⟩ is not fixed, it depends on the type of the attribute. For instance, for an attribute like <code>opacity</code> the ⟨<i>value</i>⟩ must be an expression that can be evaluated to a number between 0 and 1; for the attribute <code>color</code> the ⟨<i>value</i>⟩ must, instead, be a color; and so on. Take care that when a value contains a comma, you must surround it by braces as in <code>\"{(1,1)}\"</code>. </p><p> The allowed texts for the ⟨<i>value</i>⟩ is always the same as the one you would pass to the TikZ option of the same name. For instance, since the TikZ option <code>shift</code> expects a coordinate, you use coordinates as ⟨<i>value</i>⟩ with the usual TikZ syntax (including all sorts of extensions, the animation system calls the standard TikZ parsing routines). The same is true of dimensions, scalar values, colors, and so on. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/value",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/value"
+  },
+  "/tikz/animate/scope": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/scope=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Executed the ⟨<i>options</i>⟩ inside a TeX scope. In particular, all settings made inside the scope have no effect after the end of the <code>scope</code>. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/scope",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/scope"
+  },
+  "scope": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/scope=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Executed the ⟨<i>options</i>⟩ inside a TeX scope. In particular, all settings made inside the scope have no effect after the end of the <code>scope</code>. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/scope",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/scope"
+  },
+  "/tikz/animate/sync": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/sync=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> A shorthand for <code>scope={</code> ⟨<i>options</i>⟩ <code>, remember=\\temp},resume=\\temp</code> where <code>\\temp</code> is actually an internal name. The effect is that after a <code>sync</code> the local time just continues as if the scope where not present – but regarding everything else the effects are local to the <code>sync</code> scope. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/sync",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/sync"
+  },
+  "sync": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/sync=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> A shorthand for <code>scope={</code> ⟨<i>options</i>⟩ <code>, remember=\\temp},resume=\\temp</code> where <code>\\temp</code> is actually an internal name. The effect is that after a <code>sync</code> the local time just continues as if the scope where not present – but regarding everything else the effects are local to the <code>sync</code> scope. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/sync",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/sync"
+  },
+  "stroke opacity": {
+    "type": "key",
+    "signatureHtml": "<b>Animation attribute</b> <kbd>:opacity</kbd><b>,</b> <kbd>:fill opacity</kbd><b>,</b> <kbd>:stroke opacity</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> Similarly to the color, you can also set the opacity used for filling and for drawing using the attributes <code>fill opacity</code> and <code>draw opacity</code>, which are exactly the same as the usual TikZ keys of the same names. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf.stroke:opacity",
+    "href": "https://tikz.dev/tikz-animations#pgf.stroke%3Aopacity"
+  },
+  "visible": {
+    "type": "key",
+    "signatureHtml": "<b>Animation attribute</b> <kbd>:visible</kbd><b>,</b> <kbd>:stage</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> The difference between the <code>visible</code> attribute and an opacity of <code>0</code> is that an invisible object cannot be clicked and does not need to be rendered. The (only) two possible values for this attribute are <code>false</code> and <code>true</code>. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf.visible",
+    "href": "https://tikz.dev/tikz-animations#pgf.visible"
+  },
+  "stage": {
+    "type": "key",
+    "signatureHtml": "<b>Animation attribute</b> <kbd>:visible</kbd><b>,</b> <kbd>:stage</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> The difference between the <code>visible</code> attribute and an opacity of <code>0</code> is that an invisible object cannot be clicked and does not need to be rendered. The (only) two possible values for this attribute are <code>false</code> and <code>true</code>. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf.visible",
+    "href": "https://tikz.dev/tikz-animations#pgf.visible"
+  },
+  "/tikz/animate/arrows": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/arrows=</kbd>⟨<i>arrow spec</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key only has an effect on <code>:path</code> animations. It causes the arrow tips specified in ⟨<i>arrow spec</i>⟩ to be added to the path during the animation (the syntax is the same as for the normal <code>arrows</code> key). If you have several different animations for a paths, these may contain different arrow tips, but each animation must stick to one kind of arrow tips. </p><p> What happens internally when this key is used is the following: The specified arrow tips are rendered internally as so-called <em>markers,</em> which are small graphics that can be placed at the beginning and ends of paths and which “rotate along” as a path changes. Note that these markers are used <em>only</em> in the context of animated paths, the arrow tips of normal, “static” paths are drawn without the use of markers. Normally, there is no visual difference between an arrow tip drawn using markers or those drawn for static paths, but in rare cases there may be differences. You should only add arrows to open path consisting of a single segment with sufficiently long first and last segments (so that TikZ can shorten these segments correctly when necessary). </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/arrows",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/arrows"
+  },
+  "arrows": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/arrows=</kbd>⟨<i>arrow spec</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key only has an effect on <code>:path</code> animations. It causes the arrow tips specified in ⟨<i>arrow spec</i>⟩ to be added to the path during the animation (the syntax is the same as for the normal <code>arrows</code> key). If you have several different animations for a paths, these may contain different arrow tips, but each animation must stick to one kind of arrow tips. </p><p> What happens internally when this key is used is the following: The specified arrow tips are rendered internally as so-called <em>markers,</em> which are small graphics that can be placed at the beginning and ends of paths and which “rotate along” as a path changes. Note that these markers are used <em>only</em> in the context of animated paths, the arrow tips of normal, “static” paths are drawn without the use of markers. Normally, there is no visual difference between an arrow tip drawn using markers or those drawn for static paths, but in rare cases there may be differences. You should only add arrows to open path consisting of a single segment with sufficiently long first and last segments (so that TikZ can shorten these segments correctly when necessary). </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/arrows",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/arrows"
+  },
+  "/tikz/animate/shorten <": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/shorten &lt; =</kbd> ⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/shorten:< ",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/shorten%3A%3C%20"
+  },
+  "shorten <": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/shorten &lt; =</kbd> ⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/shorten:< ",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/shorten%3A%3C%20"
+  },
+  "/tikz/animate/shorten >": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/shorten &gt; =</kbd> ⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> For animated paths, just as the key <code>arrows</code> has to be passed to the animation (to <code>:path</code>) instead of to the static path, the keys <code>shorten &gt;</code> and <code>shorten &lt;</code> also have to be passed to the <code>:path</code> key. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/shorten:> ",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/shorten%3A%3E%20"
+  },
+  "shorten >": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/shorten &gt; =</kbd> ⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> For animated paths, just as the key <code>arrows</code> has to be passed to the animation (to <code>:path</code>) instead of to the static path, the keys <code>shorten &gt;</code> and <code>shorten &lt;</code> also have to be passed to the <code>:path</code> key. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/shorten:> ",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/shorten%3A%3E%20"
+  },
+  "xskew": {
+    "type": "key",
+    "signatureHtml": "<b>Animation attribute</b> <kbd>:xskew</kbd><b>,</b> <kbd>:yskew</kbd><b>,</b> <kbd>:xslant</kbd><b>,</b> <kbd>:yslant</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> The keys add an animation of the skew (given in degrees) or slant (given as in the <code>xslant</code> and <code>yslant</code> key): </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf.xskew",
+    "href": "https://tikz.dev/tikz-animations#pgf.xskew"
+  },
+  "yskew": {
+    "type": "key",
+    "signatureHtml": "<b>Animation attribute</b> <kbd>:xskew</kbd><b>,</b> <kbd>:yskew</kbd><b>,</b> <kbd>:xslant</kbd><b>,</b> <kbd>:yslant</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> The keys add an animation of the skew (given in degrees) or slant (given as in the <code>xslant</code> and <code>yslant</code> key): </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf.xskew",
+    "href": "https://tikz.dev/tikz-animations#pgf.xskew"
+  },
+  "/tikz/animate/options/along": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/along=</kbd>{⟨<i>path</i>⟩}⟨<i><code>sloped</code> or <code>upright</code></i>⟩<code> in</code>⟨<i>time</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Use this key with a <code>:shift</code> (or a <code>:position</code>) to make TikZ shift the object by the coordinates along the ⟨<i>path</i>⟩. When this key is used, the values may no longer be coordinates, but must be fractions of the distance along the path. A value of <code>\"0\"</code> refers to the beginning of the path and <code>\"1\"</code> refers to the end: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/along",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/along"
+  },
+  "along": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/along=</kbd>{⟨<i>path</i>⟩}⟨<i><code>sloped</code> or <code>upright</code></i>⟩<code> in</code>⟨<i>time</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Use this key with a <code>:shift</code> (or a <code>:position</code>) to make TikZ shift the object by the coordinates along the ⟨<i>path</i>⟩. When this key is used, the values may no longer be coordinates, but must be fractions of the distance along the path. A value of <code>\"0\"</code> refers to the beginning of the path and <code>\"1\"</code> refers to the end: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/along",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/along"
+  },
+  "/tikz/animate/options/origin": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/origin=</kbd>⟨<i>coordinate</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Shifts the animation coordinate system by ⟨<i>coordinate</i>⟩. This has the effect that the “origin” for scalings and rotations gets shifted by this amount. In the following example, the point around which the rotation is done is the right border at <code>(2,1)</code> since the origin of the animation is at <code>(1,1)</code> relative to the picture’s origin and the <code>origin</code> key shifts it one centimeter to the right. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/origin",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/origin"
+  },
+  "origin": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/origin=</kbd>⟨<i>coordinate</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Shifts the animation coordinate system by ⟨<i>coordinate</i>⟩. This has the effect that the “origin” for scalings and rotations gets shifted by this amount. In the following example, the point around which the rotation is done is the right border at <code>(2,1)</code> since the origin of the animation is at <code>(1,1)</code> relative to the picture’s origin and the <code>origin</code> key shifts it one centimeter to the right. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/origin",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/origin"
+  },
+  "/tikz/animate/options/transform": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/transform=</kbd>⟨<i>transformation keys</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> While the <code>origin</code> key does only a shift, the <code>transform</code> key allows you to add an arbitrary transformation to the animation coordinate system using keys like <code>shift</code>, <code>rotate</code> or even <code>reset cm</code> and <code>cm</code>. In particular, <code>origin=</code>⟨<i>c</i>⟩ has the same effect as <code>transform</code> <code>=</code> <code>{shift=</code>⟨<i>c</i>⟩<code>}</code>. Note that the transformation only influences the animation, not the object itself. </p><p> As an example, when you say <code>transform={scale=2}</code>, an <code>:xshift</code> with a value of <code>\"1cm\"</code> will actually shift the object by 2cm. Similarly, after you say <code>transform={rotate=90,scale=2}</code>, the same <code>:xshift</code> of <code>\"1cm\"</code> will actually shift the object by 2cm upwards. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/transform",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/transform"
+  },
+  "transform": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/transform=</kbd>⟨<i>transformation keys</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> While the <code>origin</code> key does only a shift, the <code>transform</code> key allows you to add an arbitrary transformation to the animation coordinate system using keys like <code>shift</code>, <code>rotate</code> or even <code>reset cm</code> and <code>cm</code>. In particular, <code>origin=</code>⟨<i>c</i>⟩ has the same effect as <code>transform</code> <code>=</code> <code>{shift=</code>⟨<i>c</i>⟩<code>}</code>. Note that the transformation only influences the animation, not the object itself. </p><p> As an example, when you say <code>transform={scale=2}</code>, an <code>:xshift</code> with a value of <code>\"1cm\"</code> will actually shift the object by 2cm. Similarly, after you say <code>transform={rotate=90,scale=2}</code>, the same <code>:xshift</code> of <code>\"1cm\"</code> will actually shift the object by 2cm upwards. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/transform",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/transform"
+  },
+  "position": {
+    "type": "key",
+    "signatureHtml": "<b>Animation attribute</b> <kbd>:position</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>Compare the two animations, one with <code>:position</code>, one with <code>:shift</code>.</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf.position",
+    "href": "https://tikz.dev/tikz-animations#pgf.position"
+  },
+  "view": {
+    "type": "key",
+    "signatureHtml": "<b>Animation attribute</b> <kbd>:view</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> A view is a canvas transformation that shifts and scales the canvas in such a way that a certain rectangle “matches” another rectangle: The idea is that you “look through” a “window” (the view) and “see” a certain area of the canvas. View animation do not allow you to do anything that cannot also be done using the <code>shift</code> and <code>scale</code> keys in combination, but it often much more natural to animate which area of a graphic you wish to see than to compute and animate a scaling and shift explicitly. </p><p> In order to use a view, you first need to create a view, which is done using the <code>meet</code> or <code>slice</code> keys from the <code>views</code> library, see Section 78. You can then animate the view using the <code>view</code> attribute. The values passed to the <code>entry</code> key follow the same syntax as the views in the <code>views</code> library (though you only animate the to-be-viewed rectangle). </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf.view",
+    "href": "https://tikz.dev/tikz-animations#pgf.view"
+  },
+  "/tikz/animate/base": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/base=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>A “base” value is a value that is used for the attribute whenever the timeline is <em>not</em> active:</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/base",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/base"
+  },
+  "base": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/base=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>A “base” value is a value that is used for the attribute whenever the timeline is <em>not</em> active:</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/base",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/base"
+  },
+  "/tikz/animate/options/forever": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/forever</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key causes the timeline to continue “forever” after the last time with the last value. You can also think of this as having the animation “freeze” at the end. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/forever",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/forever"
+  },
+  "forever": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/forever</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key causes the timeline to continue “forever” after the last time with the last value. You can also think of this as having the animation “freeze” at the end. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/forever",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/forever"
+  },
+  "/tikz/animate/options/freeze": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/freeze</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>An alias for <code>forever</code>.</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/freeze",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/freeze"
+  },
+  "freeze": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/freeze</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>An alias for <code>forever</code>.</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/freeze",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/freeze"
+  },
+  "/tikz/animate/options/begin": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/begin=</kbd>⟨<i>time</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key specifies when the “moment <code>0s</code>” should be relative to the moment when the current graphic is first displayed. You can use this key multiple times, in this case the timeline is restarted for each of the times specified (if it is already running, it will be reset). If no <code>begin</code> key is given at all, the effect is the same as if <code>begin=0s</code> had been specified. </p><p> It is permissible to set ⟨<i>time</i>⟩ to a negative value. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/begin",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/begin"
+  },
+  "begin": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/begin</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Shorthand for <code>event=begin</code>. The “begin” refers to the beginning of another animation, namely the one referenced by <code>of</code> or <code>of whom</code>. This means that the current animation will begin when some other animation begins. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/begin",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/begin"
+  },
+  "/tikz/animate/options/end": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/end=</kbd>⟨<i>time</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key will truncate the timeline so that it ends ⟨<i>time</i>⟩ after the display of the graphic, provided the timeline begins before the specified end time. For instance, if you specify a timeline starting at 2 s and ending at 5 s and you set <code>begin</code> to 1 s and <code>end</code> to 4 s, the timeline will run, relative to the moment when the graphic is displayed from 3 s to 4 s. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/end",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/end"
+  },
+  "end": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/end</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Shorthand for <code>event=end</code>. Again, the “end” refers to the end of another animation, namely the one referenced by <code>of</code> or <code>of whom</code>. This means that the current animation will <em>begin</em> when some other animation <em>ends</em>. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/end",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/end"
+  },
+  "/tikz/animate/options/begin on": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/begin on=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The ⟨<i>options</i>⟩ will be executed with the path <code>/pgf/animation/events</code> and will cause a new beginning to be added to the list of possible beginnings for the timeline (so the uses of this key accumulate). Each “beginning” is just another possible “moment <code>0s</code>” for the timeline. For instance, when the ⟨<i>options</i>⟩ are set to <code>click</code>, then each time the graph is clicked a moment <code>0s</code> starts for the timeline. </p><p> Most events are “caused” or “happen to” some object. For instance, the <code>click</code> event happens when you click on a certain object. In order to specify this object, use the following two keys inside the ⟨<i>options</i>⟩: <code>of</code> and <code>of next</code>. If neither of these keys are given, the to-be-animated object is used. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/begin:on",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/begin%3Aon"
+  },
+  "begin on": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/begin on=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The ⟨<i>options</i>⟩ will be executed with the path <code>/pgf/animation/events</code> and will cause a new beginning to be added to the list of possible beginnings for the timeline (so the uses of this key accumulate). Each “beginning” is just another possible “moment <code>0s</code>” for the timeline. For instance, when the ⟨<i>options</i>⟩ are set to <code>click</code>, then each time the graph is clicked a moment <code>0s</code> starts for the timeline. </p><p> Most events are “caused” or “happen to” some object. For instance, the <code>click</code> event happens when you click on a certain object. In order to specify this object, use the following two keys inside the ⟨<i>options</i>⟩: <code>of</code> and <code>of next</code>. If neither of these keys are given, the to-be-animated object is used. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/begin:on",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/begin%3Aon"
+  },
+  "/pgf/animation/events/of": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/of=</kbd>⟨<i>id</i>⟩<code>.</code>⟨<i>type</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This specifies a graphic object id in the same way as the <code>whom</code> key, also with an optional ⟨<i>type</i>⟩. This is the object that “causes” the event to happen. </p><p> Unlike the <code>whom</code> key, which always refers to a not-yet-existing object, this key always refers to an already existing object, namely to the most recent use of the ⟨<i>id</i>⟩. In the following example, the referenced object is the node with the label <code>2</code> since it is the most recently referenced node with ⟨<i>id</i>⟩ <code>X</code>. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/of",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/of"
+  },
+  "of": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/of=</kbd>⟨<i>id</i>⟩<code>.</code>⟨<i>type</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This specifies a graphic object id in the same way as the <code>whom</code> key, also with an optional ⟨<i>type</i>⟩. This is the object that “causes” the event to happen. </p><p> Unlike the <code>whom</code> key, which always refers to a not-yet-existing object, this key always refers to an already existing object, namely to the most recent use of the ⟨<i>id</i>⟩. In the following example, the referenced object is the node with the label <code>2</code> since it is the most recently referenced node with ⟨<i>id</i>⟩ <code>X</code>. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/of",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/of"
+  },
+  "/pgf/animation/events/of next": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/of next=</kbd>⟨<i>id</i>⟩<code>.</code>⟨<i>type</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key works like the <code>of</code> key, only it refers to a future (actually, the next) object with the given ⟨<i>id</i>⟩, not to a previous one. This, in the next example, the referenced node is the one with label <code>3</code>. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/of:next",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/of%3Anext"
+  },
+  "of next": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/of next=</kbd>⟨<i>id</i>⟩<code>.</code>⟨<i>type</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key works like the <code>of</code> key, only it refers to a future (actually, the next) object with the given ⟨<i>id</i>⟩, not to a previous one. This, in the next example, the referenced node is the one with label <code>3</code>. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/of:next",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/of%3Anext"
+  },
+  "/pgf/animation/events/event": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/event=</kbd>⟨<i>event name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Specifies the name of the event whose occurrence should start the timeline. Which events are supported depends on the device on which the animation is displayed, the output format (svg or some other format), and the setup of scripts, but here is a list of events supported by “plain svg”: <code>click</code>, <code>focusin</code>, <code>focusout</code>, <code>mousedown</code>, <code>mouseup</code>, <code>mouseover</code>, <code>mousemove</code>, <code>mouseout</code>, <code>begin</code>, <code>end</code>. However, the following keys make using these events simpler: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/event",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/event"
+  },
+  "event": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/event=</kbd>⟨<i>event name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Specifies the name of the event whose occurrence should start the timeline. Which events are supported depends on the device on which the animation is displayed, the output format (svg or some other format), and the setup of scripts, but here is a list of events supported by “plain svg”: <code>click</code>, <code>focusin</code>, <code>focusout</code>, <code>mousedown</code>, <code>mouseup</code>, <code>mouseover</code>, <code>mousemove</code>, <code>mouseout</code>, <code>begin</code>, <code>end</code>. However, the following keys make using these events simpler: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/event",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/event"
+  },
+  "/pgf/animate/events/click": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animate/events/click</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This is a shorthand for <code>event=click</code>. This event gets triggered when the user clicks on the triggering object with a mouse (or something equivalent). </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animate/events/click",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animate/events/click"
+  },
+  "click": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animate/events/click</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This is a shorthand for <code>event=click</code>. This event gets triggered when the user clicks on the triggering object with a mouse (or something equivalent). </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animate/events/click",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animate/events/click"
+  },
+  "/pgf/animation/events/mouse down": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/mouse down</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Shorthand for <code>event=mousedown</code>. The event gets triggered when the user presses a mouse button down on the object. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/mouse:down",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/mouse%3Adown"
+  },
+  "mouse down": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/mouse down</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Shorthand for <code>event=mousedown</code>. The event gets triggered when the user presses a mouse button down on the object. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/mouse:down",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/mouse%3Adown"
+  },
+  "/pgf/animation/events/mouse up": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/mouse up</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Shorthand for <code>event=mouseup</code> and gets triggered, of course, when a pressed button is released on the object. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/mouse:up",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/mouse%3Aup"
+  },
+  "mouse up": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/mouse up</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Shorthand for <code>event=mouseup</code> and gets triggered, of course, when a pressed button is released on the object. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/mouse:up",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/mouse%3Aup"
+  },
+  "/pgf/animation/events/mouse over": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/mouse over</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Shorthand for <code>event=mouseover</code>. The event gets triggered the moment the mouse cursor moves over the object. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/mouse:over",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/mouse%3Aover"
+  },
+  "mouse over": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/mouse over</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Shorthand for <code>event=mouseover</code>. The event gets triggered the moment the mouse cursor moves over the object. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/mouse:over",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/mouse%3Aover"
+  },
+  "/pgf/animation/events/mouse move": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/mouse move</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Shorthand for <code>event=mousemove</code>. The event gets triggered lots of times, namely each time the mouse moves while being “over” the object. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/mouse:move",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/mouse%3Amove"
+  },
+  "mouse move": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/mouse move</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Shorthand for <code>event=mousemove</code>. The event gets triggered lots of times, namely each time the mouse moves while being “over” the object. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/mouse:move",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/mouse%3Amove"
+  },
+  "/pgf/animation/events/mouse out": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/mouse out</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Shorthand for <code>event=mouseout</code>. The opposite of <code>mouse over</code>: triggered when the mouse leaves the object. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/mouse:out",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/mouse%3Aout"
+  },
+  "mouse out": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/mouse out</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Shorthand for <code>event=mouseout</code>. The opposite of <code>mouse over</code>: triggered when the mouse leaves the object. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/mouse:out",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/mouse%3Aout"
+  },
+  "/pgf/animation/events/begin": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/begin</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Shorthand for <code>event=begin</code>. The “begin” refers to the beginning of another animation, namely the one referenced by <code>of</code> or <code>of whom</code>. This means that the current animation will begin when some other animation begins. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/begin",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/begin"
+  },
+  "/pgf/animation/events/end": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/end</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Shorthand for <code>event=end</code>. Again, the “end” refers to the end of another animation, namely the one referenced by <code>of</code> or <code>of whom</code>. This means that the current animation will <em>begin</em> when some other animation <em>ends</em>. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/end",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/end"
+  },
+  "/pgf/animation/events/focus in": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/focus in</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This is a shorthand for <code>event=focusin</code>. This event gets triggered when the graphic object gets the focus (this usually makes sense only for text input fields). </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/focus:in",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/focus%3Ain"
+  },
+  "focus in": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/focus in</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This is a shorthand for <code>event=focusin</code>. This event gets triggered when the graphic object gets the focus (this usually makes sense only for text input fields). </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/focus:in",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/focus%3Ain"
+  },
+  "/pgf/animation/events/focus out": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/focus out</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>This is a shorthand for <code>event=focusout</code>.</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/focus:out",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/focus%3Aout"
+  },
+  "focus out": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/focus out</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>This is a shorthand for <code>event=focusout</code>.</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/focus:out",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/focus%3Aout"
+  },
+  "/pgf/animation/events/repeat": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/repeat=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The event is triggered when a repeating animation has been repeated ⟨<i>number</i>⟩ times. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/repeat",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/repeat"
+  },
+  "repeat": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/repeat=</kbd>⟨<i>specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>An alias for <code>repeats</code>.</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/repeat",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/repeat"
+  },
+  "/pgf/animation/events/key": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/key=</kbd>⟨<i>key</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The event is triggered when the keyboard key ⟨<i>key</i>⟩ has been pressed. For security reasons, a viewer may suppress this. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/key",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/key"
+  },
+  "key": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/key=</kbd>⟨<i>key</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The event is triggered when the keyboard key ⟨<i>key</i>⟩ has been pressed. For security reasons, a viewer may suppress this. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/key",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/key"
+  },
+  "/pgf/animation/events/delay": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/delay=</kbd>⟨<i>time</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Specifies that the timeline should not start with the event, but, rather, be delayed by ⟨<i>time</i>⟩. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/delay",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/delay"
+  },
+  "delay": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/animation/events/delay=</kbd>⟨<i>time</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Specifies that the timeline should not start with the event, but, rather, be delayed by ⟨<i>time</i>⟩. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./pgf/animation/events/delay",
+    "href": "https://tikz.dev/tikz-animations#pgf./pgf/animation/events/delay"
+  },
+  "/tikz/animate/options/restart": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/restart=</kbd>⟨<i>choice</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> You can set ⟨<i>choice</i>⟩ to one of the following: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/restart",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/restart"
+  },
+  "restart": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/restart=</kbd>⟨<i>choice</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> You can set ⟨<i>choice</i>⟩ to one of the following: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/restart",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/restart"
+  },
+  "/tikz/animate/options/end on": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/end on=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Works exactly like <code>begin on</code>, one possible end of the timeline is specified using the ⟨<i>options</i>⟩. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/end:on",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/end%3Aon"
+  },
+  "end on": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/end on=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Works exactly like <code>begin on</code>, one possible end of the timeline is specified using the ⟨<i>options</i>⟩. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/end:on",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/end%3Aon"
+  },
+  "/tikz/animate/options/repeats": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/repeats=</kbd>⟨<i>specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Use this key to specify that the timeline animation should repeat at the end. The ⟨<i>specification</i>⟩ must consist of two parts, each of which may be empty. The first part is one of the following: </p><p>The second part of the specification must be one of the following:</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/repeats",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/repeats"
+  },
+  "repeats": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/repeats=</kbd>⟨<i>specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Use this key to specify that the timeline animation should repeat at the end. The ⟨<i>specification</i>⟩ must consist of two parts, each of which may be empty. The first part is one of the following: </p><p>The second part of the specification must be one of the following:</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/repeats",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/repeats"
+  },
+  "/tikz/animate/options/repeat": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/repeat=</kbd>⟨<i>specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>An alias for <code>repeats</code>.</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/repeat",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/repeat"
+  },
+  "/tikz/animate/options/exit control": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/exit control=</kbd>{⟨<i>time fraction</i>⟩}{⟨<i>value fraction</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Specifies an exit control using two values as above. The spline from above would be specified as follows:</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/exit:control",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/exit%3Acontrol"
+  },
+  "exit control": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/exit control=</kbd>{⟨<i>time fraction</i>⟩}{⟨<i>value fraction</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Specifies an exit control using two values as above. The spline from above would be specified as follows:</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/exit:control",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/exit%3Acontrol"
+  },
+  "/tikz/animate/options/entry control": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/entry control=</kbd>{⟨<i>time fraction</i>⟩}{⟨<i>value fraction</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works like <code>exit control</code>.</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/entry:control",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/entry%3Acontrol"
+  },
+  "entry control": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/entry control=</kbd>{⟨<i>time fraction</i>⟩}{⟨<i>value fraction</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works like <code>exit control</code>.</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/entry:control",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/entry%3Acontrol"
+  },
+  "/tikz/animate/options/ease in": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/ease in=</kbd>{⟨<i>fraction</i>⟩}",
+    "defaultHtml": "(default <kbd>0.5</kbd>)",
+    "snippetHtml": "<p> A shorthand for <code>entry control={1-</code>⟨<i>fraction</i>⟩<code>}{1}</code>. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/ease:in",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/ease%3Ain"
+  },
+  "ease in": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/ease in=</kbd>{⟨<i>fraction</i>⟩}",
+    "defaultHtml": "(default <kbd>0.5</kbd>)",
+    "snippetHtml": "<p> A shorthand for <code>entry control={1-</code>⟨<i>fraction</i>⟩<code>}{1}</code>. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/ease:in",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/ease%3Ain"
+  },
+  "/tikz/animate/options/ease out": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/ease out=</kbd>{⟨<i>fraction</i>⟩}",
+    "defaultHtml": "(default <kbd>0.5</kbd>)",
+    "snippetHtml": "<p> A shorthand for <code>exit control={</code>⟨<i>fraction</i>⟩<code>}{1}</code>. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/ease:out",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/ease%3Aout"
+  },
+  "ease out": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/ease out=</kbd>{⟨<i>fraction</i>⟩}",
+    "defaultHtml": "(default <kbd>0.5</kbd>)",
+    "snippetHtml": "<p> A shorthand for <code>exit control={</code>⟨<i>fraction</i>⟩<code>}{1}</code>. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/ease:out",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/ease%3Aout"
+  },
+  "/tikz/animate/options/ease": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/ease=</kbd>{⟨<i>fraction</i>⟩}",
+    "defaultHtml": "(default <kbd>0.5</kbd>)",
+    "snippetHtml": "<p> A shorthand for <code>ease in=</code>⟨<i>fraction</i>⟩<code>, ease out=</code>⟨<i>fraction</i>⟩. </p><p> Note that since for the first time the entry control is ignored and, similarly, for the last time the exit control is ignored, using the <code>ease</code> key with an animation having only two times is particularly easy, since we only need to set <code>ease</code> once: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/ease",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/ease"
+  },
+  "ease": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/ease=</kbd>{⟨<i>fraction</i>⟩}",
+    "defaultHtml": "(default <kbd>0.5</kbd>)",
+    "snippetHtml": "<p> A shorthand for <code>ease in=</code>⟨<i>fraction</i>⟩<code>, ease out=</code>⟨<i>fraction</i>⟩. </p><p> Note that since for the first time the entry control is ignored and, similarly, for the last time the exit control is ignored, using the <code>ease</code> key with an animation having only two times is particularly easy, since we only need to set <code>ease</code> once: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/ease",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/ease"
+  },
+  "/tikz/animate/options/stay": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/stay</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Specifies that inside the time interval the value “stays put” at the first value till the end of the interval, where it will jump to the second value. This is similar to an exit control where the curve is “infinitely flat”. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/stay",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/stay"
+  },
+  "stay": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/stay</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Specifies that inside the time interval the value “stays put” at the first value till the end of the interval, where it will jump to the second value. This is similar to an exit control where the curve is “infinitely flat”. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/stay",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/stay"
+  },
+  "/tikz/animate/options/jump": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/jump</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Works like the <code>stay</code> key, but will cause the value to “jump to” the new value right at the beginning of the time interval. It is similar to an entry control specifying a “flat” curve. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/jump",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/jump"
+  },
+  "jump": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/jump</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Works like the <code>stay</code> key, but will cause the value to “jump to” the new value right at the beginning of the time interval. It is similar to an entry control specifying a “flat” curve. </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/jump",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/jump"
+  },
+  "/tikz/make snapshot of": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/make snapshot of=</kbd>⟨<i>time</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> When this key is used in a TeX scope, animation commands given in the scope do not add animation code to the output. Instead, TikZ computes the values the attributes of the animation would have at the specified ⟨<i>time</i>⟩ and inserts the necessary system layer command to set the attribute to the computed values (some care has been taken to make this computation match the computations done by viewer applications as best as possible). </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/make:snapshot:of",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/make%3Asnapshot%3Aof"
+  },
+  "make snapshot of": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/make snapshot of=</kbd>⟨<i>time</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> When this key is used in a TeX scope, animation commands given in the scope do not add animation code to the output. Instead, TikZ computes the values the attributes of the animation would have at the specified ⟨<i>time</i>⟩ and inserts the necessary system layer command to set the attribute to the computed values (some care has been taken to make this computation match the computations done by viewer applications as best as possible). </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/make:snapshot:of",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/make%3Asnapshot%3Aof"
+  },
+  "/tikz/animate/options/begin snapshot": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/begin snapshot=</kbd>⟨<i>start time</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Use this key on a timeline to specify that, only for purposes of taking snapshots, the timeline starts at ⟨<i>start time</i>⟩ rather than at “moment zero”. (Think of this as saying that the animation starts when a virtual user clicks on the animation and this click occurs ⟨<i>start time</i>⟩ seconds after the general “moment zero”, causing the animation to “lag behind” by this amount of time.) Computationally, for the timeline the ⟨<i>start time</i>⟩ is subtracted from the snapshot’s ⟨<i>time</i>⟩ when the value needs to be determined: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/begin:snapshot",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/begin%3Asnapshot"
+  },
+  "begin snapshot": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/animate/options/begin snapshot=</kbd>⟨<i>start time</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Use this key on a timeline to specify that, only for purposes of taking snapshots, the timeline starts at ⟨<i>start time</i>⟩ rather than at “moment zero”. (Think of this as saying that the animation starts when a virtual user clicks on the animation and this click occurs ⟨<i>start time</i>⟩ seconds after the general “moment zero”, causing the animation to “lag behind” by this amount of time.) Computationally, for the timeline the ⟨<i>start time</i>⟩ is subtracted from the snapshot’s ⟨<i>time</i>⟩ when the value needs to be determined: </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/animate/options/begin:snapshot",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/animate/options/begin%3Asnapshot"
+  },
+  "/tikz/make snapshot after": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/make snapshot after=</kbd>⟨<i>time</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Works exactly like <code>make snapshot of</code>, only the ⟨<i>time</i>⟩ is interpreted as \\(\\meta {time} + \\epsilon \\). This only makes a difference at the end of a timeline and when there are two or more values specified for the same time: When there are several values specified for time \\(t\\), a normal snapshot for time \\(t\\) uses the first value given for the attribute. In contrast, this command would use the last one given. Similarly, when an animation timeline ends at time \\(t\\), a normal snapshot of time \\(t\\) would use the last value of the timeline, while this key would not apply the animation at all (it has already ended at time \\(t + \\epsilon \\)). </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/make:snapshot:after",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/make%3Asnapshot%3Aafter"
+  },
+  "make snapshot after": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/make snapshot after=</kbd>⟨<i>time</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Works exactly like <code>make snapshot of</code>, only the ⟨<i>time</i>⟩ is interpreted as \\(\\meta {time} + \\epsilon \\). This only makes a difference at the end of a timeline and when there are two or more values specified for the same time: When there are several values specified for time \\(t\\), a normal snapshot for time \\(t\\) uses the first value given for the attribute. In contrast, this command would use the last one given. Similarly, when an animation timeline ends at time \\(t\\), a normal snapshot of time \\(t\\) would use the last value of the timeline, while this key would not apply the animation at all (it has already ended at time \\(t + \\epsilon \\)). </p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/make:snapshot:after",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/make%3Asnapshot%3Aafter"
+  },
+  "/tikz/make snapshot if necessary": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/make snapshot if necessary=</kbd>⟨<i>time</i>⟩",
+    "defaultHtml": "(default <kbd>0s</kbd>)",
+    "snippetHtml": "<p> This key makes a snapshot of ⟨<i>time</i>⟩ only when the output format does not provide support for animations; if the output format supports animations (like svg), then the command has no effect and animations are created normally. </p><p>This manual is typeset with the following being set once are for all in preamble:</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/make:snapshot:if:necessary",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/make%3Asnapshot%3Aif%3Anecessary"
+  },
+  "make snapshot if necessary": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/make snapshot if necessary=</kbd>⟨<i>time</i>⟩",
+    "defaultHtml": "(default <kbd>0s</kbd>)",
+    "snippetHtml": "<p> This key makes a snapshot of ⟨<i>time</i>⟩ only when the output format does not provide support for animations; if the output format supports animations (like svg), then the command has no effect and animations are created normally. </p><p>This manual is typeset with the following being set once are for all in preamble:</p>",
+    "page": "tikz-animations",
+    "anchor": "pgf./tikz/make:snapshot:if:necessary",
+    "href": "https://tikz.dev/tikz-animations#pgf./tikz/make%3Asnapshot%3Aif%3Anecessary"
+  }
+}

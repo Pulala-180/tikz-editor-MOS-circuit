@@ -1,0 +1,25 @@
+{
+  "app": {
+    "windows": [
+      {
+        "title": "TikZ Editor",
+        "width": 1350,
+        "height": 850,
+        "resizable": true,
+        "fullscreen": false,
+        "dragDropEnabled": false,
+        "decorations": true,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "trafficLightPosition": { "x": 18, "y": 21 },
+        "transparent": true,
+        "windowEffects": {
+          "effects": ["sidebar"],
+          "state": null,
+          "radius": null,
+          "color": null
+        }
+      }
+    ]
+  }
+}

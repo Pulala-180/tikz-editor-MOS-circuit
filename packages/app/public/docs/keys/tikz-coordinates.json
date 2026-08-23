@@ -1,0 +1,515 @@
+{
+  "canvas": {
+    "type": "key",
+    "signatureHtml": "<b>Coordinate system</b> <kbd>canvas</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> The simplest way of specifying a coordinate is to use the <code>canvas</code> coordinate system. You provide a dimension \\(d_x\\) using the <code>x=</code> option and another dimension \\(d_y\\) using the <code>y=</code> option. The position on the canvas is located at the position that is \\(d_x\\) to the right and \\(d_y\\) above the origin. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf.canvas",
+    "href": "https://tikz.dev/tikz-coordinates#pgf.canvas"
+  },
+  "/tikz/cs/x": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/x=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p> Distance by which the coordinate is to the right of the origin. You can also write things like <code>1cm+2pt</code> since the mathematical engine is used to evaluate the ⟨<i>dimension</i>⟩. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/x",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/x"
+  },
+  "x": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/x=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p> Distance by which the coordinate is to the right of the origin. You can also write things like <code>1cm+2pt</code> since the mathematical engine is used to evaluate the ⟨<i>dimension</i>⟩. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/x",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/x"
+  },
+  "/tikz/cs/y": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/y=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p>Distance by which the coordinate is above the origin.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/y",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/y"
+  },
+  "y": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/y=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p>Distance by which the coordinate is above the origin.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/y",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/y"
+  },
+  "xyz": {
+    "type": "key",
+    "signatureHtml": "<b>Coordinate system</b> <kbd>xyz</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> The <code>xyz</code> coordinate system allows you to specify a point as a multiple of three vectors called the \\(x\\)-, \\(y\\)-, and \\(z\\)-vectors. By default, the \\(x\\)-vector points 1cm to the right, the \\(y\\)-vector points 1cm upwards, but this can be changed arbitrarily as explained in Section 25.2. The default \\(z\\)-vector points to (-3.85mm,-3.85mm). </p><p> To specify the factors by which the vectors should be multiplied before being added, you use the following three options: </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf.xyz",
+    "href": "https://tikz.dev/tikz-coordinates#pgf.xyz"
+  },
+  "/tikz/cs/z": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/z=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0</kbd>)",
+    "snippetHtml": "<p>Works like <code>x</code>.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/z",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/z"
+  },
+  "z": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/z=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0</kbd>)",
+    "snippetHtml": "<p>Works like <code>x</code>.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/z",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/z"
+  },
+  "canvas polar": {
+    "type": "key",
+    "signatureHtml": "<b>Coordinate system</b> <kbd>canvas polar</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> The <code>canvas polar</code> coordinate system allows you to specify polar coordinates. You provide an angle using the <code>angle=</code> option and a radius using the <code>radius=</code> option. This yields the point on the canvas that is at the given radius distance from the origin at the given degree. An angle of zero degrees to the right, a degree of 90 upward. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf.canvas:polar",
+    "href": "https://tikz.dev/tikz-coordinates#pgf.canvas%3Apolar"
+  },
+  "/tikz/cs/angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/angle=</kbd>⟨<i>degrees</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>The angle of the coordinate. The angle must always be given in degrees.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/angle",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/angle"
+  },
+  "angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/angle=</kbd>⟨<i>degrees</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>The angle of the coordinate. The angle must always be given in degrees.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/angle",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/angle"
+  },
+  "/tikz/cs/radius": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/radius=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>The distance from the origin.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/radius",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/radius"
+  },
+  "radius": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/radius=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>The distance from the origin.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/radius",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/radius"
+  },
+  "/tikz/cs/x radius": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/x radius=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> A polar coordinate is, after all, just a point on a circle of the given ⟨<i>radius</i>⟩. When you provide an \\(x\\)-radius and also a \\(y\\)-radius, you specify an ellipse instead of a circle. The <code>radius</code> option has the same effect as specifying identical <code>x radius</code> and <code>y radius</code> options. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/x:radius",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/x%3Aradius"
+  },
+  "x radius": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/x radius=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> A polar coordinate is, after all, just a point on a circle of the given ⟨<i>radius</i>⟩. When you provide an \\(x\\)-radius and also a \\(y\\)-radius, you specify an ellipse instead of a circle. The <code>radius</code> option has the same effect as specifying identical <code>x radius</code> and <code>y radius</code> options. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/x:radius",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/x%3Aradius"
+  },
+  "/tikz/cs/y radius": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/y radius=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works like <code>x radius</code>.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/y:radius",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/y%3Aradius"
+  },
+  "y radius": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/y radius=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works like <code>x radius</code>.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/y:radius",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/y%3Aradius"
+  },
+  "xyz polar": {
+    "type": "key",
+    "signatureHtml": "<b>Coordinate system</b> <kbd>xyz polar</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This coordinate system work similarly to the <code>canvas polar</code> system. However, the radius and the angle are interpreted in the \\(xy\\)-coordinate system, not in the canvas system. More detailed, consider the circle or ellipse whose half axes are given by the current \\(x\\)-vector and the current \\(y\\)-vector. Then, consider the point that lies at a given angle on this ellipse, where an angle of zero is the same as the \\(x\\)-vector and an angle of 90 is the \\(y\\)-vector. Finally, multiply the resulting vector by the given radius factor. Voilà. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf.xyz:polar",
+    "href": "https://tikz.dev/tikz-coordinates#pgf.xyz%3Apolar"
+  },
+  "xy polar": {
+    "type": "key",
+    "signatureHtml": "<b>Coordinate system</b> <kbd>xy polar</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This is just an alias for <code>xyz polar</code>, which some people might prefer as there is no z-coordinate involved in the <code>xyz polar</code> coordinates. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf.xy:polar",
+    "href": "https://tikz.dev/tikz-coordinates#pgf.xy%3Apolar"
+  },
+  "barycentric": {
+    "type": "key",
+    "signatureHtml": "<b>Coordinate system</b> <kbd>barycentric</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> For this coordinate system, the ⟨<i>coordinate specification</i>⟩ should be a comma-separated list of expressions of the form ⟨<i>node name</i>⟩<code>=</code>⟨<i>number</i>⟩. Note that (currently) the list should not contain any spaces before or after the ⟨<i>node name</i>⟩ (unlike normal key–value pairs). </p><p> The specified coordinate is now computed as follows: Each pair provides one vector and a number. The vector is the <code>center</code> anchor of the ⟨<i>node name</i>⟩. The number is the ⟨<i>number</i>⟩. Note that (currently) you cannot specify a different anchor, so that in order to use, say, the <code>north</code> anchor of a node you first have to create a new coordinate at this north anchor. (Using for instance <kbd>\\coordinate(mynorth) at (mynode.north);</kbd>.) </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf.barycentric",
+    "href": "https://tikz.dev/tikz-coordinates#pgf.barycentric"
+  },
+  "node": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/node=</kbd>⟨<i>node</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>This key specifies the node on whose border the tangent should lie.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/node",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/node"
+  },
+  "/tikz/cs/name": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/name=</kbd>⟨<i>node name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Specifies the node that you wish to use to specify a coordinate. The ⟨<i>node name</i>⟩ is the name that was previously used to name the node using the <code>name=</code>⟨<i>node name</i>⟩ option or the special node name syntax. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/name",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/name"
+  },
+  "name": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/intersection/name=</kbd>⟨<i>prefix</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>intersection</kbd>)",
+    "snippetHtml": "<p>This key specifies the prefix name for the coordinate nodes placed at each intersection.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/intersection/name",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/intersection/name"
+  },
+  "/tikz/anchor": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/anchor=</kbd>⟨<i>anchor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Specifies an anchor of the node. Here is an example:</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/anchor",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/anchor"
+  },
+  "anchor": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/anchor=</kbd>⟨<i>anchor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Specifies an anchor of the node. Here is an example:</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/anchor",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/anchor"
+  },
+  "tangent": {
+    "type": "key",
+    "signatureHtml": "<b>Coordinate system</b> <kbd>tangent</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This coordinate system, which is available only when the TikZ library <code>calc</code> is loaded, allows you to compute the point that lies tangent to a shape. In detail, consider a ⟨<i>node</i>⟩ and a ⟨<i>point</i>⟩. Now, draw a straight line from the ⟨<i>point</i>⟩ so that it “touches” the ⟨<i>node</i>⟩ (more formally, so that it is <em>tangent</em> to this ⟨<i>node</i>⟩). The point where the line touches the shape is the point referred to by the <code>tangent</code> coordinate system. </p><p>The following options may be given:</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf.tangent",
+    "href": "https://tikz.dev/tikz-coordinates#pgf.tangent"
+  },
+  "/tikz/cs/node": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/node=</kbd>⟨<i>node</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>This key specifies the node on whose border the tangent should lie.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/node",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/node"
+  },
+  "/tikz/cs/point": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/point=</kbd>⟨<i>point</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>This key specifies the point through which the tangent should go.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/point",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/point"
+  },
+  "point": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/point=</kbd>⟨<i>point</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>This key specifies the point through which the tangent should go.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/point",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/point"
+  },
+  "/tikz/cs/solution": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/solution=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Specifies which solution should be used if there are more than one.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/solution",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/solution"
+  },
+  "solution": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/solution=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Specifies which solution should be used if there are more than one.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/solution",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/solution"
+  },
+  "\\tikzdeclarecoordinatesystem": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\tikzdeclarecoordinatesystem</kbd>{⟨<i>name</i>⟩}{⟨<i>code</i>⟩}",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This command declares a new coordinate system named ⟨<i>name</i>⟩ that can later on be used by writing <code>(</code>⟨<i>name</i>⟩<code> cs:</code>⟨<i>arguments</i>⟩<code>)</code>. When TikZ encounters a coordinate specified in this way, the ⟨<i>arguments</i>⟩ are passed to ⟨<i>code</i>⟩ as argument <code>#1</code>. </p><p> It is now the job of ⟨<i>code</i>⟩ to make sense of the ⟨<i>arguments</i>⟩. At the end of ⟨<i>code</i>⟩, the two TeX dimensions <code>\\pgf@x</code> and <code>\\pgf@y</code> should be have the \\(x\\)- and \\(y\\)-canvas coordinate of the coordinate. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf.back/tikzdeclarecoordinatesystem",
+    "href": "https://tikz.dev/tikz-coordinates#pgf.back/tikzdeclarecoordinatesystem"
+  },
+  "\\tikzaliascoordinatesystem": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\tikzaliascoordinatesystem</kbd>{⟨<i>new name</i>⟩}{⟨<i>old name</i>⟩}",
+    "defaultHtml": "",
+    "snippetHtml": "<p>Creates an alias of ⟨<i>old name</i>⟩.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf.back/tikzaliascoordinatesystem",
+    "href": "https://tikz.dev/tikz-coordinates#pgf.back/tikzaliascoordinatesystem"
+  },
+  "perpendicular": {
+    "type": "key",
+    "signatureHtml": "<b>Coordinate system</b> <kbd>perpendicular</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>You can specify the two lines using the following keys:</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf.perpendicular",
+    "href": "https://tikz.dev/tikz-coordinates#pgf.perpendicular"
+  },
+  "/tikz/cs/horizontal line through": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/horizontal line through=</kbd>{<code>(</code>⟨<i>coordinate</i>⟩<code>)</code>}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Specifies that one line is a horizontal line that goes through the given coordinate.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/horizontal:line:through",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/horizontal%3Aline%3Athrough"
+  },
+  "horizontal line through": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/horizontal line through=</kbd>{<code>(</code>⟨<i>coordinate</i>⟩<code>)</code>}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Specifies that one line is a horizontal line that goes through the given coordinate.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/horizontal:line:through",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/horizontal%3Aline%3Athrough"
+  },
+  "/tikz/cs/vertical line through": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/vertical line through=</kbd>{<code>(</code>⟨<i>coordinate</i>⟩<code>)</code>}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Specifies that the other line is vertical and goes through the given coordinate.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/vertical:line:through",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/vertical%3Aline%3Athrough"
+  },
+  "vertical line through": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cs/vertical line through=</kbd>{<code>(</code>⟨<i>coordinate</i>⟩<code>)</code>}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Specifies that the other line is vertical and goes through the given coordinate.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/cs/vertical:line:through",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/cs/vertical%3Aline%3Athrough"
+  },
+  "intersections": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>intersections</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usetikzlibrary{intersections} % LaTeX and plain TeX</kbd><br> <kbd>\\usetikzlibrary[intersections] % ConTeXt</kbd><br> <br> This library enables the calculation of intersections of two arbitrary paths. However, due to the low accuracy of TeX, the paths should not be “too complicated”. In particular, you should not try to intersect paths consisting of lots of very small segments such as plots or decorated paths. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf.intersections",
+    "href": "https://tikz.dev/tikz-coordinates#pgf.intersections"
+  },
+  "/tikz/name path": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/name path=</kbd>⟨<i>name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The effect of this key is that, after the path has been constructed, just before it is used, it is associated with ⟨<i>name</i>⟩. For <code>name path</code>, this association survives beyond the final semi-colon of the path but not the end of the surrounding scope. For <code>name path global</code>, the association will survive beyond any scope as well. Handle with care. </p><p> Any paths created by nodes on the (main) path are ignored, unless this key is explicitly used. If the same ⟨<i>name</i>⟩ is used for the main path and the node path(s), then the paths will be added together and then associated with ⟨<i>name</i>⟩. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/name:path",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/name%3Apath"
+  },
+  "name path": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/name path=</kbd>⟨<i>name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The effect of this key is that, after the path has been constructed, just before it is used, it is associated with ⟨<i>name</i>⟩. For <code>name path</code>, this association survives beyond the final semi-colon of the path but not the end of the surrounding scope. For <code>name path global</code>, the association will survive beyond any scope as well. Handle with care. </p><p> Any paths created by nodes on the (main) path are ignored, unless this key is explicitly used. If the same ⟨<i>name</i>⟩ is used for the main path and the node path(s), then the paths will be added together and then associated with ⟨<i>name</i>⟩. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/name:path",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/name%3Apath"
+  },
+  "/tikz/name intersections": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/name intersections=</kbd>{⟨<i>options</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key changes the key path to <code>/tikz/intersection</code> and processes ⟨<i>options</i>⟩. These options determine, among other things, which paths to use for the intersection. Having processed the options, any intersections are then found. A coordinate is created at each intersection, which by default, will be named <code>intersection-1</code>, <code>intersection-2</code>, and so on. Optionally, the prefix <code>intersection</code> can be changed, and the total number of intersections stored in a TeX-macro. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/name:intersections",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/name%3Aintersections"
+  },
+  "name intersections": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/name intersections=</kbd>{⟨<i>options</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key changes the key path to <code>/tikz/intersection</code> and processes ⟨<i>options</i>⟩. These options determine, among other things, which paths to use for the intersection. Having processed the options, any intersections are then found. A coordinate is created at each intersection, which by default, will be named <code>intersection-1</code>, <code>intersection-2</code>, and so on. Optionally, the prefix <code>intersection</code> can be changed, and the total number of intersections stored in a TeX-macro. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/name:intersections",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/name%3Aintersections"
+  },
+  "/tikz/intersection/of": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/intersection/of=</kbd>⟨<i>name path 1</i>⟩<code> and </code>⟨<i>name path 2</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>This key is used to specify the names of the paths to use for the intersection.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/intersection/of",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/intersection/of"
+  },
+  "of": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/intersection/of=</kbd>⟨<i>name path 1</i>⟩<code> and </code>⟨<i>name path 2</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>This key is used to specify the names of the paths to use for the intersection.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/intersection/of",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/intersection/of"
+  },
+  "/tikz/intersection/name": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/intersection/name=</kbd>⟨<i>prefix</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>intersection</kbd>)",
+    "snippetHtml": "<p>This key specifies the prefix name for the coordinate nodes placed at each intersection.</p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/intersection/name",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/intersection/name"
+  },
+  "/tikz/intersection/total": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/intersection/total=</kbd>⟨<i>macro</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key means that the total number of intersections found will be stored in ⟨<i>macro</i>⟩. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/intersection/total",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/intersection/total"
+  },
+  "total": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/intersection/total=</kbd>⟨<i>macro</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key means that the total number of intersections found will be stored in ⟨<i>macro</i>⟩. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/intersection/total",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/intersection/total"
+  },
+  "/tikz/intersection/by": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/intersection/by=</kbd>⟨<i>comma-separated list</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key allows you to specify a list of names for the intersection coordinates. The intersection coordinates will still be named ⟨<i>prefix</i>⟩<code>-</code>⟨<i>number</i>⟩, but additionally the first coordinate will also be named by the first element of the ⟨<i>comma-separated list</i>⟩. What happens is that the ⟨<i>comma-separated list</i>⟩ is passed to the <code>\\foreach</code> statement and for ⟨<i>list member</i>⟩ a coordinate is created at the already-named intersection. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/intersection/by",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/intersection/by"
+  },
+  "by": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/intersection/by=</kbd>⟨<i>comma-separated list</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key allows you to specify a list of names for the intersection coordinates. The intersection coordinates will still be named ⟨<i>prefix</i>⟩<code>-</code>⟨<i>number</i>⟩, but additionally the first coordinate will also be named by the first element of the ⟨<i>comma-separated list</i>⟩. What happens is that the ⟨<i>comma-separated list</i>⟩ is passed to the <code>\\foreach</code> statement and for ⟨<i>list member</i>⟩ a coordinate is created at the already-named intersection. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/intersection/by",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/intersection/by"
+  },
+  "/tikz/intersection/sort by": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/intersection/sort by=</kbd>⟨<i>path name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> By default, the intersections are simply returned in the order that the intersection algorithm finds them. Unfortunately, this is not necessarily a “helpful” ordering. This key can be used to sort the intersections along the path specified by ⟨<i>path name</i>⟩, which should be one of the paths mentioned in the <code>/tikz/intersection/of</code> key. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/intersection/sort:by",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/intersection/sort%3Aby"
+  },
+  "sort by": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/intersection/sort by=</kbd>⟨<i>path name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> By default, the intersections are simply returned in the order that the intersection algorithm finds them. Unfortunately, this is not necessarily a “helpful” ordering. This key can be used to sort the intersections along the path specified by ⟨<i>path name</i>⟩, which should be one of the paths mentioned in the <code>/tikz/intersection/of</code> key. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/intersection/sort:by",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/intersection/sort%3Aby"
+  },
+  "/tikz/turn": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/turn</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key can be given as an option to a ⟨<i>coordinate</i>⟩ as in the following example: </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/turn",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/turn"
+  },
+  "turn": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/turn</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key can be given as an option to a ⟨<i>coordinate</i>⟩ as in the following example: </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/turn",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/turn"
+  },
+  "/tikz/current point is local": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/current point is local=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>false</kbd>)",
+    "snippetHtml": "<p> Normally, the scope path operation has no effect on the current point. That is, curly braces on a path have no effect on the current position: </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/current:point:is:local",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/current%3Apoint%3Ais%3Alocal"
+  },
+  "current point is local": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/current point is local=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>false</kbd>)",
+    "snippetHtml": "<p> Normally, the scope path operation has no effect on the current point. That is, curly braces on a path have no effect on the current position: </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf./tikz/current:point:is:local",
+    "href": "https://tikz.dev/tikz-coordinates#pgf./tikz/current%3Apoint%3Ais%3Alocal"
+  },
+  "calc": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>calc</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usetikzlibrary{calc} % LaTeX and plain TeX</kbd><br> <kbd>\\usetikzlibrary[calc] % ConTeXt</kbd><br> <br> You need to load this library in order to use the coordinate calculation functions described in the present section. </p>",
+    "page": "tikz-coordinates",
+    "anchor": "pgf.calc",
+    "href": "https://tikz.dev/tikz-coordinates#pgf.calc"
+  }
+}

@@ -1,0 +1,19 @@
+<ipe version="70200" creator="ipe2tikz-test">
+  <page>
+    <layer name="alpha" />
+    <layer name="beta" />
+    <view layers="alpha" active="alpha" name="alpha-only" />
+    <view layers="alpha beta" active="beta" name="both">
+      <transform layer="beta" matrix="1 0 0 1 10 20" />
+    </view>
+    <path layer="alpha" stroke="black">
+      0 0 m
+      10 0 l
+    </path>
+    <path layer="beta" stroke="black">
+      0 10 m
+      10 10 l
+    </path>
+    <text pos="5 15">Inherited beta</text>
+  </page>
+</ipe>

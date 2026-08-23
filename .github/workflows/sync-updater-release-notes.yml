@@ -1,0 +1,75 @@
+name: Sync updater release notes
+
+on:
+  release:
+    types: [edited]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag, e.g. app-v0.2.0
+        required: true
+        type: string
+
+concurrency:
+  group: sync-updater-release-notes-${{ github.event.release.tag_name || inputs.tag }}
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    if: github.event_name == 'workflow_dispatch' || github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve release tag
+        id: release
+        env:
+          EVENT_TAG: ${{ github.event.release.tag_name }}
+          INPUT_TAG: ${{ inputs.tag }}
+        run: |
+          TAG="${EVENT_TAG:-$INPUT_TAG}"
+          if [ -z "$TAG" ]; then
+            echo "No release tag was provided." >&2
+            exit 1
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Download updater manifest and release notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p updater-manifest
+          gh release download "${{ steps.release.outputs.tag }}" \
+            --pattern latest.json \
+            --dir updater-manifest \
+            --clobber
+          gh release view "${{ steps.release.outputs.tag }}" \
+            --json body \
+            --jq .body > updater-manifest/release-notes.md
+
+      - name: Patch updater manifest notes
+        run: |
+          jq --rawfile notes updater-manifest/release-notes.md \
+            '.notes = $notes' \
+            updater-manifest/latest.json > updater-manifest/latest.next.json
+          mv updater-manifest/latest.next.json updater-manifest/latest.json
+
+      - name: Re-upload updater manifest to GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "${{ steps.release.outputs.tag }}" \
+            updater-manifest/latest.json \
+            --clobber
+
+      - name: Upload updater manifest to FTP
+        env:
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          curl --fail --ftp-create-dirs \
+            --user "${FTP_USERNAME}:${FTP_PASSWORD}" \
+            --upload-file updater-manifest/latest.json \
+            "ftp://w008ef9a.kasserver.com:21/editor/latest.json"

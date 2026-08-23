@@ -1,0 +1,54 @@
+name: Deploy static sites
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run -w @tikz-editor/landing build
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - run: npm run -w @tikz-editor/web build
+
+      - name: Deploy landing page
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: w008ef9a.kasserver.com
+          port: 21
+          protocol: ftp
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: apps/landing/dist/
+          server-dir: editor/
+          state-name: .ftp-deploy-sync-state-landing.json
+          exclude: |
+            **/.git*
+            **/.git*/**
+            web/**
+            latest.json
+            .ftp-deploy-sync-state-web.json
+
+      - name: Deploy web app
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: w008ef9a.kasserver.com
+          port: 21
+          protocol: ftp
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: apps/web/dist/
+          server-dir: editor/web/
+          state-name: .ftp-deploy-sync-state-web.json
+          exclude: |
+            **/.git*
+            **/.git*/**

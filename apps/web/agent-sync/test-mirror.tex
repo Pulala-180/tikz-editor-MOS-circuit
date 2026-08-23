@@ -1,0 +1,26 @@
+\documentclass[tikz, border=2mm]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\begin{document}
+\begin{tikzpicture}[x=1cm, y=1cm]
+
+\coordinate (Tail_Node) at (0,0);
+\draw[fill=black] (Tail_Node) circle (0.1cm);
+
+\begin{scope}[shift={(Tail_Node)}, xshift=-1.5cm, yshift=1.3cm]
+  \coordinate (M1_origin) at (0,0);
+  \draw[fill=red] (0,0) circle (0.1cm);
+  \node[above] at (0,0) {M1};
+\end{scope}
+
+\path (M1_origin);
+\pgfgetlastxy{\mX}{\mY}
+\coordinate (M2_origin) at (-\mX, \mY);
+
+\begin{scope}[shift={(M2_origin)}]
+  \draw[fill=blue] (0,0) circle (0.1cm);
+  \node[above] at (0,0) {M2};
+\end{scope}
+
+\end{tikzpicture}
+\end{document}

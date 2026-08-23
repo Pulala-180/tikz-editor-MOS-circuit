@@ -1,0 +1,137 @@
+{
+  "pgffor": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\usepackage{pgffor} % LaTeX</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This package can be used independently of pgf, but works particularly well together with pgf and TikZ. It defines two new commands: <code>\\foreach</code> and <code>\\breakforeach</code>. </p>",
+    "page": "pgffor",
+    "anchor": "pgf.pgffor",
+    "href": "https://tikz.dev/pgffor#pgf.pgffor"
+  },
+  "\\foreach": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\foreach</kbd><code> </code>⟨<i>variables</i>⟩<code> </code>[⟨<i>options</i>⟩]<code> in </code>⟨<i>list</i>⟩ ⟨<i>commands</i>⟩",
+    "defaultHtml": "",
+    "snippetHtml": "<p>The syntax of this command is a bit complicated, so let us go through it step-by-step.</p><p> In the easiest case, ⟨<i>variables</i>⟩ is a single TeX-command like <code>\\x</code> or <code>\\point</code>. (If you want to have some fun, you can also use active characters. If you do not know what active characters are, you are blessed.) </p>",
+    "page": "pgffor",
+    "anchor": "pgf.back/foreach",
+    "href": "https://tikz.dev/pgffor#pgf.back/foreach"
+  },
+  "/pgf/foreach/var": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/foreach/var=</kbd>⟨<i>variable</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key provides an alternative way to specify variables: <code>\\foreach [var=\\x,var=\\y]</code> is the same as <code>\\foreach \\x/\\y</code>. If used, this key should be used before the other keys. </p>",
+    "page": "pgffor",
+    "anchor": "pgf./pgf/foreach/var",
+    "href": "https://tikz.dev/pgffor#pgf./pgf/foreach/var"
+  },
+  "var": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/foreach/var=</kbd>⟨<i>variable</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key provides an alternative way to specify variables: <code>\\foreach [var=\\x,var=\\y]</code> is the same as <code>\\foreach \\x/\\y</code>. If used, this key should be used before the other keys. </p>",
+    "page": "pgffor",
+    "anchor": "pgf./pgf/foreach/var",
+    "href": "https://tikz.dev/pgffor#pgf./pgf/foreach/var"
+  },
+  "/pgf/foreach/evaluate": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/foreach/evaluate=</kbd>⟨<i>variable</i>⟩<code> </code><code>as </code>⟨<i>macro</i>⟩<code> using </code>⟨<i>formula</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> By default, list items are not evaluated: <code>1+2</code>, yields <code>1+2</code>, not <code>3</code>. This key allows a variable to be evaluated using the mathematical engine. The variable must have been specified either using the <code>var</code> key or in the ⟨<i>variables</i>⟩ argument of the <code>foreach</code> command. By default, the result of the evaluation will be stored in ⟨<i>variable</i>⟩. However, the optional <code>as </code>⟨<i>macro</i>⟩ statement can be used to store the result in ⟨<i>macro</i>⟩. </p>",
+    "page": "pgffor",
+    "anchor": "pgf./pgf/foreach/evaluate",
+    "href": "https://tikz.dev/pgffor#pgf./pgf/foreach/evaluate"
+  },
+  "evaluate": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/foreach/evaluate=</kbd>⟨<i>variable</i>⟩<code> </code><code>as </code>⟨<i>macro</i>⟩<code> using </code>⟨<i>formula</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> By default, list items are not evaluated: <code>1+2</code>, yields <code>1+2</code>, not <code>3</code>. This key allows a variable to be evaluated using the mathematical engine. The variable must have been specified either using the <code>var</code> key or in the ⟨<i>variables</i>⟩ argument of the <code>foreach</code> command. By default, the result of the evaluation will be stored in ⟨<i>variable</i>⟩. However, the optional <code>as </code>⟨<i>macro</i>⟩ statement can be used to store the result in ⟨<i>macro</i>⟩. </p>",
+    "page": "pgffor",
+    "anchor": "pgf./pgf/foreach/evaluate",
+    "href": "https://tikz.dev/pgffor#pgf./pgf/foreach/evaluate"
+  },
+  "/pgf/foreach/remember": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/foreach/remember=</kbd>⟨<i>variable</i>⟩<code> as </code>⟨<i>macro</i>⟩<code> </code><code>(initially </code>⟨<i>value</i>⟩<code>)</code>",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key allows the item value stored in ⟨<i>variable</i>⟩ to be remembered during the next iteration, stored in ⟨<i>macro</i>⟩. If a variable is evaluated, the result of this evaluation is remembered. By default the value of ⟨<i>variable</i>⟩ is zero for the first iteration, however, the optional <code>(initially </code>⟨<i>value</i>⟩<code>)</code> statement, allows the ⟨<i>macro</i>⟩ to be initially defined as ⟨<i>value</i>⟩. </p>",
+    "page": "pgffor",
+    "anchor": "pgf./pgf/foreach/remember",
+    "href": "https://tikz.dev/pgffor#pgf./pgf/foreach/remember"
+  },
+  "remember": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/foreach/remember=</kbd>⟨<i>variable</i>⟩<code> as </code>⟨<i>macro</i>⟩<code> </code><code>(initially </code>⟨<i>value</i>⟩<code>)</code>",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key allows the item value stored in ⟨<i>variable</i>⟩ to be remembered during the next iteration, stored in ⟨<i>macro</i>⟩. If a variable is evaluated, the result of this evaluation is remembered. By default the value of ⟨<i>variable</i>⟩ is zero for the first iteration, however, the optional <code>(initially </code>⟨<i>value</i>⟩<code>)</code> statement, allows the ⟨<i>macro</i>⟩ to be initially defined as ⟨<i>value</i>⟩. </p>",
+    "page": "pgffor",
+    "anchor": "pgf./pgf/foreach/remember",
+    "href": "https://tikz.dev/pgffor#pgf./pgf/foreach/remember"
+  },
+  "/pgf/foreach/count": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/foreach/count=</kbd>⟨<i>macro</i>⟩<code> </code><code>from </code>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key allows ⟨<i>macro</i>⟩ to hold the position in the list of the current item. The optional <code>from </code>⟨<i>value</i>⟩ statement allows the counting to begin from ⟨<i>value</i>⟩. </p>",
+    "page": "pgffor",
+    "anchor": "pgf./pgf/foreach/count",
+    "href": "https://tikz.dev/pgffor#pgf./pgf/foreach/count"
+  },
+  "count": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/foreach/count=</kbd>⟨<i>macro</i>⟩<code> </code><code>from </code>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key allows ⟨<i>macro</i>⟩ to hold the position in the list of the current item. The optional <code>from </code>⟨<i>value</i>⟩ statement allows the counting to begin from ⟨<i>value</i>⟩. </p>",
+    "page": "pgffor",
+    "anchor": "pgf./pgf/foreach/count",
+    "href": "https://tikz.dev/pgffor#pgf./pgf/foreach/count"
+  },
+  "/pgf/foreach/parse": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/foreach/parse=</kbd>{⟨<i>boolean</i>⟩}",
+    "defaultHtml": "(default <kbd>false</kbd>)",
+    "snippetHtml": "<p> If this key is set to true the upper bound in the loop will be fed into <code>\\pgfmathparse</code>. This allows to use complex expressions as the upper bound. However, the expression must be safe for evaluation in <code>\\pgfmathparse</code>. It is known that internal TeX registers can cause trouble. </p>",
+    "page": "pgffor",
+    "anchor": "pgf./pgf/foreach/parse",
+    "href": "https://tikz.dev/pgffor#pgf./pgf/foreach/parse"
+  },
+  "parse": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/foreach/parse=</kbd>{⟨<i>boolean</i>⟩}",
+    "defaultHtml": "(default <kbd>false</kbd>)",
+    "snippetHtml": "<p> If this key is set to true the upper bound in the loop will be fed into <code>\\pgfmathparse</code>. This allows to use complex expressions as the upper bound. However, the expression must be safe for evaluation in <code>\\pgfmathparse</code>. It is known that internal TeX registers can cause trouble. </p>",
+    "page": "pgffor",
+    "anchor": "pgf./pgf/foreach/parse",
+    "href": "https://tikz.dev/pgffor#pgf./pgf/foreach/parse"
+  },
+  "/pgf/foreach/expand list": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/foreach/expand list=</kbd>{⟨<i>boolean</i>⟩}",
+    "defaultHtml": "(default <kbd>false</kbd>)",
+    "snippetHtml": "<p> If this key is set to true the contents of the list are fully expanded with <code>\\edef</code> before further processing. This allows using complex macros which generate a list upon expansion without having to use an intermediate macro. </p>",
+    "page": "pgffor",
+    "anchor": "pgf./pgf/foreach/expand:list",
+    "href": "https://tikz.dev/pgffor#pgf./pgf/foreach/expand%3Alist"
+  },
+  "expand list": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/foreach/expand list=</kbd>{⟨<i>boolean</i>⟩}",
+    "defaultHtml": "(default <kbd>false</kbd>)",
+    "snippetHtml": "<p> If this key is set to true the contents of the list are fully expanded with <code>\\edef</code> before further processing. This allows using complex macros which generate a list upon expansion without having to use an intermediate macro. </p>",
+    "page": "pgffor",
+    "anchor": "pgf./pgf/foreach/expand:list",
+    "href": "https://tikz.dev/pgffor#pgf./pgf/foreach/expand%3Alist"
+  },
+  "\\breakforeach": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\breakforeach</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> If this command is given inside a <code>\\foreach</code> command, no further executions of the ⟨<i>commands</i>⟩ will occur. However, the current execution of the ⟨<i>commands</i>⟩ is continued normally, so it is probably best to use this command only at the end of a <code>\\foreach</code> command. </p>",
+    "page": "pgffor",
+    "anchor": "pgf.back/breakforeach",
+    "href": "https://tikz.dev/pgffor#pgf.back/breakforeach"
+  }
+}

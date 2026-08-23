@@ -1,0 +1,16 @@
+.message {
+  margin: 0;
+  font-size: calc(var(--app-ui-scale, 1) * 14px);
+  line-height: 1.6;
+  color: var(--text);
+  padding: 6px 2px;
+}
+
+.list {
+  margin: 8px 0 0 0;
+  padding-left: 20px;
+  max-height: 180px;
+  overflow: auto;
+  font-size: calc(var(--app-ui-scale, 1) * 13px);
+  color: var(--text-muted);
+}

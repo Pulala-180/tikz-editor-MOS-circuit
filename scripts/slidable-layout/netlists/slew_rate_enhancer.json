@@ -1,0 +1,77 @@
+{
+  "name": "slew-rate-enhancement-cmos-opamp",
+  "components": [
+    {"id": "frame", "type": "rail", "root": true, "branch_dir": "D"},
+
+    {"id": "VDD", "type": "vdd", "parent": "node_frame_branch_D", "axis": "y", "gap": 5.0, "label": "$V_{DD}$"},
+
+    {"id": "ISS", "type": "current_source_down", "parent": "node_VDD_branch_L", "axis": "y", "gap": -0.4, "label": "$I_{SS}$", "incoming": "\\draw[thick] (node_ISS_top) |- (node_VDD_branch_L);"},
+    {"id": "tail", "type": "black_node", "parent": "node_ISS_bottom", "axis": "y", "gap": 0.0, "incoming": "\\draw[thick] (node_tail_c) |- (node_ISS_bottom);"},
+
+    {"id": "rail_L_diff", "type": "rail", "parent": "node_tail_c", "axis": "x", "gap": -0.9, "branch_dir": "D"},
+    {"id": "rail_R_diff", "type": "rail", "parent": "node_tail_c", "axis": "x", "gap": 0.9, "branch_dir": "D"},
+
+    {"id": "M9", "type": "pmos_left", "parent": "node_rail_L_diff_branch_D", "axis": "y", "gap": -0.5, "label": "$M_9$", "incoming": "\\draw[thick] (node_M9_s) |- (node_rail_L_diff_branch_D);"},
+    {"id": "M10", "type": "pmos_right", "parent": "node_rail_R_diff_branch_D", "axis": "y", "gap": -0.5, "label": "$M_{10}$", "incoming": "\\draw[thick] (node_M10_s) |- (node_rail_R_diff_branch_D);"},
+
+    {"id": "P", "type": "black_node", "parent": "node_M9_d", "axis": "y", "gap": -0.5, "incoming": "\\draw[thick] (node_P_c) |- (node_M9_d);"},
+    {"id": "Q", "type": "black_node", "parent": "node_M10_d", "axis": "y", "gap": -0.5, "incoming": "\\draw[thick] (node_Q_c) |- (node_M10_d);"},
+
+    {"id": "M11", "type": "nmos_left", "parent": "node_P_c", "axis": "y", "gap": -0.5, "label": "$M_{11}$", "incoming": "\\draw[thick] (node_M11_d) |- (node_P_c);"},
+    {"id": "M12", "type": "nmos_right", "parent": "node_Q_c", "axis": "y", "gap": -0.5, "label": "$M_{12}$", "incoming": "\\draw[thick] (node_M12_d) |- (node_Q_c);"},
+
+    {"id": "GND_M11", "type": "gnd", "parent": "node_M11_s", "axis": "y", "gap": -0.4},
+    {"id": "GND_M12", "type": "gnd", "parent": "node_M12_s", "axis": "y", "gap": -0.4},
+
+    {"id": "Vin1", "type": "io_node", "parent": "node_M9_g", "axis": "x", "gap": -0.8, "label": "$V_{in1}$", "label_side": "left"},
+    {"id": "Vin2", "type": "io_node", "parent": "node_M10_g", "axis": "x", "gap": 0.8, "label": "$V_{in2}$", "label_side": "right"},
+    {"id": "Vb", "type": "io_node", "parent": "node_M11_g", "axis": "x", "gap": -0.8, "label": "$V_b$", "label_side": "left"},
+
+    {"id": "rail_L_out", "type": "rail", "parent": "node_frame_branch_D", "axis": "x", "gap": -1.8, "branch_dir": "D"},
+    {"id": "rail_R_out", "type": "rail", "parent": "node_frame_branch_D", "axis": "x", "gap": 1.8, "branch_dir": "D"},
+    {"id": "outL", "type": "black_node", "parent": "node_rail_L_out_branch_D", "axis": "y", "gap": -0.6, "incoming": "\\draw[thick] (node_outL_c) |- (node_rail_L_out_branch_D);"},
+    {"id": "outR", "type": "black_node", "parent": "node_rail_R_out_branch_D", "axis": "y", "gap": -0.6, "incoming": "\\draw[thick] (node_outR_c) |- (node_rail_R_out_branch_D);"},
+
+    {"id": "M1", "type": "nmos_right", "parent": "node_outL_c", "axis": "y", "gap": -0.5, "label": "$M_1$", "incoming": "\\draw[thick] (node_M1_d) |- (node_outL_c);"},
+    {"id": "M3", "type": "nmos_left", "parent": "node_outR_c", "axis": "y", "gap": -0.5, "label": "$M_3$", "incoming": "\\draw[thick] (node_M3_d) |- (node_outR_c);"},
+    {"id": "GND_M1", "type": "gnd", "parent": "node_M1_s", "axis": "y", "gap": -0.4},
+    {"id": "GND_M3", "type": "gnd", "parent": "node_M3_s", "axis": "y", "gap": -0.4},
+
+    {"id": "M2", "type": "pmos_left", "parent": "node_outL_c", "axis": "y", "gap": 0.6, "label": "$M_2$", "incoming": "\\draw[thick] (node_M2_d) |- (node_outL_c);"},
+    {"id": "M4", "type": "pmos_right", "parent": "node_outR_c", "axis": "y", "gap": 0.6, "label": "$M_4$", "incoming": "\\draw[thick] (node_M4_d) |- (node_outR_c);"},
+
+    {"id": "rail_L_diode", "type": "rail", "parent": "node_VDD_branch_L", "axis": "x", "gap": -3.3, "branch_dir": "D"},
+    {"id": "rail_R_diode", "type": "rail", "parent": "node_VDD_branch_L", "axis": "x", "gap": 3.3, "branch_dir": "D"},
+    {"id": "M7", "type": "pmos_left", "parent": "node_rail_L_diode_branch_D", "axis": "y", "gap": -0.5, "label": "$M_7$", "incoming": "\\draw[thick] (node_M7_s) |- (node_rail_L_diode_branch_D);"},
+    {"id": "M8", "type": "pmos_right", "parent": "node_rail_R_diode_branch_D", "axis": "y", "gap": -0.5, "label": "$M_8$", "incoming": "\\draw[thick] (node_M8_s) |- (node_rail_R_diode_branch_D);"},
+
+    {"id": "X", "type": "black_node", "parent": "node_M7_d", "axis": "y", "gap": 0.0, "incoming": "\\draw[thick] (node_X_c) |- (node_M7_d);"},
+    {"id": "Y", "type": "black_node", "parent": "node_M8_d", "axis": "y", "gap": 0.0, "incoming": "\\draw[thick] (node_Y_c) |- (node_M8_d);"},
+
+    {"id": "M6", "type": "nmos_right", "parent": "node_X_c", "axis": "y", "gap": -0.5, "label": "$M_6$", "incoming": "\\draw[thick] (node_M6_d) |- (node_X_c);"},
+    {"id": "M5", "type": "nmos_left", "parent": "node_Y_c", "axis": "y", "gap": -0.5, "label": "$M_5$", "incoming": "\\draw[thick] (node_M5_d) |- (node_Y_c);"},
+    {"id": "GND_M6", "type": "gnd", "parent": "node_M6_s", "axis": "y", "gap": -0.4},
+    {"id": "GND_M5", "type": "gnd", "parent": "node_M5_s", "axis": "y", "gap": -0.4},
+
+    {"id": "CL1", "type": "capacitor_v", "parent": "node_outL_c", "axis": "y", "gap": -0.4, "label": "$C_L$"},
+    {"id": "CL2", "type": "capacitor_v", "parent": "node_outR_c", "axis": "y", "gap": -0.4, "label": "$C_L$"},
+    {"id": "GND_CL1", "type": "gnd", "parent": "node_CL1_bottom", "axis": "y", "gap": -0.3},
+    {"id": "GND_CL2", "type": "gnd", "parent": "node_CL2_bottom", "axis": "y", "gap": -0.3}
+  ],
+  "chords": [
+    {"id": "tail_to_L_diff", "from": "node_tail_c", "to": "node_rail_L_diff_branch_D", "route": "-|", "style": "thick"},
+    {"id": "tail_to_R_diff", "from": "node_tail_c", "to": "node_rail_R_diff_branch_D", "route": "-|", "style": "thick"},
+    {"id": "vdd_rail", "from": "node_rail_L_diode_branch_D", "to": "node_rail_R_diode_branch_D", "route": "-|", "style": "ultra thick"},
+    {"id": "m2_vdd", "from": "node_M2_s", "to": "node_M2_s |- node_rail_L_diode_branch_D", "route": "--", "style": "thick"},
+    {"id": "m4_vdd", "from": "node_M4_s", "to": "node_M4_s |- node_rail_R_diode_branch_D", "route": "--", "style": "thick"},
+    {"id": "p_to_m1g", "from": "node_P_c", "to": "node_M1_g", "route": "-|", "style": "thick"},
+    {"id": "p_to_m5g", "from": "node_P_c", "to": "node_M5_g", "route": "|-", "style": "thick"},
+    {"id": "q_to_m3g", "from": "node_Q_c", "to": "node_M3_g", "route": "-|", "style": "thick"},
+    {"id": "q_to_m6g", "from": "node_Q_c", "to": "node_M6_g", "route": "|-", "style": "thick"},
+    {"id": "x_to_m2g", "from": "node_X_c", "to": "node_M2_g", "route": "-|", "style": "thick"},
+    {"id": "y_to_m4g", "from": "node_Y_c", "to": "node_M4_g", "route": "-|", "style": "thick"},
+    {"id": "vb_to_m12g", "from": "node_Vb_c", "to": "node_M12_g", "route": "-|", "style": "thick"},
+    {"id": "m7_diode", "from": "node_M7_d", "to": "node_M7_g", "route": "|-", "style": "thick"},
+    {"id": "m8_diode", "from": "node_M8_d", "to": "node_M8_g", "route": "|-", "style": "thick"}
+  ]
+}

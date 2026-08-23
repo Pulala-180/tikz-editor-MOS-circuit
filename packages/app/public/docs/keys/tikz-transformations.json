@@ -1,0 +1,380 @@
+{
+  "/tikz/x": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/x=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1cm</kbd>)",
+    "snippetHtml": "<p> If ⟨<i>value</i>⟩ is a dimension, the \\(x\\)-vector of pgf’s \\(xyz\\)-coordinate system is set up to point ⟨<i>value</i>⟩ to the right, that is, to (⟨<i>value</i>⟩,0pt). </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/x",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/x"
+  },
+  "x": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/x=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1cm</kbd>)",
+    "snippetHtml": "<p> If ⟨<i>value</i>⟩ is a dimension, the \\(x\\)-vector of pgf’s \\(xyz\\)-coordinate system is set up to point ⟨<i>value</i>⟩ to the right, that is, to (⟨<i>value</i>⟩,0pt). </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/x",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/x"
+  },
+  "/tikz/y": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/y=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1cm</kbd>)",
+    "snippetHtml": "<p> Works like the <code>x=</code> option, only if ⟨<i>value</i>⟩ is a dimension, the resulting vector points to (0,⟨<i>value</i>⟩). </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/y",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/y"
+  },
+  "y": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/y=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1cm</kbd>)",
+    "snippetHtml": "<p> Works like the <code>x=</code> option, only if ⟨<i>value</i>⟩ is a dimension, the resulting vector points to (0,⟨<i>value</i>⟩). </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/y",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/y"
+  },
+  "/tikz/z": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/z=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>\\(-3.85\\)mm</kbd>)",
+    "snippetHtml": "<p> Works like the <code>y=</code> option, but now a dimension is the point (⟨<i>value</i>⟩,⟨<i>value</i>⟩). </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/z",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/z"
+  },
+  "z": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/z=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>\\(-3.85\\)mm</kbd>)",
+    "snippetHtml": "<p> Works like the <code>y=</code> option, but now a dimension is the point (⟨<i>value</i>⟩,⟨<i>value</i>⟩). </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/z",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/z"
+  },
+  "/tikz/shift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/shift=</kbd>{⟨<i>coordinate</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Adds the ⟨<i>coordinate</i>⟩ to all coordinates.</p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/shift",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/shift"
+  },
+  "shift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/shift=</kbd>{⟨<i>coordinate</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Adds the ⟨<i>coordinate</i>⟩ to all coordinates.</p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/shift",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/shift"
+  },
+  "/tikz/shift only": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/shift only</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This option does not take any parameter. Its effect is to cancel all current transformations except for the shifting. This means that the origin will remain where it is, but any rotation around the origin or scaling relative to the origin or skewing will no longer have an effect. </p><p> This option is useful in situations where a complicated transformation is used to “get to a position”, but you then wish to draw something “normal” at this position. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/shift:only",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/shift%3Aonly"
+  },
+  "shift only": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/shift only</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This option does not take any parameter. Its effect is to cancel all current transformations except for the shifting. This means that the origin will remain where it is, but any rotation around the origin or scaling relative to the origin or skewing will no longer have an effect. </p><p> This option is useful in situations where a complicated transformation is used to “get to a position”, but you then wish to draw something “normal” at this position. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/shift:only",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/shift%3Aonly"
+  },
+  "/tikz/xshift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/xshift=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Adds ⟨<i>dimension</i>⟩ to the \\(x\\) value of all coordinates. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/xshift",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/xshift"
+  },
+  "xshift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/xshift=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Adds ⟨<i>dimension</i>⟩ to the \\(x\\) value of all coordinates. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/xshift",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/xshift"
+  },
+  "/tikz/yshift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/yshift=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Adds ⟨<i>dimension</i>⟩ to the \\(y\\) value of all coordinates. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/yshift",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/yshift"
+  },
+  "yshift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/yshift=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Adds ⟨<i>dimension</i>⟩ to the \\(y\\) value of all coordinates. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/yshift",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/yshift"
+  },
+  "/tikz/scale": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/scale=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Multiplies all coordinates by the given ⟨<i>factor</i>⟩. The ⟨<i>factor</i>⟩ should not be excessively large in absolute terms or very close to zero. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/scale",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/scale"
+  },
+  "scale": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/scale=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Multiplies all coordinates by the given ⟨<i>factor</i>⟩. The ⟨<i>factor</i>⟩ should not be excessively large in absolute terms or very close to zero. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/scale",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/scale"
+  },
+  "/tikz/scale around": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/scale around=</kbd>{⟨<i>factor</i>⟩<code>:</code>⟨<i>coordinate</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Scales the coordinate system by ⟨<i>factor</i>⟩, with the “origin of scaling” centered on ⟨<i>coordinate</i>⟩ rather than the origin. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/scale:around",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/scale%3Aaround"
+  },
+  "scale around": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/scale around=</kbd>{⟨<i>factor</i>⟩<code>:</code>⟨<i>coordinate</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Scales the coordinate system by ⟨<i>factor</i>⟩, with the “origin of scaling” centered on ⟨<i>coordinate</i>⟩ rather than the origin. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/scale:around",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/scale%3Aaround"
+  },
+  "/tikz/xscale": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/xscale=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Multiplies only the \\(x\\)-value of all coordinates by the given ⟨<i>factor</i>⟩. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/xscale",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/xscale"
+  },
+  "xscale": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/xscale=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Multiplies only the \\(x\\)-value of all coordinates by the given ⟨<i>factor</i>⟩. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/xscale",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/xscale"
+  },
+  "/tikz/yscale": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/yscale=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Multiplies only the \\(y\\)-value of all coordinates by ⟨<i>factor</i>⟩. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/yscale",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/yscale"
+  },
+  "yscale": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/yscale=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Multiplies only the \\(y\\)-value of all coordinates by ⟨<i>factor</i>⟩. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/yscale",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/yscale"
+  },
+  "/tikz/xslant": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/xslant=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Slants the coordinate horizontally by the given ⟨<i>factor</i>⟩: </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/xslant",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/xslant"
+  },
+  "xslant": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/xslant=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Slants the coordinate horizontally by the given ⟨<i>factor</i>⟩: </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/xslant",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/xslant"
+  },
+  "/tikz/yslant": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/yslant=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Slants the coordinate vertically by the given ⟨<i>factor</i>⟩: </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/yslant",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/yslant"
+  },
+  "yslant": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/yslant=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Slants the coordinate vertically by the given ⟨<i>factor</i>⟩: </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/yslant",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/yslant"
+  },
+  "/tikz/rotate": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/rotate=</kbd>⟨<i>degree</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Rotates the coordinate system by ⟨<i>degree</i>⟩:</p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/rotate",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/rotate"
+  },
+  "rotate": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/rotate=</kbd>⟨<i>degree</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Rotates the coordinate system by ⟨<i>degree</i>⟩:</p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/rotate",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/rotate"
+  },
+  "/tikz/rotate around": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/rotate around=</kbd>{⟨<i>degree</i>⟩<code>:</code>⟨<i>coordinate</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Rotates the coordinate system by ⟨<i>degree</i>⟩ around the point ⟨<i>coordinate</i>⟩. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/rotate:around",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/rotate%3Aaround"
+  },
+  "rotate around": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/rotate around=</kbd>{⟨<i>degree</i>⟩<code>:</code>⟨<i>coordinate</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Rotates the coordinate system by ⟨<i>degree</i>⟩ around the point ⟨<i>coordinate</i>⟩. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/rotate:around",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/rotate%3Aaround"
+  },
+  "/tikz/rotate around x": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/rotate around x=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key sets the \\(x\\), \\(y\\) and \\(z\\) vectors of the pgf \\(xyz\\)-coordinate system so that they are rotated by ⟨<i>angle</i>⟩ around the axis corresponding to the \\(x\\)-vector. The rotation is applied so that when looking towards the origin along this axis, positive angles result in an anticlockwise rotation. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/rotate:around:x",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/rotate%3Aaround%3Ax"
+  },
+  "rotate around x": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/rotate around x=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key sets the \\(x\\), \\(y\\) and \\(z\\) vectors of the pgf \\(xyz\\)-coordinate system so that they are rotated by ⟨<i>angle</i>⟩ around the axis corresponding to the \\(x\\)-vector. The rotation is applied so that when looking towards the origin along this axis, positive angles result in an anticlockwise rotation. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/rotate:around:x",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/rotate%3Aaround%3Ax"
+  },
+  "/tikz/rotate around y": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/rotate around y=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key sets the \\(x\\), \\(y\\) and \\(z\\) vectors of the pgf \\(xyz\\)-coordinate system so that they are rotated by ⟨<i>angle</i>⟩ around the axis corresponding to the \\(y\\)-vector. The rotation is applied so that when looking towards the origin along this axis, positive angles result in an anticlockwise rotation. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/rotate:around:y",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/rotate%3Aaround%3Ay"
+  },
+  "rotate around y": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/rotate around y=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key sets the \\(x\\), \\(y\\) and \\(z\\) vectors of the pgf \\(xyz\\)-coordinate system so that they are rotated by ⟨<i>angle</i>⟩ around the axis corresponding to the \\(y\\)-vector. The rotation is applied so that when looking towards the origin along this axis, positive angles result in an anticlockwise rotation. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/rotate:around:y",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/rotate%3Aaround%3Ay"
+  },
+  "/tikz/rotate around z": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/rotate around z=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key sets the \\(x\\), \\(y\\) and \\(z\\) vectors of the pgf \\(xyz\\)-coordinate system so that they are rotated by ⟨<i>angle</i>⟩ around the axis corresponding to the \\(z\\)-vector. The rotation is applied so that when looking towards the origin along this axis, positive angles result in an anticlockwise rotation. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/rotate:around:z",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/rotate%3Aaround%3Az"
+  },
+  "rotate around z": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/rotate around z=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key sets the \\(x\\), \\(y\\) and \\(z\\) vectors of the pgf \\(xyz\\)-coordinate system so that they are rotated by ⟨<i>angle</i>⟩ around the axis corresponding to the \\(z\\)-vector. The rotation is applied so that when looking towards the origin along this axis, positive angles result in an anticlockwise rotation. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/rotate:around:z",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/rotate%3Aaround%3Az"
+  },
+  "/tikz/cm": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cm=</kbd>{⟨<i>\\(a\\)</i>⟩<code>,</code>⟨<i>\\(b\\)</i>⟩<code>,</code>⟨<i>\\(c\\)</i>⟩<code>,</code>⟨<i>\\(d\\)</i>⟩<code>,</code>⟨<i>coordinate</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> applies the following transformation to all coordinates: Let \\((x,y)\\) be the coordinate to be transformed and let ⟨<i>coordinate</i>⟩ specify the point \\((t_x,t_y)\\). Then the new coordinate is given by \\(\\left (\\begin {smallmatrix} a &amp; c \\\\ b &amp; d\\end {smallmatrix}\\right ) \\left (\\begin {smallmatrix} x \\\\ y \\end {smallmatrix}\\right ) + \\left (\\begin {smallmatrix} t_x \\\\ t_y \\end {smallmatrix}\\right )\\). Usually, you do not use this option directly. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/cm",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/cm"
+  },
+  "cm": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cm=</kbd>{⟨<i>\\(a\\)</i>⟩<code>,</code>⟨<i>\\(b\\)</i>⟩<code>,</code>⟨<i>\\(c\\)</i>⟩<code>,</code>⟨<i>\\(d\\)</i>⟩<code>,</code>⟨<i>coordinate</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> applies the following transformation to all coordinates: Let \\((x,y)\\) be the coordinate to be transformed and let ⟨<i>coordinate</i>⟩ specify the point \\((t_x,t_y)\\). Then the new coordinate is given by \\(\\left (\\begin {smallmatrix} a &amp; c \\\\ b &amp; d\\end {smallmatrix}\\right ) \\left (\\begin {smallmatrix} x \\\\ y \\end {smallmatrix}\\right ) + \\left (\\begin {smallmatrix} t_x \\\\ t_y \\end {smallmatrix}\\right )\\). Usually, you do not use this option directly. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/cm",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/cm"
+  },
+  "/tikz/reset cm": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/reset cm</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Completely resets the coordinate transformation matrix to the identity matrix. This will destroy not only the transformations applied in the current scope, but also all transformations inherited from surrounding scopes. Do not use this option, unless you really, really know what you are doing. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/reset:cm",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/reset%3Acm"
+  },
+  "reset cm": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/reset cm</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Completely resets the coordinate transformation matrix to the identity matrix. This will destroy not only the transformations applied in the current scope, but also all transformations inherited from surrounding scopes. Do not use this option, unless you really, really know what you are doing. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/reset:cm",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/reset%3Acm"
+  },
+  "/tikz/transform canvas": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/transform canvas=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The ⟨<i>options</i>⟩ should contain coordinate transformations options like <code>scale</code> or <code>xshift</code>. Multiple options can be given, their effects accumulate in the usual manner. The effect of these ⟨<i>options</i>⟩ (immediately) changes the current canvas transformation matrix. The coordinate transformation matrix is not changed. Tracking of the picture size is (locally) switched off and the node coordinate will no longer be correct. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/transform:canvas",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/transform%3Acanvas"
+  },
+  "transform canvas": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/transform canvas=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The ⟨<i>options</i>⟩ should contain coordinate transformations options like <code>scale</code> or <code>xshift</code>. Multiple options can be given, their effects accumulate in the usual manner. The effect of these ⟨<i>options</i>⟩ (immediately) changes the current canvas transformation matrix. The coordinate transformation matrix is not changed. Tracking of the picture size is (locally) switched off and the node coordinate will no longer be correct. </p>",
+    "page": "tikz-transformations",
+    "anchor": "pgf./tikz/transform:canvas",
+    "href": "https://tikz.dev/tikz-transformations#pgf./tikz/transform%3Acanvas"
+  }
+}

@@ -1,0 +1,12 @@
+<ipe version="70200" creator="ipe2tikz-test">
+  <page>
+    <path stroke="black" fill="1 0 0" pen="0.5" fillrule="eofill">
+      0 0 m
+      36 0 l
+      36 36 l
+      0 36 l
+      h
+    </path>
+    <text pos="18 18" halign="center" valign="center">Hello $x$</text>
+  </page>
+</ipe>

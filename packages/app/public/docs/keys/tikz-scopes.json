@@ -1,0 +1,218 @@
+{
+  "tikz": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\usepackage{tikz} % LaTeX</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>This package does not have any options.</p><p>This will automatically load the pgf and the <code>pgffor</code> package.</p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf.tikz",
+    "href": "https://tikz.dev/tikz-scopes#pgf.tikz"
+  },
+  "\\usetikzlibrary": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\usetikzlibrary</kbd>{⟨<i>list of libraries</i>⟩}",
+    "defaultHtml": "",
+    "snippetHtml": "<p> Once TikZ has been loaded, you can use this command to load further libraries. The list of libraries should contain the names of libraries separated by commas. Instead of curly braces, you can also use square brackets, which is something ConTeXt users will like. If you try to load a library a second time, nothing will happen. </p><p><i>Example: </i><code>\\usetikzlibrary{arrows.meta}</code></p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf.back/usetikzlibrary",
+    "href": "https://tikz.dev/tikz-scopes#pgf.back/usetikzlibrary"
+  },
+  "tikzpicture": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\begin{tikzpicture}</kbd>⟨<i>animations spec</i>⟩[⟨<i>options</i>⟩]",
+    "defaultHtml": "",
+    "snippetHtml": "<p> All TikZ commands should be given inside this environment, except for the <code>\\tikzset</code> command. You cannot use graphics commands like the low-level command <code>\\pgfpathmoveto</code> outside this environment and doing so will result in chaos. For TikZ, commands like <code>\\path</code> are only defined inside this environment, so there is little chance that you will do something wrong here. </p><p> When this environment is encountered, the ⟨<i>options</i>⟩ are parsed, see Section 12.4. All options given here will apply to the whole picture. Before the options you can specify animation commands, provided that the <code>animations</code> library is loaded, see Section 26 for details. </p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf.tikzpicture",
+    "href": "https://tikz.dev/tikz-scopes#pgf.tikzpicture"
+  },
+  "/tikz/baseline": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/baseline=</kbd>⟨<i>dimension or coordinate or <kbd>default</kbd></i>⟩",
+    "defaultHtml": "(default <kbd>0pt</kbd>)",
+    "snippetHtml": "<p> Normally, the lower end of the picture is put on the baseline of the surrounding text. For example, when you give the code <code>\\tikz\\draw(0,0)circle(.5ex);</code>, pgf will find out that the lower end of the picture is at \\(-.5\\mathrm {ex} - 0.2\\mathrm {pt}\\) (the 0.2pt are half the line width, which is 0.4pt) and that the upper end is at \\(.5\\mathrm {ex}+.2\\mathrm {pt}\\). Then, the lower end will be put on the baseline, resulting in the following: . </p><p> Using this option, you can specify that the picture should be raised or lowered such that the height ⟨<i>dimension</i>⟩ is on the baseline. For example, <code>\\tikz[baseline=0pt]\\draw(0,0)circle(.5ex);</code> yields  since, now, the baseline is on the height of the \\(x\\)-axis. </p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf./tikz/baseline",
+    "href": "https://tikz.dev/tikz-scopes#pgf./tikz/baseline"
+  },
+  "baseline": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/baseline=</kbd>⟨<i>dimension or coordinate or <kbd>default</kbd></i>⟩",
+    "defaultHtml": "(default <kbd>0pt</kbd>)",
+    "snippetHtml": "<p> Normally, the lower end of the picture is put on the baseline of the surrounding text. For example, when you give the code <code>\\tikz\\draw(0,0)circle(.5ex);</code>, pgf will find out that the lower end of the picture is at \\(-.5\\mathrm {ex} - 0.2\\mathrm {pt}\\) (the 0.2pt are half the line width, which is 0.4pt) and that the upper end is at \\(.5\\mathrm {ex}+.2\\mathrm {pt}\\). Then, the lower end will be put on the baseline, resulting in the following: . </p><p> Using this option, you can specify that the picture should be raised or lowered such that the height ⟨<i>dimension</i>⟩ is on the baseline. For example, <code>\\tikz[baseline=0pt]\\draw(0,0)circle(.5ex);</code> yields  since, now, the baseline is on the height of the \\(x\\)-axis. </p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf./tikz/baseline",
+    "href": "https://tikz.dev/tikz-scopes#pgf./tikz/baseline"
+  },
+  "/tikz/execute at begin picture": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at begin picture=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option causes ⟨<i>code</i>⟩ to be executed at the beginning of the picture. This option must be given in the argument of the <code>{tikzpicture}</code> environment itself since this option will not have an effect otherwise. After all, the picture has already “started” later on. The effect of multiply setting this option accumulates. </p><p> This option is mainly used in styles like the <code>every picture</code> style to execute certain code at the start of a picture. </p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf./tikz/execute:at:begin:picture",
+    "href": "https://tikz.dev/tikz-scopes#pgf./tikz/execute%3Aat%3Abegin%3Apicture"
+  },
+  "execute at begin picture": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at begin picture=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option causes ⟨<i>code</i>⟩ to be executed at the beginning of the picture. This option must be given in the argument of the <code>{tikzpicture}</code> environment itself since this option will not have an effect otherwise. After all, the picture has already “started” later on. The effect of multiply setting this option accumulates. </p><p> This option is mainly used in styles like the <code>every picture</code> style to execute certain code at the start of a picture. </p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf./tikz/execute:at:begin:picture",
+    "href": "https://tikz.dev/tikz-scopes#pgf./tikz/execute%3Aat%3Abegin%3Apicture"
+  },
+  "/tikz/execute at end picture": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at end picture=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option installs ⟨<i>code</i>⟩ that will be executed at the end of the picture. Using this option multiple times will cause the code to accumulate. This option must also be given in the optional argument of the <code>{tikzpicture}</code> environment. </p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf./tikz/execute:at:end:picture",
+    "href": "https://tikz.dev/tikz-scopes#pgf./tikz/execute%3Aat%3Aend%3Apicture"
+  },
+  "execute at end picture": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at end picture=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option installs ⟨<i>code</i>⟩ that will be executed at the end of the picture. Using this option multiple times will cause the code to accumulate. This option must also be given in the optional argument of the <code>{tikzpicture}</code> environment. </p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf./tikz/execute:at:end:picture",
+    "href": "https://tikz.dev/tikz-scopes#pgf./tikz/execute%3Aat%3Aend%3Apicture"
+  },
+  "/tikz/every picture": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every picture</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This style is installed at the beginning of each picture.</p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf./tikz/every:picture",
+    "href": "https://tikz.dev/tikz-scopes#pgf./tikz/every%3Apicture"
+  },
+  "every picture": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every picture</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This style is installed at the beginning of each picture.</p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf./tikz/every:picture",
+    "href": "https://tikz.dev/tikz-scopes#pgf./tikz/every%3Apicture"
+  },
+  "\\tikz": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\tikz</kbd>⟨<i>animations spec</i>⟩[⟨<i>options</i>⟩]{⟨<i>path commands</i>⟩}",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This command places the ⟨<i>path commands</i>⟩ inside a <code>{tikzpicture}</code> environment. The ⟨<i>path commands</i>⟩ may contain paragraphs and fragile material (like verbatim text). </p><p> If there is only one path command, it need not be surrounded by curly braces, if there are several, you need to add them (this is similar to the <code>\\foreach</code> statement and also to the rules in programming languages like Java or C concerning the placement of curly braces). </p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf.back/tikz",
+    "href": "https://tikz.dev/tikz-scopes#pgf.back/tikz"
+  },
+  "scope": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\begin{scope}</kbd>⟨<i>animations spec</i>⟩[⟨<i>options</i>⟩]",
+    "defaultHtml": "",
+    "snippetHtml": "<p> All ⟨<i>options</i>⟩ are local to the ⟨<i>environment contents</i>⟩. Furthermore, the clipping path is also local to the environment, that is, any clipping done inside the environment “ends” at its end. </p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf.scope",
+    "href": "https://tikz.dev/tikz-scopes#pgf.scope"
+  },
+  "/tikz/name": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/name=</kbd>⟨<i>scope name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Assigns a name to a scope reference in animations. The name is a “high-level” name that drivers do not see, so you can use spaces, number, letters, in a name, but you should <em>not</em> use any punctuation like a dot, a comma, or a colon. </p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf./tikz/name",
+    "href": "https://tikz.dev/tikz-scopes#pgf./tikz/name"
+  },
+  "name": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/name=</kbd>⟨<i>scope name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Assigns a name to a scope reference in animations. The name is a “high-level” name that drivers do not see, so you can use spaces, number, letters, in a name, but you should <em>not</em> use any punctuation like a dot, a comma, or a colon. </p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf./tikz/name",
+    "href": "https://tikz.dev/tikz-scopes#pgf./tikz/name"
+  },
+  "/tikz/every scope": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every scope</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This style is installed at the beginning of every scope.</p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf./tikz/every:scope",
+    "href": "https://tikz.dev/tikz-scopes#pgf./tikz/every%3Ascope"
+  },
+  "every scope": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every scope</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This style is installed at the beginning of every scope.</p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf./tikz/every:scope",
+    "href": "https://tikz.dev/tikz-scopes#pgf./tikz/every%3Ascope"
+  },
+  "/tikz/execute at begin scope": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at begin scope=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option install some code that will be executed at the beginning of the scope. This option must be given in the argument of the <code>{scope}</code> environment. </p><p>The effect applies only to the current scope, not to subscopes.</p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf./tikz/execute:at:begin:scope",
+    "href": "https://tikz.dev/tikz-scopes#pgf./tikz/execute%3Aat%3Abegin%3Ascope"
+  },
+  "execute at begin scope": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at begin scope=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option install some code that will be executed at the beginning of the scope. This option must be given in the argument of the <code>{scope}</code> environment. </p><p>The effect applies only to the current scope, not to subscopes.</p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf./tikz/execute:at:begin:scope",
+    "href": "https://tikz.dev/tikz-scopes#pgf./tikz/execute%3Aat%3Abegin%3Ascope"
+  },
+  "/tikz/execute at end scope": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at end scope=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option installs some code that will be executed at the end of the current scope. Using this option multiple times will cause the code to accumulate. This option must also be given in the optional argument of the <code>{scope}</code> environment. </p><p>Again, the effect applies only to the current scope, not to subscopes.</p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf./tikz/execute:at:end:scope",
+    "href": "https://tikz.dev/tikz-scopes#pgf./tikz/execute%3Aat%3Aend%3Ascope"
+  },
+  "execute at end scope": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at end scope=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option installs some code that will be executed at the end of the current scope. Using this option multiple times will cause the code to accumulate. This option must also be given in the optional argument of the <code>{scope}</code> environment. </p><p>Again, the effect applies only to the current scope, not to subscopes.</p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf./tikz/execute:at:end:scope",
+    "href": "https://tikz.dev/tikz-scopes#pgf./tikz/execute%3Aat%3Aend%3Ascope"
+  },
+  "scopes": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>scopes</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usetikzlibrary{scopes} % LaTeX and plain TeX</kbd><br> <kbd>\\usetikzlibrary[scopes] % ConTeXt</kbd><br> <br> This library defines a shorthand for starting and ending <code>{scope}</code> environments. </p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf.scopes",
+    "href": "https://tikz.dev/tikz-scopes#pgf.scopes"
+  },
+  "\\scoped": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\scoped</kbd>⟨<i>animations spec</i>⟩[⟨<i>options</i>⟩]⟨<i>path command</i>⟩",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This command works like <code>\\tikz</code>, only you can use it inside a <code>{tikzpicture}</code>. It will take the following ⟨<i>path command</i>⟩ and put it inside a <code>{scope}</code> with the ⟨<i>options</i>⟩ set. The ⟨<i>path command</i>⟩ may either be a single command ended by a semicolon or it may contain multiple commands, but then they must be surrounded by curly braces. </p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf.back/scoped",
+    "href": "https://tikz.dev/tikz-scopes#pgf.back/scoped"
+  },
+  "\\tikzset": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\tikzset</kbd>{⟨<i>options</i>⟩}",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This command will process the ⟨<i>options</i>⟩ using the <code>\\pgfkeys</code> command, documented in detail in Section 87, with the default path set to <code>/tikz</code>. Under normal circumstances, the ⟨<i>options</i>⟩ will be lists of comma-separated pairs of the form ⟨<i>key</i>⟩<code>=</code>⟨<i>value</i>⟩, but more fancy things can happen when you use the power of the <code>pgfkeys</code> mechanism, see Section 87 once more. </p><p> When a pair ⟨<i>key</i>⟩<code>=</code>⟨<i>value</i>⟩ is processed, the following happens: </p>",
+    "page": "tikz-scopes",
+    "anchor": "pgf.back/tikzset",
+    "href": "https://tikz.dev/tikz-scopes#pgf.back/tikzset"
+  }
+}

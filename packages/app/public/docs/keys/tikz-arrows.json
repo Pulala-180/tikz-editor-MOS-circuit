@@ -1,0 +1,722 @@
+{
+  "/tikz/arrows": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/arrows=</kbd>⟨<i>start arrow specification</i>⟩<code>-</code>⟨<i>end arrow specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option sets the arrow tip(s) to be used at the start and end of lines. An empty value as in <code>-&gt;</code> for the start indicates that no arrow tip should be drawn at the start. </p><p> <em>Note: Since the arrow option is so often used, you can leave out the text <code>arrows=</code>.</em> What happens is that every (otherwise unknown) option that contains a <code>-</code> is interpreted as an arrow specification. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./tikz/arrows",
+    "href": "https://tikz.dev/tikz-arrows#pgf./tikz/arrows"
+  },
+  "arrows": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/arrows=</kbd>⟨<i>start arrow specification</i>⟩<code>-</code>⟨<i>end arrow specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option sets the arrow tip(s) to be used at the start and end of lines. An empty value as in <code>-&gt;</code> for the start indicates that no arrow tip should be drawn at the start. </p><p> <em>Note: Since the arrow option is so often used, you can leave out the text <code>arrows=</code>.</em> What happens is that every (otherwise unknown) option that contains a <code>-</code> is interpreted as an arrow specification. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./tikz/arrows",
+    "href": "https://tikz.dev/tikz-arrows#pgf./tikz/arrows"
+  },
+  "/pgf/tips": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/tips=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(default <kbd>true, initially on draw</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/tips",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/tips"
+  },
+  "tips": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/tips=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(default <kbd>true, initially on draw</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/tips",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/tips"
+  },
+  "/pgf/arrow keys/length": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/length=</kbd>⟨<i>dimension</i>⟩<code> </code>⟨<i>line width factor</i>⟩<code> </code>⟨<i>outer factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This parameter is usually the most important parameter that governs the size of an arrow tip: The ⟨<i>dimension</i>⟩ that you provide dictates the distance from the “very tip” of the arrow to its “back end” along the line: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/length",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/length"
+  },
+  "length": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/length=</kbd>⟨<i>dimension</i>⟩<code> </code>⟨<i>line width factor</i>⟩<code> </code>⟨<i>outer factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This parameter is usually the most important parameter that governs the size of an arrow tip: The ⟨<i>dimension</i>⟩ that you provide dictates the distance from the “very tip” of the arrow to its “back end” along the line: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/length",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/length"
+  },
+  "/pgf/arrow keys/width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/width=</kbd>⟨<i>dimension</i>⟩<code> </code>⟨<i>line width factor</i>⟩<code> </code>⟨<i>outer factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key works like the <code>length</code> key, only it specifies the “width” of the arrow tip; so if width and length are identical, the arrow will just touch the borders of a square. (An exception to this rule are “halved” arrow tips, see Section 16.3.5.) The meaning of the two optional factor numbers following the ⟨<i>dimension</i>⟩ is the same as for the <code>length</code> key. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/width",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/width"
+  },
+  "width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/width=</kbd>⟨<i>dimension</i>⟩<code> </code>⟨<i>line width factor</i>⟩<code> </code>⟨<i>outer factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key works like the <code>length</code> key, only it specifies the “width” of the arrow tip; so if width and length are identical, the arrow will just touch the borders of a square. (An exception to this rule are “halved” arrow tips, see Section 16.3.5.) The meaning of the two optional factor numbers following the ⟨<i>dimension</i>⟩ is the same as for the <code>length</code> key. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/width",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/width"
+  },
+  "/pgf/arrow keys/width'": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/width'=</kbd>⟨<i>dimension</i>⟩<code> </code>⟨<i>length factor</i>⟩<code> </code>⟨<i>line width factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The key (note the prime) has a similar effect as the <code>width</code> key. The difference is that the second, still optional parameter ⟨<i>length factor</i>⟩ specifies the width of the key not as a multiple of the line width, but as a multiple of the arrow length. </p><p> The idea is that if you write, say, <code>width'=0pt 0.5</code>, the width of the arrow will be half its length. Indeed, for standard arrow tips like <code>Stealth</code> the default width is specified in this way so that if you change the length of an arrow tip, you also change the width in such a way that the aspect ratio of the arrow tip is kept. The other way round, if you modify the factor in <code>width'</code> without changing the length, you change the aspect ratio of the arrow tip. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/width'",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/width'"
+  },
+  "width'": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/width'=</kbd>⟨<i>dimension</i>⟩<code> </code>⟨<i>length factor</i>⟩<code> </code>⟨<i>line width factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The key (note the prime) has a similar effect as the <code>width</code> key. The difference is that the second, still optional parameter ⟨<i>length factor</i>⟩ specifies the width of the key not as a multiple of the line width, but as a multiple of the arrow length. </p><p> The idea is that if you write, say, <code>width'=0pt 0.5</code>, the width of the arrow will be half its length. Indeed, for standard arrow tips like <code>Stealth</code> the default width is specified in this way so that if you change the length of an arrow tip, you also change the width in such a way that the aspect ratio of the arrow tip is kept. The other way round, if you modify the factor in <code>width'</code> without changing the length, you change the aspect ratio of the arrow tip. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/width'",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/width'"
+  },
+  "/pgf/arrow keys/inset": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/inset=</kbd>⟨<i>dimension</i>⟩<code> </code>⟨<i>line width factor</i>⟩<code> </code>⟨<i>outer factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The key is relevant only for some arrow tips such as the <code>Stealth</code> arrow tip. It specifies a distance by which something inside the arrow tip is set inwards; for the <code>Stealth</code> arrow tip it is the distance by which the back angle is moved inwards. </p><p> The computation of the distance works in the same way as for <code>length</code> and <code>width</code>: To the ⟨<i>dimension</i>⟩ we add ⟨<i>line width factor</i>⟩ times that line width, where the line width is computed based on the ⟨<i>outer factor</i>⟩ as described for the <code>length</code> key. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/inset",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/inset"
+  },
+  "inset": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/inset=</kbd>⟨<i>dimension</i>⟩<code> </code>⟨<i>line width factor</i>⟩<code> </code>⟨<i>outer factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The key is relevant only for some arrow tips such as the <code>Stealth</code> arrow tip. It specifies a distance by which something inside the arrow tip is set inwards; for the <code>Stealth</code> arrow tip it is the distance by which the back angle is moved inwards. </p><p> The computation of the distance works in the same way as for <code>length</code> and <code>width</code>: To the ⟨<i>dimension</i>⟩ we add ⟨<i>line width factor</i>⟩ times that line width, where the line width is computed based on the ⟨<i>outer factor</i>⟩ as described for the <code>length</code> key. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/inset",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/inset"
+  },
+  "/pgf/arrow keys/inset'": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/inset'=</kbd>⟨<i>dimension</i>⟩<code> </code>⟨<i>length factor</i>⟩<code> </code>⟨<i>line width factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key works like <code>inset</code>, only like <code>width'</code> the second parameter is a factor of the arrow length rather than of the line width. For instance, the <code>Stealth</code> arrow sets <code>inset'</code> to <code>0pt 0.325</code> to ensure that the inset is always at \\(13/40\\)th of the arrow length if nothing else is specified. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/inset'",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/inset'"
+  },
+  "inset'": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/inset'=</kbd>⟨<i>dimension</i>⟩<code> </code>⟨<i>length factor</i>⟩<code> </code>⟨<i>line width factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key works like <code>inset</code>, only like <code>width'</code> the second parameter is a factor of the arrow length rather than of the line width. For instance, the <code>Stealth</code> arrow sets <code>inset'</code> to <code>0pt 0.325</code> to ensure that the inset is always at \\(13/40\\)th of the arrow length if nothing else is specified. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/inset'",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/inset'"
+  },
+  "/pgf/arrow keys/angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/angle=</kbd>⟨<i>angle</i>⟩<code>:</code>⟨<i>dimension</i>⟩<code> </code>⟨<i>line width factor</i>⟩<code> </code>⟨<i>outer factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key sets the <code>length</code> and the <code>width</code> of an arrow tip at the same time. The length will be the cosine of ⟨<i>angle</i>⟩, while the width will be twice the sine of half the ⟨<i>angle</i>⟩ (this slightly awkward rule ensures that a <code>Stealth</code> arrow will have an opening angle of ⟨<i>angle</i>⟩ at its tip if this option is used). As for the <code>length</code> key, if the optional factors are given, they add a certain multiple of the line width to the ⟨<i>dimension</i>⟩ before the sine and cosines are computed. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/angle",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/angle"
+  },
+  "angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/angle=</kbd>⟨<i>angle</i>⟩<code>:</code>⟨<i>dimension</i>⟩<code> </code>⟨<i>line width factor</i>⟩<code> </code>⟨<i>outer factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key sets the <code>length</code> and the <code>width</code> of an arrow tip at the same time. The length will be the cosine of ⟨<i>angle</i>⟩, while the width will be twice the sine of half the ⟨<i>angle</i>⟩ (this slightly awkward rule ensures that a <code>Stealth</code> arrow will have an opening angle of ⟨<i>angle</i>⟩ at its tip if this option is used). As for the <code>length</code> key, if the optional factors are given, they add a certain multiple of the line width to the ⟨<i>dimension</i>⟩ before the sine and cosines are computed. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/angle",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/angle"
+  },
+  "/pgf/arrow keys/angle'": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/angle'=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets the width of the arrow to twice the tangent of \\(\\meta {angle}/2\\) times the arrow length. This results in an arrow tip with an opening angle of ⟨<i>angle</i>⟩ at its tip and with the specified <code>length</code> unchanged. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/angle'",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/angle'"
+  },
+  "angle'": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/angle'=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets the width of the arrow to twice the tangent of \\(\\meta {angle}/2\\) times the arrow length. This results in an arrow tip with an opening angle of ⟨<i>angle</i>⟩ at its tip and with the specified <code>length</code> unchanged. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/angle'",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/angle'"
+  },
+  "/pgf/arrow keys/scale": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/scale=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1</kbd>)",
+    "snippetHtml": "<p> After all the other options listed in the previous (and also the following sections) have been processed, TikZ applies a <em>scaling</em> to the computed length, inset, and width of the arrow tip (and, possibly, to other size parameters defined by special-purpose arrow tip kinds). Everything is simply scaled by the given ⟨<i>factor</i>⟩. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/scale",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/scale"
+  },
+  "scale": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/scale=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1</kbd>)",
+    "snippetHtml": "<p> After all the other options listed in the previous (and also the following sections) have been processed, TikZ applies a <em>scaling</em> to the computed length, inset, and width of the arrow tip (and, possibly, to other size parameters defined by special-purpose arrow tip kinds). Everything is simply scaled by the given ⟨<i>factor</i>⟩. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/scale",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/scale"
+  },
+  "/pgf/arrow keys/scale length": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/scale length=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1</kbd>)",
+    "snippetHtml": "<p> This factor works like <code>scale</code>, only it is applied only to dimensions “along the axis of the arrow”, that is, to the length and to the inset, but not to the width. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/scale:length",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/scale%3Alength"
+  },
+  "scale length": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/scale length=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1</kbd>)",
+    "snippetHtml": "<p> This factor works like <code>scale</code>, only it is applied only to dimensions “along the axis of the arrow”, that is, to the length and to the inset, but not to the width. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/scale:length",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/scale%3Alength"
+  },
+  "/pgf/arrow keys/scale width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/scale width=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1</kbd>)",
+    "snippetHtml": "<p>Like <code>scale length</code>, but for dimensions related to the width.</p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/scale:width",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/scale%3Awidth"
+  },
+  "scale width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/scale width=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1</kbd>)",
+    "snippetHtml": "<p>Like <code>scale length</code>, but for dimensions related to the width.</p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/scale:width",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/scale%3Awidth"
+  },
+  "/pgf/arrow keys/arc": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/arc=</kbd>⟨<i>degrees</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>180</kbd>)",
+    "snippetHtml": "<p> Sets the angle of arcs in arrows to ⟨<i>degrees</i>⟩. Note that this key is quite different from the <code>angle</code> key, which is “just a fancy way of setting the length and width”. In contrast, the <code>arc</code> key is used to set the degrees of arcs that are part of an arrow tip: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/arc",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/arc"
+  },
+  "arc": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/arc=</kbd>⟨<i>degrees</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>180</kbd>)",
+    "snippetHtml": "<p> Sets the angle of arcs in arrows to ⟨<i>degrees</i>⟩. Note that this key is quite different from the <code>angle</code> key, which is “just a fancy way of setting the length and width”. In contrast, the <code>arc</code> key is used to set the degrees of arcs that are part of an arrow tip: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/arc",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/arc"
+  },
+  "/pgf/arrow keys/slant": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/slant=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0</kbd>)",
+    "snippetHtml": "<p> Slanting is used to create an “italics” effect for arrow tips: All arrow tips get “slanted” a little bit relative to the axis of the arrow: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/slant",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/slant"
+  },
+  "slant": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/slant=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0</kbd>)",
+    "snippetHtml": "<p> Slanting is used to create an “italics” effect for arrow tips: All arrow tips get “slanted” a little bit relative to the axis of the arrow: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/slant",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/slant"
+  },
+  "/pgf/arrow keys/reversed": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/reversed</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Adding this key to an arrow tip will “reverse its direction” so that is points in the opposite direction (but is still at that end of the line where the non-reversed arrow tip would have been drawn; so only the tip is reversed). For most arrow tips, this just results in an internal flip of a coordinate system, but some arrow tips actually use a slightly different version of the tip for reversed arrow tips (namely when the joining of the tip with the line would look strange). All of this happens automatically, so you do not need to worry about this. </p><p> If you apply this key twice, the effect cancels, which is useful for the definition of shorthands (which will be discussed later). </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/reversed",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/reversed"
+  },
+  "reversed": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/reversed</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Adding this key to an arrow tip will “reverse its direction” so that is points in the opposite direction (but is still at that end of the line where the non-reversed arrow tip would have been drawn; so only the tip is reversed). For most arrow tips, this just results in an internal flip of a coordinate system, but some arrow tips actually use a slightly different version of the tip for reversed arrow tips (namely when the joining of the tip with the line would look strange). All of this happens automatically, so you do not need to worry about this. </p><p> If you apply this key twice, the effect cancels, which is useful for the definition of shorthands (which will be discussed later). </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/reversed",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/reversed"
+  },
+  "/pgf/arrow keys/harpoon": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/harpoon</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>The key requests that only the “left half” of the arrow tip should drawn:</p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/harpoon",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/harpoon"
+  },
+  "harpoon": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/harpoon</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>The key requests that only the “left half” of the arrow tip should drawn:</p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/harpoon",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/harpoon"
+  },
+  "/pgf/arrow keys/swap": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/swap</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key flips that arrow tip along the axis of the line. It makes sense only for asymmetric arrow tips like the harpoons created using the <code>harpoon</code> option. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/swap",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/swap"
+  },
+  "swap": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/swap</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key flips that arrow tip along the axis of the line. It makes sense only for asymmetric arrow tips like the harpoons created using the <code>harpoon</code> option. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/swap",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/swap"
+  },
+  "/pgf/arrow keys/left": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/left</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>A shorthand for <code>harpoon</code>.</p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/left",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/left"
+  },
+  "left": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/left</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>A shorthand for <code>harpoon</code>.</p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/left",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/left"
+  },
+  "/pgf/arrow keys/right": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/right</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>A shorthand for <code>harpoon, swap</code>.</p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/right",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/right"
+  },
+  "right": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/right</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>A shorthand for <code>harpoon, swap</code>.</p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/right",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/right"
+  },
+  "/pgf/arrow keys/color": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/color=</kbd>⟨<i>color or empty</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p> Normally, an arrow tip gets the same color as the path to which it is attached. More precisely, it will get the current “draw color”, also known as “stroke color”, which you can set using <code>draw=</code>⟨<i>some color</i>⟩. By adding the option <code>color=</code> to an arrow tip (note that an “empty” color is specified in this way), you ask that the arrow tip gets this default draw color of the path. Since this is the default behavior, you usually do not need to specify anything: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/color",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/color"
+  },
+  "color": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/color=</kbd>⟨<i>color or empty</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p> Normally, an arrow tip gets the same color as the path to which it is attached. More precisely, it will get the current “draw color”, also known as “stroke color”, which you can set using <code>draw=</code>⟨<i>some color</i>⟩. By adding the option <code>color=</code> to an arrow tip (note that an “empty” color is specified in this way), you ask that the arrow tip gets this default draw color of the path. Since this is the default behavior, you usually do not need to specify anything: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/color",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/color"
+  },
+  "/pgf/arrow keys/fill": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/fill=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(default <kbd>is scope’s color setting</kbd>)",
+    "snippetHtml": "<p> Use this key to explicitly set the color used for filling the arrow tips. This color can be different from the color used to draw (stroke) the arrow tip: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/fill",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/fill"
+  },
+  "fill": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/fill=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(default <kbd>is scope’s color setting</kbd>)",
+    "snippetHtml": "<p> Use this key to explicitly set the color used for filling the arrow tips. This color can be different from the color used to draw (stroke) the arrow tip: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/fill",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/fill"
+  },
+  "/pgf/arrow keys/open": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/open</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>A shorthand for <code>fill=none</code>.</p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/open",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/open"
+  },
+  "open": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/open</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>A shorthand for <code>fill=none</code>.</p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/open",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/open"
+  },
+  "/pgf/arrow keys/line cap": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/line cap=</kbd>⟨<i><code>round</code> or <code>butt</code></i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets the line cap of all lines that are drawn in the arrow to a round cap or a butt cap. (Unlike for normal lines, the <code>rect</code> cap is not allowed.) Naturally, this key has no effect for arrows whose paths are closed. </p><p>Each arrow tip has a default value for the line cap, which can be overruled using this option.</p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/line:cap",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/line%3Acap"
+  },
+  "line cap": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/line cap=</kbd>⟨<i><code>round</code> or <code>butt</code></i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets the line cap of all lines that are drawn in the arrow to a round cap or a butt cap. (Unlike for normal lines, the <code>rect</code> cap is not allowed.) Naturally, this key has no effect for arrows whose paths are closed. </p><p>Each arrow tip has a default value for the line cap, which can be overruled using this option.</p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/line:cap",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/line%3Acap"
+  },
+  "/pgf/arrow keys/line join": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/line join=</kbd>⟨<i><code>round</code> or <code>miter</code></i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets the line join to round or miter (<code>bevel</code> is not allowed). This time, the key only has an effect on paths that have “corners” in them. The same rules as for <code>line cap</code> apply: the size is not affects, but the tip end is: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/line:join",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/line%3Ajoin"
+  },
+  "line join": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/line join=</kbd>⟨<i><code>round</code> or <code>miter</code></i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets the line join to round or miter (<code>bevel</code> is not allowed). This time, the key only has an effect on paths that have “corners” in them. The same rules as for <code>line cap</code> apply: the size is not affects, but the tip end is: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/line:join",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/line%3Ajoin"
+  },
+  "/pgf/arrow keys/round": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/round</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> A shorthand for <code>line cap=round, line join=round</code>, resulting in “rounded” arrow heads. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/round",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/round"
+  },
+  "round": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/round</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> A shorthand for <code>line cap=round, line join=round</code>, resulting in “rounded” arrow heads. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/round",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/round"
+  },
+  "/pgf/arrow keys/sharp": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/sharp</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> A shorthand for <code>line cap=butt, line join=miter</code>, resulting in “sharp” or “pointed” arrow heads. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/sharp",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/sharp"
+  },
+  "sharp": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/sharp</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> A shorthand for <code>line cap=butt, line join=miter</code>, resulting in “sharp” or “pointed” arrow heads. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/sharp",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/sharp"
+  },
+  "/pgf/arrow keys/line width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/line width=</kbd>⟨<i>dimension</i>⟩<code> </code>⟨<i>line width factor</i>⟩<code> </code>⟨<i>outer factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key sets the line width inside an arrow tip for drawing (out)lines of the arrow tip. When you set this width to <code>0pt</code>, which makes sense only for closed tips, the arrow tip is only filled. This can result in better rendering of some small arrow tips and in case of bend arrow tips (because the line joins will also be bend and not “mitered”.) </p><p> The meaning of the factors is as usual the same as for <code>length</code> or <code>width</code>. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/line:width",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/line%3Awidth"
+  },
+  "line width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/line width=</kbd>⟨<i>dimension</i>⟩<code> </code>⟨<i>line width factor</i>⟩<code> </code>⟨<i>outer factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key sets the line width inside an arrow tip for drawing (out)lines of the arrow tip. When you set this width to <code>0pt</code>, which makes sense only for closed tips, the arrow tip is only filled. This can result in better rendering of some small arrow tips and in case of bend arrow tips (because the line joins will also be bend and not “mitered”.) </p><p> The meaning of the factors is as usual the same as for <code>length</code> or <code>width</code>. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/line:width",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/line%3Awidth"
+  },
+  "/pgf/arrow keys/line width'": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/line width'=</kbd>⟨<i>dimension</i>⟩<code> </code>⟨<i>length factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Works like <code>line width</code> only the factor is with respect to the <code>length</code>. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/line:width'",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/line%3Awidth'"
+  },
+  "line width'": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/line width'=</kbd>⟨<i>dimension</i>⟩<code> </code>⟨<i>length factor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Works like <code>line width</code> only the factor is with respect to the <code>length</code>. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/line:width'",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/line%3Awidth'"
+  },
+  "/pgf/arrow keys/quick": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/quick</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Recall that curves in TikZ are actually Bézier curves, which means that they start and end at certain points and we specify two vectors, one for the start and one for the end, that provide tangents to the curve at these points. In particular, for the end of the curve, there is a point called the <em>second support point</em> of the curve such that a tangent to the curve at the end goes through this point. In our above example, the second support point is at the middle of the light red line and, indeed, a tangent to the red line at the point touching the wall is perfectly horizontal. </p><p> In order to add our arrow tip to the curved path, our first objective is to “shorten” the path by 6.25mm. Unfortunately, this is now much more difficult than for a straight path. When the <code>quick</code> option is added to an arrow tip (it is also the default if no special libraries are loaded), we cheat somewhat: Instead of really moving along 6.25mm along the path, we simply shift the end of the curve by 6.25mm <em>along the tangent</em> (which is easy to compute). We also have to shift the second support point by the same amount to ensure that the line still has the same tangent at the end. This will result in the following: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/quick",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/quick"
+  },
+  "quick": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/quick</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Recall that curves in TikZ are actually Bézier curves, which means that they start and end at certain points and we specify two vectors, one for the start and one for the end, that provide tangents to the curve at these points. In particular, for the end of the curve, there is a point called the <em>second support point</em> of the curve such that a tangent to the curve at the end goes through this point. In our above example, the second support point is at the middle of the light red line and, indeed, a tangent to the red line at the point touching the wall is perfectly horizontal. </p><p> In order to add our arrow tip to the curved path, our first objective is to “shorten” the path by 6.25mm. Unfortunately, this is now much more difficult than for a straight path. When the <code>quick</code> option is added to an arrow tip (it is also the default if no special libraries are loaded), we cheat somewhat: Instead of really moving along 6.25mm along the path, we simply shift the end of the curve by 6.25mm <em>along the tangent</em> (which is easy to compute). We also have to shift the second support point by the same amount to ensure that the line still has the same tangent at the end. This will result in the following: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/quick",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/quick"
+  },
+  "bending": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>bending</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usetikzlibrary{bending} % LaTeX and plain TeX</kbd><br> <kbd>\\usetikzlibrary[bending] % ConTeXt</kbd><br> <br> Load this library to use the <code>flex</code>, <code>flex'</code>, or <code>bending</code> arrow keys. When this library is loaded, <code>flex</code> becomes the default mode that is used with all paths, unless <code>quick</code> is explicitly selected for the arrow tip. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf.bending",
+    "href": "https://tikz.dev/tikz-arrows#pgf.bending"
+  },
+  "/pgf/arrow keys/flex": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/flex=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "<p> When the <code>bending</code> library is loaded, this key is applied to all arrow tips by default. It has the following effect: </p><p> As can be seen in the example, the <code>flex</code> option gives a result that is visually pleasing and does not deform the path. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/flex",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/flex"
+  },
+  "flex": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/flex=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "<p> When the <code>bending</code> library is loaded, this key is applied to all arrow tips by default. It has the following effect: </p><p> As can be seen in the example, the <code>flex</code> option gives a result that is visually pleasing and does not deform the path. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/flex",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/flex"
+  },
+  "/pgf/arrow keys/flex'": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/flex'=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "<p> The <code>flex'</code> key is almost identical to the <code>flex</code> key. The only difference is that a factor of <code>1</code> corresponds to rotating the arrow tip so that the instead of the visual end, the “ultimate back end” of the arrow tip lies on the red path. In the example instead of having the arrow tip at a distance of <code>6.25mm</code> from the tip lie on the path, we have the point at a distance of <code>1cm</code> from the tip lie on the path: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/flex'",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/flex'"
+  },
+  "flex'": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/flex'=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "<p> The <code>flex'</code> key is almost identical to the <code>flex</code> key. The only difference is that a factor of <code>1</code> corresponds to rotating the arrow tip so that the instead of the visual end, the “ultimate back end” of the arrow tip lies on the red path. In the example instead of having the arrow tip at a distance of <code>6.25mm</code> from the tip lie on the path, we have the point at a distance of <code>1cm</code> from the tip lie on the path: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/flex'",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/flex'"
+  },
+  "/pgf/arrow keys/bend": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/bend</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> <em>Bending</em> an arrow tip is a radical solution to the problem of positioning arrow tips on a curved line: The arrow tip is no longer “rigid” but the drawing itself will now bend along the curve. This has the advantage that all the problems of flexing with wrong tangents and overflexing disappear. The downsides are longer computation times (bending an arrow is <em>much</em> more expensive that flexing it, let alone than quick mode) and also the fact that excessive bending can lead to ugly arrow tips. On the other hand, for most arrow tips their bend version are visually quite pleasing and create a sophisticated look: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/bend",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/bend"
+  },
+  "bend": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/bend</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> <em>Bending</em> an arrow tip is a radical solution to the problem of positioning arrow tips on a curved line: The arrow tip is no longer “rigid” but the drawing itself will now bend along the curve. This has the advantage that all the problems of flexing with wrong tangents and overflexing disappear. The downsides are longer computation times (bending an arrow is <em>much</em> more expensive that flexing it, let alone than quick mode) and also the fact that excessive bending can lead to ugly arrow tips. On the other hand, for most arrow tips their bend version are visually quite pleasing and create a sophisticated look: </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/bend",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/bend"
+  },
+  "/pgf/arrow keys/sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/sep=</kbd>⟨<i>dimension</i>⟩<code> </code>⟨<i>line width factor</i>⟩<code> </code>⟨<i>outer factor</i>⟩",
+    "defaultHtml": "(default <kbd>0.88pt .3 1</kbd>)",
+    "snippetHtml": "<p> When a sequence of arrow tips is specified in an arrow tip specification for the end of the line, the arrow tips are normally arranged in such a way that the tip of each arrow ends exactly at the “back end” of the next arrow tip (for start specifications, the ordering is inverted, of course). Now, when the <code>sep</code> option is set, instead of exactly touching the back end of the next arrow, the specified ⟨<i>dimension</i>⟩ is added as additional space (the distance may also be negative, resulting in an overlap of the arrow tips). The optional factors have the same meaning as for the <code>length</code> key, see that key for details. </p><p>Let us now have a look at some examples. First, we use two arrow tips with different separations between them:</p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/sep",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/sep"
+  },
+  "sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/sep=</kbd>⟨<i>dimension</i>⟩<code> </code>⟨<i>line width factor</i>⟩<code> </code>⟨<i>outer factor</i>⟩",
+    "defaultHtml": "(default <kbd>0.88pt .3 1</kbd>)",
+    "snippetHtml": "<p> When a sequence of arrow tips is specified in an arrow tip specification for the end of the line, the arrow tips are normally arranged in such a way that the tip of each arrow ends exactly at the “back end” of the next arrow tip (for start specifications, the ordering is inverted, of course). Now, when the <code>sep</code> option is set, instead of exactly touching the back end of the next arrow, the specified ⟨<i>dimension</i>⟩ is added as additional space (the distance may also be negative, resulting in an overlap of the arrow tips). The optional factors have the same meaning as for the <code>length</code> key, see that key for details. </p><p>Let us now have a look at some examples. First, we use two arrow tips with different separations between them:</p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/sep",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/sep"
+  },
+  "/handlers/.tip": {
+    "type": "key",
+    "signatureHtml": "<b>Key handler</b> ⟨<i>key</i>⟩<kbd>/.tip</kbd>=⟨<i>end specification</i>⟩",
+    "defaultHtml": "",
+    "snippetHtml": "<p> Defined the ⟨<i>key</i>⟩ as a name that can be used inside arrow tip specifications. If the ⟨<i>key</i>⟩ has a path before it, this path is ignored (so there is only one “namespace” for arrow tips). Whenever it is used, it will be replaced by the ⟨<i>end specification</i>⟩. Note that you must <em>always</em> provide (only) an end specification; when the ⟨<i>key</i>⟩ is used inside a start specification, the ordering and the meaning of the keys inside the ⟨<i>end specification</i>⟩ are translated automatically. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./handlers/.tip",
+    "href": "https://tikz.dev/tikz-arrows#pgf./handlers/.tip"
+  },
+  ".tip": {
+    "type": "key",
+    "signatureHtml": "<b>Key handler</b> ⟨<i>key</i>⟩<kbd>/.tip</kbd>=⟨<i>end specification</i>⟩",
+    "defaultHtml": "",
+    "snippetHtml": "<p> Defined the ⟨<i>key</i>⟩ as a name that can be used inside arrow tip specifications. If the ⟨<i>key</i>⟩ has a path before it, this path is ignored (so there is only one “namespace” for arrow tips). Whenever it is used, it will be replaced by the ⟨<i>end specification</i>⟩. Note that you must <em>always</em> provide (only) an end specification; when the ⟨<i>key</i>⟩ is used inside a start specification, the ordering and the meaning of the keys inside the ⟨<i>end specification</i>⟩ are translated automatically. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./handlers/.tip",
+    "href": "https://tikz.dev/tikz-arrows#pgf./handlers/.tip"
+  },
+  "/tikz/>": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/&gt;=</kbd>⟨<i>end arrow specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This is a short way of saying <code>&lt;-&gt;/.tip=</code>⟨<i>end arrow specification</i>⟩. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./tikz/>",
+    "href": "https://tikz.dev/tikz-arrows#pgf./tikz/%3E"
+  },
+  ">": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/&gt;=</kbd>⟨<i>end arrow specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This is a short way of saying <code>&lt;-&gt;/.tip=</code>⟨<i>end arrow specification</i>⟩. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./tikz/>",
+    "href": "https://tikz.dev/tikz-arrows#pgf./tikz/%3E"
+  },
+  "/tikz/shorten <": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/shorten &lt;=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Shorten the path by ⟨<i>length</i>⟩ in the direction of the starting point. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./tikz/shorten:<",
+    "href": "https://tikz.dev/tikz-arrows#pgf./tikz/shorten%3A%3C"
+  },
+  "shorten <": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/shorten &lt;=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Shorten the path by ⟨<i>length</i>⟩ in the direction of the starting point. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./tikz/shorten:<",
+    "href": "https://tikz.dev/tikz-arrows#pgf./tikz/shorten%3A%3C"
+  },
+  "/tikz/shorten >": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/shorten &gt;=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Shorten the path by ⟨<i>length</i>⟩ in the direction of the end point. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./tikz/shorten:>",
+    "href": "https://tikz.dev/tikz-arrows#pgf./tikz/shorten%3A%3E"
+  },
+  "shorten >": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/shorten &gt;=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Shorten the path by ⟨<i>length</i>⟩ in the direction of the end point. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./tikz/shorten:>",
+    "href": "https://tikz.dev/tikz-arrows#pgf./tikz/shorten%3A%3E"
+  },
+  "arrows.meta": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>arrows.meta</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usepgflibrary{arrows.meta} % LaTeX and plain TeX and pure pgf</kbd><br> <kbd>\\usepgflibrary[arrows.meta] % ConTeXt and pure pgf</kbd><br> <kbd>\\usetikzlibrary{arrows.meta} % LaTeX and plain TeX when using TikZ</kbd><br> <kbd>\\usetikzlibrary[arrows.meta] % ConTeXt when using TikZ</kbd><br> <br> This library defines a large number of standard “meta” arrow tips. “Meta” means that you can configure these arrow tips in many different ways like changing their size or their line caps and joins and many other details. </p><p> The only reason this library is not loaded by default is for compatibility with older versions of TikZ. You can, however, safely load and use this library alongside the older libraries <code>arrows</code> and <code>arrows.spaced</code>. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf.arrows.meta",
+    "href": "https://tikz.dev/tikz-arrows#pgf.arrows.meta"
+  },
+  "/pgf/arrow keys/cap angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/cap angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets <code>length</code> to an appropriate multiple of the line width so that the angle of a <code>Triangle Cap</code> is exactly ⟨<i>angle</i>⟩ at the tip. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/cap:angle",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/cap%3Aangle"
+  },
+  "cap angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/cap angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets <code>length</code> to an appropriate multiple of the line width so that the angle of a <code>Triangle Cap</code> is exactly ⟨<i>angle</i>⟩ at the tip. </p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/cap:angle",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/cap%3Aangle"
+  },
+  "/pgf/arrow keys/n": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/n=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>4</kbd>)",
+    "snippetHtml": "<p>Sets the number of rays in a <code>Rays</code> arrow tip.</p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/n",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/n"
+  },
+  "n": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow keys/n=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>4</kbd>)",
+    "snippetHtml": "<p>Sets the number of rays in a <code>Rays</code> arrow tip.</p>",
+    "page": "tikz-arrows",
+    "anchor": "pgf./pgf/arrow:keys/n",
+    "href": "https://tikz.dev/tikz-arrows#pgf./pgf/arrow%3Akeys/n"
+  }
+}

@@ -1,0 +1,398 @@
+{
+  "/tikz/draw opacity": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/draw opacity=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option sets “how transparent” lines should be. A value of <code>1</code> means “fully opaque” or “not transparent at all”, a value of <code>0</code> means “fully transparent” or “invisible”. A value of <code>0.5</code> yields lines that are semitransparent. </p><p>Note that when you use PostScript as your output format, this option works only with recent versions of Ghostscript.</p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/draw:opacity",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/draw%3Aopacity"
+  },
+  "draw opacity": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/draw opacity=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option sets “how transparent” lines should be. A value of <code>1</code> means “fully opaque” or “not transparent at all”, a value of <code>0</code> means “fully transparent” or “invisible”. A value of <code>0.5</code> yields lines that are semitransparent. </p><p>Note that when you use PostScript as your output format, this option works only with recent versions of Ghostscript.</p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/draw:opacity",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/draw%3Aopacity"
+  },
+  "/tikz/opacity": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/opacity=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets both the drawing and filling opacity to ⟨<i>value</i>⟩. </p><p>The following predefined styles make it easier to use this option:</p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/opacity",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/opacity"
+  },
+  "opacity": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/opacity=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets both the drawing and filling opacity to ⟨<i>value</i>⟩. </p><p>The following predefined styles make it easier to use this option:</p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/opacity",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/opacity"
+  },
+  "/tikz/transparent": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/transparent</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>Makes everything totally transparent and, hence, invisible.</p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/transparent",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/transparent"
+  },
+  "transparent": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/transparent</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>Makes everything totally transparent and, hence, invisible.</p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/transparent",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/transparent"
+  },
+  "/tikz/ultra nearly transparent": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/ultra nearly transparent</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>Makes everything, well, ultra nearly transparent.</p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/ultra:nearly:transparent",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/ultra%3Anearly%3Atransparent"
+  },
+  "ultra nearly transparent": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/ultra nearly transparent</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>Makes everything, well, ultra nearly transparent.</p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/ultra:nearly:transparent",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/ultra%3Anearly%3Atransparent"
+  },
+  "/tikz/very nearly transparent": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/very nearly transparent</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/very:nearly:transparent",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/very%3Anearly%3Atransparent"
+  },
+  "very nearly transparent": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/very nearly transparent</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/very:nearly:transparent",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/very%3Anearly%3Atransparent"
+  },
+  "/tikz/nearly transparent": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/nearly transparent</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/nearly:transparent",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/nearly%3Atransparent"
+  },
+  "nearly transparent": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/nearly transparent</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/nearly:transparent",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/nearly%3Atransparent"
+  },
+  "/tikz/semitransparent": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/semitransparent</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/semitransparent",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/semitransparent"
+  },
+  "semitransparent": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/semitransparent</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/semitransparent",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/semitransparent"
+  },
+  "/tikz/nearly opaque": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/nearly opaque</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/nearly:opaque",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/nearly%3Aopaque"
+  },
+  "nearly opaque": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/nearly opaque</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/nearly:opaque",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/nearly%3Aopaque"
+  },
+  "/tikz/very nearly opaque": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/very nearly opaque</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/very:nearly:opaque",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/very%3Anearly%3Aopaque"
+  },
+  "very nearly opaque": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/very nearly opaque</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/very:nearly:opaque",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/very%3Anearly%3Aopaque"
+  },
+  "/tikz/ultra nearly opaque": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/ultra nearly opaque</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/ultra:nearly:opaque",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/ultra%3Anearly%3Aopaque"
+  },
+  "ultra nearly opaque": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/ultra nearly opaque</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/ultra:nearly:opaque",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/ultra%3Anearly%3Aopaque"
+  },
+  "/tikz/opaque": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/opaque</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>This yields completely opaque drawings, which is the default.</p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/opaque",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/opaque"
+  },
+  "opaque": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/opaque</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>This yields completely opaque drawings, which is the default.</p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/opaque",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/opaque"
+  },
+  "/tikz/fill opacity": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/fill opacity=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option sets the opacity of fillings. In addition to filling operations, this opacity also applies to text and images. </p><p> Note, again, that when you use PostScript as your output format, this option works only with recent versions of Ghostscript. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/fill:opacity",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/fill%3Aopacity"
+  },
+  "fill opacity": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/fill opacity=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option sets the opacity of fillings. In addition to filling operations, this opacity also applies to text and images. </p><p> Note, again, that when you use PostScript as your output format, this option works only with recent versions of Ghostscript. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/fill:opacity",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/fill%3Aopacity"
+  },
+  "/tikz/text opacity": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/text opacity=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Sets the opacity of text labels, overriding the <code>fill opacity</code> setting.</p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/text:opacity",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/text%3Aopacity"
+  },
+  "text opacity": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/text opacity=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Sets the opacity of text labels, overriding the <code>fill opacity</code> setting.</p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/text:opacity",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/text%3Aopacity"
+  },
+  "/tikz/blend mode": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/blend mode=</kbd>⟨<i>mode</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets the current blend mode to ⟨<i>mode</i>⟩. Here ⟨<i>mode</i>⟩ must be one of the modes listed below. More details on these modes can also be found in Section 7.2.4 of the pdf Specification, version 1.7. </p><p> In the following example, the blend mode is only used and set inside a transparency group (see also Section 23.5). This is because most renderers (viewing programs) have trouble rendering blending correctly otherwise. For instance, at the time of writing, the versions of Adobe’s Reader and Apple’s Preview render the following drawing very differently, if the transparency group is not used in the following example. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/blend:mode",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/blend%3Amode"
+  },
+  "blend mode": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/blend mode=</kbd>⟨<i>mode</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets the current blend mode to ⟨<i>mode</i>⟩. Here ⟨<i>mode</i>⟩ must be one of the modes listed below. More details on these modes can also be found in Section 7.2.4 of the pdf Specification, version 1.7. </p><p> In the following example, the blend mode is only used and set inside a transparency group (see also Section 23.5). This is because most renderers (viewing programs) have trouble rendering blending correctly otherwise. For instance, at the time of writing, the versions of Adobe’s Reader and Apple’s Preview render the following drawing very differently, if the transparency group is not used in the following example. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/blend:mode",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/blend%3Amode"
+  },
+  "/tikz/blend group": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/blend group=</kbd>⟨<i>mode</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key can only be used with a scope (like <code>transparency group</code>). It will cause the current scope to become a transparency group and, inside this group, the blend mode will be set to ⟨<i>mode</i>⟩. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/blend:group",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/blend%3Agroup"
+  },
+  "blend group": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/blend group=</kbd>⟨<i>mode</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key can only be used with a scope (like <code>transparency group</code>). It will cause the current scope to become a transparency group and, inside this group, the blend mode will be set to ⟨<i>mode</i>⟩. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/blend:group",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/blend%3Agroup"
+  },
+  "tikzfadingfrompicture": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\begin{tikzfadingfrompicture}</kbd>[⟨<i>options</i>⟩]",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This command works like a <code>{tikzpicture}</code>, only the picture is not shown, but instead a fading is defined based on this picture. To set the name of the picture, use the <code>name</code> option (which is normally used to set the name of a node). </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf.tikzfadingfrompicture",
+    "href": "https://tikz.dev/tikz-transparency#pgf.tikzfadingfrompicture"
+  },
+  "\\tikzfading": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\tikzfading</kbd>[⟨<i>options</i>⟩]",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This command is used to define a fading similarly to the way a shading is defined. In the ⟨<i>options</i>⟩ you should </p><p> Then, a new fading named ⟨<i>name</i>⟩ will be created based on the shading. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf.back/tikzfading",
+    "href": "https://tikz.dev/tikz-transparency#pgf.back/tikzfading"
+  },
+  "/tikz/path fading": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/path fading=</kbd>⟨<i>name</i>⟩",
+    "defaultHtml": "(default <kbd>scope’s setting</kbd>)",
+    "snippetHtml": "<p> This option tells TikZ that the current path should be faded with the fading ⟨<i>name</i>⟩. If no ⟨<i>name</i>⟩ is given, the ⟨<i>name</i>⟩ set for the whole scope is used. Similarly to options like <code>draw</code> or <code>fill</code>, this option is reset for each path, so you have to add it to each path that should be faded. You can also specify <code>none</code> as ⟨<i>name</i>⟩, in which case fading for the path will be switched off in case it has been switched on by previous options or styles. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/path:fading",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/path%3Afading"
+  },
+  "path fading": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/path fading=</kbd>⟨<i>name</i>⟩",
+    "defaultHtml": "(default <kbd>scope’s setting</kbd>)",
+    "snippetHtml": "<p> This option tells TikZ that the current path should be faded with the fading ⟨<i>name</i>⟩. If no ⟨<i>name</i>⟩ is given, the ⟨<i>name</i>⟩ set for the whole scope is used. Similarly to options like <code>draw</code> or <code>fill</code>, this option is reset for each path, so you have to add it to each path that should be faded. You can also specify <code>none</code> as ⟨<i>name</i>⟩, in which case fading for the path will be switched off in case it has been switched on by previous options or styles. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/path:fading",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/path%3Afading"
+  },
+  "/tikz/fit fading": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/fit fading=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true, initially true</kbd>)",
+    "snippetHtml": "<p> When set to <code>true</code>, the fading is shifted and resized (in exactly the same way as a shading) so that it covers the current path. When set to <code>false</code>, the fading is only shifted so that it is centered on the path’s center, but it is not resized. This can be useful for special-purpose fadings, for instance when you use a fading to “punch out” something. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/fit:fading",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/fit%3Afading"
+  },
+  "fit fading": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/fit fading=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true, initially true</kbd>)",
+    "snippetHtml": "<p> When set to <code>true</code>, the fading is shifted and resized (in exactly the same way as a shading) so that it covers the current path. When set to <code>false</code>, the fading is only shifted so that it is centered on the path’s center, but it is not resized. This can be useful for special-purpose fadings, for instance when you use a fading to “punch out” something. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/fit:fading",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/fit%3Afading"
+  },
+  "/tikz/fading transform": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/fading transform=</kbd>⟨<i>transformation options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The ⟨<i>transformation options</i>⟩ are applied to the fading before it is used. For instance, if ⟨<i>transformation options</i>⟩ is set to <code>rotate=90</code>, the fading is rotated by 90 degrees. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/fading:transform",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/fading%3Atransform"
+  },
+  "fading transform": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/fading transform=</kbd>⟨<i>transformation options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The ⟨<i>transformation options</i>⟩ are applied to the fading before it is used. For instance, if ⟨<i>transformation options</i>⟩ is set to <code>rotate=90</code>, the fading is rotated by 90 degrees. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/fading:transform",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/fading%3Atransform"
+  },
+  "/tikz/fading angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/fading angle=</kbd>⟨<i>degree</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> A shortcut for <code>fading transform={rotate=</code>⟨<i>degree</i>⟩<code>}</code>. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/fading:angle",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/fading%3Aangle"
+  },
+  "fading angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/fading angle=</kbd>⟨<i>degree</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> A shortcut for <code>fading transform={rotate=</code>⟨<i>degree</i>⟩<code>}</code>. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/fading:angle",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/fading%3Aangle"
+  },
+  "/tikz/scope fading": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/scope fading=</kbd>⟨<i>fading</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> In principle, this key works in exactly the same way as the <code>path fading</code> key. The only difference is, that the effect of the fading will persist after the current path till the end of the scope. Thus, the ⟨<i>fading</i>⟩ is applied to all subsequent drawings in the current scope, not just to the current path. In this regard, the option works very much like the <code>clip</code> option. (Note, however, that, unlike the <code>clip</code> option, fadings to not accumulate unless a transparency group is used.) </p><p> The keys <code>fit fading</code> and <code>fading transform</code> have the same effect as for <code>path fading</code>. Also that, just as for <code>path fading</code>, providing the <code>scope fading</code> option with a <code>{scope}</code> only sets the name of the fading to be used. You have to explicitly provide the <code>scope fading</code> with a path to actually install a fading. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/scope:fading",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/scope%3Afading"
+  },
+  "scope fading": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/scope fading=</kbd>⟨<i>fading</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> In principle, this key works in exactly the same way as the <code>path fading</code> key. The only difference is, that the effect of the fading will persist after the current path till the end of the scope. Thus, the ⟨<i>fading</i>⟩ is applied to all subsequent drawings in the current scope, not just to the current path. In this regard, the option works very much like the <code>clip</code> option. (Note, however, that, unlike the <code>clip</code> option, fadings to not accumulate unless a transparency group is used.) </p><p> The keys <code>fit fading</code> and <code>fading transform</code> have the same effect as for <code>path fading</code>. Also that, just as for <code>path fading</code>, providing the <code>scope fading</code> option with a <code>{scope}</code> only sets the name of the fading to be used. You have to explicitly provide the <code>scope fading</code> with a path to actually install a fading. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/scope:fading",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/scope%3Afading"
+  },
+  "/tikz/transparency group": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/transparency group=</kbd>[⟨<i>options</i>⟩]",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option can be given to a <code>scope</code>. It will have the following effect: The scope’s contents is stroked / filled “ignoring any outside transparency”. This means, all previous transparency settings are ignored (you can still set transparency inside the group, but never mind). For instance, in the forbidden sign example, the whole sign is first painted (conceptually) like the image on the left hand side. Note that some pixels of the sign are painted multiple times (up to three times), but only the last color “wins”. </p><p> Then, when the scope is finished, it is painted as a whole. The <em>fill</em> transparency settings are now applied to the resulting picture. For instance, the pixel that has been painted three times is just red at the end, so this red color will be blended with whatever is “behind” the group on the page. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/transparency:group",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/transparency%3Agroup"
+  },
+  "transparency group": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/transparency group=</kbd>[⟨<i>options</i>⟩]",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option can be given to a <code>scope</code>. It will have the following effect: The scope’s contents is stroked / filled “ignoring any outside transparency”. This means, all previous transparency settings are ignored (you can still set transparency inside the group, but never mind). For instance, in the forbidden sign example, the whole sign is first painted (conceptually) like the image on the left hand side. Note that some pixels of the sign are painted multiple times (up to three times), but only the last color “wins”. </p><p> Then, when the scope is finished, it is painted as a whole. The <em>fill</em> transparency settings are now applied to the resulting picture. For instance, the pixel that has been painted three times is just red at the end, so this red color will be blended with whatever is “behind” the group on the page. </p>",
+    "page": "tikz-transparency",
+    "anchor": "pgf./tikz/transparency:group",
+    "href": "https://tikz.dev/tikz-transparency#pgf./tikz/transparency%3Agroup"
+  }
+}

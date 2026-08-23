@@ -1,0 +1,434 @@
+{
+  "/tikz/matrix": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/matrix=</kbd>⟨<i>true or false</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> This option can be passed to a <code>node</code> path command. It signals that the node will contain a matrix. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix"
+  },
+  "matrix": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/matrix=</kbd>⟨<i>true or false</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> This option can be passed to a <code>node</code> path command. It signals that the node will contain a matrix. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix"
+  },
+  "/tikz/every matrix": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every matrix</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This style is used in every matrix.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/every:matrix",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/every%3Amatrix"
+  },
+  "every matrix": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every matrix</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This style is used in every matrix.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/every:matrix",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/every%3Amatrix"
+  },
+  "/tikz/every outer matrix": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every outer matrix</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p> While the <code>every matrix</code> key also applies to the matrix contents, this only applies to the outer node which holds the matrix. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/every:outer:matrix",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/every%3Aouter%3Amatrix"
+  },
+  "every outer matrix": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every outer matrix</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p> While the <code>every matrix</code> key also applies to the matrix contents, this only applies to the outer node which holds the matrix. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/every:outer:matrix",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/every%3Aouter%3Amatrix"
+  },
+  "\\matrix": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\matrix</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> Inside <code>{tikzpicture}</code> this is an abbreviation for <code>\\path node[matrix]</code>. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf.back/matrix",
+    "href": "https://tikz.dev/tikz-matrices#pgf.back/matrix"
+  },
+  "/tikz/column sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/column sep=</kbd>⟨<i>spacing list</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option sets a default space that is added between every two columns. This space can be positive or negative and is zero by default. The ⟨<i>spacing list</i>⟩ normally contains a single dimension like <code>2pt</code>. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/column:sep",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/column%3Asep"
+  },
+  "column sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/column sep=</kbd>⟨<i>spacing list</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option sets a default space that is added between every two columns. This space can be positive or negative and is zero by default. The ⟨<i>spacing list</i>⟩ normally contains a single dimension like <code>2pt</code>. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/column:sep",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/column%3Asep"
+  },
+  "/tikz/row sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/row sep=</kbd>⟨<i>spacing list</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option works like <code>column sep</code>, only for rows. Here, too, you can specify whether the space is added between the lower end of the first row and the upper end of the second row, or whether the space is computed between the origins of the two rows. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/row:sep",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/row%3Asep"
+  },
+  "row sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/row sep=</kbd>⟨<i>spacing list</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option works like <code>column sep</code>, only for rows. Here, too, you can specify whether the space is added between the lower end of the first row and the upper end of the second row, or whether the space is computed between the origins of the two rows. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/row:sep",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/row%3Asep"
+  },
+  "/tikz/every cell": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every cell=</kbd>{⟨<i>row</i>⟩}{⟨<i>column</i>⟩}",
+    "defaultHtml": "(style, no default, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p> This style is installed at the beginning of each cell picture with the two parameters being the current ⟨<i>row</i>⟩ and ⟨<i>column</i>⟩ of the cell. Note that setting this style to <code>draw</code> will <em>not</em> cause all nodes to be drawn since the <code>draw</code> option has to be passed to each node individually. </p><p> Inside this style (and inside all cells), the current ⟨<i>row</i>⟩ and ⟨<i>column</i>⟩ number are also accessible via the counters <code>\\pgfmatrixcurrentrow</code> and <code>\\pgfmatrixcurrentcolumn</code>. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/every:cell",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/every%3Acell"
+  },
+  "every cell": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/matrix/inner style/every cell</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>Wraps <code>/tikz/every cell</code>.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix/inner:style/every:cell",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix/inner%3Astyle/every%3Acell"
+  },
+  "/tikz/cells": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cells=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key adds the ⟨<i>options</i>⟩ to the style <code>every cell</code>. It is mainly just a shorthand for the code <code>every cell/.append style=</code>⟨<i>options</i>⟩. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/cells",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/cells"
+  },
+  "cells": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/cells=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key adds the ⟨<i>options</i>⟩ to the style <code>every cell</code>. It is mainly just a shorthand for the code <code>every cell/.append style=</code>⟨<i>options</i>⟩. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/cells",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/cells"
+  },
+  "/tikz/nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/nodes=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key adds the ⟨<i>options</i>⟩ to the style <code>every node</code>. It is mainly just a shorthand for the code <code>every node/.append style=</code>⟨<i>options</i>⟩. </p><p> The main use of this option is the install some options for the nodes <em>inside</em> the matrix that should not apply to the matrix <em>itself</em>. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/nodes",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/nodes"
+  },
+  "nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/nodes=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key adds the ⟨<i>options</i>⟩ to the style <code>every node</code>. It is mainly just a shorthand for the code <code>every node/.append style=</code>⟨<i>options</i>⟩. </p><p> The main use of this option is the install some options for the nodes <em>inside</em> the matrix that should not apply to the matrix <em>itself</em>. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/nodes",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/nodes"
+  },
+  "/tikz/every odd column": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every odd column</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>This style is used for every cell in an odd column.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/every:odd:column",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/every%3Aodd%3Acolumn"
+  },
+  "every odd column": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every odd column</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>This style is used for every cell in an odd column.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/every:odd:column",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/every%3Aodd%3Acolumn"
+  },
+  "/tikz/every even column": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every even column</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>This style is used for every cell in an even column.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/every:even:column",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/every%3Aeven%3Acolumn"
+  },
+  "every even column": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every even column</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>This style is used for every cell in an even column.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/every:even:column",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/every%3Aeven%3Acolumn"
+  },
+  "/tikz/every odd row": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every odd row</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>This style is used for every cell in an odd row.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/every:odd:row",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/every%3Aodd%3Arow"
+  },
+  "every odd row": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every odd row</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>This style is used for every cell in an odd row.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/every:odd:row",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/every%3Aodd%3Arow"
+  },
+  "/tikz/every even row": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every even row</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>This style is used for every cell in an even row.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/every:even:row",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/every%3Aeven%3Arow"
+  },
+  "every even row": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every even row</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>This style is used for every cell in an even row.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/every:even:row",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/every%3Aeven%3Arow"
+  },
+  "/tikz/matrix/inner style/every cell": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/matrix/inner style/every cell</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>Wraps <code>/tikz/every cell</code>.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix/inner:style/every:cell",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix/inner%3Astyle/every%3Acell"
+  },
+  "/tikz/matrix/inner style/column": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/matrix/inner style/column</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p> Wraps <code>/tikz/column </code>⟨<i>number</i>⟩. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix/inner:style/column",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix/inner%3Astyle/column"
+  },
+  "column": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/matrix/inner style/column</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p> Wraps <code>/tikz/column </code>⟨<i>number</i>⟩. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix/inner:style/column",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix/inner%3Astyle/column"
+  },
+  "/tikz/matrix/inner style/even odd column": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/matrix/inner style/even odd column</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>Wraps <code>/tikz/every even column</code> and <code>/tikz/every odd column</code>.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix/inner:style/even:odd:column",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix/inner%3Astyle/even%3Aodd%3Acolumn"
+  },
+  "even odd column": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/matrix/inner style/even odd column</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>Wraps <code>/tikz/every even column</code> and <code>/tikz/every odd column</code>.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix/inner:style/even:odd:column",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix/inner%3Astyle/even%3Aodd%3Acolumn"
+  },
+  "/tikz/matrix/inner style/row": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/matrix/inner style/row</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p> Wraps <code>/tikz/row </code>⟨<i>number</i>⟩. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix/inner:style/row",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix/inner%3Astyle/row"
+  },
+  "row": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/matrix/inner style/row</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p> Wraps <code>/tikz/row </code>⟨<i>number</i>⟩. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix/inner:style/row",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix/inner%3Astyle/row"
+  },
+  "/tikz/matrix/inner style/even odd row": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/matrix/inner style/even odd row</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>Wraps <code>/tikz/every even row</code> and <code>/tikz/every odd row</code>.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix/inner:style/even:odd:row",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix/inner%3Astyle/even%3Aodd%3Arow"
+  },
+  "even odd row": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/matrix/inner style/even odd row</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>Wraps <code>/tikz/every even row</code> and <code>/tikz/every odd row</code>.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix/inner:style/even:odd:row",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix/inner%3Astyle/even%3Aodd%3Arow"
+  },
+  "/tikz/matrix/inner style/cell": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/matrix/inner style/cell</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p> Wraps <code>/tikz/row </code>⟨<i>number</i>⟩<code> column </code>⟨<i>number</i>⟩. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix/inner:style/cell",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix/inner%3Astyle/cell"
+  },
+  "cell": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/matrix/inner style/cell</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p> Wraps <code>/tikz/row </code>⟨<i>number</i>⟩<code> column </code>⟨<i>number</i>⟩. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix/inner:style/cell",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix/inner%3Astyle/cell"
+  },
+  "/tikz/matrix/inner style order": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/matrix/inner style order</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>The order in which these styles are applied to the matrix cells is specified by this key. By default it is</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix/inner:style:order",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix/inner%3Astyle%3Aorder"
+  },
+  "inner style order": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/matrix/inner style order</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>The order in which these styles are applied to the matrix cells is specified by this key. By default it is</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix/inner:style:order",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix/inner%3Astyle%3Aorder"
+  },
+  "/tikz/execute at begin cell": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at begin cell=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>The code will be executed at the beginning of each nonempty cell.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/execute:at:begin:cell",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/execute%3Aat%3Abegin%3Acell"
+  },
+  "execute at begin cell": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at begin cell=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>The code will be executed at the beginning of each nonempty cell.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/execute:at:begin:cell",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/execute%3Aat%3Abegin%3Acell"
+  },
+  "/tikz/execute at end cell": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at end cell=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>The code will be executed at the end of each nonempty cell.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/execute:at:end:cell",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/execute%3Aat%3Aend%3Acell"
+  },
+  "execute at end cell": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at end cell=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>The code will be executed at the end of each nonempty cell.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/execute:at:end:cell",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/execute%3Aat%3Aend%3Acell"
+  },
+  "/tikz/execute at empty cell": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at empty cell=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>The code will be executed inside each empty cell.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/execute:at:empty:cell",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/execute%3Aat%3Aempty%3Acell"
+  },
+  "execute at empty cell": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at empty cell=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>The code will be executed inside each empty cell.</p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/execute:at:empty:cell",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/execute%3Aat%3Aempty%3Acell"
+  },
+  "/tikz/matrix anchor": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/matrix anchor=</kbd>⟨<i>anchor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option has the same effect as <code>anchor</code>, but the option applies only to the matrix itself, not to the cells inside. If you just say <code>anchor=north</code> as an option to the matrix node, all nodes inside matrix will also have this anchor, unless it is explicitly set differently for each node. By comparison, <code>matrix anchor</code> sets the anchor for the matrix, but for the nodes inside the value of <code>anchor</code> remain unchanged. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix:anchor",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix%3Aanchor"
+  },
+  "matrix anchor": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/matrix anchor=</kbd>⟨<i>anchor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option has the same effect as <code>anchor</code>, but the option applies only to the matrix itself, not to the cells inside. If you just say <code>anchor=north</code> as an option to the matrix node, all nodes inside matrix will also have this anchor, unless it is explicitly set differently for each node. By comparison, <code>matrix anchor</code> sets the anchor for the matrix, but for the nodes inside the value of <code>anchor</code> remain unchanged. </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/matrix:anchor",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/matrix%3Aanchor"
+  },
+  "/tikz/ampersand replacement": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/ampersand replacement=</kbd>⟨<i>macro name or empty</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> If a macro name is provided, this macro will be defined to be equal to <code>\\pgfmatrixnextcell</code> inside matrices and <code>&amp;</code> will not be made active. For instance, you could say <code>ampersand replacement=\\&amp;</code> and then use <code>\\&amp;</code> to separate columns as in the following example: </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/ampersand:replacement",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/ampersand%3Areplacement"
+  },
+  "ampersand replacement": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/ampersand replacement=</kbd>⟨<i>macro name or empty</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> If a macro name is provided, this macro will be defined to be equal to <code>\\pgfmatrixnextcell</code> inside matrices and <code>&amp;</code> will not be made active. For instance, you could say <code>ampersand replacement=\\&amp;</code> and then use <code>\\&amp;</code> to separate columns as in the following example: </p>",
+    "page": "tikz-matrices",
+    "anchor": "pgf./tikz/ampersand:replacement",
+    "href": "https://tikz.dev/tikz-matrices#pgf./tikz/ampersand%3Areplacement"
+  }
+}

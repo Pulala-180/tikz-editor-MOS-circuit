@@ -1,0 +1,164 @@
+[
+  {
+    "id": "missing-tikzpicture",
+    "source": "\\draw (0,0) -- (1,0);",
+    "expected": [
+      {
+        "phase": "parse",
+        "code": "missing-tikzpicture",
+        "severity": "warning",
+        "message": "No tikzpicture environment found; wrap the code in `\\begin{tikzpicture}` ... `\\end{tikzpicture}`."
+      }
+    ]
+  },
+  {
+    "id": "missing-semicolon-before-node",
+    "source": "\\begin{tikzpicture}\n  \\draw (0,0) -- (1,1)\n  \\node {A};\n\\end{tikzpicture}",
+    "expected": [
+      {
+        "phase": "parse",
+        "code": "missing-semicolon",
+        "severity": "warning",
+        "message": "\\node starts before the previous statement ended; add a semicolon before \\node."
+      }
+    ]
+  },
+  {
+    "id": "stray-semicolon",
+    "source": "\\begin{tikzpicture}\n  ;\n\\end{tikzpicture}",
+    "expected": [
+      {
+        "phase": "parse",
+        "code": "stray-token",
+        "severity": "error",
+        "message": "Unexpected semicolon; remove it or put it after a TikZ command."
+      }
+    ]
+  },
+  {
+    "id": "unclosed-option-list",
+    "source": "\\begin{tikzpicture}\n  \\draw[red, thick (0,0) -- (1,1);\n\\end{tikzpicture}",
+    "expected": [
+      {
+        "phase": "parse",
+        "code": "parse-error",
+        "severity": "error",
+        "message": "Syntax error in option list. Check for missing commas or unmatched brackets."
+      },
+      {
+        "phase": "parse",
+        "code": "missing-option-close",
+        "severity": "warning",
+        "message": "Unclosed option list; add a closing `]` before the statement continues."
+      }
+    ]
+  },
+  {
+    "id": "unclosed-scope",
+    "source": "\\begin{tikzpicture}\n  \\begin{scope}[xshift=1cm]\n    \\draw (0,0) -- (1,0);\n\\end{tikzpicture}",
+    "expected": [
+      {
+        "phase": "parse",
+        "code": "parse-error",
+        "severity": "error",
+        "message": "Syntax error inside scope. Check for a missing \\end{scope}, unclosed groups, or missing semicolons."
+      }
+    ]
+  },
+  {
+    "id": "malformed-coordinate",
+    "source": "\\begin{tikzpicture}\n  \\draw (0,) -- (1,1);\n\\end{tikzpicture}",
+    "expected": [
+      {
+        "phase": "parse",
+        "code": "malformed-coordinate",
+        "severity": "warning",
+        "message": "Malformed coordinate `(0,)`; use a named coordinate such as `(A)` or numeric parts such as `(0,0)`."
+      }
+    ]
+  },
+  {
+    "id": "malformed-newcommand",
+    "source": "\\begin{tikzpicture}\n  \\newcommand{\\foo}[bad]{x}\n\\end{tikzpicture}",
+    "expected": [
+      {
+        "phase": "parse",
+        "code": "parse-error",
+        "severity": "error",
+        "message": "Syntax error in \\newcommand definition. Expected \\newcommand{\\name}[argCount]{body}."
+      }
+    ]
+  },
+  {
+    "id": "foreach-unbraced-list",
+    "source": "\\begin{tikzpicture}\n  \\foreach \\x in 1,2,3 { \\draw (\\x,0) -- (\\x,1); }\n\\end{tikzpicture}",
+    "expected": [
+      {
+        "phase": "parse",
+        "code": "parse-error",
+        "severity": "error",
+        "message": "Syntax error in \\foreach statement. Check the variable list and body syntax."
+      }
+    ]
+  },
+  {
+    "id": "foreach-two-dot-range",
+    "source": "\\begin{tikzpicture}\n  \\foreach \\x in {0,..,3} { \\draw (\\x,0) -- (\\x,1); }\n\\end{tikzpicture}",
+    "expected": [
+      {
+        "phase": "parse",
+        "code": "invalid-foreach-range-ellipsis",
+        "severity": "error",
+        "message": "Invalid foreach range token `..`; use `...` (three dots), for example `{0,...,10}`."
+      }
+    ]
+  },
+  {
+    "id": "unclosed-node-text",
+    "source": "\\begin{tikzpicture}\n  \\node at (0,0) {Hello;\n\\end{tikzpicture}",
+    "expected": [
+      {
+        "phase": "parse",
+        "code": "parse-error",
+        "severity": "error",
+        "message": "Unclosed node text; add a closing `}` before the end of the node statement."
+      }
+    ]
+  },
+  {
+    "id": "stray-prose",
+    "source": "\\begin{tikzpicture}\n  hello world\n\\end{tikzpicture}",
+    "expected": [
+      {
+        "phase": "parse",
+        "code": "stray-token",
+        "severity": "error",
+        "message": "Unexpected text `hello` in tikzpicture; start statements with a TikZ command such as \\draw, \\node, or \\path."
+      }
+    ]
+  },
+  {
+    "id": "empty-colorlet-name",
+    "source": "\\begin{tikzpicture}\n  \\colorlet{}{red}\n\\end{tikzpicture}",
+    "expected": [
+      {
+        "phase": "semantic",
+        "code": "invalid-colorlet-name",
+        "severity": "warning",
+        "message": "\\colorlet requires a non-empty color name."
+      }
+    ]
+  },
+  {
+    "id": "unknown-command-typo",
+    "source": "\\begin{tikzpicture}\n  \\drwa (0,0) -- (1,1);\n\\end{tikzpicture}",
+    "expected": [
+      {
+        "phase": "semantic",
+        "code": "unsupported-statement",
+        "severity": "warning",
+        "message": "Unknown or unsupported command `\\drwa`; this editor will ignore the statement. Check for a typo or unsupported TikZ command."
+      }
+    ]
+  }
+]

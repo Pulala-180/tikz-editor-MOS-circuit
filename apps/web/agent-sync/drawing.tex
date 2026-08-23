@@ -1,0 +1,113 @@
+\documentclass[tikz,border=1cm]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{positioning}
+\begin{document}
+\begin{tikzpicture}
+% =================================================================
+% Common-Gate Amplifier with Source Degeneration (源极负反馈共栅极电路)
+% Pure Cascading Tree Topology anchored at Root Transistor M1.
+% =================================================================
+
+% ============ ROOT: M1 (nMOS, left gate) ============
+\begin{scope}[shift={(0, 0)}]
+  \coordinate (node_M1_g) at (-0.73, 0);
+  \coordinate (node_M1_d) at (0, 0.5);
+  \coordinate (node_M1_s) at (0, -0.6);
+
+  \draw[thick, line cap=round] (-0.73,0) -- (-0.47,0);
+  \draw[ultra thick] (-0.48,-0.25) -- (-0.48,0.25);
+  \draw[ultra thick] (-0.32,-0.3) -- (-0.32,0.3);
+  \draw[thick, line cap=round, line join=round] (-0.33,0.2) -- (0,0.2) -- (0,0.5);
+  \draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, thick, line cap=round] (-0.33,-0.2) -- (-0.03,-0.2);
+  \draw[thick, line cap=round, line join=round] (0,-0.21) -- (0,-0.6);
+
+  \node[right=0.08cm] at (0, 0) {\normalsize $M_1$};
+\end{scope}
+
+% ============ Gate Bias: Vb (IO Node) ============
+\begin{scope}[shift={(node_M1_g)}, xshift=-0.8cm]
+  \coordinate (node_Vb_c) at (0, 0);
+  \draw[thick] (0, 0) -| (node_M1_g);
+  \draw[fill=white, thick] (0, 0) circle (0.055cm);
+  \node[left=0.12cm] at (0, 0) {\normalsize $V_b$};
+\end{scope}
+
+% ============ Drain Junction: Black Node ============
+\begin{scope}[shift={(node_M1_d)}, yshift=0.5cm]
+  \coordinate (node_drain_c) at (0, 0);
+  \coordinate (node_drain_branch_R) at (0.9cm, 0);
+
+  \node[minimum height=0.5cm, minimum width=0.5cm, fill=white, opacity=0.01] at (0, 0) {};
+  \draw[thick] (node_drain_c) |- (node_M1_d);
+  \draw[fill=black] (node_drain_c) circle (0.055cm);
+  \draw[thick] (node_drain_c) -- (node_drain_branch_R);
+\end{scope}
+
+% ============ Output Terminal: Vout (IO Node) ============
+\begin{scope}[shift={(node_drain_branch_R)}, xshift=0.3cm]
+  \coordinate (node_Vout_c) at (0, 0);
+  \draw[thick] (0, 0) -| (node_drain_branch_R);
+  \draw[fill=white, thick] (0, 0) circle (0.055cm);
+  \node[right=0.12cm] at (0, 0) {\normalsize $V_{out}$};
+\end{scope}
+
+% ============ Load Resistor: RD (Resistor, Exact Standard Library Geometry) ============
+\begin{scope}[shift={(node_drain_c)}, yshift=1.0cm]
+  \coordinate (node_RD_top) at (0, 0.35);
+  \coordinate (node_RD_bottom) at (0, -0.35);
+
+  \draw[thick] (0, -0.35) |- (node_drain_c);
+  \draw[thick, line cap=round] (0,-0.35) -- (0,-0.195) -- (0.15,-0.1625) -- (-0.15,-0.0975) -- (0.15,-0.0325) -- (-0.15,0.0325) -- (0.15,0.0975) -- (-0.15,0.1625) -- (0,0.195) -- (0,0.35);
+  \node[right=0.2cm] at (0.15, 0) {\normalsize $R_D$};
+\end{scope}
+
+% ============ Power Rail: VDD ============
+\begin{scope}[shift={(node_RD_top)}, yshift=0.5cm]
+  \node[minimum height=0.5cm, minimum width=1.6cm, fill=white, opacity=0.01] at (0, 0) {};
+  \draw[thick] (0, 0) |- (node_RD_top);
+  \draw[ultra thick] (-0.8, 0) -- (0.8, 0);
+  \node[above=0.05cm] at (0, 0) {\normalsize $V_{DD}$};
+\end{scope}
+
+% ============ Source Junction: Black Node ============
+\begin{scope}[shift={(node_M1_s)}, yshift=-0.5cm]
+  \coordinate (node_source_c) at (0, 0);
+  \coordinate (node_source_branch_L) at (-0.9cm, 0);
+
+  \node[minimum height=0.5cm, minimum width=0.5cm, fill=white, opacity=0.01] at (0, 0) {};
+  \draw[thick] (node_source_c) |- (node_M1_s);
+  \draw[fill=black] (node_source_c) circle (0.055cm);
+  \draw[thick] (node_source_c) -- (node_source_branch_L);
+\end{scope}
+
+% ============ Input Terminal: Vin (IO Node) ============
+\begin{scope}[shift={(node_source_branch_L)}, xshift=-0.3cm]
+  \coordinate (node_Vin_c) at (0, 0);
+  \draw[thick] (0, 0) -| (node_source_branch_L);
+  \draw[fill=white, thick] (0, 0) circle (0.055cm);
+  \node[left=0.12cm] at (0, 0) {\normalsize $V_{in}$};
+\end{scope}
+
+% ============ Degeneration Resistor: RS (Resistor, Exact Standard Library Geometry) ============
+\begin{scope}[shift={(node_source_c)}, yshift=-1.0cm]
+  \coordinate (node_RS_top) at (0, 0.35);
+  \coordinate (node_RS_bottom) at (0, -0.35);
+
+  \draw[thick] (0, 0.35) |- (node_source_c);
+  \draw[thick, line cap=round] (0,-0.35) -- (0,-0.195) -- (0.15,-0.1625) -- (-0.15,-0.0975) -- (0.15,-0.0325) -- (-0.15,0.0325) -- (0.15,0.0975) -- (-0.15,0.1625) -- (0,0.195) -- (0,0.35);
+  \node[right=0.2cm] at (0.15, 0) {\normalsize $R_S$};
+\end{scope}
+
+% ============ Ground Terminal: GND ============
+\begin{scope}[shift={(node_RS_bottom)}, yshift=-0.4cm]
+  \draw[thick] (0, 0) |- (node_RS_bottom);
+  \draw[ultra thick] (-0.2, 0) -- (0.2, 0);
+  \draw[ultra thick] (-0.13, -0.1) -- (0.13, -0.1);
+  \draw[ultra thick] (-0.06, -0.2) -- (0.06, -0.2);
+\end{scope}
+
+\end{tikzpicture}
+
+\end{document}

@@ -1,0 +1,32 @@
+{
+  "name": "@tikz-editor/landing",
+  "private": true,
+  "version": "0.5.1",
+  "type": "module",
+  "scripts": {
+    "generate:build-info": "node --import tsx scripts/generate-build-info.mts",
+    "generate:release-downloads": "node --import tsx scripts/generate-release-downloads.mts",
+    "generate:feature-svgs": "node --import tsx scripts/generate-feature-svgs.mts",
+    "generate:tool-svgs": "node --import tsx scripts/generate-tool-svgs.mts",
+    "capture:screenshots": "node --import tsx scripts/capture-screenshots.mts",
+    "dev": "npm run generate:build-info && npm run generate:release-downloads && npm run generate:feature-svgs && vite",
+    "build": "npm run generate:build-info && npm run generate:release-downloads && npm run generate:feature-svgs && tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@remixicon/react": "^4.9.0",
+    "@tikz-editor/app": "0.5.1",
+    "gsap": "^3.13.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0"
+  }
+}

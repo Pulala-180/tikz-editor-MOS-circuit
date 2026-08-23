@@ -1,0 +1,2288 @@
+{
+  "graphs": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>graphs</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usetikzlibrary{graphs} % LaTeX and plain TeX</kbd><br> <kbd>\\usetikzlibrary[graphs] % ConTeXt</kbd><br> <br> The package must be loaded to use the <code>graph</code> path command. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.graphs",
+    "href": "https://tikz.dev/tikz-graphs#pgf.graphs"
+  },
+  "\\graph": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\graph</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>Inside a <code>{tikzpicture}</code> this is an abbreviation for <code>\\path graph</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.back/graph",
+    "href": "https://tikz.dev/tikz-graphs#pgf.back/graph"
+  },
+  "graph": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>graph</kbd>[⟨<i>options</i>⟩]⟨<i>group specification</i>⟩ …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> When this command is encountered on a path, the construction of the current path is suspended (similarly to an <code>edge</code> command or a <code>node</code> command). In a local scope, the ⟨<i>options</i>⟩ are first executed with the key path <code>/tikz/graphs</code> using the following command: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.graph",
+    "href": "https://tikz.dev/tikz-graphs#pgf.graph"
+  },
+  "\\tikzgraphsset": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\tikzgraphsset</kbd>{⟨<i>options</i>⟩}",
+    "defaultHtml": "",
+    "snippetHtml": "<p> Executes the ⟨<i>options</i>⟩ with the path prefix <code>/tikz/graphs</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.back/tikzgraphsset",
+    "href": "https://tikz.dev/tikz-graphs#pgf.back/tikzgraphsset"
+  },
+  "/tikz/graphs/every graph": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/graphs/every graph</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p> This style is executed at the beginning of every <code>graph</code> path command prior to the ⟨<i>options</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/every:graph",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/every%3Agraph"
+  },
+  "every graph": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/graphs/every graph</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p> This style is executed at the beginning of every <code>graph</code> path command prior to the ⟨<i>options</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/every:graph",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/every%3Agraph"
+  },
+  "/tikz/graphs/nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/nodes=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option causes the ⟨<i>options</i>⟩ to be applied to each newly created node inside the ⟨<i>group specification</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/nodes",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/nodes"
+  },
+  "nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/nodes=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option causes the ⟨<i>options</i>⟩ to be applied to each newly created node inside the ⟨<i>group specification</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/nodes",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/nodes"
+  },
+  "/tikz/graphs/edges": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/edges=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option causes the ⟨<i>options</i>⟩ to be applied to each newly created edge inside the ⟨<i>group specification</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/edges",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/edges"
+  },
+  "edges": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/edges=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option causes the ⟨<i>options</i>⟩ to be applied to each newly created edge inside the ⟨<i>group specification</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/edges",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/edges"
+  },
+  "/tikz/graphs/edge": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/edge=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>This is an alias for <code>edges</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/edge",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/edge"
+  },
+  "edge": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/edge=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>This is an alias for <code>edges</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/edge",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/edge"
+  },
+  "/tikz/graphs/edge node": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/edge node=</kbd>⟨<i>node specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key specifies that the ⟨<i>node specification</i>⟩ should be added to each newly created edge as an implicitly placed node. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/edge:node",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/edge%3Anode"
+  },
+  "edge node": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/edge node=</kbd>⟨<i>node specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key specifies that the ⟨<i>node specification</i>⟩ should be added to each newly created edge as an implicitly placed node. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/edge:node",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/edge%3Anode"
+  },
+  "/tikz/graphs/edge label": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/edge label=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key is an abbreviation for <code>edge node=node[auto]{</code>⟨<i>text</i>⟩<code>}</code>. The net effect is that the <code>text</code> is placed next to the newly created edges. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/edge:label",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/edge%3Alabel"
+  },
+  "edge label": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/edge label=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key is an abbreviation for <code>edge node=node[auto]{</code>⟨<i>text</i>⟩<code>}</code>. The net effect is that the <code>text</code> is placed next to the newly created edges. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/edge:label",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/edge%3Alabel"
+  },
+  "/tikz/graphs/edge label'": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/edge label'=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key is an abbreviation for <code>edge node=node[auto,swap]{</code>⟨<i>text</i>⟩<code>}</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/edge:label'",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/edge%3Alabel'"
+  },
+  "edge label'": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/edge label'=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key is an abbreviation for <code>edge node=node[auto,swap]{</code>⟨<i>text</i>⟩<code>}</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/edge:label'",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/edge%3Alabel'"
+  },
+  "/tikz/graph/parse": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graph/parse=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key can only be used inside the ⟨<i>options</i>⟩ of a ⟨<i>group specification</i>⟩. Its effect is that the ⟨<i>text</i>⟩ is inserted at the beginning of the current group as if you had entered it there. Naturally, it makes little sense to just write down some static ⟨<i>text</i>⟩ since you could just as well directly place it at the beginning of the group. The real power of this command stems from the fact that the keys mechanism allows you to say, for instance, <code>parse/.expand once</code> to insert the text stored in some macro into the group. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graph/parse",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graph/parse"
+  },
+  "parse": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graph/parse=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key can only be used inside the ⟨<i>options</i>⟩ of a ⟨<i>group specification</i>⟩. Its effect is that the ⟨<i>text</i>⟩ is inserted at the beginning of the current group as if you had entered it there. Naturally, it makes little sense to just write down some static ⟨<i>text</i>⟩ since you could just as well directly place it at the beginning of the group. The real power of this command stems from the fact that the keys mechanism allows you to say, for instance, <code>parse/.expand once</code> to insert the text stored in some macro into the group. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graph/parse",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graph/parse"
+  },
+  "/tikz/graphs/new ->": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/new -&gt;=</kbd>{⟨<i>left node</i>⟩}{⟨<i>right node</i>⟩}{⟨<i>edge options</i>⟩}{⟨<i>edge nodes</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key will be called for a <code>-&gt;</code> edge specification with the following four parameters: </p><p>By default, the key executes the following code:</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/new:->",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/new%3A-%3E"
+  },
+  "new ->": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/new -&gt;=</kbd>{⟨<i>left node</i>⟩}{⟨<i>right node</i>⟩}{⟨<i>edge options</i>⟩}{⟨<i>edge nodes</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key will be called for a <code>-&gt;</code> edge specification with the following four parameters: </p><p>By default, the key executes the following code:</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/new:->",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/new%3A-%3E"
+  },
+  "/tikz/every new ->": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every new -&gt;</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>This key gets executed by default for a <code>new -&gt;</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/every:new:->",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/every%3Anew%3A-%3E"
+  },
+  "every new ->": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every new -&gt;</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>This key gets executed by default for a <code>new -&gt;</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/every:new:->",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/every%3Anew%3A-%3E"
+  },
+  "/tikz/graphs/left anchor": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/left anchor=</kbd>⟨<i>anchor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This anchor is used for the node that is to the left of an edge specification. Setting this anchor to the empty string means that no special anchor is used (which is the default). The ⟨<i>anchor</i>⟩ is stored in the macro <code>\\tikzgraphleftanchor</code> with a leading dot. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/left:anchor",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/left%3Aanchor"
+  },
+  "left anchor": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/left anchor=</kbd>⟨<i>anchor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This anchor is used for the node that is to the left of an edge specification. Setting this anchor to the empty string means that no special anchor is used (which is the default). The ⟨<i>anchor</i>⟩ is stored in the macro <code>\\tikzgraphleftanchor</code> with a leading dot. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/left:anchor",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/left%3Aanchor"
+  },
+  "/tikz/graphs/right anchor": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/right anchor=</kbd>⟨<i>anchor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works like <code>left anchor</code>, only for <code>\\tikzgraphrightanchor</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/right:anchor",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/right%3Aanchor"
+  },
+  "right anchor": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/right anchor=</kbd>⟨<i>anchor</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works like <code>left anchor</code>, only for <code>\\tikzgraphrightanchor</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/right:anchor",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/right%3Aanchor"
+  },
+  "/tikz/graphs/new --": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/new --=</kbd>{⟨<i>left node</i>⟩}{⟨<i>right node</i>⟩}{⟨<i>edge options</i>⟩}{⟨<i>edge nodes</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key is called for <code>--</code> with the same parameters as above. The only difference in the definition is that in the <code>\\path</code> command the <code>-&gt;</code> gets replaced by <code>-</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/new:--",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/new%3A--"
+  },
+  "new --": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/new --=</kbd>{⟨<i>left node</i>⟩}{⟨<i>right node</i>⟩}{⟨<i>edge options</i>⟩}{⟨<i>edge nodes</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key is called for <code>--</code> with the same parameters as above. The only difference in the definition is that in the <code>\\path</code> command the <code>-&gt;</code> gets replaced by <code>-</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/new:--",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/new%3A--"
+  },
+  "/tikz/every new --": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every new --</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/every:new:--",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/every%3Anew%3A--"
+  },
+  "every new --": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every new --</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/every:new:--",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/every%3Anew%3A--"
+  },
+  "/tikz/graphs/new <->": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/new &lt;-&gt;=</kbd>{⟨<i>left node</i>⟩}{⟨<i>right node</i>⟩}{⟨<i>edge options</i>⟩}{⟨<i>edge nodes</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Called for <code>&lt;-&gt;</code> with the same parameters as above. The <code>-&gt;</code> is replaced by <code>&lt;-</code> </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/new:<->",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/new%3A%3C-%3E"
+  },
+  "new <->": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/new &lt;-&gt;=</kbd>{⟨<i>left node</i>⟩}{⟨<i>right node</i>⟩}{⟨<i>edge options</i>⟩}{⟨<i>edge nodes</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Called for <code>&lt;-&gt;</code> with the same parameters as above. The <code>-&gt;</code> is replaced by <code>&lt;-</code> </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/new:<->",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/new%3A%3C-%3E"
+  },
+  "/tikz/every new <->": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every new &lt;-&gt;</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/every:new:<->",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/every%3Anew%3A%3C-%3E"
+  },
+  "every new <->": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every new &lt;-&gt;</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/every:new:<->",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/every%3Anew%3A%3C-%3E"
+  },
+  "/tikz/graphs/new <-": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/new &lt;-=</kbd>{⟨<i>left node</i>⟩}{⟨<i>right node</i>⟩}{⟨<i>edge options</i>⟩}{⟨<i>edge nodes</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Called for <code>&lt;-</code> with the same parameters as above.<sup>4</sup> </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/new:<-",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/new%3A%3C-"
+  },
+  "new <-": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/new &lt;-=</kbd>{⟨<i>left node</i>⟩}{⟨<i>right node</i>⟩}{⟨<i>edge options</i>⟩}{⟨<i>edge nodes</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Called for <code>&lt;-</code> with the same parameters as above.<sup>4</sup> </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/new:<-",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/new%3A%3C-"
+  },
+  "/tikz/every new <-": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every new &lt;-</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/every:new:<-",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/every%3Anew%3A%3C-"
+  },
+  "every new <-": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every new &lt;-</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/every:new:<-",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/every%3Anew%3A%3C-"
+  },
+  "/tikz/graphs/new -!-": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/new -!-=</kbd>{⟨<i>left node</i>⟩}{⟨<i>right node</i>⟩}{⟨<i>edge options</i>⟩}{⟨<i>edge nodes</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Called for <code>-!-</code> with the same parameters as above. Does nothing by default.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/new:-!-",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/new%3A-!-"
+  },
+  "new -!-": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/new -!-=</kbd>{⟨<i>left node</i>⟩}{⟨<i>right node</i>⟩}{⟨<i>edge options</i>⟩}{⟨<i>edge nodes</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Called for <code>-!-</code> with the same parameters as above. Does nothing by default.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/new:-!-",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/new%3A-!-"
+  },
+  "/tikz/graphs/use existing nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/use existing nodes=</kbd>⟨<i>true or false</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> When this key is set to <code>true</code>, all nodes will be considered to the referenced, no node will be fresh. This option is useful if you have already created all the nodes of a graph prior to using the <code>graph</code> command and you now only wish to connect the nodes. It also implies that an error is raised if you reference a node which has not been defined previously. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/use:existing:nodes",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/use%3Aexisting%3Anodes"
+  },
+  "use existing nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/use existing nodes=</kbd>⟨<i>true or false</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> When this key is set to <code>true</code>, all nodes will be considered to the referenced, no node will be fresh. This option is useful if you have already created all the nodes of a graph prior to using the <code>graph</code> command and you now only wish to connect the nodes. It also implies that an error is raised if you reference a node which has not been defined previously. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/use:existing:nodes",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/use%3Aexisting%3Anodes"
+  },
+  "/tikz/graphs/fresh nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/fresh nodes=</kbd>⟨<i>true or false</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> When this key is set to <code>true</code>, all nodes will be considered to be fresh. This option is useful when you create for instance a tree with many identical nodes. </p><p> When a node name is encountered that was already used previously, a new name is chosen is follows: An apostrophe (<code>'</code>) is appended repeatedly until a node name is found that has not yet been used: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/fresh:nodes",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/fresh%3Anodes"
+  },
+  "fresh nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/fresh nodes=</kbd>⟨<i>true or false</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> When this key is set to <code>true</code>, all nodes will be considered to be fresh. This option is useful when you create for instance a tree with many identical nodes. </p><p> When a node name is encountered that was already used previously, a new name is chosen is follows: An apostrophe (<code>'</code>) is appended repeatedly until a node name is found that has not yet been used: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/fresh:nodes",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/fresh%3Anodes"
+  },
+  "/tikz/graphs/number nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/number nodes=</kbd>⟨<i>start number</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "<p> When this key is used in a scope, each encountered node name will get appended a new number, starting with ⟨<i>start</i>⟩. Typically, this ensures that all node names are different. Between the original node name and the appended number, the setting of the following will be inserted: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/number:nodes",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/number%3Anodes"
+  },
+  "number nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/number nodes=</kbd>⟨<i>start number</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "<p> When this key is used in a scope, each encountered node name will get appended a new number, starting with ⟨<i>start</i>⟩. Typically, this ensures that all node names are different. Between the original node name and the appended number, the setting of the following will be inserted: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/number:nodes",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/number%3Anodes"
+  },
+  "/tikz/graphs/number nodes sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/number nodes sep=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>space</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/number:nodes:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/number%3Anodes%3Asep"
+  },
+  "number nodes sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/number nodes sep=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>space</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/number:nodes:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/number%3Anodes%3Asep"
+  },
+  "/tikz/graphs/name": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/name=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key prepends the ⟨<i>text</i>⟩, followed by a separating symbol (a space by default), to all ⟨<i>node name</i>⟩s inside a ⟨<i>full node name</i>⟩. Repeated calls of this key accumulate, leading to ever-longer “name paths”: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/name",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/name"
+  },
+  "name": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/name=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key prepends the ⟨<i>text</i>⟩, followed by a separating symbol (a space by default), to all ⟨<i>node name</i>⟩s inside a ⟨<i>full node name</i>⟩. Repeated calls of this key accumulate, leading to ever-longer “name paths”: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/name",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/name"
+  },
+  "/tikz/graphs/name separator": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/name separator=</kbd>⟨<i>symbols</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>\\space</kbd>)",
+    "snippetHtml": "<p> Changes the symbol that is used to separate the ⟨<i>text</i>⟩ from the ⟨<i>node name</i>⟩. The default is <code>\\space</code>, resulting in a space. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/name:separator",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/name%3Aseparator"
+  },
+  "name separator": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/name separator=</kbd>⟨<i>symbols</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>\\space</kbd>)",
+    "snippetHtml": "<p> Changes the symbol that is used to separate the ⟨<i>text</i>⟩ from the ⟨<i>node name</i>⟩. The default is <code>\\space</code>, resulting in a space. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/name:separator",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/name%3Aseparator"
+  },
+  "/tikz/graphs/as": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/as=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The ⟨<i>text</i>⟩ is used as the text of the node. This allows you to provide a text for the node that differs arbitrarily from the name of the node. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/as",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/as"
+  },
+  "as": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/as=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The ⟨<i>text</i>⟩ is used as the text of the node. This allows you to provide a text for the node that differs arbitrarily from the name of the node. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/as",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/as"
+  },
+  "/tikz/graphs/typeset": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/typeset=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The macro or code stored in this key is used as the ⟨<i>text</i>⟩ of the node. Inside the ⟨<i>code</i>⟩, the following macros are available: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/typeset",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/typeset"
+  },
+  "typeset": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/typeset=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The macro or code stored in this key is used as the ⟨<i>text</i>⟩ of the node. Inside the ⟨<i>code</i>⟩, the following macros are available: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/typeset",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/typeset"
+  },
+  "\\tikzgraphnodetext": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\tikzgraphnodetext</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This macro expands to the ⟨<i>text</i>⟩ to the right of the double underscore or slash in a direct node specification or, if there is no slash, to the ⟨<i>node name</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.back/tikzgraphnodetext",
+    "href": "https://tikz.dev/tikz-graphs#pgf.back/tikzgraphnodetext"
+  },
+  "\\tikzgraphnodename": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\tikzgraphnodename</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>This macro expands to the name of the current node without the path.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.back/tikzgraphnodename",
+    "href": "https://tikz.dev/tikz-graphs#pgf.back/tikzgraphnodename"
+  },
+  "\\tikzgraphnodepath": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\tikzgraphnodepath</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This macro expands to the current path of the node. These paths result from the use of the <code>name</code> key as described above. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.back/tikzgraphnodepath",
+    "href": "https://tikz.dev/tikz-graphs#pgf.back/tikzgraphnodepath"
+  },
+  "\\tikzgraphnodefullname": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\tikzgraphnodefullname</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>This macro contains the concatenation of the above two.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.back/tikzgraphnodefullname",
+    "href": "https://tikz.dev/tikz-graphs#pgf.back/tikzgraphnodefullname"
+  },
+  "/tikz/graphs/empty nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/empty nodes</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Just sets <code>typeset</code> to nothing, which causes all nodes to have an empty text (unless, of course, the <code>as</code> option is used): </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/empty:nodes",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/empty%3Anodes"
+  },
+  "empty nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/empty nodes</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Just sets <code>typeset</code> to nothing, which causes all nodes to have an empty text (unless, of course, the <code>as</code> option is used): </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/empty:nodes",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/empty%3Anodes"
+  },
+  "/tikz/graphs/math nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/math nodes</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Sets <code>typeset</code> to <code>$\\tikzgraphnodetext$</code>, which causes all nodes names to be typeset in math mode: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/math:nodes",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/math%3Anodes"
+  },
+  "math nodes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/math nodes</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Sets <code>typeset</code> to <code>$\\tikzgraphnodetext$</code>, which causes all nodes names to be typeset in math mode: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/math:nodes",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/math%3Anodes"
+  },
+  "/tikz/new set": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/new set=</kbd>⟨<i>set name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This will setup a node set named ⟨<i>set name</i>⟩ within the current scope. Inside the scope, you can add nodes to the node set using the <code>set</code> key. If a node set of the same name already exists in the current scope, it will be reset and made empty for the current scope. </p><p> Note that this command has the path <code>/tikz</code> and is normally used <em>outside</em> the <code>graph</code> command. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/new:set",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/new%3Aset"
+  },
+  "new set": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/new set=</kbd>⟨<i>set name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This will setup a node set named ⟨<i>set name</i>⟩ within the current scope. Inside the scope, you can add nodes to the node set using the <code>set</code> key. If a node set of the same name already exists in the current scope, it will be reset and made empty for the current scope. </p><p> Note that this command has the path <code>/tikz</code> and is normally used <em>outside</em> the <code>graph</code> command. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/new:set",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/new%3Aset"
+  },
+  "/tikz/set": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/set=</kbd>⟨<i>set name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key can be used as an option with a <code>node</code> command. The ⟨<i>set name</i>⟩ must be the name of a node set that has previously been created inside some enclosing scope via the <code>new set</code> key. The effect is that the current node is added to the node set. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/set",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/set"
+  },
+  "set": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/set=</kbd>⟨<i>set name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key can be used as an option with a <code>node</code> command. The ⟨<i>set name</i>⟩ must be the name of a node set that has previously been created inside some enclosing scope via the <code>new set</code> key. The effect is that the current node is added to the node set. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/set",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/set"
+  },
+  "/tikz/graphs/trie": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/trie=</kbd>⟨<i>true or false</i>⟩",
+    "defaultHtml": "(default <kbd>true, initially false</kbd>)",
+    "snippetHtml": "<p> If this key is set to <code>true</code>, after a node has been created on a chain, the <code>name</code> key is executed with the node’s ⟨<i>node name</i>⟩. Thus, all nodes later on this chain have the “path” of nodes leading to this node as their name. This means, in particular, that </p><p>In total, this is exactly the behavior you would expect of a trie:</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/trie",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/trie"
+  },
+  "trie": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/trie=</kbd>⟨<i>true or false</i>⟩",
+    "defaultHtml": "(default <kbd>true, initially false</kbd>)",
+    "snippetHtml": "<p> If this key is set to <code>true</code>, after a node has been created on a chain, the <code>name</code> key is executed with the node’s ⟨<i>node name</i>⟩. Thus, all nodes later on this chain have the “path” of nodes leading to this node as their name. This means, in particular, that </p><p>In total, this is exactly the behavior you would expect of a trie:</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/trie",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/trie"
+  },
+  "/tikz/graphs/quick": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/quick</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> When you provide this key with a graph, the syntax of graph specifications gets restricted. You are no longer allowed to use certain features of the graph syntax; but all features that are still allowed are also allowed in the same way when you do not provide the <code>quick</code> option. Thus, leaving out the <code>quick</code> option will never hurt. </p><p> Since the syntax is so severely restricted, it is easier to explain which aspects of the graph syntax <em>will</em> still work: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/quick",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/quick"
+  },
+  "quick": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/quick</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> When you provide this key with a graph, the syntax of graph specifications gets restricted. You are no longer allowed to use certain features of the graph syntax; but all features that are still allowed are also allowed in the same way when you do not provide the <code>quick</code> option. Thus, leaving out the <code>quick</code> option will never hurt. </p><p> Since the syntax is so severely restricted, it is easier to explain which aspects of the graph syntax <em>will</em> still work: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/quick",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/quick"
+  },
+  "/tikz/graphs/multi": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/multi</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> When this edge is set for a whole graph (which is the default) or just for a group (which is useful if the whole graph is simple in general, but a part is a multi-graph), then when you specify an edge between two nodes several times, several such edges get created: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/multi",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/multi"
+  },
+  "multi": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/multi</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> When this edge is set for a whole graph (which is the default) or just for a group (which is useful if the whole graph is simple in general, but a part is a multi-graph), then when you specify an edge between two nodes several times, several such edges get created: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/multi",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/multi"
+  },
+  "/tikz/graphs/simple": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/simple</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>In contrast a multi-graph, in a simple graph, at most one edge gets created for every pair of vertices:</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/simple",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/simple"
+  },
+  "simple": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/simple</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>In contrast a multi-graph, in a simple graph, at most one edge gets created for every pair of vertices:</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/simple",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/simple"
+  },
+  "/tikz/graphs/edge quotes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/edge quotes=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> A shorthand for setting the style <code>every edge quotes</code> to ⟨<i>options</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/edge:quotes",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/edge%3Aquotes"
+  },
+  "edge quotes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/edge quotes=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> A shorthand for setting the style <code>every edge quotes</code> to ⟨<i>options</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/edge:quotes",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/edge%3Aquotes"
+  },
+  "/tikz/graphs/edge quotes center": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/edge quotes center</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>A shorthand for <code>edge quotes</code> to <code>anchor=center</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/edge:quotes:center",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/edge%3Aquotes%3Acenter"
+  },
+  "edge quotes center": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/edge quotes center</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>A shorthand for <code>edge quotes</code> to <code>anchor=center</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/edge:quotes:center",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/edge%3Aquotes%3Acenter"
+  },
+  "/tikz/graphs/edge quotes mid": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/edge quotes mid</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>A shorthand for <code>edge quotes</code> to <code>anchor=mid</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/edge:quotes:mid",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/edge%3Aquotes%3Amid"
+  },
+  "edge quotes mid": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/edge quotes mid</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>A shorthand for <code>edge quotes</code> to <code>anchor=mid</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/edge:quotes:mid",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/edge%3Aquotes%3Amid"
+  },
+  "/tikz/graphs/target edge style": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/target edge style=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key can (only) be used with a <em>node</em> inside a graph specification. When used, the ⟨<i>options</i>⟩ will be added to every edge that is created by a connector like <code>-&gt;</code> in which the node is a <em>target</em>. Consider the following example: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/target:edge:style",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/target%3Aedge%3Astyle"
+  },
+  "target edge style": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/target edge style=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key can (only) be used with a <em>node</em> inside a graph specification. When used, the ⟨<i>options</i>⟩ will be added to every edge that is created by a connector like <code>-&gt;</code> in which the node is a <em>target</em>. Consider the following example: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/target:edge:style",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/target%3Aedge%3Astyle"
+  },
+  "/tikz/graphs/target edge clear": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/target edge clear</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Clears all ⟨<i>options</i>⟩ for edges with the node as a target and also edge labels (see below) for this node. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/target:edge:clear",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/target%3Aedge%3Aclear"
+  },
+  "target edge clear": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/target edge clear</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Clears all ⟨<i>options</i>⟩ for edges with the node as a target and also edge labels (see below) for this node. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/target:edge:clear",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/target%3Aedge%3Aclear"
+  },
+  "/tikz/graphs/target edge node": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/target edge node=</kbd>⟨<i>node specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key works like <code>target edge style</code>, only the ⟨<i>node specification</i>⟩ will not be added as options to any newly created edges with the current node as their target, but rather it will be added as a node specification. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/target:edge:node",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/target%3Aedge%3Anode"
+  },
+  "target edge node": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/target edge node=</kbd>⟨<i>node specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key works like <code>target edge style</code>, only the ⟨<i>node specification</i>⟩ will not be added as options to any newly created edges with the current node as their target, but rather it will be added as a node specification. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/target:edge:node",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/target%3Aedge%3Anode"
+  },
+  "/tikz/graphs/source edge style": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/source edge style=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Works exactly like <code>target edge style</code>, only now the ⟨<i>options</i>⟩ are only added when the node is a source of a newly created edge: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/source:edge:style",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/source%3Aedge%3Astyle"
+  },
+  "source edge style": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/source edge style=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Works exactly like <code>target edge style</code>, only now the ⟨<i>options</i>⟩ are only added when the node is a source of a newly created edge: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/source:edge:style",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/source%3Aedge%3Astyle"
+  },
+  "/tikz/graphs/source edge node": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/source edge node=</kbd>⟨<i>node specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works like <code>source edge style</code> and <code>target edge node</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/source:edge:node",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/source%3Aedge%3Anode"
+  },
+  "source edge node": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/source edge node=</kbd>⟨<i>node specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works like <code>source edge style</code> and <code>target edge node</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/source:edge:node",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/source%3Aedge%3Anode"
+  },
+  "/tikz/graphs/source edge clear": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/source edge clear=</kbd>⟨<i>node specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works like <code>target edge clear</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/source:edge:clear",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/source%3Aedge%3Aclear"
+  },
+  "source edge clear": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/source edge clear=</kbd>⟨<i>node specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works like <code>target edge clear</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/source:edge:clear",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/source%3Aedge%3Aclear"
+  },
+  "/tikz/graphs/clear >": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/clear &gt;</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>A more easy-to-remember shorthand for <code>target edge clear</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/clear:>",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/clear%3A%3E"
+  },
+  "clear >": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/clear &gt;</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>A more easy-to-remember shorthand for <code>target edge clear</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/clear:>",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/clear%3A%3E"
+  },
+  "/tikz/graphs/clear <": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/clear &lt;</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>A more easy-to-remember shorthand for <code>source edge clear</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/clear:<",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/clear%3A%3C"
+  },
+  "clear <": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/clear &lt;</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>A more easy-to-remember shorthand for <code>source edge clear</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/clear:<",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/clear%3A%3C"
+  },
+  "/tikz/graphs/put node text on incoming edges": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/put node text on incoming edges=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>When this key is used with a node or a group, the following happens:</p><p>Here is an example that show how this command is used.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/put:node:text:on:incoming:edges",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/put%3Anode%3Atext%3Aon%3Aincoming%3Aedges"
+  },
+  "put node text on incoming edges": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/put node text on incoming edges=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>When this key is used with a node or a group, the following happens:</p><p>Here is an example that show how this command is used.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/put:node:text:on:incoming:edges",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/put%3Anode%3Atext%3Aon%3Aincoming%3Aedges"
+  },
+  "/tikz/graphs/put node text on outgoing edges": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/put node text on outgoing edges=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works like the previous key, only with <code>target</code> replaced by <code>source</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/put:node:text:on:outgoing:edges",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/put%3Anode%3Atext%3Aon%3Aoutgoing%3Aedges"
+  },
+  "put node text on outgoing edges": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/put node text on outgoing edges=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works like the previous key, only with <code>target</code> replaced by <code>source</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/put:node:text:on:outgoing:edges",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/put%3Anode%3Atext%3Aon%3Aoutgoing%3Aedges"
+  },
+  "/tikz/graphs/color class": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/color class=</kbd>⟨<i>color class name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This sets up a new color class called ⟨<i>color class name</i>⟩. Nodes and whole groups of nodes can now be colored with ⟨<i>color class name</i>⟩. This is done using the following keys, which become available inside the current scope: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/color:class",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/color%3Aclass"
+  },
+  "color class": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/color class=</kbd>⟨<i>color class name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This sets up a new color class called ⟨<i>color class name</i>⟩. Nodes and whole groups of nodes can now be colored with ⟨<i>color class name</i>⟩. This is done using the following keys, which become available inside the current scope: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/color:class",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/color%3Aclass"
+  },
+  "/tikz/graphs/operator": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/operator=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>This key has an effect in three places:</p><p> The first case is a special case of the second, since it is treated like a group specification containing a single node. The last case is more complicated and discussed in the next section. So, let us focus on the second case. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/operator",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/operator"
+  },
+  "operator": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/operator=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>This key has an effect in three places:</p><p> The first case is a special case of the second, since it is treated like a group specification containing a single node. The last case is more complicated and discussed in the next section. So, let us focus on the second case. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/operator",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/operator"
+  },
+  "/tikz/graphs/default edge kind": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/default edge kind=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>--</kbd>)",
+    "snippetHtml": "<p> This key stores one of the five edge kinds <code>--</code>, <code>&lt;-</code>, <code>-&gt;</code>, <code>&lt;-&gt;</code>, and <code>-!-</code>. When an operator wishes to create a new edge, it should typically set </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/default:edge:kind",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/default%3Aedge%3Akind"
+  },
+  "default edge kind": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/default edge kind=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>--</kbd>)",
+    "snippetHtml": "<p> This key stores one of the five edge kinds <code>--</code>, <code>&lt;-</code>, <code>-&gt;</code>, <code>&lt;-&gt;</code>, and <code>-!-</code>. When an operator wishes to create a new edge, it should typically set </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/default:edge:kind",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/default%3Aedge%3Akind"
+  },
+  "/tikz/graphs/--": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/--</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>Sets the <code>default edge kind</code> to <code>--</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/--",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/--"
+  },
+  "--": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/--</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>Sets the <code>default edge kind</code> to <code>--</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/--",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/--"
+  },
+  "/tikz/graphs/->": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/-&gt;</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>Sets the <code>default edge kind</code> to <code>-&gt;</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/->",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/-%3E"
+  },
+  "->": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/-&gt;</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>Sets the <code>default edge kind</code> to <code>-&gt;</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/->",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/-%3E"
+  },
+  "/tikz/graphs/<-": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/&lt;-</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>Sets the <code>default edge kind</code> to <code>&lt;-</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/<-",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/%3C-"
+  },
+  "<-": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/&lt;-</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>Sets the <code>default edge kind</code> to <code>&lt;-</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/<-",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/%3C-"
+  },
+  "/tikz/graphs/<->": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/&lt;-&gt;</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>Sets the <code>default edge kind</code> to <code>&lt;-&gt;</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/<->",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/%3C-%3E"
+  },
+  "<->": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/&lt;-&gt;</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>Sets the <code>default edge kind</code> to <code>&lt;-&gt;</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/<->",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/%3C-%3E"
+  },
+  "/tikz/graphs/-!-": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/-!-</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>Sets the <code>default edge kind</code> to <code>-!-</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/-!-",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/-!-"
+  },
+  "-!-": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/-!-</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>Sets the <code>default edge kind</code> to <code>-!-</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/-!-",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/-!-"
+  },
+  "\\tikzgraphforeachcolorednode": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\tikzgraphforeachcolorednode</kbd>{⟨<i>color name</i>⟩}{⟨<i>macro</i>⟩}",
+    "defaultHtml": "",
+    "snippetHtml": "<p> When this command is called inside ⟨<i>code</i>⟩, the following will happen: TikZ will iterate over all nodes inside the just-specified group that have the color ⟨<i>color name</i>⟩. The order in which they are iterated over is the order in which they appear inside the group specification (if a node is encountered several times inside the specification, only the first occurrence counts). Then, for each node the ⟨<i>macro</i>⟩ is executed with the node’s name as the only argument. </p><p> In the following example we use an operator to connect every node colored <code>all</code> inside the subgroup to he node <code>root</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.back/tikzgraphforeachcolorednode",
+    "href": "https://tikz.dev/tikz-graphs#pgf.back/tikzgraphforeachcolorednode"
+  },
+  "\\tikzgraphpreparecolor": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\tikzgraphpreparecolor</kbd>{⟨<i>color name</i>⟩}{⟨<i>counter</i>⟩}{⟨<i>prefix</i>⟩}",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This command is used to “prepare” the nodes of a certain color for random access. The effect is the following: It is counted how many nodes there are having color ⟨<i>color name</i>⟩ in the current group and the result is stored in ⟨<i>counter</i>⟩. Next, macros named ⟨<i>prefix</i>⟩<code>1</code>, ⟨<i>prefix</i>⟩<code>2</code>, and so on are defined, that store the names of the first, second, third, and so on node having the color ⟨<i>color name</i>⟩. </p><p> The net effect is that after you have prepared a color, you can quickly iterate over them. This is especially useful when you iterate over several color at the same time. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.back/tikzgraphpreparecolor",
+    "href": "https://tikz.dev/tikz-graphs#pgf.back/tikzgraphpreparecolor"
+  },
+  "/tikz/graphs/default edge operator": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/default edge operator=</kbd>⟨<i>key</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>matching and star</kbd>)",
+    "snippetHtml": "<p> This key stores the name of a ⟨<i>key</i>⟩ that is executed for every ⟨<i>edge specification</i>⟩ whose ⟨<i>options</i>⟩ do not contain the <code>operator</code> key. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/default:edge:operator",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/default%3Aedge%3Aoperator"
+  },
+  "default edge operator": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/default edge operator=</kbd>⟨<i>key</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>matching and star</kbd>)",
+    "snippetHtml": "<p> This key stores the name of a ⟨<i>key</i>⟩ that is executed for every ⟨<i>edge specification</i>⟩ whose ⟨<i>options</i>⟩ do not contain the <code>operator</code> key. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/default:edge:operator",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/default%3Aedge%3Aoperator"
+  },
+  "/tikz/graphs/declare": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/declare=</kbd>{⟨<i>graph name</i>⟩}{⟨<i>specification</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key declares that ⟨<i>graph name</i>⟩ can subsequently be used as a replacement for a ⟨<i>node name</i>⟩. Whenever the ⟨<i>graph name</i>⟩ is used in the following, a graph group will be inserted instead whose content is exactly ⟨<i>specification</i>⟩. In case ⟨<i>graph name</i>⟩ is used together with some ⟨<i>options</i>⟩, they are executed prior to inserting the ⟨<i>specification</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/declare",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/declare"
+  },
+  "declare": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/declare=</kbd>{⟨<i>graph name</i>⟩}{⟨<i>specification</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key declares that ⟨<i>graph name</i>⟩ can subsequently be used as a replacement for a ⟨<i>node name</i>⟩. Whenever the ⟨<i>graph name</i>⟩ is used in the following, a graph group will be inserted instead whose content is exactly ⟨<i>specification</i>⟩. In case ⟨<i>graph name</i>⟩ is used together with some ⟨<i>options</i>⟩, they are executed prior to inserting the ⟨<i>specification</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/declare",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/declare"
+  },
+  "/tikz/graphs/no placement": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/no placement</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This strategy simply “switches off” the whole placement mechanism, causing all nodes to be placed at the origin by default. You need to use this strategy if you position nodes “by hand”. For this, you can use the <code>at</code> key, the <code>shift</code> keys: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/no:placement",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/no%3Aplacement"
+  },
+  "no placement": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/no placement</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This strategy simply “switches off” the whole placement mechanism, causing all nodes to be placed at the origin by default. You need to use this strategy if you position nodes “by hand”. For this, you can use the <code>at</code> key, the <code>shift</code> keys: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/no:placement",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/no%3Aplacement"
+  },
+  "/tikz/graphs/x": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/x=</kbd>⟨<i>x dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> When you use this key, it will have the same effect as if you had written <code>at={(</code>⟨<i>x dimension</i>⟩<code>,</code>⟨<i>y dimension</i>⟩<code>)}</code>, where ⟨<i>y dimension</i>⟩ is a value set using the <code>y</code> key: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/x",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/x"
+  },
+  "x": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/x=</kbd>⟨<i>x dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> When you use this key, it will have the same effect as if you had written <code>at={(</code>⟨<i>x dimension</i>⟩<code>,</code>⟨<i>y dimension</i>⟩<code>)}</code>, where ⟨<i>y dimension</i>⟩ is a value set using the <code>y</code> key: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/x",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/x"
+  },
+  "/tikz/graphs/y": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/y=</kbd>⟨<i>y dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>See above.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/y",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/y"
+  },
+  "y": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/y=</kbd>⟨<i>y dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>See above.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/y",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/y"
+  },
+  "/tikz/graphs/Cartesian placement": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/Cartesian placement</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This strategy is the default strategy. It works, roughly, as follows: For each new node on a chain, advance a “logical width” counter and for each new node in a group, advance a “logical depth” counter. When a chain contains a whole group, then the “logical width” taken up by the group is the maximum over the logical widths taken up by the chains inside the group; and symmetrically the logical depth of a chain is the maximum of the depths of the groups inside it. </p><p> This slightly confusing explanation is perhaps best exemplified. In the below example, the two numbers indicate the two logical width and depth of each node as computed by the <code>graphs</code> library. Just ignore the arcane code that is used to print these numbers. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/Cartesian:placement",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/Cartesian%3Aplacement"
+  },
+  "Cartesian placement": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/Cartesian placement</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This strategy is the default strategy. It works, roughly, as follows: For each new node on a chain, advance a “logical width” counter and for each new node in a group, advance a “logical depth” counter. When a chain contains a whole group, then the “logical width” taken up by the group is the maximum over the logical widths taken up by the chains inside the group; and symmetrically the logical depth of a chain is the maximum of the depths of the groups inside it. </p><p> This slightly confusing explanation is perhaps best exemplified. In the below example, the two numbers indicate the two logical width and depth of each node as computed by the <code>graphs</code> library. Just ignore the arcane code that is used to print these numbers. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/Cartesian:placement",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/Cartesian%3Aplacement"
+  },
+  "/tikz/graphs/chain shift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/chain shift=</kbd>⟨<i>coordinate</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>(1,0)</kbd>)",
+    "snippetHtml": "<p> Under the regime of the <code>Cartesian placement</code> strategy, each node is shifted by the current logical width times this ⟨<i>coordinate</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/chain:shift",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/chain%3Ashift"
+  },
+  "chain shift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/chain shift=</kbd>⟨<i>coordinate</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>(1,0)</kbd>)",
+    "snippetHtml": "<p> Under the regime of the <code>Cartesian placement</code> strategy, each node is shifted by the current logical width times this ⟨<i>coordinate</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/chain:shift",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/chain%3Ashift"
+  },
+  "/tikz/graphs/group shift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/group shift=</kbd>⟨<i>coordinate</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>(0,-1)</kbd>)",
+    "snippetHtml": "<p> Like for <code>chain shift</code>, each node is shifted by the current logical depth times this ⟨<i>coordinate</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/group:shift",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/group%3Ashift"
+  },
+  "group shift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/group shift=</kbd>⟨<i>coordinate</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>(0,-1)</kbd>)",
+    "snippetHtml": "<p> Like for <code>chain shift</code>, each node is shifted by the current logical depth times this ⟨<i>coordinate</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/group:shift",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/group%3Ashift"
+  },
+  "/tikz/graphs/grow up": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grow up=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "<p> Sets the <code>chain shift</code> to <code>(0,</code>⟨<i>distance</i>⟩<code>)</code>, so that chains “grow upward”. The distance by which the center of each new element is removed from the center of the previous one is ⟨<i>distance</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grow:up",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grow%3Aup"
+  },
+  "grow up": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grow up=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "<p> Sets the <code>chain shift</code> to <code>(0,</code>⟨<i>distance</i>⟩<code>)</code>, so that chains “grow upward”. The distance by which the center of each new element is removed from the center of the previous one is ⟨<i>distance</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grow:up",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grow%3Aup"
+  },
+  "/tikz/graphs/grow down": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grow down=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "<p>Like <code>grow up</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grow:down",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grow%3Adown"
+  },
+  "grow down": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grow down=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "<p>Like <code>grow up</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grow:down",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grow%3Adown"
+  },
+  "/tikz/graphs/grow left": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grow left=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "<p>Like <code>grow up</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grow:left",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grow%3Aleft"
+  },
+  "grow left": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grow left=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "<p>Like <code>grow up</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grow:left",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grow%3Aleft"
+  },
+  "/tikz/graphs/grow right": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grow right=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "<p>Like <code>grow up</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grow:right",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grow%3Aright"
+  },
+  "grow right": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grow right=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "<p>Like <code>grow up</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grow:right",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grow%3Aright"
+  },
+  "/tikz/graphs/branch up": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/branch up=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "<p> Sets the <code>group shift</code> so that groups “branch upward”. The distance by which the center of each new element is removed from the center of the previous one is ⟨<i>distance</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/branch:up",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/branch%3Aup"
+  },
+  "branch up": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/branch up=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "<p> Sets the <code>group shift</code> so that groups “branch upward”. The distance by which the center of each new element is removed from the center of the previous one is ⟨<i>distance</i>⟩. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/branch:up",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/branch%3Aup"
+  },
+  "/tikz/graphs/branch down": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/branch down=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/branch:down",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/branch%3Adown"
+  },
+  "branch down": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/branch down=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/branch:down",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/branch%3Adown"
+  },
+  "/tikz/graphs/branch left": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/branch left=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/branch:left",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/branch%3Aleft"
+  },
+  "branch left": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/branch left=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/branch:left",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/branch%3Aleft"
+  },
+  "/tikz/graphs/branch right": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/branch right=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/branch:right",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/branch%3Aright"
+  },
+  "branch right": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/branch right=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/branch:right",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/branch%3Aright"
+  },
+  "/tikz/graphs/grid placement": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grid placement</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key works similar to <code>Cartesian placement</code>. As for that placement strategy, a node has logical width and depth 1. However, the computed total width and depth are mapped to a \\(N\\times M\\) grid. The values of \\(N\\) and \\(M\\) depend on the size of the graph and the value of <code>wrap after</code>. The number of columns \\(M\\) is either set to <code>wrap after</code> explicitly or computed automatically as \\(\\sqrt {|\\texttt {V}|}\\). \\(N\\) is the number of rows needed to lay out the graph in a grid with \\(M\\) columns. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grid:placement",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grid%3Aplacement"
+  },
+  "grid placement": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grid placement</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key works similar to <code>Cartesian placement</code>. As for that placement strategy, a node has logical width and depth 1. However, the computed total width and depth are mapped to a \\(N\\times M\\) grid. The values of \\(N\\) and \\(M\\) depend on the size of the graph and the value of <code>wrap after</code>. The number of columns \\(M\\) is either set to <code>wrap after</code> explicitly or computed automatically as \\(\\sqrt {|\\texttt {V}|}\\). \\(N\\) is the number of rows needed to lay out the graph in a grid with \\(M\\) columns. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grid:placement",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grid%3Aplacement"
+  },
+  "/tikz/graphs/grow right sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grow right sep=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1em</kbd>)",
+    "snippetHtml": "<p> This key has several effects, but let us start with the bottom line: Nodes along a chain are placed in such a way that the left end of a new node is ⟨<i>distance</i>⟩ from the right end of the previous node: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grow:right:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grow%3Aright%3Asep"
+  },
+  "grow right sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grow right sep=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1em</kbd>)",
+    "snippetHtml": "<p> This key has several effects, but let us start with the bottom line: Nodes along a chain are placed in such a way that the left end of a new node is ⟨<i>distance</i>⟩ from the right end of the previous node: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grow:right:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grow%3Aright%3Asep"
+  },
+  "/tikz/graphs/grow left sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grow left sep=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1em</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grow:left:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grow%3Aleft%3Asep"
+  },
+  "grow left sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grow left sep=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1em</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grow:left:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grow%3Aleft%3Asep"
+  },
+  "/tikz/graphs/grow up sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grow up sep=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1em</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grow:up:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grow%3Aup%3Asep"
+  },
+  "grow up sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grow up sep=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1em</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grow:up:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grow%3Aup%3Asep"
+  },
+  "/tikz/graphs/grow down sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grow down sep=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1em</kbd>)",
+    "snippetHtml": "<p>As above.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grow:down:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grow%3Adown%3Asep"
+  },
+  "grow down sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/grow down sep=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1em</kbd>)",
+    "snippetHtml": "<p>As above.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/grow:down:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/grow%3Adown%3Asep"
+  },
+  "/tikz/graphs/branch right sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/branch right sep=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1em</kbd>)",
+    "snippetHtml": "<p>This key works like <code>grow right sep</code>, only it affects groups rather than chains.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/branch:right:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/branch%3Aright%3Asep"
+  },
+  "branch right sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/branch right sep=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1em</kbd>)",
+    "snippetHtml": "<p>This key works like <code>grow right sep</code>, only it affects groups rather than chains.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/branch:right:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/branch%3Aright%3Asep"
+  },
+  "/tikz/graphs/branch left sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/branch left sep=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1em</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/branch:left:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/branch%3Aleft%3Asep"
+  },
+  "branch left sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/branch left sep=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1em</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/branch:left:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/branch%3Aleft%3Asep"
+  },
+  "/tikz/graphs/branch up sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/branch up sep=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1em</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/branch:up:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/branch%3Aup%3Asep"
+  },
+  "branch up sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/branch up sep=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1em</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/branch:up:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/branch%3Aup%3Asep"
+  },
+  "/tikz/graphs/branch down sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/branch down sep=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1em</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/branch:down:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/branch%3Adown%3Asep"
+  },
+  "branch down sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/branch down sep=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(default <kbd>1em</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/branch:down:sep",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/branch%3Adown%3Asep"
+  },
+  "/tikz/graphs/circular placement": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/circular placement</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key works quite similar to <code>Cartesian placement</code>. As for that placement strategy, a node has logical width and depth <code>1</code>. However, the computed total width and depth are mapped to polar coordinates rather than Cartesian coordinates. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/circular:placement",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/circular%3Aplacement"
+  },
+  "circular placement": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/circular placement</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key works quite similar to <code>Cartesian placement</code>. As for that placement strategy, a node has logical width and depth <code>1</code>. However, the computed total width and depth are mapped to polar coordinates rather than Cartesian coordinates. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/circular:placement",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/circular%3Aplacement"
+  },
+  "/tikz/graphs/chain polar shift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/chain polar shift=</kbd><code>(</code>⟨<i>angle</i>⟩<code>:</code>⟨<i>radius</i>⟩<code>)</code>",
+    "defaultHtml": "(no default, initially <kbd>(0:1)</kbd>)",
+    "snippetHtml": "<p> Under the regime of the <code>circular placement</code> strategy, each node on a chain is shifted by <code>(</code>⟨<i>logical width</i>⟩⟨<i>angle</i>⟩<code>:</code>⟨<i>logical width</i>⟩⟨<i>angle</i>⟩<code>)</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/chain:polar:shift",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/chain%3Apolar%3Ashift"
+  },
+  "chain polar shift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/chain polar shift=</kbd><code>(</code>⟨<i>angle</i>⟩<code>:</code>⟨<i>radius</i>⟩<code>)</code>",
+    "defaultHtml": "(no default, initially <kbd>(0:1)</kbd>)",
+    "snippetHtml": "<p> Under the regime of the <code>circular placement</code> strategy, each node on a chain is shifted by <code>(</code>⟨<i>logical width</i>⟩⟨<i>angle</i>⟩<code>:</code>⟨<i>logical width</i>⟩⟨<i>angle</i>⟩<code>)</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/chain:polar:shift",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/chain%3Apolar%3Ashift"
+  },
+  "/tikz/graphs/group polar shift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/group polar shift=</kbd><code>(</code>⟨<i>angle</i>⟩<code>:</code>⟨<i>radius</i>⟩<code>)</code>",
+    "defaultHtml": "(no default, initially <kbd>(45:0)</kbd>)",
+    "snippetHtml": "<p> Like for <code>group shift</code>, each node on a chain is shifted by <code>(</code>⟨<i>logical depth</i>⟩⟨<i>angle</i>⟩<code>:</code>⟨<i>logical depth</i>⟩⟨<i>angle</i>⟩<code>)</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/group:polar:shift",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/group%3Apolar%3Ashift"
+  },
+  "group polar shift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/group polar shift=</kbd><code>(</code>⟨<i>angle</i>⟩<code>:</code>⟨<i>radius</i>⟩<code>)</code>",
+    "defaultHtml": "(no default, initially <kbd>(45:0)</kbd>)",
+    "snippetHtml": "<p> Like for <code>group shift</code>, each node on a chain is shifted by <code>(</code>⟨<i>logical depth</i>⟩⟨<i>angle</i>⟩<code>:</code>⟨<i>logical depth</i>⟩⟨<i>angle</i>⟩<code>)</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/group:polar:shift",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/group%3Apolar%3Ashift"
+  },
+  "/tikz/graphs/radius": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/radius=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1cm</kbd>)",
+    "snippetHtml": "<p> This is an initial value that is added to the total computed radius when the polar shift of a node has been calculated. Essentially, this key allows you to set the ⟨<i>radius</i>⟩ of the innermost circle. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/radius",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/radius"
+  },
+  "radius": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/radius=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1cm</kbd>)",
+    "snippetHtml": "<p> This is an initial value that is added to the total computed radius when the polar shift of a node has been calculated. Essentially, this key allows you to set the ⟨<i>radius</i>⟩ of the innermost circle. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/radius",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/radius"
+  },
+  "/tikz/graphs/phase": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/phase=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>90</kbd>)",
+    "snippetHtml": "<p> This is an initial value that is added to the total computed angle when the polar shift of a node has been calculated. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/phase",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/phase"
+  },
+  "phase": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/phase=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>90</kbd>)",
+    "snippetHtml": "<p> This is an initial value that is added to the total computed angle when the polar shift of a node has been calculated. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/phase",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/phase"
+  },
+  "/tikz/graphs/clockwise": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/clockwise=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(default <kbd>\\tikzgraphVnum</kbd>)",
+    "snippetHtml": "<p> This key sets the <code>group shift</code> so that if there are exactly ⟨<i>number</i>⟩ many nodes in a group, they will form a complete circle. If you do not provide a ⟨<i>number</i>⟩, the current value of <code>\\tikzgraphVnum</code> is used, which is exactly what you want when you use predefined graph macros like <code>subgraph K_n</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/clockwise",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/clockwise"
+  },
+  "clockwise": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/clockwise=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(default <kbd>\\tikzgraphVnum</kbd>)",
+    "snippetHtml": "<p> This key sets the <code>group shift</code> so that if there are exactly ⟨<i>number</i>⟩ many nodes in a group, they will form a complete circle. If you do not provide a ⟨<i>number</i>⟩, the current value of <code>\\tikzgraphVnum</code> is used, which is exactly what you want when you use predefined graph macros like <code>subgraph K_n</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/clockwise",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/clockwise"
+  },
+  "/tikz/graphs/counterclockwise": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/counterclockwise=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(default <kbd>\\tikzgraphVnum</kbd>)",
+    "snippetHtml": "<p>Works like <code>clockwise</code>, only the direction is inverted.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/counterclockwise",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/counterclockwise"
+  },
+  "counterclockwise": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/counterclockwise=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(default <kbd>\\tikzgraphVnum</kbd>)",
+    "snippetHtml": "<p>Works like <code>clockwise</code>, only the direction is inverted.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/counterclockwise",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/counterclockwise"
+  },
+  "/tikz/graphs/placement/level": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/level</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>This key stores a number that is increased for each element on a chain, but gets reset at the end of a group:</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/level",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/level"
+  },
+  "level": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/butterfly/level=</kbd>⟨<i>level</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1</kbd>)",
+    "snippetHtml": "<p>Sets the level \\(l\\) for the connections.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/butterfly/level",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/butterfly/level"
+  },
+  "/tikz/graph/level": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/graph/level=</kbd>⟨<i>level</i>⟩",
+    "defaultHtml": "(style, no default)",
+    "snippetHtml": "<p> This key gets executed for each newly created node with ⟨<i>level</i>⟩ set to the current level of the node. You can use this key to, say, reconfigure the node distance or the node color. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graph/level",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graph/level"
+  },
+  "/tikz/graphs/placement/element count": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/element count</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key stores a number that tells us the position of the node on the current chain. However, you only have access to this value inside the code passed to the macro <code>compute position</code>, explained later on. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/element:count",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/element%3Acount"
+  },
+  "element count": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/element count</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key stores a number that tells us the position of the node on the current chain. However, you only have access to this value inside the code passed to the macro <code>compute position</code>, explained later on. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/element:count",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/element%3Acount"
+  },
+  "/tikz/graphs/placement/width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/width</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key stores the “logical width” of the nodes parsed up to now in the current group or chain (more precisely, parsed since the last call of <code>place</code> in an enclosing group). This is not necessarily the “total physical width” of the nodes, but rather a number representing how “big” the elements prior to the current element were. This <em>may</em> be their width, but it may also be their height or even their number (which, incidentally, is the default). You can use the <code>width</code> to perform shifts or rotations of to-be-created nodes (to be explained later). </p><p> The logical width is defined recursively as follows. First, the width of a single node is computed by calling the following key: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/width",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/width"
+  },
+  "width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/width</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key stores the “logical width” of the nodes parsed up to now in the current group or chain (more precisely, parsed since the last call of <code>place</code> in an enclosing group). This is not necessarily the “total physical width” of the nodes, but rather a number representing how “big” the elements prior to the current element were. This <em>may</em> be their width, but it may also be their height or even their number (which, incidentally, is the default). You can use the <code>width</code> to perform shifts or rotations of to-be-created nodes (to be explained later). </p><p> The logical width is defined recursively as follows. First, the width of a single node is computed by calling the following key: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/width",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/width"
+  },
+  "/tikz/graphs/placement/logical node width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/logical node width=</kbd>⟨<i>full node name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key is called to compute a physical or logical width of the node ⟨<i>full node name</i>⟩. You can change the code of this key. The code should return the computed value in the macro <code>\\pgfmathresult</code>. By default, this key returns <code>1</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/logical:node:width",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/logical%3Anode%3Awidth"
+  },
+  "logical node width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/logical node width=</kbd>⟨<i>full node name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key is called to compute a physical or logical width of the node ⟨<i>full node name</i>⟩. You can change the code of this key. The code should return the computed value in the macro <code>\\pgfmathresult</code>. By default, this key returns <code>1</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/logical:node:width",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/logical%3Anode%3Awidth"
+  },
+  "/tikz/graphs/placement/chain count": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/chain count</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>This key stores a number that tells us the sequence number of the chain in the current group.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/chain:count",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/chain%3Acount"
+  },
+  "chain count": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/chain count</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>This key stores a number that tells us the sequence number of the chain in the current group.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/chain:count",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/chain%3Acount"
+  },
+  "/tikz/graphs/placement/depth": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/depth</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Similarly to the <code>width</code> key, this key stores the “logical depth” of the nodes parsed up to now in the current group or chain and, also similarly, this key may or may not be related to the actual depth/height of the current node. As for the <code>width</code>, the exact definition is as follows: For a single node, the depth is computed by the following key: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/depth",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/depth"
+  },
+  "depth": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/depth</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Similarly to the <code>width</code> key, this key stores the “logical depth” of the nodes parsed up to now in the current group or chain and, also similarly, this key may or may not be related to the actual depth/height of the current node. As for the <code>width</code>, the exact definition is as follows: For a single node, the depth is computed by the following key: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/depth",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/depth"
+  },
+  "/tikz/graphs/placement/logical node depth": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/logical node depth=</kbd>⟨<i>full node name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The code behind this key should return the “logical height” of the node ⟨<i>full node name</i>⟩ in the macro <code>\\pgfmathresult</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/logical:node:depth",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/logical%3Anode%3Adepth"
+  },
+  "logical node depth": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/logical node depth=</kbd>⟨<i>full node name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The code behind this key should return the “logical height” of the node ⟨<i>full node name</i>⟩ in the macro <code>\\pgfmathresult</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/logical:node:depth",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/logical%3Anode%3Adepth"
+  },
+  "/tikz/graphs/placement/compute position": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/compute position=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The ⟨<i>code</i>⟩ is called by the <code>graph</code> command just prior to creating a new node (the exact moment when this key is called is detailed in the description of the <code>place</code> key). When the ⟨<i>code</i>⟩ is called, all of the keys described above will hold numbers computed in the way described above. </p><p> The job of the ⟨<i>code</i>⟩ is to setup node options appropriately so that the to-be-created node will be placed correctly. Thus, the ⟨<i>code</i>⟩ should typically set the key <code>nodes={shift=</code>⟨<i>coordinate</i>⟩<code>}</code> where ⟨<i>coordinate</i>⟩ is the computed position for the node. The ⟨<i>code</i>⟩ could also set other options like, say, the color of a node depending on its depth. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/compute:position",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/compute%3Aposition"
+  },
+  "compute position": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/compute position=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The ⟨<i>code</i>⟩ is called by the <code>graph</code> command just prior to creating a new node (the exact moment when this key is called is detailed in the description of the <code>place</code> key). When the ⟨<i>code</i>⟩ is called, all of the keys described above will hold numbers computed in the way described above. </p><p> The job of the ⟨<i>code</i>⟩ is to setup node options appropriately so that the to-be-created node will be placed correctly. Thus, the ⟨<i>code</i>⟩ should typically set the key <code>nodes={shift=</code>⟨<i>coordinate</i>⟩<code>}</code> where ⟨<i>coordinate</i>⟩ is the computed position for the node. The ⟨<i>code</i>⟩ could also set other options like, say, the color of a node depending on its depth. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/compute:position",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/compute%3Aposition"
+  },
+  "/tikz/graphs/placement/place": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/place</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Executing this key has two effects: First, the key <code>compute position</code> is called to compute a good position for future nodes (usually, these “future nodes” are just a single node that is created immediately). Second, all of the above counters like <code>depth</code> or <code>width</code> are reset (but not <code>level</code>). </p><p> There are two places where this key is sensibly called: First, just prior to creating a node, which happens automatically. Second, when you change the online strategy. In this case, the computed width and depth values from one strategy typically make no sense in the other strategy, which is why the new strategy should proceed “from a fresh start”. In this case, the implicit call of <code>compute position</code> ensures that the new strategy gets the last place the old strategy would have used as its starting point, while the computation of its positions is now relative to this new starting point. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/place",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/place"
+  },
+  "place": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/placement/place</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Executing this key has two effects: First, the key <code>compute position</code> is called to compute a good position for future nodes (usually, these “future nodes” are just a single node that is created immediately). Second, all of the above counters like <code>depth</code> or <code>width</code> are reset (but not <code>level</code>). </p><p> There are two places where this key is sensibly called: First, just prior to creating a node, which happens automatically. Second, when you change the online strategy. In this case, the computed width and depth values from one strategy typically make no sense in the other strategy, which is why the new strategy should proceed “from a fresh start”. In this case, the implicit call of <code>compute position</code> ensures that the new strategy gets the last place the old strategy would have used as its starting point, while the computation of its positions is now relative to this new starting point. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/placement/place",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/placement/place"
+  },
+  "graphs.standard": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>graphs.standard</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usetikzlibrary{graphs.standard} % LaTeX and plain TeX</kbd><br> <kbd>\\usetikzlibrary[graphs.standard] % ConTeXt</kbd><br> <br> This library defines a number of graph macros that are often used in the literature. When new graphs are added to this collection, they will follow the definitions in the Mathematica program, see SimpleGraphs on mathworld.wolfram.com. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.graphs.standard",
+    "href": "https://tikz.dev/tikz-graphs#pgf.graphs.standard"
+  },
+  "subgraph I_n": {
+    "type": "key",
+    "signatureHtml": "<b>Graph</b> <kbd>subgraph I_n</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>This graph consists just of \\(n\\) unconnected vertices. The following key is used to specify the set of these vertices:</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.subgraph:I_n",
+    "href": "https://tikz.dev/tikz-graphs#pgf.subgraph%3AI_n"
+  },
+  "/tikz/graphs/V": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/V=</kbd>{⟨<i>list of vertices</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets a list of vertex names for use with graphs like <code>subgraph I_n</code> and also other graphs. This list is available in the macro <code>\\tikzgraphV</code>. The number of elements of this list is available in <code>\\tikzgraphVnum</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/V",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/V"
+  },
+  "V": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/V=</kbd>{⟨<i>list of vertices</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets a list of vertex names for use with graphs like <code>subgraph I_n</code> and also other graphs. This list is available in the macro <code>\\tikzgraphV</code>. The number of elements of this list is available in <code>\\tikzgraphVnum</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/V",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/V"
+  },
+  "/tikz/graphs/n": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/n=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This is an abbreviation for <code>V={1,...,</code>⟨<i>number</i>⟩<code>}, name shore V/.style={name=V}</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/n",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/n"
+  },
+  "n": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/n=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This is an abbreviation for <code>V={1,...,</code>⟨<i>number</i>⟩<code>}, name shore V/.style={name=V}</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/n",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/n"
+  },
+  "subgraph I_nm": {
+    "type": "key",
+    "signatureHtml": "<b>Graph</b> <kbd>subgraph I_nm</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This graph consists of two sets of once \\(n\\) unconnected vertices and then \\(m\\) unconnected vertices. The first set consists of the vertices set by the key <code>V</code>, the other set consists of the vertices set by the key <code>W</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.subgraph:I_nm",
+    "href": "https://tikz.dev/tikz-graphs#pgf.subgraph%3AI_nm"
+  },
+  "/tikz/graphs/name shore V": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/graphs/name shore V</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p> Set this style to, say, <code>name=my V set</code> in order to set a name for the <code>V</code> set. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/name:shore:V",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/name%3Ashore%3AV"
+  },
+  "name shore V": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/graphs/name shore V</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p> Set this style to, say, <code>name=my V set</code> in order to set a name for the <code>V</code> set. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/name:shore:V",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/name%3Ashore%3AV"
+  },
+  "/tikz/graphs/name shore W": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/graphs/name shore W</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>Same as for <code>name shore V</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/name:shore:W",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/name%3Ashore%3AW"
+  },
+  "name shore W": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/graphs/name shore W</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>Same as for <code>name shore V</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/name:shore:W",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/name%3Ashore%3AW"
+  },
+  "/tikz/graphs/W": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/W=</kbd>{⟨<i>list of vertices</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets the list of vertices for the <code>W</code> set. The elements and their number are available in the macros <code>\\tikzgraphW</code> and <code>\\tikzgraphWnum</code>, respectively. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/W",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/W"
+  },
+  "W": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/W=</kbd>{⟨<i>list of vertices</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets the list of vertices for the <code>W</code> set. The elements and their number are available in the macros <code>\\tikzgraphW</code> and <code>\\tikzgraphWnum</code>, respectively. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/W",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/W"
+  },
+  "/tikz/graphs/m": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/m=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This is an abbreviation for <code>W={1,...,</code>⟨<i>number</i>⟩<code>}, name shore W/.style={name=W}</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/m",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/m"
+  },
+  "m": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/m=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This is an abbreviation for <code>W={1,...,</code>⟨<i>number</i>⟩<code>}, name shore W/.style={name=W}</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/m",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/m"
+  },
+  "subgraph K_n": {
+    "type": "key",
+    "signatureHtml": "<b>Graph</b> <kbd>subgraph K_n</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>This graph is the complete clique on the vertices from the <code>V</code> key.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.subgraph:K_n",
+    "href": "https://tikz.dev/tikz-graphs#pgf.subgraph%3AK_n"
+  },
+  "subgraph K_nm": {
+    "type": "key",
+    "signatureHtml": "<b>Graph</b> <kbd>subgraph K_nm</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This graph is the complete bipartite graph with the two shores <code>V</code> and <code>W</code> as in <code>subgraph I_nm</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.subgraph:K_nm",
+    "href": "https://tikz.dev/tikz-graphs#pgf.subgraph%3AK_nm"
+  },
+  "subgraph P_n": {
+    "type": "key",
+    "signatureHtml": "<b>Graph</b> <kbd>subgraph P_n</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>This graph is the path on the vertices in <code>V</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.subgraph:P_n",
+    "href": "https://tikz.dev/tikz-graphs#pgf.subgraph%3AP_n"
+  },
+  "subgraph C_n": {
+    "type": "key",
+    "signatureHtml": "<b>Graph</b> <kbd>subgraph C_n</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>This graph is the cycle on the vertices in <code>V</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.subgraph:C_n",
+    "href": "https://tikz.dev/tikz-graphs#pgf.subgraph%3AC_n"
+  },
+  "subgraph Grid_n": {
+    "type": "key",
+    "signatureHtml": "<b>Graph</b> <kbd>subgraph Grid_n</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>This graph is a grid of the vertices in <code>V</code>.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf.subgraph:Grid_n",
+    "href": "https://tikz.dev/tikz-graphs#pgf.subgraph%3AGrid_n"
+  },
+  "/tikz/graphs/wrap after": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/wrap after=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Defines the number of nodes placed in a single row of the grid. This value implicitly defines the number of grid columns as well. In the following example a <code>grid placement</code> is used to visualize the edges created between the nodes of a <code>Grid_n</code> <code>subgraph</code> using different values for <code>wrap after</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/wrap:after",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/wrap%3Aafter"
+  },
+  "wrap after": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/wrap after=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Defines the number of nodes placed in a single row of the grid. This value implicitly defines the number of grid columns as well. In the following example a <code>grid placement</code> is used to visualize the edges created between the nodes of a <code>Grid_n</code> <code>subgraph</code> using different values for <code>wrap after</code>. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/wrap:after",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/wrap%3Aafter"
+  },
+  "/tikz/graphs/clique": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/clique=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(default <kbd>all</kbd>)",
+    "snippetHtml": "<p> Adds an edge between all vertices of the current group having the (logical) color ⟨<i>color</i>⟩. Since, by default, this color is set to <code>all</code>, which is a color that all nodes get by default, when you do not specify anything, all nodes will be connected. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/clique",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/clique"
+  },
+  "clique": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/clique=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(default <kbd>all</kbd>)",
+    "snippetHtml": "<p> Adds an edge between all vertices of the current group having the (logical) color ⟨<i>color</i>⟩. Since, by default, this color is set to <code>all</code>, which is a color that all nodes get by default, when you do not specify anything, all nodes will be connected. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/clique",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/clique"
+  },
+  "/tikz/graphs/induced independent set": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/induced independent set=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(default <kbd>all</kbd>)",
+    "snippetHtml": "<p> This key is the “opposite” of a <code>clique</code>: It removes all edges in the current group having belonging to color class ⟨<i>color</i>⟩. More precisely, an edge of kind <code>-!-</code> is added for each pair of vertices. This means that edge only get removed if you specify the <code>simple</code> option. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/induced:independent:set",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/induced%3Aindependent%3Aset"
+  },
+  "induced independent set": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/induced independent set=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(default <kbd>all</kbd>)",
+    "snippetHtml": "<p> This key is the “opposite” of a <code>clique</code>: It removes all edges in the current group having belonging to color class ⟨<i>color</i>⟩. More precisely, an edge of kind <code>-!-</code> is added for each pair of vertices. This means that edge only get removed if you specify the <code>simple</code> option. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/induced:independent:set",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/induced%3Aindependent%3Aset"
+  },
+  "/tikz/graphs/cycle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/cycle=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(default <kbd>all</kbd>)",
+    "snippetHtml": "<p> Connects the nodes colored ⟨<i>color</i>⟩ is a cyclic fashion. The ordering is the ordering in which they appear in the whole graph specification. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/cycle",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/cycle"
+  },
+  "cycle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/cycle=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(default <kbd>all</kbd>)",
+    "snippetHtml": "<p> Connects the nodes colored ⟨<i>color</i>⟩ is a cyclic fashion. The ordering is the ordering in which they appear in the whole graph specification. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/cycle",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/cycle"
+  },
+  "/tikz/graphs/induced cycle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/induced cycle=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(default <kbd>all</kbd>)",
+    "snippetHtml": "<p> While the <code>cycle</code> command will only add edges, this key will also remove all other edges between the nodes of the cycle, provided we are constructing a <code>simple</code> graph. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/induced:cycle",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/induced%3Acycle"
+  },
+  "induced cycle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/induced cycle=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(default <kbd>all</kbd>)",
+    "snippetHtml": "<p> While the <code>cycle</code> command will only add edges, this key will also remove all other edges between the nodes of the cycle, provided we are constructing a <code>simple</code> graph. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/induced:cycle",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/induced%3Acycle"
+  },
+  "/tikz/graphs/path": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/path=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(default <kbd>all</kbd>)",
+    "snippetHtml": "<p>Works like <code>cycle</code>, only there is no edge from the last to the first vertex.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/path",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/path"
+  },
+  "path": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/path=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(default <kbd>all</kbd>)",
+    "snippetHtml": "<p>Works like <code>cycle</code>, only there is no edge from the last to the first vertex.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/path",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/path"
+  },
+  "/tikz/graphs/induced path": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/induced path=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(default <kbd>all</kbd>)",
+    "snippetHtml": "<p>Works like <code>induced cycle</code>, only there is no edge from the last to the first vertex.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/induced:path",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/induced%3Apath"
+  },
+  "induced path": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/induced path=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(default <kbd>all</kbd>)",
+    "snippetHtml": "<p>Works like <code>induced cycle</code>, only there is no edge from the last to the first vertex.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/induced:path",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/induced%3Apath"
+  },
+  "/tikz/graphs/complete bipartite": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/complete bipartite=</kbd>⟨<i>from color</i>⟩⟨<i>to color</i>⟩",
+    "defaultHtml": "(default <kbd>{source'}{target'}</kbd>)",
+    "snippetHtml": "<p> Adds all possible edges from every node having color ⟨<i>from color</i>⟩ to every node having color ⟨<i>to color</i>⟩: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/complete:bipartite",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/complete%3Abipartite"
+  },
+  "complete bipartite": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/complete bipartite=</kbd>⟨<i>from color</i>⟩⟨<i>to color</i>⟩",
+    "defaultHtml": "(default <kbd>{source'}{target'}</kbd>)",
+    "snippetHtml": "<p> Adds all possible edges from every node having color ⟨<i>from color</i>⟩ to every node having color ⟨<i>to color</i>⟩: </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/complete:bipartite",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/complete%3Abipartite"
+  },
+  "/tikz/graphs/induced complete bipartite": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/induced complete bipartite</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Works like the <code>complete bipartite</code> operator, but in a <code>simple</code> graph any edges between the vertices in either shore are removed (more precisely, they get replaced by <code>-!-</code> edges). </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/induced:complete:bipartite",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/induced%3Acomplete%3Abipartite"
+  },
+  "induced complete bipartite": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/induced complete bipartite</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> Works like the <code>complete bipartite</code> operator, but in a <code>simple</code> graph any edges between the vertices in either shore are removed (more precisely, they get replaced by <code>-!-</code> edges). </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/induced:complete:bipartite",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/induced%3Acomplete%3Abipartite"
+  },
+  "/tikz/graphs/matching": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/matching=</kbd>⟨<i>from color</i>⟩⟨<i>to color</i>⟩",
+    "defaultHtml": "(default <kbd>{source'}{target'}</kbd>)",
+    "snippetHtml": "<p> This joining operator forms a maximum <em>matching</em> between the nodes of the two sets of nodes having colors ⟨<i>from color</i>⟩ and ⟨<i>to color</i>⟩, respectively. The first node of the from set is connected to the first node of to set, the second node of the from set is connected to the second node of the to set, and so on. If the sets have the same size, what results is what graph theoreticians call a <em>perfect matching</em>, otherwise only a maximum, but not perfect matching results. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/matching",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/matching"
+  },
+  "matching": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/matching=</kbd>⟨<i>from color</i>⟩⟨<i>to color</i>⟩",
+    "defaultHtml": "(default <kbd>{source'}{target'}</kbd>)",
+    "snippetHtml": "<p> This joining operator forms a maximum <em>matching</em> between the nodes of the two sets of nodes having colors ⟨<i>from color</i>⟩ and ⟨<i>to color</i>⟩, respectively. The first node of the from set is connected to the first node of to set, the second node of the from set is connected to the second node of the to set, and so on. If the sets have the same size, what results is what graph theoreticians call a <em>perfect matching</em>, otherwise only a maximum, but not perfect matching results. </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/matching",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/matching"
+  },
+  "/tikz/graphs/matching and star": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/matching and star=</kbd>⟨<i>from color</i>⟩⟨<i>to color</i>⟩",
+    "defaultHtml": "(default <kbd>{source'}{target'}</kbd>)",
+    "snippetHtml": "<p> The <code>matching and star</code> connector works like the <code>matching</code> connector, only it behaves differently when the two to-be-connected sets have different size. In this case, all the surplus nodes get connected to the last node of the other set, resulting in what is known as a <em>star</em> in graph theory. This simple rule allows for some powerful effects (since this connector is the one initially set, there is no need to add it here): </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/matching:and:star",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/matching%3Aand%3Astar"
+  },
+  "matching and star": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/matching and star=</kbd>⟨<i>from color</i>⟩⟨<i>to color</i>⟩",
+    "defaultHtml": "(default <kbd>{source'}{target'}</kbd>)",
+    "snippetHtml": "<p> The <code>matching and star</code> connector works like the <code>matching</code> connector, only it behaves differently when the two to-be-connected sets have different size. In this case, all the surplus nodes get connected to the last node of the other set, resulting in what is known as a <em>star</em> in graph theory. This simple rule allows for some powerful effects (since this connector is the one initially set, there is no need to add it here): </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/matching:and:star",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/matching%3Aand%3Astar"
+  },
+  "/tikz/graphs/butterfly": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/butterfly=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The <code>butterfly</code> connector is used to create the kind of connections present between layers of a so-called <em>butterfly network</em>. As for other connectors, two sets of nodes are connected, which are the nodes having color <code>target'</code> and <code>source'</code> by default. In a <em>level \\(l\\)</em> connection, the first \\(l\\) nodes of the first set are connected to the second \\(l\\) nodes of the second set, while the second \\(l\\) nodes of the first set get connected to the first \\(l\\) nodes of the second set. Then, for next \\(2l\\) nodes of both sets a similar kind of connection is installed. Additionally, each node gets connected to the corresponding node in the other set with the same index (as in a <code>matching</code>): </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/butterfly",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/butterfly"
+  },
+  "butterfly": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/butterfly=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The <code>butterfly</code> connector is used to create the kind of connections present between layers of a so-called <em>butterfly network</em>. As for other connectors, two sets of nodes are connected, which are the nodes having color <code>target'</code> and <code>source'</code> by default. In a <em>level \\(l\\)</em> connection, the first \\(l\\) nodes of the first set are connected to the second \\(l\\) nodes of the second set, while the second \\(l\\) nodes of the first set get connected to the first \\(l\\) nodes of the second set. Then, for next \\(2l\\) nodes of both sets a similar kind of connection is installed. Additionally, each node gets connected to the corresponding node in the other set with the same index (as in a <code>matching</code>): </p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/butterfly",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/butterfly"
+  },
+  "/tikz/graphs/butterfly/level": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/butterfly/level=</kbd>⟨<i>level</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1</kbd>)",
+    "snippetHtml": "<p>Sets the level \\(l\\) for the connections.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/butterfly/level",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/butterfly/level"
+  },
+  "/tikz/graphs/butterfly/from": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/butterfly/from=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>target'</kbd>)",
+    "snippetHtml": "<p>Sets the color class of the from nodes.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/butterfly/from",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/butterfly/from"
+  },
+  "from": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/butterfly/from=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>target'</kbd>)",
+    "snippetHtml": "<p>Sets the color class of the from nodes.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/butterfly/from",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/butterfly/from"
+  },
+  "/tikz/graphs/butterfly/to": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/butterfly/to=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>source'</kbd>)",
+    "snippetHtml": "<p>Sets the color class of the to nodes.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/butterfly/to",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/butterfly/to"
+  },
+  "to": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/graphs/butterfly/to=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>source'</kbd>)",
+    "snippetHtml": "<p>Sets the color class of the to nodes.</p>",
+    "page": "tikz-graphs",
+    "anchor": "pgf./tikz/graphs/butterfly/to",
+    "href": "https://tikz.dev/tikz-graphs#pgf./tikz/graphs/butterfly/to"
+  }
+}

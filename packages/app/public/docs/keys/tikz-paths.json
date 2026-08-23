@@ -1,0 +1,776 @@
+{
+  "\\path": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\path</kbd>⟨<i>specification</i>⟩<code>;</code>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>This command is available only inside a <code>{tikzpicture}</code> environment.</p><p> The ⟨<i>specification</i>⟩ is a long stream of <em>path operations</em>. Most of these path operations tell TikZ how the path is built. For example, when you write <code>--(0,0)</code>, you use a <em>line-to operation</em> and it means “continue the path from wherever you are to the origin”. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.back/path",
+    "href": "https://tikz.dev/tikz-paths#pgf.back/path"
+  },
+  "/tikz/every path": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every path</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p> This style is installed at the beginning of every path. This can be useful for (temporarily) adding, say, the <code>draw</code> option to everything in a scope. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/every:path",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/every%3Apath"
+  },
+  "every path": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every path</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p> This style is installed at the beginning of every path. This can be useful for (temporarily) adding, say, the <code>draw</code> option to everything in a scope. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/every:path",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/every%3Apath"
+  },
+  "/tikz/insert path": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/insert path=</kbd>⟨<i>path</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key can be used inside an option to add something to the current path. This is mostly useful for defining styles that create graphic contents. This option should be used with care, for instance it should not be used as an argument of, say, a <code>node</code>. In the following example, we use a style to add little circles to a path. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/insert:path",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/insert%3Apath"
+  },
+  "insert path": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/insert path=</kbd>⟨<i>path</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key can be used inside an option to add something to the current path. This is mostly useful for defining styles that create graphic contents. This option should be used with care, for instance it should not be used as an argument of, say, a <code>node</code>. In the following example, we use a style to add little circles to a path. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/insert:path",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/insert%3Apath"
+  },
+  "/tikz/append after command": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/append after command=</kbd>⟨<i>path</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Some of the path commands described in the following sections take optional arguments. For these commands, when you use this key inside these options, the ⟨<i>path</i>⟩ will be inserted <em>after</em> the path command is done. For instance, when you give this command in the option list of a node, the ⟨<i>path</i>⟩ will be added after the node. This is used by, for instance, the <code>label</code> option to allow you to specify a label in the option list of a node, but have this <code>label</code> cause a node to be added after another node. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/append:after:command",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/append%3Aafter%3Acommand"
+  },
+  "append after command": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/append after command=</kbd>⟨<i>path</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Some of the path commands described in the following sections take optional arguments. For these commands, when you use this key inside these options, the ⟨<i>path</i>⟩ will be inserted <em>after</em> the path command is done. For instance, when you give this command in the option list of a node, the ⟨<i>path</i>⟩ will be added after the node. This is used by, for instance, the <code>label</code> option to allow you to specify a label in the option list of a node, but have this <code>label</code> cause a node to be added after another node. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/append:after:command",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/append%3Aafter%3Acommand"
+  },
+  "/tikz/prefix after command": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/prefix after command=</kbd>⟨<i>path</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Works like <code>append after command</code>, only the accumulation order is inverse: The ⟨<i>path</i>⟩ is added before any earlier paths added using either <code>append after command</code> or <code>prefix after command</code>. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/prefix:after:command",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/prefix%3Aafter%3Acommand"
+  },
+  "prefix after command": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/prefix after command=</kbd>⟨<i>path</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Works like <code>append after command</code>, only the accumulation order is inverse: The ⟨<i>path</i>⟩ is added before any earlier paths added using either <code>append after command</code> or <code>prefix after command</code>. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/prefix:after:command",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/prefix%3Aafter%3Acommand"
+  },
+  "--": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>--</kbd>⟨<i>coordinate or cycle</i>⟩ …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> The line-to operation extends the current path from the current point in a straight line to the given ⟨<i>coordinate</i>⟩ (the “or cycle” part is explained in a moment). The “current point” is the endpoint of the previous drawing operation or the point specified by a prior move-to operation. </p><p> When a line-to operation is used and some path segment has just been constructed, for example by another line-to operation, the two line segments become joined. This means that if they are drawn, the point where they meet is “joined” smoothly. To appreciate the difference, consider the following two examples: In the left example, the path consists of two path segments that are not joined, but they happen to share a point, while in the right example a smooth join is shown. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.--",
+    "href": "https://tikz.dev/tikz-paths#pgf.--"
+  },
+  "-|": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>-|</kbd>⟨<i>coordinate or cycle</i>⟩ …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>This operation means “first horizontal, then vertical”.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.-bar/",
+    "href": "https://tikz.dev/tikz-paths#pgf.-bar/"
+  },
+  "|-": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>|-</kbd>⟨<i>coordinate or cycle</i>⟩ …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>This operation means “first vertical, then horizontal”.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.bar/-",
+    "href": "https://tikz.dev/tikz-paths#pgf.bar/-"
+  },
+  "..": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>..</kbd><code>controls</code>⟨<i>c</i>⟩<code>and</code>⟨<i>d</i>⟩<code>..</code>⟨<i>y or cycle</i>⟩ …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This operation extends the current path from the current point, let us call it \\(x\\), via a curve to a point \\(y\\) (if, instead of a coordinate you say <code>cycle</code> at the end, \\(y\\) will be the coordinate of the last move-to operation). The curve is a cubic Bézier curve. For such a curve, apart from \\(y\\), you also specify two control points \\(c\\) and \\(d\\). The idea is that the curve starts at \\(x\\), “heading” in the direction of \\(c\\). Mathematically spoken, the tangent of the curve at \\(x\\) goes through \\(c\\). Similarly, the curve ends at \\(y\\), “coming from” the other control point, \\(d\\). The larger the distance between \\(x\\) and \\(c\\) and between \\(d\\) and \\(y\\), the larger the curve will be. </p><p> If the “<code>and</code>⟨<i>d</i>⟩” part is not given, \\(d\\) is assumed to be equal to \\(c\\). </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf...",
+    "href": "https://tikz.dev/tikz-paths#pgf..."
+  },
+  "rectangle": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>rectangle</kbd>⟨<i>corner or cycle</i>⟩ …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> When this operation is used, one corner will be the current point, another corner is given by ⟨<i>corner</i>⟩, which becomes the new current point. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.rectangle",
+    "href": "https://tikz.dev/tikz-paths#pgf.rectangle"
+  },
+  "/tikz/rounded corners": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/rounded corners=</kbd>⟨<i>inset</i>⟩",
+    "defaultHtml": "(default <kbd>4pt</kbd>)",
+    "snippetHtml": "<p> When this option is in force, all corners (places where a line is continued either via line-to or a curve-to operation) are replaced by little arcs so that the corner becomes smooth. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/rounded:corners",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/rounded%3Acorners"
+  },
+  "rounded corners": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/rounded corners=</kbd>⟨<i>inset</i>⟩",
+    "defaultHtml": "(default <kbd>4pt</kbd>)",
+    "snippetHtml": "<p> When this option is in force, all corners (places where a line is continued either via line-to or a curve-to operation) are replaced by little arcs so that the corner becomes smooth. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/rounded:corners",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/rounded%3Acorners"
+  },
+  "/tikz/sharp corners": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/sharp corners</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>This options switches off any rounding on subsequent corners of the path.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/sharp:corners",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/sharp%3Acorners"
+  },
+  "sharp corners": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/sharp corners</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p>This options switches off any rounding on subsequent corners of the path.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/sharp:corners",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/sharp%3Acorners"
+  },
+  "circle": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>circle</kbd><code>[</code>⟨<i>options</i>⟩<code>]</code> …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This command adds a circle to the current path where the center of the circle is the current point by default, but you can use the <code>at</code> option to change this. The new current point of the path will be (typically just remain) the center of the circle. </p><p>The radius of the circle is specified using the following options:</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.circle",
+    "href": "https://tikz.dev/tikz-paths#pgf.circle"
+  },
+  "/tikz/x radius": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/x radius=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets the horizontal radius of the circle (which, when this value is different from the vertical radius, is actually an ellipse). The ⟨<i>value</i>⟩ may either be a dimension or a dimensionless number. In the latter case, the number is interpreted in the \\(xy\\)-coordinate system (if the \\(x\\)-unit is set to, say, <code>2cm</code>, then <code>x radius=3</code> will have the same effect as <code>x radius=6cm</code>). </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/x:radius",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/x%3Aradius"
+  },
+  "x radius": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/x radius=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets the horizontal radius of the circle (which, when this value is different from the vertical radius, is actually an ellipse). The ⟨<i>value</i>⟩ may either be a dimension or a dimensionless number. In the latter case, the number is interpreted in the \\(xy\\)-coordinate system (if the \\(x\\)-unit is set to, say, <code>2cm</code>, then <code>x radius=3</code> will have the same effect as <code>x radius=6cm</code>). </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/x:radius",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/x%3Aradius"
+  },
+  "/tikz/y radius": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/y radius=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works like the <code>x radius</code>.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/y:radius",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/y%3Aradius"
+  },
+  "y radius": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/y radius=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works like the <code>x radius</code>.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/y:radius",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/y%3Aradius"
+  },
+  "/tikz/radius": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/radius=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Sets the <code>x radius</code> and <code>y radius</code> simultaneously.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/radius",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/radius"
+  },
+  "radius": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/radius=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Sets the <code>x radius</code> and <code>y radius</code> simultaneously.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/radius",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/radius"
+  },
+  "/tikz/at": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/at=</kbd>⟨<i>coordinate</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> If this option is explicitly set inside the ⟨<i>options</i>⟩ (or indirectly via the <code>every circle</code> style), the ⟨<i>coordinate</i>⟩ is used as the center of the circle instead of the current point. Setting <code>at</code> to some value in an enclosing scope has no effect. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/at",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/at"
+  },
+  "at": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/at=</kbd>⟨<i>coordinate</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> If this option is explicitly set inside the ⟨<i>options</i>⟩ (or indirectly via the <code>every circle</code> style), the ⟨<i>coordinate</i>⟩ is used as the center of the circle instead of the current point. Setting <code>at</code> to some value in an enclosing scope has no effect. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/at",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/at"
+  },
+  "/tikz/every circle": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every circle</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p> You can use this key to set up, say, a default radius for every circle. The key will also be used with the <code>ellipse</code> operation. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/every:circle",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/every%3Acircle"
+  },
+  "every circle": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every circle</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p> You can use this key to set up, say, a default radius for every circle. The key will also be used with the <code>ellipse</code> operation. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/every:circle",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/every%3Acircle"
+  },
+  "ellipse": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>ellipse</kbd><code>[</code>⟨<i>options</i>⟩<code>]</code> …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This command has exactly the same effect as <code>circle</code>. The older syntax for this command is <code>ellipse (</code>⟨<i>x radius</i>⟩ <code>and</code> ⟨<i>y radius</i>⟩<code>)</code>. As for the <code>circle</code> command, this syntax is not as good as the standard syntax. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.ellipse",
+    "href": "https://tikz.dev/tikz-paths#pgf.ellipse"
+  },
+  "arc": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>arc</kbd>[⟨<i>options</i>⟩] …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> The <code>arc</code> operation adds a part of an ellipse to the current path. The radii of the ellipse are given by the values of <code>x radius</code> and <code>y radius</code>, which should be set in the ⟨<i>options</i>⟩. The arc will start at the current point and will end at the end of the arc. The arc will start and end at angles computed from the three keys <code>start angle</code>, <code>end angle</code>, and <code>delta angle</code>. Normally, the first two keys specify the start and end angle. However, in case one of them is empty, it is computed from the other key plus or minus the <code>delta angle</code>. In detail, if <code>end angle</code> is empty, it is set to the start angle plus the delta angle. If the start angle is missing, it is set to the end angle minus the delta angle. If all three keys are set, the delta angle is ignored. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.arc",
+    "href": "https://tikz.dev/tikz-paths#pgf.arc"
+  },
+  "/tikz/start angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/start angle=</kbd>⟨<i>degrees</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Sets the start angle.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/start:angle",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/start%3Aangle"
+  },
+  "start angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/start angle=</kbd>⟨<i>degrees</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Sets the start angle.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/start:angle",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/start%3Aangle"
+  },
+  "/tikz/end angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/end angle=</kbd>⟨<i>degrees</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Sets the end angle.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/end:angle",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/end%3Aangle"
+  },
+  "end angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/end angle=</kbd>⟨<i>degrees</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Sets the end angle.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/end:angle",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/end%3Aangle"
+  },
+  "/tikz/delta angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/delta angle=</kbd>⟨<i>degrees</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Sets the delta angle.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/delta:angle",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/delta%3Aangle"
+  },
+  "delta angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/delta angle=</kbd>⟨<i>degrees</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Sets the delta angle.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/delta:angle",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/delta%3Aangle"
+  },
+  "grid": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>grid</kbd>[⟨<i>options</i>⟩]⟨<i>corner or cycle</i>⟩ …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This operation adds a grid filling a rectangle whose two corners are given by ⟨<i>corner</i>⟩ and by the previous coordinate. (Instead of a coordinate you can also say <code>cycle</code> to use the position of the last move-to as the corner coordinate, but it is not very natural to do so.) Thus, the typical way in which a grid is drawn is <code>\\draw (1,1) grid (3,3);</code>, which yields a grid filling the rectangle whose corners are at \\((1,1)\\) and \\((3,3)\\). All coordinate transformations apply to the grid. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.grid",
+    "href": "https://tikz.dev/tikz-paths#pgf.grid"
+  },
+  "/tikz/step": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/step=</kbd>⟨<i>number or dimension or coordinate</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1cm</kbd>)",
+    "snippetHtml": "<p> Sets the stepping in both the \\(x\\) and \\(y\\)-direction. If a dimension is provided, this is used directly. If a number is provided, this number is interpreted in the \\(xy\\)-coordinate system. For example, if you provide the number <code>2</code>, then the \\(x\\)-step is twice the \\(x\\)-vector and the \\(y\\)-step is twice the \\(y\\)-vector set by the <code>x=</code> and <code>y=</code> options. Finally, if you provide a coordinate, then the \\(x\\)-part of this coordinate will be used as the \\(x\\)-step and the \\(y\\)-part will be used as the \\(y\\)-coordinate. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/step",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/step"
+  },
+  "step": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/step=</kbd>⟨<i>number or dimension or coordinate</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1cm</kbd>)",
+    "snippetHtml": "<p> Sets the stepping in both the \\(x\\) and \\(y\\)-direction. If a dimension is provided, this is used directly. If a number is provided, this number is interpreted in the \\(xy\\)-coordinate system. For example, if you provide the number <code>2</code>, then the \\(x\\)-step is twice the \\(x\\)-vector and the \\(y\\)-step is twice the \\(y\\)-vector set by the <code>x=</code> and <code>y=</code> options. Finally, if you provide a coordinate, then the \\(x\\)-part of this coordinate will be used as the \\(x\\)-step and the \\(y\\)-part will be used as the \\(y\\)-coordinate. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/step",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/step"
+  },
+  "/tikz/xstep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/xstep=</kbd>⟨<i>dimension or number</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1cm</kbd>)",
+    "snippetHtml": "<p>Sets the stepping in the \\(x\\)-direction.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/xstep",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/xstep"
+  },
+  "xstep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/xstep=</kbd>⟨<i>dimension or number</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1cm</kbd>)",
+    "snippetHtml": "<p>Sets the stepping in the \\(x\\)-direction.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/xstep",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/xstep"
+  },
+  "/tikz/ystep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/ystep=</kbd>⟨<i>dimension or number</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1cm</kbd>)",
+    "snippetHtml": "<p>Sets the stepping in the \\(y\\)-direction.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/ystep",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/ystep"
+  },
+  "ystep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/ystep=</kbd>⟨<i>dimension or number</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1cm</kbd>)",
+    "snippetHtml": "<p>Sets the stepping in the \\(y\\)-direction.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/ystep",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/ystep"
+  },
+  "/tikz/help lines": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/help lines</kbd>",
+    "defaultHtml": "(style, initially <kbd>line width=0.2pt,gray</kbd>)",
+    "snippetHtml": "<p> This style makes lines “subdued” by using thin gray lines for them. However, this style is not installed automatically and you have to say for example: </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/help:lines",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/help%3Alines"
+  },
+  "help lines": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/help lines</kbd>",
+    "defaultHtml": "(style, initially <kbd>line width=0.2pt,gray</kbd>)",
+    "snippetHtml": "<p> This style makes lines “subdued” by using thin gray lines for them. However, this style is not installed automatically and you have to say for example: </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/help:lines",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/help%3Alines"
+  },
+  "parabola": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>parabola</kbd>[⟨<i>options</i>⟩]<code>bend</code>⟨<i>bend coordinate</i>⟩⟨<i>coordinate or cycle</i>⟩ …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This operation adds a parabola through the current point and the given ⟨<i>coordinate</i>⟩ or, if <code>cycle</code> is used instead of coordinate at the end, the ⟨<i>coordinate</i>⟩ is set to the position of the last move-to and the path gets closed after the parabola. If the <code>bend</code> is given, it specifies where the bend should go; the ⟨<i>options</i>⟩ can also be used to specify where the bend is. By default, the bend is at the old current point. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.parabola",
+    "href": "https://tikz.dev/tikz-paths#pgf.parabola"
+  },
+  "/tikz/bend": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/bend=</kbd>⟨<i>coordinate</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Has the same effect as saying <code>bend</code>⟨<i>coordinate</i>⟩ outside the ⟨<i>options</i>⟩. The option specifies that the bend of the parabola should be at the given ⟨<i>coordinate</i>⟩. You have to take care yourself that the bend position is a “valid” position; which means that if there is no parabola of the form \\(f(x) = a x^2 + b x + c\\) that goes through the old current point, the given bend, and the new current point, the result will not be a parabola. </p><p> There is one special property of the ⟨<i>coordinate</i>⟩: When a relative coordinate is given like <code>+(0,0)</code>, the position relative to this coordinate is “flexible”. More precisely, this position lies somewhere on a line from the old current point to the new current point. The exact position depends on the next option. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/bend",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/bend"
+  },
+  "bend": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/bend=</kbd>⟨<i>coordinate</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Has the same effect as saying <code>bend</code>⟨<i>coordinate</i>⟩ outside the ⟨<i>options</i>⟩. The option specifies that the bend of the parabola should be at the given ⟨<i>coordinate</i>⟩. You have to take care yourself that the bend position is a “valid” position; which means that if there is no parabola of the form \\(f(x) = a x^2 + b x + c\\) that goes through the old current point, the given bend, and the new current point, the result will not be a parabola. </p><p> There is one special property of the ⟨<i>coordinate</i>⟩: When a relative coordinate is given like <code>+(0,0)</code>, the position relative to this coordinate is “flexible”. More precisely, this position lies somewhere on a line from the old current point to the new current point. The exact position depends on the next option. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/bend",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/bend"
+  },
+  "/tikz/bend pos": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/bend pos=</kbd>⟨<i>fraction</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Specifies where the “previous” point is relative to which the bend is calculated. The previous point will be at the ⟨<i>fraction</i>⟩th part of the line from the old current point to the new current point. </p><p> The idea is the following: If you say <code>bend pos=0</code> and <code>bend +(0,0)</code>, the bend will be at the old current point. If you say <code>bend pos=1</code> and <code>bend +(0,0)</code>, the bend will be at the new current point. If you say <code>bend pos=0.5</code> and <code>bend +(0,2cm)</code> the bend will be 2cm above the middle of the line between the start and end point. This is most useful in situations such as the following: </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/bend:pos",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/bend%3Apos"
+  },
+  "bend pos": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/bend pos=</kbd>⟨<i>fraction</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Specifies where the “previous” point is relative to which the bend is calculated. The previous point will be at the ⟨<i>fraction</i>⟩th part of the line from the old current point to the new current point. </p><p> The idea is the following: If you say <code>bend pos=0</code> and <code>bend +(0,0)</code>, the bend will be at the old current point. If you say <code>bend pos=1</code> and <code>bend +(0,0)</code>, the bend will be at the new current point. If you say <code>bend pos=0.5</code> and <code>bend +(0,2cm)</code> the bend will be 2cm above the middle of the line between the start and end point. This is most useful in situations such as the following: </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/bend:pos",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/bend%3Apos"
+  },
+  "/tikz/parabola height": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/parabola height=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option has the same effect as <code>[bend pos=0.5,bend={+(0pt,</code>⟨<i>dimension</i>⟩<code>)}]</code>. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/parabola:height",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/parabola%3Aheight"
+  },
+  "parabola height": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/parabola height=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This option has the same effect as <code>[bend pos=0.5,bend={+(0pt,</code>⟨<i>dimension</i>⟩<code>)}]</code>. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/parabola:height",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/parabola%3Aheight"
+  },
+  "/tikz/bend at start": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/bend at start</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p> This places the bend at the start of a parabola. It is a shortcut for the following options: <code>bend pos=0,bend={+(0,0)}</code>. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/bend:at:start",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/bend%3Aat%3Astart"
+  },
+  "bend at start": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/bend at start</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p> This places the bend at the start of a parabola. It is a shortcut for the following options: <code>bend pos=0,bend={+(0,0)}</code>. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/bend:at:start",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/bend%3Aat%3Astart"
+  },
+  "/tikz/bend at end": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/bend at end</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>This places the bend at the end of a parabola.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/bend:at:end",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/bend%3Aat%3Aend"
+  },
+  "bend at end": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/bend at end</kbd>",
+    "defaultHtml": "(style, no value)",
+    "snippetHtml": "<p>This places the bend at the end of a parabola.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/bend:at:end",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/bend%3Aat%3Aend"
+  },
+  "sin": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>sin</kbd>⟨<i>coordinate or cycle</i>⟩ …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> The effect of <code>sin</code> is to draw a scaled and shifted version of a sine curve in the interval \\([0,\\pi /2]\\). The scaling and shifting is done in such a way that the start of the sine curve in the interval is at the old current point and that the end of the curve in the interval is at ⟨<i>coordinate</i>⟩. Here is an example that should clarify this: </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.sin",
+    "href": "https://tikz.dev/tikz-paths#pgf.sin"
+  },
+  "cos": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>cos</kbd>⟨<i>coordinate or cycle</i>⟩ …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This operation works similarly, only a cosine in the interval \\([0,\\pi /2]\\) is drawn. By correctly alternating <code>sin</code> and <code>cos</code> operations, you can create a complete sine or cosine curve: </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.cos",
+    "href": "https://tikz.dev/tikz-paths#pgf.cos"
+  },
+  "svg": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>svg</kbd>[⟨<i>options</i>⟩]{⟨<i>path data</i>⟩} …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This operation adds the path specified in the ⟨<i>path data</i>⟩ in svg 1.1 path data syntax to the current path. Unlike the svg-specification, it <em>is</em> permissible that the path data does not start with a move-to command (<code>m</code> or <code>M</code>), in which case the last point of the current path is used as start point. The optional ⟨<i>options</i>⟩ apply locally to this path operation, typically you will use them to set up, say, some transformations. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.svg",
+    "href": "https://tikz.dev/tikz-paths#pgf.svg"
+  },
+  "to": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>to</kbd><code>[</code>⟨<i>options</i>⟩<code>]</code> ⟨<i>nodes</i>⟩ ⟨<i>coordinate or cycle</i>⟩ …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This path operation inserts the path currently set via the <code>to path</code> option at the current position. The ⟨<i>options</i>⟩ can be used to modify (perhaps implicitly) the <code>to path</code> and to set up how the path will be rendered. </p><p> Before the <code>to path</code> is inserted, a number of macros are set up that can “help” the <code>to path</code>. These are <code>\\tikztostart</code>, <code>\\tikztotarget</code>, and <code>\\tikztonodes</code>; they are explained in the following. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.to",
+    "href": "https://tikz.dev/tikz-paths#pgf.to"
+  },
+  "/tikz/edge node": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/edge node=</kbd>⟨<i>node specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key can be used inside the ⟨<i>options</i>⟩ of a <code>to</code> path command. It will add the ⟨<i>node specification</i>⟩ to the list of nodes to be placed on the connecting line, just as if you had written the ⟨<i>node specification</i>⟩ directly after the <code>to</code> keyword: </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/edge:node",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/edge%3Anode"
+  },
+  "edge node": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/edge node=</kbd>⟨<i>node specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key can be used inside the ⟨<i>options</i>⟩ of a <code>to</code> path command. It will add the ⟨<i>node specification</i>⟩ to the list of nodes to be placed on the connecting line, just as if you had written the ⟨<i>node specification</i>⟩ directly after the <code>to</code> keyword: </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/edge:node",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/edge%3Anode"
+  },
+  "/tikz/edge label": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/edge label=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> A shorthand for <code>edge node={node[auto]{</code>⟨<i>text</i>⟩<code>}}</code>. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/edge:label",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/edge%3Alabel"
+  },
+  "edge label": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/edge label=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> A shorthand for <code>edge node={node[auto]{</code>⟨<i>text</i>⟩<code>}}</code>. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/edge:label",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/edge%3Alabel"
+  },
+  "/tikz/edge label'": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/edge label'=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> A shorthand for <code>edge node={node[auto,swap]{</code>⟨<i>text</i>⟩<code>}}</code>. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/edge:label'",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/edge%3Alabel'"
+  },
+  "edge label'": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/edge label'=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> A shorthand for <code>edge node={node[auto,swap]{</code>⟨<i>text</i>⟩<code>}}</code>. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/edge:label'",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/edge%3Alabel'"
+  },
+  "/tikz/every to": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every to</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This style is installed at the beginning of every to.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/every:to",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/every%3Ato"
+  },
+  "every to": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every to</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This style is installed at the beginning of every to.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/every:to",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/every%3Ato"
+  },
+  "/tikz/to path": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/to path=</kbd>⟨<i>path</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Whenever a <code>to</code> operation is used, the ⟨<i>path</i>⟩ is inserted. More precisely, the following path is added: </p><p> The ⟨<i>options</i>⟩ are the options given to the <code>to</code> operation, the ⟨<i>path</i>⟩ is the path set by this option <code>to path</code>. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/to:path",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/to%3Apath"
+  },
+  "to path": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/to path=</kbd>⟨<i>path</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Whenever a <code>to</code> operation is used, the ⟨<i>path</i>⟩ is inserted. More precisely, the following path is added: </p><p> The ⟨<i>options</i>⟩ are the options given to the <code>to</code> operation, the ⟨<i>path</i>⟩ is the path set by this option <code>to path</code>. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/to:path",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/to%3Apath"
+  },
+  "/tikz/execute at begin to": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at begin to=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The ⟨<i>code</i>⟩ is executed prior to the <code>to</code>. This can be used to draw one or more additional paths or to do additional computations. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/execute:at:begin:to",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/execute%3Aat%3Abegin%3Ato"
+  },
+  "execute at begin to": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at begin to=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The ⟨<i>code</i>⟩ is executed prior to the <code>to</code>. This can be used to draw one or more additional paths or to do additional computations. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/execute:at:begin:to",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/execute%3Aat%3Abegin%3Ato"
+  },
+  "/tikz/execute at end to": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at end to=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works like the previous option, only this code is executed after the to path has been added.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/execute:at:end:to",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/execute%3Aat%3Aend%3Ato"
+  },
+  "execute at end to": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/execute at end to=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Works like the previous option, only this code is executed after the to path has been added.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/execute:at:end:to",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/execute%3Aat%3Aend%3Ato"
+  },
+  "foreach": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>foreach</kbd>⟨<i>variables</i>⟩[⟨<i>options</i>⟩] <code>in</code> ⟨<i>list</i>⟩ {⟨<i>path commands</i>⟩} …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> The <code>foreach</code> operation can be used to repeatedly insert the ⟨<i>path commands</i>⟩ into the current path. Naturally, the ⟨<i>path commands</i>⟩ should internally reference some of the ⟨<i>variables</i>⟩ so that you do not insert exactly the same path repeatedly, but rather variations. For historical reasons, you can also write <code>\\foreach</code> instead of <code>foreach</code>. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.foreach",
+    "href": "https://tikz.dev/tikz-paths#pgf.foreach"
+  },
+  "let": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>let</kbd>⟨<i>assignment</i>⟩ <code>,</code>⟨<i>assignment</i>⟩<code>,</code>⟨<i>assignment</i>⟩…<code> in </code> …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> When this path operation is encountered, the ⟨<i>assignment</i>⟩s are evaluated, one by one. This will store coordinate and number in special <em>registers</em> (which are local to TikZ, they have nothing to do with TeX registers). Subsequently, one can access the contents of these registers using the macros <code>\\p</code>, <code>\\x</code>, <code>\\y</code>, and <code>\\n</code>. </p><p> The first kind of permissible ⟨<i>assignment</i>⟩s have the following form: </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.let",
+    "href": "https://tikz.dev/tikz-paths#pgf.let"
+  },
+  "\\n": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\n</kbd>{⟨<i>number register</i>⟩}",
+    "defaultHtml": "",
+    "snippetHtml": "<p> When this macro is used on the left-hand side of an <code>=</code>-sign in a let operation, it has no effect and is just there for readability. When the macro is used on the right-hand side of an <code>=</code>-sign or in the body of the let operation, then it expands to the value stored in the ⟨<i>number register</i>⟩. This will either be a dimensionless number like <code>2.0</code> or a dimension like <code>5.6pt</code>. </p><p> For instance, if we say <code>let \\n1={1pt+2pt}, \\n2={1+2} in ...</code>, then inside the <code>...</code> part the macro <code>\\n1</code> will expand to <code>3pt</code> and <code>\\n2</code> expands to <code>3</code>. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.back/n",
+    "href": "https://tikz.dev/tikz-paths#pgf.back/n"
+  },
+  "\\p": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\p</kbd>{⟨<i>point register</i>⟩}",
+    "defaultHtml": "",
+    "snippetHtml": "<p> When this macro is used on the left-hand side of an <code>=</code>-sign in a let operation, it has no effect and is just there for readability. When the macro is used on the right-hand side of an <code>=</code>-sign or in the body of the let operation, then it expands to the \\(x\\)-part (measured in TeX points) of the coordinate stored in the ⟨<i>register</i>⟩, followed, by a comma, followed by the \\(y\\)-part. </p><p> For instance, if we say <code>let \\p1=(1pt,1pt+2pt) in ...</code>, then inside the <code>...</code> part the macro <code>\\p1</code> will expand to exactly the seven characters “1pt,3pt”. This means that you when you write <code>(\\p1)</code>, this expands to <code>(1pt,3pt)</code>, which is presumably exactly what you intended. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.back/p",
+    "href": "https://tikz.dev/tikz-paths#pgf.back/p"
+  },
+  "\\x": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\x</kbd>{⟨<i>point register</i>⟩}",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This macro expands just to the \\(x\\)-part of the point register. If we say as above, as we did above, <code>let \\p1=(1pt,1pt+2pt) in ...</code>, then inside the <code>...</code> part the macro <code>\\x1</code> expands to <code>1pt</code>. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.back/x",
+    "href": "https://tikz.dev/tikz-paths#pgf.back/x"
+  },
+  "\\y": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\y</kbd>{⟨<i>point register</i>⟩}",
+    "defaultHtml": "",
+    "snippetHtml": "<p>Works like <code>\\x</code>, only for the \\(y\\)-part.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.back/y",
+    "href": "https://tikz.dev/tikz-paths#pgf.back/y"
+  },
+  "\\pgfextra": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\pgfextra</kbd>{⟨<i>code</i>⟩}",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This command may only be used inside a TikZ path. There it is used like a normal path operation. The construction of the path is temporarily suspended and the ⟨<i>code</i>⟩ is executed. Then, the path construction is resumed. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf.back/pgfextra",
+    "href": "https://tikz.dev/tikz-paths#pgf.back/pgfextra"
+  },
+  "/tikz/save path": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/save path=</kbd>⟨<i>macro</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Save the current soft path into ⟨<i>macro</i>⟩.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/save:path",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/save%3Apath"
+  },
+  "save path": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/save path=</kbd>⟨<i>macro</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Save the current soft path into ⟨<i>macro</i>⟩.</p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/save:path",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/save%3Apath"
+  },
+  "/tikz/use path": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/use path=</kbd>⟨<i>macro</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Set the current path to the soft path stored in ⟨<i>macro</i>⟩. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/use:path",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/use%3Apath"
+  },
+  "use path": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/use path=</kbd>⟨<i>macro</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Set the current path to the soft path stored in ⟨<i>macro</i>⟩. </p>",
+    "page": "tikz-paths",
+    "anchor": "pgf./tikz/use:path",
+    "href": "https://tikz.dev/tikz-paths#pgf./tikz/use%3Apath"
+  }
+}

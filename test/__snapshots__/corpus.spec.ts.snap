@@ -1,0 +1,315 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`pgf-docs corpus regression > extracts snippets and tracks parse+semantic+svg quality metrics 1`] = `
+{
+  "extraction": {
+    "filesScanned": 103,
+    "incompleteSnippets": 736,
+    "parserInputInlineSnippets": 1080,
+    "parserInputSnippets": 2187,
+    "tikzInlineSnippets": 1265,
+    "tikzPictureSnippets": 1107,
+    "totalSnippets": 2372,
+  },
+  "parse": {
+    "failedHard": 0,
+    "parsedClean": 1432,
+    "parsedWithRecovery": 755,
+    "recoverableRate": 0.3452,
+  },
+  "sampleHardFailures": [],
+  "semantic": {
+    "elementTotals": {
+      "circles": 431,
+      "ellipses": 41,
+      "paths": 8151,
+      "texts": 4298,
+      "total": 12921,
+    },
+    "semanticEmptySceneRate": 0.3301,
+    "semanticEmptySceneSnippets": 722,
+    "semanticErrorRate": 0.0498,
+    "semanticErrorSnippets": 109,
+    "semanticUnsupportedRate": 0.4746,
+    "semanticUnsupportedSnippets": 1038,
+    "semanticWarningRate": 0.4829,
+    "semanticWarningSnippets": 1056,
+  },
+  "semanticCoverage": {
+    "allUnknownSnippetRate": 0.1966,
+    "pathItemTotals": {
+      "commentItemRate": 0.0022,
+      "commentItems": 28,
+      "coordinateItemRate": 0.4323,
+      "coordinateItems": 5502,
+      "coordinateOperationItemRate": 0.0042,
+      "coordinateOperationItems": 53,
+      "keywordItemRate": 0.2413,
+      "keywordItems": 3071,
+      "letOperationItemRate": 0.0008,
+      "letOperationItems": 10,
+      "nodeItemRate": 0.1138,
+      "nodeItems": 1448,
+      "optionItemRate": 0.1347,
+      "optionItems": 1715,
+      "plotOperationItemRate": 0.0038,
+      "plotOperationItems": 48,
+      "svgOperationItemRate": 0.0002,
+      "svgOperationItems": 2,
+      "toOperationItemRate": 0.0086,
+      "toOperationItems": 109,
+      "totalPathItems": 12728,
+      "unknownPathItemRate": 0.0583,
+      "unknownPathItems": 742,
+    },
+    "snippetCoordinateCoverageRate": 0.5085,
+    "snippetNodeCoverageRate": 0.2771,
+    "snippetPathCoverageRate": 0.7796,
+    "snippetsAllUnknownStatements": 430,
+    "snippetsWithCoordinateItems": 1112,
+    "snippetsWithNodeItems": 606,
+    "snippetsWithPathStatements": 1705,
+    "statementTotals": {
+      "foreachStatements": 164,
+      "pathStatementRate": 0.7656,
+      "pathStatements": 3713,
+      "scopeStatements": 95,
+      "totalStatements": 4850,
+      "unknownStatementRate": 0.181,
+      "unknownStatements": 878,
+    },
+  },
+  "topDiagnosticCodes": [
+    {
+      "code": "parse-error",
+      "count": 1171,
+    },
+    {
+      "code": "missing-semicolon",
+      "count": 666,
+    },
+    {
+      "code": "stray-token",
+      "count": 439,
+    },
+    {
+      "code": "malformed-coordinate",
+      "count": 25,
+    },
+    {
+      "code": "missing-option-close",
+      "count": 24,
+    },
+    {
+      "code": "missing-group-close",
+      "count": 19,
+    },
+  ],
+  "topRecoveryFiles": [
+    {
+      "count": 154,
+      "filePath": "pgfmanual-en-dv-stylesheets.tex",
+    },
+    {
+      "count": 69,
+      "filePath": "pgfmanual-en-tikz-animations.tex",
+    },
+    {
+      "count": 66,
+      "filePath": "pgfmanual-en-dv-axes.tex",
+    },
+    {
+      "count": 32,
+      "filePath": "pgfmanual-en-tikz-shapes.tex",
+    },
+    {
+      "count": 24,
+      "filePath": "pgfmanual-en-base-transformations.tex",
+    },
+    {
+      "count": 23,
+      "filePath": "pgfmanual-en-library-plot-handlers.tex",
+    },
+    {
+      "count": 19,
+      "filePath": "pgfmanual-en-base-points.tex",
+    },
+    {
+      "count": 19,
+      "filePath": "pgfmanual-en-dv-visualizers.tex",
+    },
+    {
+      "count": 19,
+      "filePath": "pgfmanual-en-tikz-graphs.tex",
+    },
+    {
+      "count": 15,
+      "filePath": "pgfmanual-en-base-paths.tex",
+    },
+  ],
+  "topSemanticDiagnosticCodes": [
+    {
+      "code": "unsupported-statement",
+      "count": 1278,
+    },
+    {
+      "code": "foreach-body-parse-error",
+      "count": 399,
+    },
+    {
+      "code": "unsupported-option-key:sibling angle",
+      "count": 139,
+    },
+    {
+      "code": "parse-error",
+      "count": 93,
+    },
+    {
+      "code": "unsupported-coordinate-form:explicit",
+      "count": 92,
+    },
+    {
+      "code": "relative-coordinate-without-current-point",
+      "count": 79,
+    },
+    {
+      "code": "unsupported-option-flag:baseline",
+      "count": 70,
+    },
+    {
+      "code": "unsupported-option-flag:post",
+      "count": 65,
+    },
+    {
+      "code": "unsupported-option-flag:pre",
+      "count": 65,
+    },
+    {
+      "code": "unsupported-path-operator",
+      "count": 59,
+    },
+    {
+      "code": "unsupported-path-keyword",
+      "count": 54,
+    },
+    {
+      "code": "invalid-coordinate-operation",
+      "count": 51,
+    },
+  ],
+  "topSemanticUnsupportedCodes": [
+    {
+      "code": "unsupported-statement",
+      "count": 1278,
+    },
+    {
+      "code": "unsupported-option-key:sibling angle",
+      "count": 139,
+    },
+    {
+      "code": "unsupported-coordinate-form:explicit",
+      "count": 92,
+    },
+    {
+      "code": "unsupported-option-flag:baseline",
+      "count": 70,
+    },
+    {
+      "code": "unsupported-option-flag:post",
+      "count": 65,
+    },
+    {
+      "code": "unsupported-option-flag:pre",
+      "count": 65,
+    },
+    {
+      "code": "unsupported-path-operator",
+      "count": 59,
+    },
+    {
+      "code": "unsupported-path-keyword",
+      "count": 54,
+    },
+    {
+      "code": "unsupported-pic-operation",
+      "count": 50,
+    },
+    {
+      "code": "unsupported-coordinate-z-component",
+      "count": 48,
+    },
+    {
+      "code": "unsupported-option-key:concept color",
+      "count": 47,
+    },
+    {
+      "code": "unsupported-option-key:label",
+      "count": 46,
+    },
+  ],
+  "topSemanticUnsupportedFiles": [
+    {
+      "count": 161,
+      "filePath": "pgfmanual-en-dv-stylesheets.tex",
+    },
+    {
+      "count": 83,
+      "filePath": "pgfmanual-en-dv-axes.tex",
+    },
+    {
+      "count": 64,
+      "filePath": "pgfmanual-en-library-circuits.tex",
+    },
+    {
+      "count": 48,
+      "filePath": "pgfmanual-en-base-animations.tex",
+    },
+    {
+      "count": 38,
+      "filePath": "pgfmanual-en-base-transformations.tex",
+    },
+    {
+      "count": 38,
+      "filePath": "pgfmanual-en-library-decorations.tex",
+    },
+    {
+      "count": 23,
+      "filePath": "pgfmanual-en-library-plot-handlers.tex",
+    },
+    {
+      "count": 23,
+      "filePath": "pgfmanual-en-tikz-arrows.tex",
+    },
+    {
+      "count": 23,
+      "filePath": "pgfmanual-en-tikz-graphs.tex",
+    },
+    {
+      "count": 22,
+      "filePath": "pgfmanual-en-dv-visualizers.tex",
+    },
+  ],
+  "topSvgDiagnosticCodes": [
+    {
+      "code": "unsupported-shading:color wheel",
+      "count": 1,
+    },
+    {
+      "code": "unsupported-shading:color wheel black center",
+      "count": 1,
+    },
+    {
+      "code": "unsupported-shading:color wheel white center",
+      "count": 1,
+    },
+    {
+      "code": "unsupported-shading:mandelbrot set",
+      "count": 1,
+    },
+    {
+      "code": "unsupported-shading:rainbow",
+      "count": 1,
+    },
+  ],
+}
+`;

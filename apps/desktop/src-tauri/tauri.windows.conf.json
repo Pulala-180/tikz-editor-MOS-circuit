@@ -1,0 +1,28 @@
+{
+  "app": {
+    "windows": [
+      {
+        "title": "TikZ Editor",
+        "width": 1350,
+        "height": 850,
+        "resizable": true,
+        "fullscreen": false,
+        "dragDropEnabled": false,
+        "decorations": true,
+        "windowClassname": "TikZEditorMainWindow"
+      }
+    ]
+  },
+  "bundle": {
+    "windows": {
+      "allowDowngrades": false,
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper",
+        "silent": true
+      },
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}

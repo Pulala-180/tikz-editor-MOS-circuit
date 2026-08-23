@@ -1,0 +1,13 @@
+{
+  "name": "tikz-editor-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "scripts/*"
+  ],
+  "scripts": {
+    "dev": "npm run -w @tikz-editor/web dev",
+    "build": "npm run -w @tikz-editor/web build"
+  }
+}

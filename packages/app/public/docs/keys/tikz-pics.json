@@ -1,0 +1,218 @@
+{
+  "\\pic": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\pic</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>Inside <code>{tikzpicture}</code> this is an abbreviation for <code>\\path pic</code>.</p>",
+    "page": "tikz-pics",
+    "anchor": "pgf.back/pic",
+    "href": "https://tikz.dev/tikz-pics#pgf.back/pic"
+  },
+  "pic": {
+    "type": "key",
+    "signatureHtml": "<kbd>\\path</kbd> … <kbd>pic</kbd> ⟨<i>foreach statements</i>⟩ <code>[</code>⟨<i>options</i>⟩<code>]</code> <code>(</code>⟨<i>prefix</i>⟩<code>)</code> <code>at(</code>⟨<i>coordinate</i>⟩<code>)</code> <code>:</code>⟨<i>animation attribute</i>⟩<code>=</code>{⟨<i>options</i>⟩} {⟨<i>pic type</i>⟩} …<kbd>;</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> Adds a pic to the current TikZ picture of the specified ⟨<i>pic type</i>⟩. The effect is, basically, that some code associated with the ⟨<i>pic type</i>⟩ is executed (how this works, exactly, is explained later). This code can consist of arbitrary TikZ code. As for nodes, the current path will not be modified by this path command, all drawings produced by the code are “external” to the path the same way neither a node nor its border are part of the path on which they are specified. </p><p> Just like the <code>node</code> command, this path operation is somewhat complex and we go over it step by step. </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf.pic",
+    "href": "https://tikz.dev/tikz-pics#pgf.pic"
+  },
+  "/tikz/pic type": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/pic type=</kbd>⟨<i>pic type</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key sets the pic type of the current <code>pic</code>. When this option is used inside an option block of a <code>pic</code>, the parsing of the <code>pic</code> ends immediately and no pic type in braces is expected. (In other words, this option behaves exactly like the <code>node contents</code> option and, indeed, the two are interchangeable.) </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/pic:type",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/pic%3Atype"
+  },
+  "pic type": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/pic type=</kbd>⟨<i>pic type</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key sets the pic type of the current <code>pic</code>. When this option is used inside an option block of a <code>pic</code>, the parsing of the <code>pic</code> ends immediately and no pic type in braces is expected. (In other words, this option behaves exactly like the <code>node contents</code> option and, indeed, the two are interchangeable.) </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/pic:type",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/pic%3Atype"
+  },
+  "/tikz/pics/code": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/pics/code=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key stores the ⟨<i>code</i>⟩ that should be drawn in the current pic. Normally, setting this key is done by the ⟨<i>pic type</i>⟩, but you can also set it in the ⟨<i>options</i>⟩ and leave the ⟨<i>pic type</i>⟩ empty: </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/pics/code",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/pics/code"
+  },
+  "code": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/pics/code=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key stores the ⟨<i>code</i>⟩ that should be drawn in the current pic. Normally, setting this key is done by the ⟨<i>pic type</i>⟩, but you can also set it in the ⟨<i>options</i>⟩ and leave the ⟨<i>pic type</i>⟩ empty: </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/pics/code",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/pics/code"
+  },
+  "/tikz/pic actions": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/pic actions</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key is a style that can be used (only) inside the code of a pic. There, it will set the “action” keys set inside the ⟨<i>options</i>⟩ of the pic (“actions” are drawing, filling, shading, and clipping or any combination thereof). </p><p>To see how this key works, let us define the following pic:</p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/pic:actions",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/pic%3Aactions"
+  },
+  "pic actions": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/pic actions</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key is a style that can be used (only) inside the code of a pic. There, it will set the “action” keys set inside the ⟨<i>options</i>⟩ of the pic (“actions” are drawing, filling, shading, and clipping or any combination thereof). </p><p>To see how this key works, let us define the following pic:</p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/pic:actions",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/pic%3Aactions"
+  },
+  "/tikz/pics/foreground code": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/pics/foreground code=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key stores ⟨<i>code</i>⟩ that will always be drawn in front of the current path, even when <code>behind path</code> is used. If <code>behind path</code> is not used and <code>code</code> is (also) set, the code of <code>code</code> is drawn first, following by the foreground ⟨<i>code</i>⟩. </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/pics/foreground:code",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/pics/foreground%3Acode"
+  },
+  "foreground code": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/pics/foreground code=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key stores ⟨<i>code</i>⟩ that will always be drawn in front of the current path, even when <code>behind path</code> is used. If <code>behind path</code> is not used and <code>code</code> is (also) set, the code of <code>code</code> is drawn first, following by the foreground ⟨<i>code</i>⟩. </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/pics/foreground:code",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/pics/foreground%3Acode"
+  },
+  "/tikz/pics/background code": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/pics/background code=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Like <code>foreground code</code>, only that the ⟨<i>code</i>⟩ is always put behind the path, except when the <code>behind path</code> option is applied to the pic, then the background code is drawn in front of the “behind path” code. </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/pics/background:code",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/pics/background%3Acode"
+  },
+  "background code": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/pics/background code=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Like <code>foreground code</code>, only that the ⟨<i>code</i>⟩ is always put behind the path, except when the <code>behind path</code> option is applied to the pic, then the background code is drawn in front of the “behind path” code. </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/pics/background:code",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/pics/background%3Acode"
+  },
+  "/tikz/every pic": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every pic</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This style is installed at the beginning of every pic.</p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/every:pic",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/every%3Apic"
+  },
+  "every pic": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every pic</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This style is installed at the beginning of every pic.</p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/every:pic",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/every%3Apic"
+  },
+  "/tikz/name prefix ..": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/name prefix ..</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key is available only inside the code of a pic. There, it (locally) changes the name prefix to the value it had outside the pic. This allows you to access nodes outside the current pic. </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/name:prefix:..",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/name%3Aprefix%3A.."
+  },
+  "name prefix ..": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/name prefix ..</kbd>",
+    "defaultHtml": "(no value)",
+    "snippetHtml": "<p> This key is available only inside the code of a pic. There, it (locally) changes the name prefix to the value it had outside the pic. This allows you to access nodes outside the current pic. </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/name:prefix:..",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/name%3Aprefix%3A.."
+  },
+  "/tikz/pic text": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/pic text=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This macro stores the ⟨<i>text</i>⟩ in the macro <code>\\tikzpictext</code>, which is <code>\\let</code> to <code>\\relax</code> by default. Setting the <code>pic text</code> to some value is the “preferred” way of communicating a (single) piece of text that should become part of a pic (typically of a node). In particular, the <code>quotes</code> library maps quoted parameters to this key. </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/pic:text",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/pic%3Atext"
+  },
+  "pic text": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/pic text=</kbd>⟨<i>text</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This macro stores the ⟨<i>text</i>⟩ in the macro <code>\\tikzpictext</code>, which is <code>\\let</code> to <code>\\relax</code> by default. Setting the <code>pic text</code> to some value is the “preferred” way of communicating a (single) piece of text that should become part of a pic (typically of a node). In particular, the <code>quotes</code> library maps quoted parameters to this key. </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/pic:text",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/pic%3Atext"
+  },
+  "/tikz/pic text options": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/pic text options=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This macro stores the ⟨<i>options</i>⟩ in the macro <code>\\tikzpictextoptions</code>, which is <code>\\let</code> to the empty string by default. The <code>quotes</code> library maps options for quoted parameters to this key. </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/pic:text:options",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/pic%3Atext%3Aoptions"
+  },
+  "pic text options": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/pic text options=</kbd>⟨<i>options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This macro stores the ⟨<i>options</i>⟩ in the macro <code>\\tikzpictextoptions</code>, which is <code>\\let</code> to the empty string by default. The <code>quotes</code> library maps options for quoted parameters to this key. </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/pic:text:options",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/pic%3Atext%3Aoptions"
+  },
+  "/tikz/every pic quotes": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every pic quotes</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/every:pic:quotes",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/every%3Apic%3Aquotes"
+  },
+  "every pic quotes": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every pic quotes</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "",
+    "page": "tikz-pics",
+    "anchor": "pgf./tikz/every:pic:quotes",
+    "href": "https://tikz.dev/tikz-pics#pgf./tikz/every%3Apic%3Aquotes"
+  },
+  "/handlers/.pic": {
+    "type": "key",
+    "signatureHtml": "<b>Key handler</b> ⟨<i>key</i>⟩<kbd>/.pic</kbd><code>=</code>⟨<i>some code</i>⟩",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This handler can only be used with a key with the prefix <code>/tikz/</code>, so you should normally use it only as an option to a TikZ command or to the <code>\\tikzset</code> command. It takes the ⟨<i>key</i>⟩’s path and, inside that path, it replaces <code>/tikz/</code> by <code>/tikz/pics/</code> (so, basically, it adds the “missing” <code>pics</code> part of the path). Then, it sets up things so that the resulting name to key is a style that executes <code>code=some code</code>. </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./handlers/.pic",
+    "href": "https://tikz.dev/tikz-pics#pgf./handlers/.pic"
+  },
+  ".pic": {
+    "type": "key",
+    "signatureHtml": "<b>Key handler</b> ⟨<i>key</i>⟩<kbd>/.pic</kbd><code>=</code>⟨<i>some code</i>⟩",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This handler can only be used with a key with the prefix <code>/tikz/</code>, so you should normally use it only as an option to a TikZ command or to the <code>\\tikzset</code> command. It takes the ⟨<i>key</i>⟩’s path and, inside that path, it replaces <code>/tikz/</code> by <code>/tikz/pics/</code> (so, basically, it adds the “missing” <code>pics</code> part of the path). Then, it sets up things so that the resulting name to key is a style that executes <code>code=some code</code>. </p>",
+    "page": "tikz-pics",
+    "anchor": "pgf./handlers/.pic",
+    "href": "https://tikz.dev/tikz-pics#pgf./handlers/.pic"
+  }
+}

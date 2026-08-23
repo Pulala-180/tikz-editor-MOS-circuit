@@ -1,0 +1,1829 @@
+{
+  "shapes.geometric": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>shapes.geometric</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usepgflibrary{shapes.geometric} % LaTeX and plain TeX and pure pgf</kbd><br> <kbd>\\usepgflibrary[shapes.geometric] % ConTeXt and pure pgf</kbd><br> <kbd>\\usetikzlibrary{shapes.geometric} % LaTeX and plain TeX when using TikZ</kbd><br> <kbd>\\usetikzlibrary[shapes.geometric] % ConTeXt when using TikZ</kbd><br> <br> This library defines different shapes that correspond to basic geometric objects like ellipses or polygons. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.shapes.geometric",
+    "href": "https://tikz.dev/library-shapes#pgf.shapes.geometric"
+  },
+  "diamond": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>diamond</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a diamond tightly fitting the text box. The ratio between width and height is 1 by default, but can be changed by setting the shape aspect ratio using the following pgf key (to use this key in TikZ simply remove the <code>/pgf/</code> path). </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.diamond",
+    "href": "https://tikz.dev/library-shapes#pgf.diamond"
+  },
+  "/pgf/aspect": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/aspect=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1.0</kbd>)",
+    "snippetHtml": "<p> The aspect is a recommendation for the quotient of the width and the height of a shape. This key calls the macro <code>\\pgfsetshapeaspect</code>. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/aspect",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/aspect"
+  },
+  "aspect": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/aspect=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1.0</kbd>)",
+    "snippetHtml": "<p> The aspect is a recommendation for the quotient of the width and the height of a shape. This key calls the macro <code>\\pgfsetshapeaspect</code>. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/aspect",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/aspect"
+  },
+  "trapezium": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>trapezium</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a trapezium, that is, a quadrilateral with a single pair of parallel lines (this can sometimes be known as a trapezoid). The trapezium shape supports the rotation of the shape border, as described in Section 17.2.3. </p><p> The lower internal angles at the lower corners of the trapezium can be specified independently, and the resulting extensions are in addition to the natural dimensions of the node contents (which includes any <code>inner sep</code>. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.trapezium",
+    "href": "https://tikz.dev/library-shapes#pgf.trapezium"
+  },
+  "/pgf/trapezium left angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/trapezium left angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>60</kbd>)",
+    "snippetHtml": "<p>Sets the lower internal angle of the left side.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/trapezium:left:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/trapezium%3Aleft%3Aangle"
+  },
+  "trapezium left angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/trapezium left angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>60</kbd>)",
+    "snippetHtml": "<p>Sets the lower internal angle of the left side.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/trapezium:left:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/trapezium%3Aleft%3Aangle"
+  },
+  "/pgf/trapezium right angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/trapezium right angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>60</kbd>)",
+    "snippetHtml": "<p>Sets the lower internal angle of the right side.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/trapezium:right:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/trapezium%3Aright%3Aangle"
+  },
+  "trapezium right angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/trapezium right angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>60</kbd>)",
+    "snippetHtml": "<p>Sets the lower internal angle of the right side.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/trapezium:right:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/trapezium%3Aright%3Aangle"
+  },
+  "/pgf/trapezium angle": {
+    "type": "style",
+    "signatureHtml": "<kbd>/pgf/trapezium angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(style, no default)",
+    "snippetHtml": "<p> This key stores no value itself, but sets the value of the previous two keys to ⟨<i>angle</i>⟩. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/trapezium:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/trapezium%3Aangle"
+  },
+  "trapezium angle": {
+    "type": "style",
+    "signatureHtml": "<kbd>/pgf/trapezium angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(style, no default)",
+    "snippetHtml": "<p> This key stores no value itself, but sets the value of the previous two keys to ⟨<i>angle</i>⟩. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/trapezium:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/trapezium%3Aangle"
+  },
+  "/pgf/trapezium stretches": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/trapezium stretches=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> This key controls whether pgf allows the width and the height of the trapezium to be enlarged independently, when considering any minimum size specification. This is initially <code>false</code>, ensuring that the shape “looks the same but bigger” when enlarged. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/trapezium:stretches",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/trapezium%3Astretches"
+  },
+  "trapezium stretches": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/trapezium stretches=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> This key controls whether pgf allows the width and the height of the trapezium to be enlarged independently, when considering any minimum size specification. This is initially <code>false</code>, ensuring that the shape “looks the same but bigger” when enlarged. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/trapezium:stretches",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/trapezium%3Astretches"
+  },
+  "/pgf/trapezium stretches body": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/trapezium stretches body=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> This is similar to the <code>trapezium stretches</code> key except that when ⟨<i>boolean</i>⟩ is <code>true</code>, pgf enlarges only the body of the trapezium when applying minimum width. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/trapezium:stretches:body",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/trapezium%3Astretches%3Abody"
+  },
+  "trapezium stretches body": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/trapezium stretches body=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> This is similar to the <code>trapezium stretches</code> key except that when ⟨<i>boolean</i>⟩ is <code>true</code>, pgf enlarges only the body of the trapezium when applying minimum width. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/trapezium:stretches:body",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/trapezium%3Astretches%3Abody"
+  },
+  "semicircle": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>semicircle</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a semicircle, which tightly fits the node contents. This shape supports the rotation of the shape border, as described in Section 17.2.3. The anchors for the <code>semicircle</code> shape are shown below. Anchor <code>30</code> is an example of a border anchor. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.semicircle",
+    "href": "https://tikz.dev/library-shapes#pgf.semicircle"
+  },
+  "regular polygon": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>regular polygon</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a regular polygon, which, by default, is drawn so that a side (rather than a corner) is always at the bottom. This shape supports the rotation as described in Section 17.2.3, but the border of the polygon is <em>always</em> constructed using the incircle, whose radius is calculated to tightly fit the node contents (including any <code>inner sep</code>). </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.regular:polygon",
+    "href": "https://tikz.dev/library-shapes#pgf.regular%3Apolygon"
+  },
+  "/pgf/regular polygon sides": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/regular polygon sides=</kbd>⟨<i>integer</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>5</kbd>)",
+    "snippetHtml": "",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/regular:polygon:sides",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/regular%3Apolygon%3Asides"
+  },
+  "regular polygon sides": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/regular polygon sides=</kbd>⟨<i>integer</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>5</kbd>)",
+    "snippetHtml": "",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/regular:polygon:sides",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/regular%3Apolygon%3Asides"
+  },
+  "star": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>star</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a star, which by default (minus any transformations) is drawn with the first point pointing upwards. This shape supports the rotation as described in Section 17.2.3, but the border of the star is <em>always</em> constructed using the incircle. </p><p> A star should be thought of as having a set of “inner points” and “outer points”. The inner points of the border are based on the radius of the circle which tightly fits the node contents, and the outer points are based on the circumcircle, the circle that passes through every outer point. Any specified minimum size, width or height, is interpreted as the diameter of the circumcircle. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.star",
+    "href": "https://tikz.dev/library-shapes#pgf.star"
+  },
+  "/pgf/star points": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/star points=</kbd>⟨<i>integer</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>5</kbd>)",
+    "snippetHtml": "<p>Sets the number of points for the star.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/star:points",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/star%3Apoints"
+  },
+  "star points": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/star points=</kbd>⟨<i>integer</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>5</kbd>)",
+    "snippetHtml": "<p>Sets the number of points for the star.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/star:points",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/star%3Apoints"
+  },
+  "/pgf/star point height": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/star point height=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.5cm</kbd>)",
+    "snippetHtml": "<p> Sets the height of the star points. This is the distance between the inner point and outer point radii. If the star is enlarged to some specified minimum size, the inner radius is increased to maintain the point height. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/star:point:height",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/star%3Apoint%3Aheight"
+  },
+  "star point height": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/star point height=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.5cm</kbd>)",
+    "snippetHtml": "<p> Sets the height of the star points. This is the distance between the inner point and outer point radii. If the star is enlarged to some specified minimum size, the inner radius is increased to maintain the point height. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/star:point:height",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/star%3Apoint%3Aheight"
+  },
+  "/pgf/star point ratio": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/star point ratio=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1.5</kbd>)",
+    "snippetHtml": "<p> Sets the ratio between the inner point and outer point radii. If the star is enlarged to some specified minimum size, the inner radius is increased to maintain the ratio. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/star:point:ratio",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/star%3Apoint%3Aratio"
+  },
+  "star point ratio": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/star point ratio=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1.5</kbd>)",
+    "snippetHtml": "<p> Sets the ratio between the inner point and outer point radii. If the star is enlarged to some specified minimum size, the inner radius is increased to maintain the ratio. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/star:point:ratio",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/star%3Apoint%3Aratio"
+  },
+  "isosceles triangle": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>isosceles triangle</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is an isosceles triangle, which supports the rotation of the shape border, as described in Section 17.2.3. The angle of rotation determines the direction in which the apex of the triangle points (provided no other transformations are applied). However, regardless of the rotation of the shape border, the width and height are always considered as follows: </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.isosceles:triangle",
+    "href": "https://tikz.dev/library-shapes#pgf.isosceles%3Atriangle"
+  },
+  "/pgf/isosceles triangle apex angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/isosceles triangle apex angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>30</kbd>)",
+    "snippetHtml": "<p>Sets the angle of the apex of the isosceles triangle.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/isosceles:triangle:apex:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/isosceles%3Atriangle%3Aapex%3Aangle"
+  },
+  "isosceles triangle apex angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/isosceles triangle apex angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>30</kbd>)",
+    "snippetHtml": "<p>Sets the angle of the apex of the isosceles triangle.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/isosceles:triangle:apex:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/isosceles%3Atriangle%3Aapex%3Aangle"
+  },
+  "/pgf/isosceles triangle stretches": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/isosceles triangle stretches=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>false</kbd>)",
+    "snippetHtml": "<p> By default ⟨<i>boolean</i>⟩ is <code>false</code>. This means, that when applying any minimum width or minimum height requirements, increasing the height will increase the width (and vice versa), in order to keep the apex angle the same. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/isosceles:triangle:stretches",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/isosceles%3Atriangle%3Astretches"
+  },
+  "isosceles triangle stretches": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/isosceles triangle stretches=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>false</kbd>)",
+    "snippetHtml": "<p> By default ⟨<i>boolean</i>⟩ is <code>false</code>. This means, that when applying any minimum width or minimum height requirements, increasing the height will increase the width (and vice versa), in order to keep the apex angle the same. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/isosceles:triangle:stretches",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/isosceles%3Atriangle%3Astretches"
+  },
+  "kite": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>kite</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a kite, which supports the rotation of the shape border, as described in Section 17.2.3. There are pgf keys to specify the upper and lower vertex angles of the kite. To use these keys in TikZ, simply remove the <code>/pgf/</code> path. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.kite",
+    "href": "https://tikz.dev/library-shapes#pgf.kite"
+  },
+  "/pgf/kite upper vertex angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/kite upper vertex angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>120</kbd>)",
+    "snippetHtml": "<p>Sets the upper internal angle of the kite.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/kite:upper:vertex:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/kite%3Aupper%3Avertex%3Aangle"
+  },
+  "kite upper vertex angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/kite upper vertex angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>120</kbd>)",
+    "snippetHtml": "<p>Sets the upper internal angle of the kite.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/kite:upper:vertex:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/kite%3Aupper%3Avertex%3Aangle"
+  },
+  "/pgf/kite lower vertex angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/kite lower vertex angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>60</kbd>)",
+    "snippetHtml": "<p>Sets the lower internal angle of the kite.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/kite:lower:vertex:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/kite%3Alower%3Avertex%3Aangle"
+  },
+  "kite lower vertex angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/kite lower vertex angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>60</kbd>)",
+    "snippetHtml": "<p>Sets the lower internal angle of the kite.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/kite:lower:vertex:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/kite%3Alower%3Avertex%3Aangle"
+  },
+  "/pgf/kite vertex angles": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/kite vertex angles=</kbd>⟨<i>angle specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key sets the keys for both the upper and lower vertex angles (it stores no value itself). ⟨<i>angle specification</i>⟩ can be pair of angles in the form ⟨<i>upper angle</i>⟩ <code>and</code> ⟨<i>lower angle</i>⟩, or a single angle. In this latter case, both the upper and lower vertex angles will be the same. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/kite:vertex:angles",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/kite%3Avertex%3Aangles"
+  },
+  "kite vertex angles": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/kite vertex angles=</kbd>⟨<i>angle specification</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key sets the keys for both the upper and lower vertex angles (it stores no value itself). ⟨<i>angle specification</i>⟩ can be pair of angles in the form ⟨<i>upper angle</i>⟩ <code>and</code> ⟨<i>lower angle</i>⟩, or a single angle. In this latter case, both the upper and lower vertex angles will be the same. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/kite:vertex:angles",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/kite%3Avertex%3Aangles"
+  },
+  "dart": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>dart</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a dart (which can also be known as an arrowhead or concave kite). This shape supports the rotation of the shape border, as described in Section 17.2.3. The angle of the border rotation determines the direction in which the dart points (unless other transformations have been applied). </p><p> There are pgf keys to set the angle for the ‘tip’ of the dart and the angle between the ‘tails’ of the dart. To use these keys in TikZ, simply remove the <code>/pgf/</code> path. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.dart",
+    "href": "https://tikz.dev/library-shapes#pgf.dart"
+  },
+  "/pgf/dart tip angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/dart tip angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>45</kbd>)",
+    "snippetHtml": "<p>Sets the angle at the tip of the dart.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/dart:tip:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/dart%3Atip%3Aangle"
+  },
+  "dart tip angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/dart tip angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>45</kbd>)",
+    "snippetHtml": "<p>Sets the angle at the tip of the dart.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/dart:tip:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/dart%3Atip%3Aangle"
+  },
+  "/pgf/dart tail angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/dart tail angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>135</kbd>)",
+    "snippetHtml": "<p>Sets the angle between the tails of the dart.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/dart:tail:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/dart%3Atail%3Aangle"
+  },
+  "dart tail angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/dart tail angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>135</kbd>)",
+    "snippetHtml": "<p>Sets the angle between the tails of the dart.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/dart:tail:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/dart%3Atail%3Aangle"
+  },
+  "circular sector": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>circular sector</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a circular sector (which can also be known as a wedge). This shape supports the rotation of the shape border, as described in Section 17.2.3. The angle of the border rotation determines the direction in which the ‘apex’ of the sector points (unless other transformations have been applied). </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.circular:sector",
+    "href": "https://tikz.dev/library-shapes#pgf.circular%3Asector"
+  },
+  "/pgf/circular sector angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/circular sector angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>60</kbd>)",
+    "snippetHtml": "<p>Sets the central angle of the sector.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/circular:sector:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/circular%3Asector%3Aangle"
+  },
+  "circular sector angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/circular sector angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>60</kbd>)",
+    "snippetHtml": "<p>Sets the central angle of the sector.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/circular:sector:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/circular%3Asector%3Aangle"
+  },
+  "cylinder": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>cylinder</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a 2-dimensional representation of a cylinder, which supports the rotation of the shape border as described in Section 17.2.3. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.cylinder",
+    "href": "https://tikz.dev/library-shapes#pgf.cylinder"
+  },
+  "/pgf/cylinder uses custom fill": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/cylinder uses custom fill=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> This enables the use of a custom fill for the body and the end of the cylinder. The background path for the shape should not be filled (e.g., in TikZ, the <code>fill</code> option for the node must be implicitly or explicitly set to <code>none</code>). Internally, this key sets the TeX-if <code>\\ifpgfcylinderusescustomfill</code> appropriately. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/cylinder:uses:custom:fill",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/cylinder%3Auses%3Acustom%3Afill"
+  },
+  "cylinder uses custom fill": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/cylinder uses custom fill=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> This enables the use of a custom fill for the body and the end of the cylinder. The background path for the shape should not be filled (e.g., in TikZ, the <code>fill</code> option for the node must be implicitly or explicitly set to <code>none</code>). Internally, this key sets the TeX-if <code>\\ifpgfcylinderusescustomfill</code> appropriately. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/cylinder:uses:custom:fill",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/cylinder%3Auses%3Acustom%3Afill"
+  },
+  "/pgf/cylinder end fill": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/cylinder end fill=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>white</kbd>)",
+    "snippetHtml": "<p>Sets the color for the end of the cylinder.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/cylinder:end:fill",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/cylinder%3Aend%3Afill"
+  },
+  "cylinder end fill": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/cylinder end fill=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>white</kbd>)",
+    "snippetHtml": "<p>Sets the color for the end of the cylinder.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/cylinder:end:fill",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/cylinder%3Aend%3Afill"
+  },
+  "/pgf/cylinder body fill": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/cylinder body fill=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>white</kbd>)",
+    "snippetHtml": "<p>Sets the color for the body of the cylinder.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/cylinder:body:fill",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/cylinder%3Abody%3Afill"
+  },
+  "cylinder body fill": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/cylinder body fill=</kbd>⟨<i>color</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>white</kbd>)",
+    "snippetHtml": "<p>Sets the color for the body of the cylinder.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/cylinder:body:fill",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/cylinder%3Abody%3Afill"
+  },
+  "shapes.symbols": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>shapes.symbols</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usepgflibrary{shapes.symbols} % LaTeX and plain TeX and pure pgf</kbd><br> <kbd>\\usepgflibrary[shapes.symbols] % ConTeXt and pure pgf</kbd><br> <kbd>\\usetikzlibrary{shapes.symbols} % LaTeX and plain TeX when using TikZ</kbd><br> <kbd>\\usetikzlibrary[shapes.symbols] % ConTeXt when using TikZ</kbd><br> <br> This library defines shapes that can be used for drawing symbols like a forbidden sign or a cloud. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.shapes.symbols",
+    "href": "https://tikz.dev/library-shapes#pgf.shapes.symbols"
+  },
+  "correct forbidden sign": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>correct forbidden sign</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape places the node inside a circle with a diagonal from the upper left to the lower right added. The circle is part of the background, the diagonal line part of the foreground path; thus, the diagonal line is on top of the text. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.correct:forbidden:sign",
+    "href": "https://tikz.dev/library-shapes#pgf.correct%3Aforbidden%3Asign"
+  },
+  "forbidden sign": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>forbidden sign</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is like <code>correct forbidden sign</code>, only the line goes from the lower left to the upper right. The strange naming of these shapes is for historical reasons. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.forbidden:sign",
+    "href": "https://tikz.dev/library-shapes#pgf.forbidden%3Asign"
+  },
+  "magnifying glass": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>magnifying glass</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape places the node inside a circle with a handle attached to the node. The angle of the handle and its length can be adjusted using two keys: </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.magnifying:glass",
+    "href": "https://tikz.dev/library-shapes#pgf.magnifying%3Aglass"
+  },
+  "/pgf/magnifying glass handle angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/magnifying glass handle angle=</kbd>⟨<i>degree</i>⟩",
+    "defaultHtml": "(default <kbd>-45</kbd>)",
+    "snippetHtml": "<p>The angle of the handle.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/magnifying:glass:handle:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/magnifying%3Aglass%3Ahandle%3Aangle"
+  },
+  "magnifying glass handle angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/magnifying glass handle angle=</kbd>⟨<i>degree</i>⟩",
+    "defaultHtml": "(default <kbd>-45</kbd>)",
+    "snippetHtml": "<p>The angle of the handle.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/magnifying:glass:handle:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/magnifying%3Aglass%3Ahandle%3Aangle"
+  },
+  "/pgf/magnifying glass handle aspect": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/magnifying glass handle aspect=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(default <kbd>1.5</kbd>)",
+    "snippetHtml": "<p>The length of the handle as a multiple of the circle radius.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/magnifying:glass:handle:aspect",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/magnifying%3Aglass%3Ahandle%3Aaspect"
+  },
+  "magnifying glass handle aspect": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/magnifying glass handle aspect=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(default <kbd>1.5</kbd>)",
+    "snippetHtml": "<p>The length of the handle as a multiple of the circle radius.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/magnifying:glass:handle:aspect",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/magnifying%3Aglass%3Ahandle%3Aaspect"
+  },
+  "cloud": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>cloud</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a cloud, drawn to tightly fit the node contents (strictly speaking, using an ellipse which tightly fits the node contents – including any <code>inner sep</code>). </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.cloud",
+    "href": "https://tikz.dev/library-shapes#pgf.cloud"
+  },
+  "/pgf/cloud puffs": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/cloud puffs=</kbd>⟨<i>integer</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>10</kbd>)",
+    "snippetHtml": "<p>Sets the number of puffs for the cloud.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/cloud:puffs",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/cloud%3Apuffs"
+  },
+  "cloud puffs": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/cloud puffs=</kbd>⟨<i>integer</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>10</kbd>)",
+    "snippetHtml": "<p>Sets the number of puffs for the cloud.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/cloud:puffs",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/cloud%3Apuffs"
+  },
+  "/pgf/cloud puff arc": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/cloud puff arc=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>135</kbd>)",
+    "snippetHtml": "<p> Sets the length of the puff arc (in degrees). A shorter arc can produce better looking joins between puffs for larger line widths. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/cloud:puff:arc",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/cloud%3Apuff%3Aarc"
+  },
+  "cloud puff arc": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/cloud puff arc=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>135</kbd>)",
+    "snippetHtml": "<p> Sets the length of the puff arc (in degrees). A shorter arc can produce better looking joins between puffs for larger line widths. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/cloud:puff:arc",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/cloud%3Apuff%3Aarc"
+  },
+  "/pgf/cloud ignores aspect": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/cloud ignores aspect=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> Instruct pgf to ignore the <code>aspect</code> key. Internally, the TeX-if <code>\\ifpgfcloudignoresaspect</code> is set appropriately. The initial value is <code>false</code>. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/cloud:ignores:aspect",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/cloud%3Aignores%3Aaspect"
+  },
+  "cloud ignores aspect": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/cloud ignores aspect=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> Instruct pgf to ignore the <code>aspect</code> key. Internally, the TeX-if <code>\\ifpgfcloudignoresaspect</code> is set appropriately. The initial value is <code>false</code>. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/cloud:ignores:aspect",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/cloud%3Aignores%3Aaspect"
+  },
+  "starburst": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>starburst</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a randomly generated elliptical star, which supports the rotation of the shape border as described in Section 17.2.3. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.starburst",
+    "href": "https://tikz.dev/library-shapes#pgf.starburst"
+  },
+  "/pgf/starburst points": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/starburst points=</kbd>⟨<i>integer</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>17</kbd>)",
+    "snippetHtml": "<p>Sets the number of outer points for the starburst.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/starburst:points",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/starburst%3Apoints"
+  },
+  "starburst points": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/starburst points=</kbd>⟨<i>integer</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>17</kbd>)",
+    "snippetHtml": "<p>Sets the number of outer points for the starburst.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/starburst:points",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/starburst%3Apoints"
+  },
+  "/pgf/starburst point height": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/starburst point height=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.5cm</kbd>)",
+    "snippetHtml": "<p>Sets the <em>maximum</em> distance between the inner point radius and the outer point radius.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/starburst:point:height",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/starburst%3Apoint%3Aheight"
+  },
+  "starburst point height": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/starburst point height=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.5cm</kbd>)",
+    "snippetHtml": "<p>Sets the <em>maximum</em> distance between the inner point radius and the outer point radius.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/starburst:point:height",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/starburst%3Apoint%3Aheight"
+  },
+  "/pgf/random starburst": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/random starburst=</kbd>⟨<i>integer</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>100</kbd>)",
+    "snippetHtml": "<p> Sets the seed for the random number generator for creating the starburst. The maximum value for ⟨<i>integer</i>⟩ is <code>16383</code>. If ⟨<i>integer</i>⟩<code>=0</code>, the random number generator will not be used, and the maximum point height will be used for all outer points. If ⟨<i>integer</i>⟩ is omitted, a seed will be randomly chosen. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/random:starburst",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/random%3Astarburst"
+  },
+  "random starburst": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/random starburst=</kbd>⟨<i>integer</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>100</kbd>)",
+    "snippetHtml": "<p> Sets the seed for the random number generator for creating the starburst. The maximum value for ⟨<i>integer</i>⟩ is <code>16383</code>. If ⟨<i>integer</i>⟩<code>=0</code>, the random number generator will not be used, and the maximum point height will be used for all outer points. If ⟨<i>integer</i>⟩ is omitted, a seed will be randomly chosen. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/random:starburst",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/random%3Astarburst"
+  },
+  "signal": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>signal</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a “signal” or sign shape, that is, a rectangle, with optionally pointed sides. A signal can point “to” somewhere, with outward points in that direction. It can also be “from” somewhere, with inward points from that direction. The resulting points extend the node contents (which include the <code>inner sep</code>). </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.signal",
+    "href": "https://tikz.dev/library-shapes#pgf.signal"
+  },
+  "/pgf/signal pointer angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/signal pointer angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>90</kbd>)",
+    "snippetHtml": "<p> Sets the angle for the pointed sides of the shape. This angle is maintained when enforcing any minimum size requirements, so any adjustment to the width will affect the height, and vice versa. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/signal:pointer:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/signal%3Apointer%3Aangle"
+  },
+  "signal pointer angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/signal pointer angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>90</kbd>)",
+    "snippetHtml": "<p> Sets the angle for the pointed sides of the shape. This angle is maintained when enforcing any minimum size requirements, so any adjustment to the width will affect the height, and vice versa. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/signal:pointer:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/signal%3Apointer%3Aangle"
+  },
+  "/pgf/signal from": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/signal from=</kbd>⟨<i>direction</i>⟩ and ⟨<i>opposite direction</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>nowhere</kbd>)",
+    "snippetHtml": "<p> Sets which sides take an inward pointer (i.e., that points towards the center of the shape). The possible values for ⟨<i>direction</i>⟩ and ⟨<i>opposite direction</i>⟩ are the compass point directions <code>north</code>, <code>south</code>, <code>east</code> and <code>west</code> (or <code>above</code>, <code>below</code>, <code>right</code> and <code>left</code>). An additional keyword <code>nowhere</code> can be used to reset the sides so they have no pointers. When used with <code>signal from</code> key, this only resets inward pointers; used with the <code>signal to</code> key, it only resets outward pointers. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/signal:from",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/signal%3Afrom"
+  },
+  "signal from": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/signal from=</kbd>⟨<i>direction</i>⟩ and ⟨<i>opposite direction</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>nowhere</kbd>)",
+    "snippetHtml": "<p> Sets which sides take an inward pointer (i.e., that points towards the center of the shape). The possible values for ⟨<i>direction</i>⟩ and ⟨<i>opposite direction</i>⟩ are the compass point directions <code>north</code>, <code>south</code>, <code>east</code> and <code>west</code> (or <code>above</code>, <code>below</code>, <code>right</code> and <code>left</code>). An additional keyword <code>nowhere</code> can be used to reset the sides so they have no pointers. When used with <code>signal from</code> key, this only resets inward pointers; used with the <code>signal to</code> key, it only resets outward pointers. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/signal:from",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/signal%3Afrom"
+  },
+  "/pgf/signal to": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/signal to=</kbd>⟨<i>direction</i>⟩ and ⟨<i>opposite direction</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>east</kbd>)",
+    "snippetHtml": "<p>Sets which sides take an outward pointer (i.e., that points away from the shape).</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/signal:to",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/signal%3Ato"
+  },
+  "signal to": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/signal to=</kbd>⟨<i>direction</i>⟩ and ⟨<i>opposite direction</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>east</kbd>)",
+    "snippetHtml": "<p>Sets which sides take an outward pointer (i.e., that points away from the shape).</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/signal:to",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/signal%3Ato"
+  },
+  "tape": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>tape</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a rectangle with optional, “bendy” top and bottom sides, which tightly fits the node contents (including the <code>inner sep</code>). </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.tape",
+    "href": "https://tikz.dev/library-shapes#pgf.tape"
+  },
+  "/pgf/tape bend top": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/tape bend top=</kbd>⟨<i>bend style</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>in and out</kbd>)",
+    "snippetHtml": "<p> Specifies how the top side bends. The ⟨<i>bend style</i>⟩ is either <code>in and out</code>, <code>out and in</code> or <code>none</code> (i.e., a straight line). The bending sides are drawn in a clockwise direction, and using the bend style <code>in and out</code> will mean the side will first bend inwards and then bend outwards. The opposite holds true for <code>out and in</code>. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/tape:bend:top",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/tape%3Abend%3Atop"
+  },
+  "tape bend top": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/tape bend top=</kbd>⟨<i>bend style</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>in and out</kbd>)",
+    "snippetHtml": "<p> Specifies how the top side bends. The ⟨<i>bend style</i>⟩ is either <code>in and out</code>, <code>out and in</code> or <code>none</code> (i.e., a straight line). The bending sides are drawn in a clockwise direction, and using the bend style <code>in and out</code> will mean the side will first bend inwards and then bend outwards. The opposite holds true for <code>out and in</code>. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/tape:bend:top",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/tape%3Abend%3Atop"
+  },
+  "/pgf/tape bend bottom": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/tape bend bottom=</kbd>⟨<i>bend style</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>in and out</kbd>)",
+    "snippetHtml": "<p>Specifies how the bottom side bends.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/tape:bend:bottom",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/tape%3Abend%3Abottom"
+  },
+  "tape bend bottom": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/tape bend bottom=</kbd>⟨<i>bend style</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>in and out</kbd>)",
+    "snippetHtml": "<p>Specifies how the bottom side bends.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/tape:bend:bottom",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/tape%3Abend%3Abottom"
+  },
+  "/pgf/tape bend height": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/tape bend height=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>5pt</kbd>)",
+    "snippetHtml": "<p>Sets the total height for a side with a bend.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/tape:bend:height",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/tape%3Abend%3Aheight"
+  },
+  "tape bend height": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/tape bend height=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>5pt</kbd>)",
+    "snippetHtml": "<p>Sets the total height for a side with a bend.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/tape:bend:height",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/tape%3Abend%3Aheight"
+  },
+  "magnetic tape": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>magnetic tape</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape represents a ‘magnetic tape’ or any sequential data store that is sometimes used in flowcharts. It is essentially a circle with a little tail: </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.magnetic:tape",
+    "href": "https://tikz.dev/library-shapes#pgf.magnetic%3Atape"
+  },
+  "/pgf/magnetic tape tail extend": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/magnetic tape tail extend=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0cm</kbd>)",
+    "snippetHtml": "<p>This key sets how far the tail extends beyond the radius of the tape. Negative values will be ignored.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/magnetic:tape:tail:extend",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/magnetic%3Atape%3Atail%3Aextend"
+  },
+  "magnetic tape tail extend": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/magnetic tape tail extend=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0cm</kbd>)",
+    "snippetHtml": "<p>This key sets how far the tail extends beyond the radius of the tape. Negative values will be ignored.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/magnetic:tape:tail:extend",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/magnetic%3Atape%3Atail%3Aextend"
+  },
+  "/pgf/magnetic tape tail": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/magnetic tape tail=</kbd>⟨<i>proportion</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0.15</kbd>)",
+    "snippetHtml": "<p> This key sets the thickness of the ‘tail’ to be ⟨<i>proportion</i>⟩ times the radius of the shape. The ⟨<i>proportion</i>⟩ should be between <code>0.0</code> and <code>1.0</code>. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/magnetic:tape:tail",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/magnetic%3Atape%3Atail"
+  },
+  "magnetic tape tail": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/magnetic tape tail=</kbd>⟨<i>proportion</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0.15</kbd>)",
+    "snippetHtml": "<p> This key sets the thickness of the ‘tail’ to be ⟨<i>proportion</i>⟩ times the radius of the shape. The ⟨<i>proportion</i>⟩ should be between <code>0.0</code> and <code>1.0</code>. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/magnetic:tape:tail",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/magnetic%3Atape%3Atail"
+  },
+  "shapes.arrows": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>shapes.arrows</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usepgflibrary{shapes.arrows} % LaTeX and plain TeX and pure pgf</kbd><br> <kbd>\\usepgflibrary[shapes.arrows] % ConTeXt and pure pgf</kbd><br> <kbd>\\usetikzlibrary{shapes.arrows} % LaTeX and plain TeX when using TikZ</kbd><br> <kbd>\\usetikzlibrary[shapes.arrows] % ConTeXt when using TikZ</kbd><br> <br> This library defines arrow shapes. Note that an arrow shape is something quite different from a (normal) arrow tip: It is a shape that just “happens” to “look like” an arrow. In particular, you cannot use these shapes as arrow tips. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.shapes.arrows",
+    "href": "https://tikz.dev/library-shapes#pgf.shapes.arrows"
+  },
+  "single arrow": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>single arrow</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is an arrow, which tightly fits the node contents (including any <code>inner sep</code>). This shape supports the rotation of the shape border, as described in Section 17.2.3. The angle of rotation determines in which direction the arrow points (provided no other rotational transformations are applied). </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.single:arrow",
+    "href": "https://tikz.dev/library-shapes#pgf.single%3Aarrow"
+  },
+  "/pgf/single arrow tip angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/single arrow tip angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>90</kbd>)",
+    "snippetHtml": "<p> Sets the angle for the arrow tip. Enlarging the arrow to some minimum width may increase the height of the shape to maintain this angle. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/single:arrow:tip:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/single%3Aarrow%3Atip%3Aangle"
+  },
+  "single arrow tip angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/single arrow tip angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>90</kbd>)",
+    "snippetHtml": "<p> Sets the angle for the arrow tip. Enlarging the arrow to some minimum width may increase the height of the shape to maintain this angle. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/single:arrow:tip:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/single%3Aarrow%3Atip%3Aangle"
+  },
+  "/pgf/single arrow head extend": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/single arrow head extend=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.5cm</kbd>)",
+    "snippetHtml": "<p> This sets the distance between the tail of the arrow and the outer end of the arrow head. This may change if the shape is enlarged to some minimum width. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/single:arrow:head:extend",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/single%3Aarrow%3Ahead%3Aextend"
+  },
+  "single arrow head extend": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/single arrow head extend=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.5cm</kbd>)",
+    "snippetHtml": "<p> This sets the distance between the tail of the arrow and the outer end of the arrow head. This may change if the shape is enlarged to some minimum width. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/single:arrow:head:extend",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/single%3Aarrow%3Ahead%3Aextend"
+  },
+  "/pgf/single arrow head indent": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/single arrow head indent=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0cm</kbd>)",
+    "snippetHtml": "<p> This moves the point where the arrow head joins the shaft of the arrow <em>towards</em> the arrow tip, by ⟨<i>length</i>⟩. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/single:arrow:head:indent",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/single%3Aarrow%3Ahead%3Aindent"
+  },
+  "single arrow head indent": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/single arrow head indent=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0cm</kbd>)",
+    "snippetHtml": "<p> This moves the point where the arrow head joins the shaft of the arrow <em>towards</em> the arrow tip, by ⟨<i>length</i>⟩. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/single:arrow:head:indent",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/single%3Aarrow%3Ahead%3Aindent"
+  },
+  "double arrow": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>double arrow</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a double arrow, which tightly fits the node contents (including any <code>inner sep</code>), and supports the rotation of the shape border, as described in Section 17.2.3. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.double:arrow",
+    "href": "https://tikz.dev/library-shapes#pgf.double%3Aarrow"
+  },
+  "/pgf/double arrow tip angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/double arrow tip angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>90</kbd>)",
+    "snippetHtml": "<p> Sets the angle for the arrow tip. Enlarging the arrow to some minimum width may increase the height of the shape to maintain this angle. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/double:arrow:tip:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/double%3Aarrow%3Atip%3Aangle"
+  },
+  "double arrow tip angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/double arrow tip angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>90</kbd>)",
+    "snippetHtml": "<p> Sets the angle for the arrow tip. Enlarging the arrow to some minimum width may increase the height of the shape to maintain this angle. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/double:arrow:tip:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/double%3Aarrow%3Atip%3Aangle"
+  },
+  "/pgf/double arrow head extend": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/double arrow head extend=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.5cm</kbd>)",
+    "snippetHtml": "<p> This sets the distance between the shaft of the arrow and the outer end of the arrow heads. This may change if the shape is enlarged to some minimum width. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/double:arrow:head:extend",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/double%3Aarrow%3Ahead%3Aextend"
+  },
+  "double arrow head extend": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/double arrow head extend=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.5cm</kbd>)",
+    "snippetHtml": "<p> This sets the distance between the shaft of the arrow and the outer end of the arrow heads. This may change if the shape is enlarged to some minimum width. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/double:arrow:head:extend",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/double%3Aarrow%3Ahead%3Aextend"
+  },
+  "/pgf/double arrow head indent": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/double arrow head indent=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0cm</kbd>)",
+    "snippetHtml": "<p> This moves the point where the arrow heads join the shaft of the arrow <em>towards</em> the arrow tips, by ⟨<i>length</i>⟩. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/double:arrow:head:indent",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/double%3Aarrow%3Ahead%3Aindent"
+  },
+  "double arrow head indent": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/double arrow head indent=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0cm</kbd>)",
+    "snippetHtml": "<p> This moves the point where the arrow heads join the shaft of the arrow <em>towards</em> the arrow tips, by ⟨<i>length</i>⟩. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/double:arrow:head:indent",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/double%3Aarrow%3Ahead%3Aindent"
+  },
+  "arrow box": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>arrow box</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>This shape is a rectangle with optional arrows which extend from the four sides.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf.arrow:box",
+    "href": "https://tikz.dev/library-shapes#pgf.arrow%3Abox"
+  },
+  "/pgf/arrow box tip angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box tip angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>90</kbd>)",
+    "snippetHtml": "<p>Sets the angle at the arrow tip for all four arrows.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:tip:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Atip%3Aangle"
+  },
+  "arrow box tip angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box tip angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>90</kbd>)",
+    "snippetHtml": "<p>Sets the angle at the arrow tip for all four arrows.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:tip:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Atip%3Aangle"
+  },
+  "/pgf/arrow box head extend": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box head extend=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.125cm</kbd>)",
+    "snippetHtml": "<p>Sets the distance the arrow head extends away from the shaft of the arrow. This applies to all arrows.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:head:extend",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Ahead%3Aextend"
+  },
+  "arrow box head extend": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box head extend=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.125cm</kbd>)",
+    "snippetHtml": "<p>Sets the distance the arrow head extends away from the shaft of the arrow. This applies to all arrows.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:head:extend",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Ahead%3Aextend"
+  },
+  "/pgf/arrow box head indent": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box head indent=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0cm</kbd>)",
+    "snippetHtml": "<p> Moves the point where the arrow head joins the shaft of the arrow <em>towards</em> the arrow tip. This applies to all arrows. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:head:indent",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Ahead%3Aindent"
+  },
+  "arrow box head indent": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box head indent=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0cm</kbd>)",
+    "snippetHtml": "<p> Moves the point where the arrow head joins the shaft of the arrow <em>towards</em> the arrow tip. This applies to all arrows. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:head:indent",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Ahead%3Aindent"
+  },
+  "/pgf/arrow box shaft width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box shaft width=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.125cm</kbd>)",
+    "snippetHtml": "<p>Sets the width of the shaft of all arrows.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:shaft:width",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Ashaft%3Awidth"
+  },
+  "arrow box shaft width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box shaft width=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.125cm</kbd>)",
+    "snippetHtml": "<p>Sets the width of the shaft of all arrows.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:shaft:width",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Ashaft%3Awidth"
+  },
+  "/pgf/arrow box north arrow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box north arrow=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.5cm</kbd>)",
+    "snippetHtml": "<p> Sets the distance the north arrow extends from the node. By default this is from the border of the shape, but by using the additional keyword <code>from center</code>, the distance will be measured from the center of the shape. If ⟨<i>distance</i>⟩ is <code>0pt</code> or a negative distance, the arrow will not be drawn. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:north:arrow",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Anorth%3Aarrow"
+  },
+  "arrow box north arrow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box north arrow=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.5cm</kbd>)",
+    "snippetHtml": "<p> Sets the distance the north arrow extends from the node. By default this is from the border of the shape, but by using the additional keyword <code>from center</code>, the distance will be measured from the center of the shape. If ⟨<i>distance</i>⟩ is <code>0pt</code> or a negative distance, the arrow will not be drawn. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:north:arrow",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Anorth%3Aarrow"
+  },
+  "/pgf/arrow box south arrow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box south arrow=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.5cm</kbd>)",
+    "snippetHtml": "<p>Sets the distance the south arrow extends from the node.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:south:arrow",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Asouth%3Aarrow"
+  },
+  "arrow box south arrow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box south arrow=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.5cm</kbd>)",
+    "snippetHtml": "<p>Sets the distance the south arrow extends from the node.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:south:arrow",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Asouth%3Aarrow"
+  },
+  "/pgf/arrow box east arrow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box east arrow=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.5cm</kbd>)",
+    "snippetHtml": "<p>Sets the distance the east arrow extends from the node.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:east:arrow",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Aeast%3Aarrow"
+  },
+  "arrow box east arrow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box east arrow=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.5cm</kbd>)",
+    "snippetHtml": "<p>Sets the distance the east arrow extends from the node.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:east:arrow",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Aeast%3Aarrow"
+  },
+  "/pgf/arrow box west arrow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box west arrow=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.5cm</kbd>)",
+    "snippetHtml": "<p>Sets the distance the west arrow extends from the node.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:west:arrow",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Awest%3Aarrow"
+  },
+  "arrow box west arrow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box west arrow=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.5cm</kbd>)",
+    "snippetHtml": "<p>Sets the distance the west arrow extends from the node.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:west:arrow",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Awest%3Aarrow"
+  },
+  "/pgf/arrow box arrows": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box arrows=</kbd>{⟨<i>list</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets the distance that all arrows extend from the node. The specification in ⟨<i>list</i>⟩ consists of the four compass points <code>north</code>, <code>south</code>, <code>east</code> or <code>west</code>, separated by commas (so the list must be contained within braces). The distances can be specified after each side separated by a colon (e.g., <code>north:1cm</code>, or <code>west:5cm from center</code>). If an item specifies no distance, the most recently specified distance will be used (at the start of the list this is <code>0cm</code>, so the first item in the list should specify a distance). Any sides not specified will not be drawn with an arrow. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:arrows",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Aarrows"
+  },
+  "arrow box arrows": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/arrow box arrows=</kbd>{⟨<i>list</i>⟩}",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Sets the distance that all arrows extend from the node. The specification in ⟨<i>list</i>⟩ consists of the four compass points <code>north</code>, <code>south</code>, <code>east</code> or <code>west</code>, separated by commas (so the list must be contained within braces). The distances can be specified after each side separated by a colon (e.g., <code>north:1cm</code>, or <code>west:5cm from center</code>). If an item specifies no distance, the most recently specified distance will be used (at the start of the list this is <code>0cm</code>, so the first item in the list should specify a distance). Any sides not specified will not be drawn with an arrow. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/arrow:box:arrows",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/arrow%3Abox%3Aarrows"
+  },
+  "shapes.multipart": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>shapes.multipart</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usepgflibrary{shapes.multipart} % LaTeX and plain TeX and pure pgf</kbd><br> <kbd>\\usepgflibrary[shapes.multipart] % ConTeXt and pure pgf</kbd><br> <kbd>\\usetikzlibrary{shapes.multipart} % LaTeX and plain TeX when using TikZ</kbd><br> <kbd>\\usetikzlibrary[shapes.multipart] % ConTeXt when using TikZ</kbd><br> <br> This library defines general-purpose shapes that are composed of multiple (text) parts. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.shapes.multipart",
+    "href": "https://tikz.dev/library-shapes#pgf.shapes.multipart"
+  },
+  "circle split": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>circle split</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a multi-part shape consisting of a circle with a line in the middle. The upper part is the main part (the <code>text</code> part), the lower part is the <code>lower</code> part. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.circle:split",
+    "href": "https://tikz.dev/library-shapes#pgf.circle%3Asplit"
+  },
+  "circle solidus": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>circle solidus</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>This shape (due to Manuel Lacruz) is similar to the split circle, but the two text parts are arranged diagonally.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf.circle:solidus",
+    "href": "https://tikz.dev/library-shapes#pgf.circle%3Asolidus"
+  },
+  "ellipse split": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>ellipse split</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a multi-part shape consisting of an ellipse with a line in the middle. The upper part is the main part (the <code>text</code> part), the lower part is the <code>lower</code> part. The anchors for this shape are shown below. Anchor <code>60</code> is a border anchor. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.ellipse:split",
+    "href": "https://tikz.dev/library-shapes#pgf.ellipse%3Asplit"
+  },
+  "diamond split": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>diamond split</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a multi-part shape consisting of a diamond with a line in the middle. The upper part is the main part (the <code>text</code> part); the lower part is the <code>lower</code> part. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.diamond:split",
+    "href": "https://tikz.dev/library-shapes#pgf.diamond%3Asplit"
+  },
+  "rectangle split": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>rectangle split</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>This shape is a rectangle, which can be split either horizontally or vertically into several parts.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf.rectangle:split",
+    "href": "https://tikz.dev/library-shapes#pgf.rectangle%3Asplit"
+  },
+  "/pgf/rectangle split allocate boxes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split allocate boxes=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key checks if ⟨<i>number</i>⟩ boxes have been allocated, and if not, it allocates the required boxes using <code>\\newbox</code> (some “magic” is performed to get around the fact that <code>\\newbox</code> is declared <code>\\outer</code> in plain TeX). </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:allocate:boxes",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Aallocate%3Aboxes"
+  },
+  "rectangle split allocate boxes": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split allocate boxes=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key checks if ⟨<i>number</i>⟩ boxes have been allocated, and if not, it allocates the required boxes using <code>\\newbox</code> (some “magic” is performed to get around the fact that <code>\\newbox</code> is declared <code>\\outer</code> in plain TeX). </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:allocate:boxes",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Aallocate%3Aboxes"
+  },
+  "/pgf/rectangle split parts": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split parts=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>4</kbd>)",
+    "snippetHtml": "<p> Split the rectangle into ⟨<i>number</i>⟩ parts, which should be in the range <code>1</code> to <code>20</code>. If more than four parts are needed, the boxes should be allocated in advance as described above. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:parts",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Aparts"
+  },
+  "rectangle split parts": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split parts=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>4</kbd>)",
+    "snippetHtml": "<p> Split the rectangle into ⟨<i>number</i>⟩ parts, which should be in the range <code>1</code> to <code>20</code>. If more than four parts are needed, the boxes should be allocated in advance as described above. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:parts",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Aparts"
+  },
+  "/pgf/rectangle split horizontal": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split horizontal=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p>This key determines whether the rectangle is split horizontally or vertically</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:horizontal",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Ahorizontal"
+  },
+  "rectangle split horizontal": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split horizontal=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p>This key determines whether the rectangle is split horizontally or vertically</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:horizontal",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Ahorizontal"
+  },
+  "/pgf/rectangle split ignore empty parts": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split ignore empty parts=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> When ⟨<i>boolean</i>⟩ is true, pgf will ignore any part that is empty <em>except the text part</em>. This effectively overrides the <code>rectangle split parts</code> key in that, if 3 parts (for example) are specified, but one is empty, only two will be shown. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:ignore:empty:parts",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Aignore%3Aempty%3Aparts"
+  },
+  "rectangle split ignore empty parts": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split ignore empty parts=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> When ⟨<i>boolean</i>⟩ is true, pgf will ignore any part that is empty <em>except the text part</em>. This effectively overrides the <code>rectangle split parts</code> key in that, if 3 parts (for example) are specified, but one is empty, only two will be shown. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:ignore:empty:parts",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Aignore%3Aempty%3Aparts"
+  },
+  "/pgf/rectangle split empty part width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split empty part width=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1ex</kbd>)",
+    "snippetHtml": "<p>Sets the default width for a node part box if it is empty and empty parts are not ignored.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:empty:part:width",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Aempty%3Apart%3Awidth"
+  },
+  "rectangle split empty part width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split empty part width=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1ex</kbd>)",
+    "snippetHtml": "<p>Sets the default width for a node part box if it is empty and empty parts are not ignored.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:empty:part:width",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Aempty%3Apart%3Awidth"
+  },
+  "/pgf/rectangle split empty part height": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split empty part height=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1ex</kbd>)",
+    "snippetHtml": "<p>Sets the default height for a node part box if it is empty and empty parts are not ignored.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:empty:part:height",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Aempty%3Apart%3Aheight"
+  },
+  "rectangle split empty part height": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split empty part height=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1ex</kbd>)",
+    "snippetHtml": "<p>Sets the default height for a node part box if it is empty and empty parts are not ignored.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:empty:part:height",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Aempty%3Apart%3Aheight"
+  },
+  "/pgf/rectangle split empty part depth": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split empty part depth=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0ex</kbd>)",
+    "snippetHtml": "<p>Sets the default depth for a node part box if it is empty and empty parts are not ignored.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:empty:part:depth",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Aempty%3Apart%3Adepth"
+  },
+  "rectangle split empty part depth": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split empty part depth=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0ex</kbd>)",
+    "snippetHtml": "<p>Sets the default depth for a node part box if it is empty and empty parts are not ignored.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:empty:part:depth",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Aempty%3Apart%3Adepth"
+  },
+  "/pgf/rectangle split part align": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split part align=</kbd>{⟨<i>list</i>⟩}",
+    "defaultHtml": "(no default, initially <kbd>center</kbd>)",
+    "snippetHtml": "<p> Sets the alignment of the boxes inside the node parts. Each item in ⟨<i>list</i>⟩ should be separated by commas (so if there is more than one item in ⟨<i>list</i>⟩, it must be surrounded by braces). </p><p> When the rectangle is split vertically, the entries in ⟨<i>list</i>⟩ must be one of <code>left</code>, <code>right</code>, or <code>center</code>. If ⟨<i>list</i>⟩ has less entries than node parts then the remaining boxes are aligned according to the last entry in the list. Note that this only aligns the boxes in each part and <em>does not</em> affect the alignment of the contents of the boxes. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:part:align",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Apart%3Aalign"
+  },
+  "rectangle split part align": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split part align=</kbd>{⟨<i>list</i>⟩}",
+    "defaultHtml": "(no default, initially <kbd>center</kbd>)",
+    "snippetHtml": "<p> Sets the alignment of the boxes inside the node parts. Each item in ⟨<i>list</i>⟩ should be separated by commas (so if there is more than one item in ⟨<i>list</i>⟩, it must be surrounded by braces). </p><p> When the rectangle is split vertically, the entries in ⟨<i>list</i>⟩ must be one of <code>left</code>, <code>right</code>, or <code>center</code>. If ⟨<i>list</i>⟩ has less entries than node parts then the remaining boxes are aligned according to the last entry in the list. Note that this only aligns the boxes in each part and <em>does not</em> affect the alignment of the contents of the boxes. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:part:align",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Apart%3Aalign"
+  },
+  "/pgf/rectangle split draw splits": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split draw splits=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> Sets whether the line or lines between node parts will be drawn. Internally, this sets the TeX-if <code>\\ifpgfrectanglesplitdrawsplits</code> appropriately. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:draw:splits",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Adraw%3Asplits"
+  },
+  "rectangle split draw splits": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split draw splits=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> Sets whether the line or lines between node parts will be drawn. Internally, this sets the TeX-if <code>\\ifpgfrectanglesplitdrawsplits</code> appropriately. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:draw:splits",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Adraw%3Asplits"
+  },
+  "/pgf/rectangle split use custom fill": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split use custom fill=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> This enables the use of a custom fill for each of the node parts (including the area covered by the <code>inner sep</code>). The background path for the shape should not be filled (e.g., in TikZ, the <code>fill</code> option for the node must be implicitly or explicitly set to <code>none</code>). Internally, this key sets the TeX-if <code>\\ifpgfrectanglesplitusecustomfill</code> appropriately. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:use:custom:fill",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Ause%3Acustom%3Afill"
+  },
+  "rectangle split use custom fill": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split use custom fill=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> This enables the use of a custom fill for each of the node parts (including the area covered by the <code>inner sep</code>). The background path for the shape should not be filled (e.g., in TikZ, the <code>fill</code> option for the node must be implicitly or explicitly set to <code>none</code>). Internally, this key sets the TeX-if <code>\\ifpgfrectanglesplitusecustomfill</code> appropriately. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:use:custom:fill",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Ause%3Acustom%3Afill"
+  },
+  "/pgf/rectangle split part fill": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split part fill=</kbd>{⟨<i>list</i>⟩}",
+    "defaultHtml": "(no default, initially <kbd>white</kbd>)",
+    "snippetHtml": "<p> Sets the custom fill color for each node part shape. The items in ⟨<i>list</i>⟩ should be separated by commas (so if there is more than one item in ⟨<i>list</i>⟩, it must be surrounded by braces). If ⟨<i>list</i>⟩ has less entries than node parts, then the remaining node parts use the color from the last entry in the list. This key will automatically set <code>/pgf/rectangle split use custom fill</code>. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:part:fill",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Apart%3Afill"
+  },
+  "rectangle split part fill": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rectangle split part fill=</kbd>{⟨<i>list</i>⟩}",
+    "defaultHtml": "(no default, initially <kbd>white</kbd>)",
+    "snippetHtml": "<p> Sets the custom fill color for each node part shape. The items in ⟨<i>list</i>⟩ should be separated by commas (so if there is more than one item in ⟨<i>list</i>⟩, it must be surrounded by braces). If ⟨<i>list</i>⟩ has less entries than node parts, then the remaining node parts use the color from the last entry in the list. This key will automatically set <code>/pgf/rectangle split use custom fill</code>. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rectangle:split:part:fill",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rectangle%3Asplit%3Apart%3Afill"
+  },
+  "shapes.callouts": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>shapes.callouts</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usepgflibrary{shapes.callouts} % LaTeX and plain TeX and pure pgf</kbd><br> <kbd>\\usepgflibrary[shapes.callouts] % ConTeXt and pure pgf</kbd><br> <kbd>\\usetikzlibrary{shapes.callouts} % LaTeX and plain TeX when using TikZ</kbd><br> <kbd>\\usetikzlibrary[shapes.callouts] % ConTeXt when using TikZ</kbd><br> <br> Producing basic callouts can be done quite easily in pgf and TikZ by creating a node and then subsequently drawing a path from the border of the node to the required point. This library provides more fancy, ‘balloon’-style callouts. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.shapes.callouts",
+    "href": "https://tikz.dev/library-shapes#pgf.shapes.callouts"
+  },
+  "/pgf/callout relative pointer": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/callout relative pointer=</kbd>⟨<i>coordinate</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>\\pgfpointpolar{315}{.5cm}</kbd>)",
+    "snippetHtml": "<p>Sets the vector of the callout pointer ‘relative’ to the callout shape.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/callout:relative:pointer",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/callout%3Arelative%3Apointer"
+  },
+  "callout relative pointer": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/callout relative pointer=</kbd>⟨<i>coordinate</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>(315:.5cm)</kbd>)",
+    "snippetHtml": "<p> The TikZ version of the <code>callout relative pointer</code> key. Here, ⟨<i>coordinate</i>⟩ can be specified using the TikZ format for coordinates. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./tikz/callout:relative:pointer",
+    "href": "https://tikz.dev/library-shapes#pgf./tikz/callout%3Arelative%3Apointer"
+  },
+  "/pgf/callout absolute pointer": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/callout absolute pointer=</kbd>⟨<i>coordinate</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Sets the vector of the callout pointer absolutely within the picture.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/callout:absolute:pointer",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/callout%3Aabsolute%3Apointer"
+  },
+  "callout absolute pointer": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/callout absolute pointer=</kbd>⟨<i>coordinate</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The TikZ version of the <code>callout absolute pointer</code> key. Here, ⟨<i>coordinate</i>⟩ can be specified using the TikZ format for coordinates. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./tikz/callout:absolute:pointer",
+    "href": "https://tikz.dev/library-shapes#pgf./tikz/callout%3Aabsolute%3Apointer"
+  },
+  "/tikz/callout relative pointer": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/callout relative pointer=</kbd>⟨<i>coordinate</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>(315:.5cm)</kbd>)",
+    "snippetHtml": "<p> The TikZ version of the <code>callout relative pointer</code> key. Here, ⟨<i>coordinate</i>⟩ can be specified using the TikZ format for coordinates. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./tikz/callout:relative:pointer",
+    "href": "https://tikz.dev/library-shapes#pgf./tikz/callout%3Arelative%3Apointer"
+  },
+  "/tikz/callout absolute pointer": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/callout absolute pointer=</kbd>⟨<i>coordinate</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The TikZ version of the <code>callout absolute pointer</code> key. Here, ⟨<i>coordinate</i>⟩ can be specified using the TikZ format for coordinates. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./tikz/callout:absolute:pointer",
+    "href": "https://tikz.dev/library-shapes#pgf./tikz/callout%3Aabsolute%3Apointer"
+  },
+  "/pgf/callout pointer shorten": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/callout pointer shorten=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0cm</kbd>)",
+    "snippetHtml": "<p> Moves the callout pointer towards the center of the callout’s main shape by ⟨<i>distance</i>⟩. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/callout:pointer:shorten",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/callout%3Apointer%3Ashorten"
+  },
+  "callout pointer shorten": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/callout pointer shorten=</kbd>⟨<i>distance</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0cm</kbd>)",
+    "snippetHtml": "<p> Moves the callout pointer towards the center of the callout’s main shape by ⟨<i>distance</i>⟩. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/callout:pointer:shorten",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/callout%3Apointer%3Ashorten"
+  },
+  "rectangle callout": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>rectangle callout</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a callout whose main shape is a rectangle, which tightly fits the node contents (including any <code>inner sep</code>). It supports the keys described above and also the following key: </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.rectangle:callout",
+    "href": "https://tikz.dev/library-shapes#pgf.rectangle%3Acallout"
+  },
+  "/pgf/callout pointer width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/callout pointer width=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.25cm</kbd>)",
+    "snippetHtml": "<p>Sets the width of the pointer at the border of the rectangle.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/callout:pointer:width",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/callout%3Apointer%3Awidth"
+  },
+  "callout pointer width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/callout pointer width=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.25cm</kbd>)",
+    "snippetHtml": "<p>Sets the width of the pointer at the border of the rectangle.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/callout:pointer:width",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/callout%3Apointer%3Awidth"
+  },
+  "ellipse callout": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>ellipse callout</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a callout whose main shape is an ellipse, which tightly fits the node contents (including any <code>inner sep</code>). It uses the <code>absolute callout pointer</code>, <code>relative callout pointer</code> and <code>callout pointer shorten</code> keys, and also the following key: </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.ellipse:callout",
+    "href": "https://tikz.dev/library-shapes#pgf.ellipse%3Acallout"
+  },
+  "/pgf/callout pointer arc": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/callout pointer arc=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>15</kbd>)",
+    "snippetHtml": "<p> Sets the width of the pointer at the border of the ellipse according to an arc of length ⟨<i>angle</i>⟩. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/callout:pointer:arc",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/callout%3Apointer%3Aarc"
+  },
+  "callout pointer arc": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/callout pointer arc=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>15</kbd>)",
+    "snippetHtml": "<p> Sets the width of the pointer at the border of the ellipse according to an arc of length ⟨<i>angle</i>⟩. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/callout:pointer:arc",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/callout%3Apointer%3Aarc"
+  },
+  "cloud callout": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>cloud callout</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is a callout whose main shape is a cloud which fits the node contents. The pointer is segmented, consisting of a series of shrinking ellipses. This callout requires the <code>shapes.callouts</code> library (for the cloud shape). If this library is not loaded an error will result. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.cloud:callout",
+    "href": "https://tikz.dev/library-shapes#pgf.cloud%3Acallout"
+  },
+  "/pgf/callout pointer start size": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/callout pointer start size=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.2 of callout</kbd>)",
+    "snippetHtml": "<p> Sets the size of the first segment in the pointer (i.e., the segment nearest the main cloud shape). There are three possible forms for ⟨<i>value</i>⟩: </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/callout:pointer:start:size",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/callout%3Apointer%3Astart%3Asize"
+  },
+  "callout pointer start size": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/callout pointer start size=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.2 of callout</kbd>)",
+    "snippetHtml": "<p> Sets the size of the first segment in the pointer (i.e., the segment nearest the main cloud shape). There are three possible forms for ⟨<i>value</i>⟩: </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/callout:pointer:start:size",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/callout%3Apointer%3Astart%3Asize"
+  },
+  "/pgf/callout pointer end size": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/callout pointer end size=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.1 of callout</kbd>)",
+    "snippetHtml": "<p>Sets the size of the last ellipse in the pointer.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/callout:pointer:end:size",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/callout%3Apointer%3Aend%3Asize"
+  },
+  "callout pointer end size": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/callout pointer end size=</kbd>⟨<i>value</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.1 of callout</kbd>)",
+    "snippetHtml": "<p>Sets the size of the last ellipse in the pointer.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/callout:pointer:end:size",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/callout%3Apointer%3Aend%3Asize"
+  },
+  "/pgf/callout pointer segments": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/callout pointer segments=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>2</kbd>)",
+    "snippetHtml": "<p> Sets the number of segments in the pointer. Note that pgf will happily overlap segments if too many are specified. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/callout:pointer:segments",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/callout%3Apointer%3Asegments"
+  },
+  "callout pointer segments": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/callout pointer segments=</kbd>⟨<i>number</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>2</kbd>)",
+    "snippetHtml": "<p> Sets the number of segments in the pointer. Note that pgf will happily overlap segments if too many are specified. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/callout:pointer:segments",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/callout%3Apointer%3Asegments"
+  },
+  "shapes.misc": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>shapes.misc</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usepgflibrary{shapes.misc} % LaTeX and plain TeX and pure pgf</kbd><br> <kbd>\\usepgflibrary[shapes.misc] % ConTeXt and pure pgf</kbd><br> <kbd>\\usetikzlibrary{shapes.misc} % LaTeX and plain TeX when using TikZ</kbd><br> <kbd>\\usetikzlibrary[shapes.misc] % ConTeXt when using TikZ</kbd><br> <br> This library defines general-purpose shapes that do not fit into the previous categories. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.shapes.misc",
+    "href": "https://tikz.dev/library-shapes#pgf.shapes.misc"
+  },
+  "cross out": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>cross out</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape “crosses out” the node. Its foreground path are simply two diagonal lines between the corners of the node’s bounding box. Here is an example: </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.cross:out",
+    "href": "https://tikz.dev/library-shapes#pgf.cross%3Aout"
+  },
+  "strike out": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>strike out</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This shape is identical to the <code>cross out</code> shape, only its foreground path consists of a single line from the lower left to the upper right. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf.strike:out",
+    "href": "https://tikz.dev/library-shapes#pgf.strike%3Aout"
+  },
+  "rounded rectangle": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>rounded rectangle</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>This shape is a rectangle which can have optionally rounded sides.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf.rounded:rectangle",
+    "href": "https://tikz.dev/library-shapes#pgf.rounded%3Arectangle"
+  },
+  "/pgf/rounded rectangle arc length": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rounded rectangle arc length=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>180</kbd>)",
+    "snippetHtml": "<p> Sets the length of the arcs for the rounded ends. Recommended values for ⟨<i>angle</i>⟩ are between <code>90</code> and <code>180</code>. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rounded:rectangle:arc:length",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rounded%3Arectangle%3Aarc%3Alength"
+  },
+  "rounded rectangle arc length": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rounded rectangle arc length=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>180</kbd>)",
+    "snippetHtml": "<p> Sets the length of the arcs for the rounded ends. Recommended values for ⟨<i>angle</i>⟩ are between <code>90</code> and <code>180</code>. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rounded:rectangle:arc:length",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rounded%3Arectangle%3Aarc%3Alength"
+  },
+  "/pgf/rounded rectangle west arc": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rounded rectangle west arc=</kbd>⟨<i>arc type</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>convex</kbd>)",
+    "snippetHtml": "<p> Sets the style of the rounding for the left side. The permitted values for ⟨<i>arc type</i>⟩ are <code>concave</code>, <code>convex</code>, or <code>none</code>. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rounded:rectangle:west:arc",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rounded%3Arectangle%3Awest%3Aarc"
+  },
+  "rounded rectangle west arc": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rounded rectangle west arc=</kbd>⟨<i>arc type</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>convex</kbd>)",
+    "snippetHtml": "<p> Sets the style of the rounding for the left side. The permitted values for ⟨<i>arc type</i>⟩ are <code>concave</code>, <code>convex</code>, or <code>none</code>. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rounded:rectangle:west:arc",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rounded%3Arectangle%3Awest%3Aarc"
+  },
+  "/pgf/rounded rectangle left arc": {
+    "type": "style",
+    "signatureHtml": "<kbd>/pgf/rounded rectangle left arc=</kbd>⟨<i>arc type</i>⟩",
+    "defaultHtml": "(style, no default)",
+    "snippetHtml": "<p>Alternative key for specifying the west arc.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rounded:rectangle:left:arc",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rounded%3Arectangle%3Aleft%3Aarc"
+  },
+  "rounded rectangle left arc": {
+    "type": "style",
+    "signatureHtml": "<kbd>/pgf/rounded rectangle left arc=</kbd>⟨<i>arc type</i>⟩",
+    "defaultHtml": "(style, no default)",
+    "snippetHtml": "<p>Alternative key for specifying the west arc.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rounded:rectangle:left:arc",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rounded%3Arectangle%3Aleft%3Aarc"
+  },
+  "/pgf/rounded rectangle east arc": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rounded rectangle east arc=</kbd>⟨<i>arc type</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>convex</kbd>)",
+    "snippetHtml": "<p>Sets the style of the rounding for the east side.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rounded:rectangle:east:arc",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rounded%3Arectangle%3Aeast%3Aarc"
+  },
+  "rounded rectangle east arc": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/rounded rectangle east arc=</kbd>⟨<i>arc type</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>convex</kbd>)",
+    "snippetHtml": "<p>Sets the style of the rounding for the east side.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rounded:rectangle:east:arc",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rounded%3Arectangle%3Aeast%3Aarc"
+  },
+  "/pgf/rounded rectangle right arc": {
+    "type": "style",
+    "signatureHtml": "<kbd>/pgf/rounded rectangle right arc=</kbd>⟨<i>arc type</i>⟩",
+    "defaultHtml": "(style, no default)",
+    "snippetHtml": "<p>Alternative key for specifying the east arc.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rounded:rectangle:right:arc",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rounded%3Arectangle%3Aright%3Aarc"
+  },
+  "rounded rectangle right arc": {
+    "type": "style",
+    "signatureHtml": "<kbd>/pgf/rounded rectangle right arc=</kbd>⟨<i>arc type</i>⟩",
+    "defaultHtml": "(style, no default)",
+    "snippetHtml": "<p>Alternative key for specifying the east arc.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/rounded:rectangle:right:arc",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/rounded%3Arectangle%3Aright%3Aarc"
+  },
+  "chamfered rectangle": {
+    "type": "key",
+    "signatureHtml": "<b>Shape</b> <kbd>chamfered rectangle</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p>This shape is a rectangle with optionally chamfered corners.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf.chamfered:rectangle",
+    "href": "https://tikz.dev/library-shapes#pgf.chamfered%3Arectangle"
+  },
+  "/pgf/chamfered rectangle angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/chamfered rectangle angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>45</kbd>)",
+    "snippetHtml": "<p>Sets the angle <em>from the vertical</em> for the chamfer.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/chamfered:rectangle:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/chamfered%3Arectangle%3Aangle"
+  },
+  "chamfered rectangle angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/chamfered rectangle angle=</kbd>⟨<i>angle</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>45</kbd>)",
+    "snippetHtml": "<p>Sets the angle <em>from the vertical</em> for the chamfer.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/chamfered:rectangle:angle",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/chamfered%3Arectangle%3Aangle"
+  },
+  "/pgf/chamfered rectangle xsep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/chamfered rectangle xsep=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.666ex</kbd>)",
+    "snippetHtml": "<p> Sets the distance that the chamfer extends horizontally beyond the node contents (which includes the <code>inner sep</code>). If ⟨<i>length</i>⟩ is large, such that the top and bottom chamfered edges would cross, then ⟨<i>length</i>⟩ is ignored and the chamfered edges are drawn so that they meet in the middle. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/chamfered:rectangle:xsep",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/chamfered%3Arectangle%3Axsep"
+  },
+  "chamfered rectangle xsep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/chamfered rectangle xsep=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.666ex</kbd>)",
+    "snippetHtml": "<p> Sets the distance that the chamfer extends horizontally beyond the node contents (which includes the <code>inner sep</code>). If ⟨<i>length</i>⟩ is large, such that the top and bottom chamfered edges would cross, then ⟨<i>length</i>⟩ is ignored and the chamfered edges are drawn so that they meet in the middle. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/chamfered:rectangle:xsep",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/chamfered%3Arectangle%3Axsep"
+  },
+  "/pgf/chamfered rectangle ysep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/chamfered rectangle ysep=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.666ex</kbd>)",
+    "snippetHtml": "<p> Sets the distance that the chamfer extends vertically beyond the node contents. If ⟨<i>length</i>⟩ is large, such that the left and right chamfered edges would cross, then ⟨<i>length</i>⟩ is ignored and the chamfered edges are drawn so that they meet in the middle. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/chamfered:rectangle:ysep",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/chamfered%3Arectangle%3Aysep"
+  },
+  "chamfered rectangle ysep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/chamfered rectangle ysep=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.666ex</kbd>)",
+    "snippetHtml": "<p> Sets the distance that the chamfer extends vertically beyond the node contents. If ⟨<i>length</i>⟩ is large, such that the left and right chamfered edges would cross, then ⟨<i>length</i>⟩ is ignored and the chamfered edges are drawn so that they meet in the middle. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/chamfered:rectangle:ysep",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/chamfered%3Arectangle%3Aysep"
+  },
+  "/pgf/chamfered rectangle sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/chamfered rectangle sep=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.666ex</kbd>)",
+    "snippetHtml": "<p>Sets both the <code>xsep</code> and <code>ysep</code> simultaneously.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/chamfered:rectangle:sep",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/chamfered%3Arectangle%3Asep"
+  },
+  "chamfered rectangle sep": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/chamfered rectangle sep=</kbd>⟨<i>length</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>.666ex</kbd>)",
+    "snippetHtml": "<p>Sets both the <code>xsep</code> and <code>ysep</code> simultaneously.</p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/chamfered:rectangle:sep",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/chamfered%3Arectangle%3Asep"
+  },
+  "/pgf/chamfered rectangle corners": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/chamfered rectangle corners=</kbd>⟨<i>list</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>chamfer all</kbd>)",
+    "snippetHtml": "<p> Specifies which corners are chamfered. The corners are identified by their “compass point” directions (i.e. <code>north east</code>, <code>north west</code>, <code>south west</code>, and <code>south east</code>), and must be separated by commas (so if there is more than one corner in the list, it must be surrounded by braces). Any corners not mentioned in ⟨<i>list</i>⟩ are automatically not chamfered. Two additional values <code>chamfer all</code> and <code>chamfer none</code>, are also permitted. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/chamfered:rectangle:corners",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/chamfered%3Arectangle%3Acorners"
+  },
+  "chamfered rectangle corners": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/chamfered rectangle corners=</kbd>⟨<i>list</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>chamfer all</kbd>)",
+    "snippetHtml": "<p> Specifies which corners are chamfered. The corners are identified by their “compass point” directions (i.e. <code>north east</code>, <code>north west</code>, <code>south west</code>, and <code>south east</code>), and must be separated by commas (so if there is more than one corner in the list, it must be surrounded by braces). Any corners not mentioned in ⟨<i>list</i>⟩ are automatically not chamfered. Two additional values <code>chamfer all</code> and <code>chamfer none</code>, are also permitted. </p>",
+    "page": "library-shapes",
+    "anchor": "pgf./pgf/chamfered:rectangle:corners",
+    "href": "https://tikz.dev/library-shapes#pgf./pgf/chamfered%3Arectangle%3Acorners"
+  }
+}

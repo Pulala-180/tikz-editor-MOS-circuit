@@ -1,0 +1,11 @@
+{
+  "fadings": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>fadings</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usepgflibrary{fadings} % LaTeX and plain TeX and pure pgf</kbd><br> <kbd>\\usepgflibrary[fadings] % ConTeXt and pure pgf</kbd><br> <kbd>\\usetikzlibrary{fadings} % LaTeX and plain TeX when using TikZ</kbd><br> <kbd>\\usetikzlibrary[fadings] % ConTeXt when using TikZ</kbd><br> <br> The package defines a number of fadings, see Section 23 for an introduction. The TikZ version defines special TikZ commands for creating fadings. These commands are explained in Section 23. </p>",
+    "page": "library-fadings",
+    "anchor": "pgf.fadings",
+    "href": "https://tikz.dev/library-fadings#pgf.fadings"
+  }
+}

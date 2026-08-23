@@ -1,0 +1,83 @@
+\documentclass[11pt]{article}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,positioning,patterns}
+
+% Global preamble definitions
+\definecolor{accentA}{RGB}{40,110,210}
+\definecolor{accentB}{RGB}{220,90,40}
+\tikzset{
+  baseNode/.style={draw, rounded corners=1pt, inner sep=3pt, font=\small},
+  flowArrow/.style={->, line width=0.4pt},
+  helperGrid/.style={gray!30, line width=0.2pt}
+}
+\newcommand{\NodeStyle}[1]{baseNode, fill=#1!12}
+\newcommand{\Tick}[1]{\node[font=\scriptsize] at #1 {};}
+\newcommand{\Vec}[1]{\mathbf{#1}}
+
+\begin{document}
+\section*{Example Paper}
+This fixture intentionally mixes prose, equations, and multiple TikZ pictures.
+
+\begin{tikzpicture}[x=1cm,y=1cm]
+  \draw[helperGrid] (-0.2,-0.2) grid (4.2,2.2);
+  \node[\NodeStyle{accentA}] (A) at (0.8,1.5) {Input};
+  \node[\NodeStyle{accentB}, right=1.4cm of A] (B) {Transform};
+  \node[\NodeStyle{accentA}, right=1.4cm of B] (C) {Output};
+  \draw[flowArrow] (A) -- (B);
+  \draw[flowArrow] (B) -- (C);
+\end{tikzpicture}
+
+Some discussion between figures. We reference $\Vec{x}_{t+1}=A\Vec{x}_t+b$.
+
+% Between-figure redefinitions
+\renewcommand{\Vec}[1]{\boldsymbol{#1}}
+\tikzset{
+  flowArrow/.style={->, line width=0.55pt},
+  emphasisBox/.style={draw=accentB, thick, rounded corners=2pt, fill=accentB!8}
+}
+\def\PlotScale{1.2}
+
+\begin{tikzpicture}[scale=\PlotScale]
+  \draw[->] (-0.2,0) -- (3.2,0) node[right] {$x$};
+  \draw[->] (0,-0.2) -- (0,2.2) node[above] {$y$};
+  \draw[accentA, thick, domain=0:3, samples=60] plot (\x,{0.2 + 0.6*\x - 0.1*\x*\x});
+  \node[emphasisBox] at (2.2,1.7) {Updated style};
+\end{tikzpicture}
+
+More text. We now redefine local helper behavior before the next drawing.
+
+% Additional between-figure macros
+\newcommand{\StateNode}[2]{\node[\NodeStyle{accentA}] (#1) at #2 {#1};}
+\renewcommand{\NodeStyle}[1]{baseNode, fill=#1!20, minimum width=8mm}
+\tikzstyle{edgeNote}=[font=\scriptsize, fill=white, inner sep=1pt]
+
+\begin{tikzpicture}
+  \StateNode{S0}{(0,0)}
+  \StateNode{S1}{(1.8,0.8)}
+  \StateNode{S2}{(3.6,0)}
+  \draw[flowArrow] (S0) -- node[edgeNote, above] {$a$} (S1);
+  \draw[flowArrow] (S1) -- node[edgeNote, above] {$b$} (S2);
+  \draw[flowArrow] (S2) to[bend left=22] node[edgeNote, below] {$c$} (S0);
+\end{tikzpicture}
+
+Final paragraph before the fourth figure.
+
+% Last between-figure change
+\tikzset{
+  region/.style={pattern=north east lines, pattern color=accentA!45, draw=accentA},
+  marker/.style={circle, fill=accentB, inner sep=1.1pt}
+}
+\let\OldTick\Tick
+\renewcommand{\Tick}[1]{\node[marker] at #1 {};}
+
+\begin{tikzpicture}[x=0.9cm,y=0.9cm]
+  \draw[->] (0,0) -- (5,0);
+  \draw[->] (0,0) -- (0,3.4);
+  \draw[region] (0.8,0.6) rectangle (4.2,2.7);
+  \Tick{(1.2,1.1)}
+  \Tick{(2.0,2.1)}
+  \Tick{(3.4,1.4)}
+  \node[baseNode, fill=white] at (2.5,3.0) {Region of interest};
+\end{tikzpicture}
+
+\end{document}

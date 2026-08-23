@@ -1,0 +1,191 @@
+{
+  "shadows": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>shadows</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usetikzlibrary{shadows} % LaTeX and plain TeX</kbd><br> <kbd>\\usetikzlibrary[shadows] % ConTeXt</kbd><br> <br> This library defines styles that help adding a (partly) transparent shadow to a path or node. </p>",
+    "page": "library-shadows",
+    "anchor": "pgf.shadows",
+    "href": "https://tikz.dev/library-shadows#pgf.shadows"
+  },
+  "/tikz/general shadow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/general shadow=</kbd>⟨<i>shadow options</i>⟩",
+    "defaultHtml": "(default <kbd>empty</kbd>)",
+    "snippetHtml": "<p> This option should be given to a <code>\\path</code> or a <code>node</code>. It has the following effect: Before the path is used normally, it is used once with the ⟨<i>shadow options</i>⟩ in force. Furthermore, when the path is “preused” in this way, it is shifted and scaled a little bit. </p><p> In detail, the following happens: A <code>preaction</code> is used to paint the path in a special manner before it is actually painted. This “special” manner is as follows: The options in ⟨<i>shadow options</i>⟩ are used for painting this path. Typically, the ⟨<i>shadow options</i>⟩ will contain options like <code>fill=black</code> to create, say, a black shadow. Furthermore, after the ⟨<i>shadow options</i>⟩ have been set up, the following extra canvas transformations are applied to the path: It is scaled by <code>shadow scale</code> (with the origin of scaling at the path’s center) and it is shifted by <code>shadow xshift</code> and <code>shadow yshift</code>. </p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/general:shadow",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/general%3Ashadow"
+  },
+  "general shadow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/general shadow=</kbd>⟨<i>shadow options</i>⟩",
+    "defaultHtml": "(default <kbd>empty</kbd>)",
+    "snippetHtml": "<p> This option should be given to a <code>\\path</code> or a <code>node</code>. It has the following effect: Before the path is used normally, it is used once with the ⟨<i>shadow options</i>⟩ in force. Furthermore, when the path is “preused” in this way, it is shifted and scaled a little bit. </p><p> In detail, the following happens: A <code>preaction</code> is used to paint the path in a special manner before it is actually painted. This “special” manner is as follows: The options in ⟨<i>shadow options</i>⟩ are used for painting this path. Typically, the ⟨<i>shadow options</i>⟩ will contain options like <code>fill=black</code> to create, say, a black shadow. Furthermore, after the ⟨<i>shadow options</i>⟩ have been set up, the following extra canvas transformations are applied to the path: It is scaled by <code>shadow scale</code> (with the origin of scaling at the path’s center) and it is shifted by <code>shadow xshift</code> and <code>shadow yshift</code>. </p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/general:shadow",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/general%3Ashadow"
+  },
+  "/tikz/shadow scale": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/shadow scale=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1</kbd>)",
+    "snippetHtml": "<p>Shadows are scaled by ⟨<i>factor</i>⟩.</p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/shadow:scale",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/shadow%3Ascale"
+  },
+  "shadow scale": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/shadow scale=</kbd>⟨<i>factor</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>1</kbd>)",
+    "snippetHtml": "<p>Shadows are scaled by ⟨<i>factor</i>⟩.</p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/shadow:scale",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/shadow%3Ascale"
+  },
+  "/tikz/shadow xshift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/shadow xshift=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p> Shadows are shifted horizontally by ⟨<i>dimension</i>⟩. </p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/shadow:xshift",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/shadow%3Axshift"
+  },
+  "shadow xshift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/shadow xshift=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p> Shadows are shifted horizontally by ⟨<i>dimension</i>⟩. </p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/shadow:xshift",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/shadow%3Axshift"
+  },
+  "/tikz/shadow yshift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/shadow yshift=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p> Shadows are shifted vertically by ⟨<i>dimension</i>⟩. </p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/shadow:yshift",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/shadow%3Ayshift"
+  },
+  "shadow yshift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/shadow yshift=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p> Shadows are shifted vertically by ⟨<i>dimension</i>⟩. </p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/shadow:yshift",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/shadow%3Ayshift"
+  },
+  "/tikz/drop shadow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/drop shadow=</kbd>⟨<i>shadow options</i>⟩",
+    "defaultHtml": "(default <kbd>empty</kbd>)",
+    "snippetHtml": "<p> This option adds a drop shadow to a <code>\\path</code> or a <code>node</code>. It uses the <code>general shadow</code> and passes the ⟨<i>shadow options</i>⟩ to it, plus, before them, the following extra options: </p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/drop:shadow",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/drop%3Ashadow"
+  },
+  "drop shadow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/drop shadow=</kbd>⟨<i>shadow options</i>⟩",
+    "defaultHtml": "(default <kbd>empty</kbd>)",
+    "snippetHtml": "<p> This option adds a drop shadow to a <code>\\path</code> or a <code>node</code>. It uses the <code>general shadow</code> and passes the ⟨<i>shadow options</i>⟩ to it, plus, before them, the following extra options: </p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/drop:shadow",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/drop%3Ashadow"
+  },
+  "/tikz/every shadow": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every shadow</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p> This style is executed in addition to any ⟨<i>shadow options</i>⟩ for each shadow. Use this style to reconfigure the way shadows are drawn. </p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/every:shadow",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/every%3Ashadow"
+  },
+  "every shadow": {
+    "type": "style",
+    "signatureHtml": "<kbd>/tikz/every shadow</kbd>",
+    "defaultHtml": "(style, initially <kbd>empty</kbd>)",
+    "snippetHtml": "<p> This style is executed in addition to any ⟨<i>shadow options</i>⟩ for each shadow. Use this style to reconfigure the way shadows are drawn. </p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/every:shadow",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/every%3Ashadow"
+  },
+  "/tikz/copy shadow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/copy shadow=</kbd>⟨<i>shadow options</i>⟩",
+    "defaultHtml": "(default <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This shadow installs the following default options:</p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/copy:shadow",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/copy%3Ashadow"
+  },
+  "copy shadow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/copy shadow=</kbd>⟨<i>shadow options</i>⟩",
+    "defaultHtml": "(default <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This shadow installs the following default options:</p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/copy:shadow",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/copy%3Ashadow"
+  },
+  "/tikz/double copy shadow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/double copy shadow=</kbd>⟨<i>shadow options</i>⟩",
+    "defaultHtml": "(default <kbd>empty</kbd>)",
+    "snippetHtml": "<p> This shadow works like a <code>copy shadow</code>, only the shadow is added twice, the second time with the double <code>xshift</code> and <code>yshift</code>. </p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/double:copy:shadow",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/double%3Acopy%3Ashadow"
+  },
+  "double copy shadow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/double copy shadow=</kbd>⟨<i>shadow options</i>⟩",
+    "defaultHtml": "(default <kbd>empty</kbd>)",
+    "snippetHtml": "<p> This shadow works like a <code>copy shadow</code>, only the shadow is added twice, the second time with the double <code>xshift</code> and <code>yshift</code>. </p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/double:copy:shadow",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/double%3Acopy%3Ashadow"
+  },
+  "/tikz/circular drop shadow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/circular drop shadow=</kbd>⟨<i>shadow options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This shadow works like a drop shadow, only it adds a circular fading to the shadow. This means that the shadow will fade out at the border. The following options are preset for this shadow: </p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/circular:drop:shadow",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/circular%3Adrop%3Ashadow"
+  },
+  "circular drop shadow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/circular drop shadow=</kbd>⟨<i>shadow options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This shadow works like a drop shadow, only it adds a circular fading to the shadow. This means that the shadow will fade out at the border. The following options are preset for this shadow: </p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/circular:drop:shadow",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/circular%3Adrop%3Ashadow"
+  },
+  "/tikz/circular glow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/circular glow=</kbd>⟨<i>shadow options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This shadow works much like the <code>circular shadow</code>, only it is not shifted. This creates a visual effect of a “glow” behind the circle. The following options are preset for this shadow: </p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/circular:glow",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/circular%3Aglow"
+  },
+  "circular glow": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/circular glow=</kbd>⟨<i>shadow options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This shadow works much like the <code>circular shadow</code>, only it is not shifted. This creates a visual effect of a “glow” behind the circle. The following options are preset for this shadow: </p>",
+    "page": "library-shadows",
+    "anchor": "pgf./tikz/circular:glow",
+    "href": "https://tikz.dev/library-shadows#pgf./tikz/circular%3Aglow"
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "decorations": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>decorations</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usetikzlibrary{decorations} % LaTeX and plain TeX</kbd><br> <kbd>\\usetikzlibrary[decorations] % ConTeXt</kbd><br> <br> In order to use decorations, you first have to load a <code>decorations</code> library. This <code>decorations</code> library defines the basic options described in the following, but it does not define any new decorations. This is done by libraries like <code>decorations.text</code>. Since these more specialized libraries include the <code>decorations</code> library automatically, you usually do not have to bother about it. </p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf.decorations",
+    "href": "https://tikz.dev/tikz-decorations#pgf.decorations"
+  },
+  "decorate": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/decorate=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> When this key is set, the whole path is decorated after it has been finished. The decoration used for decorating the path is set via the <code>decoration</code> way, in exactly the same way as for the <code>decorate</code> path command. Indeed, the following two commands have the same effect: </p><p> The main use or the <code>decorate</code> option is the you can also use it with the nodes. It then causes the background path of the node to be decorated. Note that you can decorate a background path only once in this manner. That is, in contrast to the <code>decorate</code> path command you cannot apply this option twice (this would just set it to <code>true</code>, once more). </p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./tikz/decorate",
+    "href": "https://tikz.dev/tikz-decorations#pgf./tikz/decorate"
+  },
+  "/pgf/decoration": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decoration=</kbd>⟨<i>decoration options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decoration",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decoration"
+  },
+  "decoration": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decoration=</kbd>⟨<i>decoration options</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decoration",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decoration"
+  },
+  "/pgf/decoration/name": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decoration/name=</kbd>⟨<i>name</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>none</kbd>)",
+    "snippetHtml": "<p> Use this key to set which decoration is to be used. The ⟨<i>name</i>⟩ can both be a decoration or a meta-decoration (you need to worry about the difference only if you wish to define your own decorations). </p><p> If you set ⟨<i>name</i>⟩ to <code>none</code>, no decorations are added. </p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decoration/name",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decoration/name"
+  },
+  "name": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decoration/name=</kbd>⟨<i>name</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>none</kbd>)",
+    "snippetHtml": "<p> Use this key to set which decoration is to be used. The ⟨<i>name</i>⟩ can both be a decoration or a meta-decoration (you need to worry about the difference only if you wish to define your own decorations). </p><p> If you set ⟨<i>name</i>⟩ to <code>none</code>, no decorations are added. </p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decoration/name",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decoration/name"
+  },
+  "/tikz/decorate": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/decorate=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(default <kbd>true</kbd>)",
+    "snippetHtml": "<p> When this key is set, the whole path is decorated after it has been finished. The decoration used for decorating the path is set via the <code>decoration</code> way, in exactly the same way as for the <code>decorate</code> path command. Indeed, the following two commands have the same effect: </p><p> The main use or the <code>decorate</code> option is the you can also use it with the nodes. It then causes the background path of the node to be decorated. Note that you can decorate a background path only once in this manner. That is, in contrast to the <code>decorate</code> path command you cannot apply this option twice (this would just set it to <code>true</code>, once more). </p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./tikz/decorate",
+    "href": "https://tikz.dev/tikz-decorations#pgf./tikz/decorate"
+  },
+  "/pgf/decoration/raise": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decoration/raise=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p> The segments of the decoration are raised by ⟨<i>dimension</i>⟩ relative to the to-be-decorated path. More precisely, the segments of the path are offset by this much “to the left” of the path as we travel along the path. This raising is done after and in addition to any transformations set using the <code>transform</code> option (see below). </p><p> A negative ⟨<i>dimension</i>⟩ will offset the decoration “to the right” of the to-be-decorated path. </p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decoration/raise",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decoration/raise"
+  },
+  "raise": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decoration/raise=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p> The segments of the decoration are raised by ⟨<i>dimension</i>⟩ relative to the to-be-decorated path. More precisely, the segments of the path are offset by this much “to the left” of the path as we travel along the path. This raising is done after and in addition to any transformations set using the <code>transform</code> option (see below). </p><p> A negative ⟨<i>dimension</i>⟩ will offset the decoration “to the right” of the to-be-decorated path. </p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decoration/raise",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decoration/raise"
+  },
+  "/pgf/decoration/mirror": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decoration/mirror=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Causes the segments of the decoration to be mirrored along the to-be-decorated path. This is done after and in addition to any transformations set using the <code>transform</code> and/or <code>raise</code> options. </p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decoration/mirror",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decoration/mirror"
+  },
+  "mirror": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decoration/mirror=</kbd>⟨<i>boolean</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Causes the segments of the decoration to be mirrored along the to-be-decorated path. This is done after and in addition to any transformations set using the <code>transform</code> and/or <code>raise</code> options. </p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decoration/mirror",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decoration/mirror"
+  },
+  "/pgf/decoration/transform": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decoration/transform=</kbd>⟨<i>transformations</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key allows you to specify general ⟨<i>transformations</i>⟩ to be applied to the segments of a decoration. These transformations are applied before and independently of <code>raise</code> and <code>mirror</code> transformations. The ⟨<i>transformations</i>⟩ should be normal TikZ transformations like <code>shift</code> or <code>rotate</code>. </p><p> In the following example the <code>shift only</code> transformation is used to make sure that the crosses are <em>not</em> sloped along the path. </p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decoration/transform",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decoration/transform"
+  },
+  "transform": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decoration/transform=</kbd>⟨<i>transformations</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This key allows you to specify general ⟨<i>transformations</i>⟩ to be applied to the segments of a decoration. These transformations are applied before and independently of <code>raise</code> and <code>mirror</code> transformations. The ⟨<i>transformations</i>⟩ should be normal TikZ transformations like <code>shift</code> or <code>rotate</code>. </p><p> In the following example the <code>shift only</code> transformation is used to make sure that the crosses are <em>not</em> sloped along the path. </p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decoration/transform",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decoration/transform"
+  },
+  "/pgf/decoration/pre": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decoration/pre=</kbd>⟨<i>decoration</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>lineto</kbd>)",
+    "snippetHtml": "<p> This key sets a decoration that should be used before the main decoration starts. The ⟨<i>decoration</i>⟩ will be used for a length of <code>pre length</code>, which <code>0pt</code> by default. Thus, for the <code>pre</code> option to have any effect, you also need to set the <code>pre length</code> option. </p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decoration/pre",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decoration/pre"
+  },
+  "pre": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decoration/pre=</kbd>⟨<i>decoration</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>lineto</kbd>)",
+    "snippetHtml": "<p> This key sets a decoration that should be used before the main decoration starts. The ⟨<i>decoration</i>⟩ will be used for a length of <code>pre length</code>, which <code>0pt</code> by default. Thus, for the <code>pre</code> option to have any effect, you also need to set the <code>pre length</code> option. </p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decoration/pre",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decoration/pre"
+  },
+  "/pgf/decoration/pre length": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decoration/pre length=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p> This key sets the distance along which the pre-decoration should be used. If you do not need/wish a pre-decoration, set this key to <code>0pt</code> (exactly this string, not just to something that evaluates to the same things such as <code>0cm</code>). </p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decoration/pre:length",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decoration/pre%3Alength"
+  },
+  "pre length": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decoration/pre length=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p> This key sets the distance along which the pre-decoration should be used. If you do not need/wish a pre-decoration, set this key to <code>0pt</code> (exactly this string, not just to something that evaluates to the same things such as <code>0cm</code>). </p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decoration/pre:length",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decoration/pre%3Alength"
+  },
+  "/pgf/decorations/post": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decorations/post=</kbd>⟨<i>decoration</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>lineto</kbd>)",
+    "snippetHtml": "<p>Works like <code>pre</code>, only for the end of the decoration.</p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decorations/post",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decorations/post"
+  },
+  "post": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decorations/post=</kbd>⟨<i>decoration</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>lineto</kbd>)",
+    "snippetHtml": "<p>Works like <code>pre</code>, only for the end of the decoration.</p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decorations/post",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decorations/post"
+  },
+  "/pgf/decorations/post length": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decorations/post length=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p>Works like <code>pre length</code>, only for the end of the decoration.</p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decorations/post:length",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decorations/post%3Alength"
+  },
+  "post length": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/decorations/post length=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(no default, initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p>Works like <code>pre length</code>, only for the end of the decoration.</p>",
+    "page": "tikz-decorations",
+    "anchor": "pgf./pgf/decorations/post:length",
+    "href": "https://tikz.dev/tikz-decorations#pgf./pgf/decorations/post%3Alength"
+  }
+}

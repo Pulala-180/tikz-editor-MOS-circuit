@@ -1,0 +1,77 @@
+{
+  "$schema": "../../../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "TikZ Editor",
+  "version": "0.5.1",
+  "identifier": "com.tikz.editor",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "TikZ Editor",
+        "width": 1350,
+        "height": 850,
+        "resizable": true,
+        "fullscreen": false,
+        "dragDropEnabled": false,
+        "decorations": true
+      }
+    ],
+    "security": {
+      "csp": null
+    },
+    "macOSPrivateApi": true
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "fileAssociations": [
+      {
+        "name": "TikZ Source",
+        "description": "TikZ source document",
+        "ext": [
+          "tikz"
+        ],
+        "role": "Editor",
+        "rank": "Owner",
+        "mimeType": "application/x-tikz",
+        "exportedType": {
+          "identifier": "com.tikz.editor.tikz",
+          "conformsTo": [
+            "public.plain-text"
+          ]
+        }
+      },
+      {
+        "name": "TeX Source",
+        "description": "TeX source document",
+        "ext": [
+          "tex"
+        ],
+        "role": "Editor",
+        "rank": "Alternate",
+        "mimeType": "text/x-tex"
+      }
+    ],
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDFENkFBQzhGMzdCQ0U3RTUKUldUbDU3dzNqNnhxSGF5aDFFQ2NnNGtIZW1qRjNIM3hGM1pMTFh4d1YxMjQrcENsdmRYaXkxTWYK",
+      "endpoints": [
+        "https://tikz.dev/editor/latest.json"
+      ]
+    }
+  }
+}

@@ -1,0 +1,452 @@
+{
+  "patterns": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>patterns</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usepgflibrary{patterns} % LaTeX and plain TeX and pure pgf</kbd><br> <kbd>\\usepgflibrary[patterns] % ConTeXt and pure pgf</kbd><br> <kbd>\\usetikzlibrary{patterns} % LaTeX and plain TeX when using TikZ</kbd><br> <kbd>\\usetikzlibrary[patterns] % ConTeXt when using TikZ</kbd><br> <br> The package defines patterns for filling areas. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf.patterns",
+    "href": "https://tikz.dev/library-patterns#pgf.patterns"
+  },
+  "patterns.meta": {
+    "type": "key",
+    "signatureHtml": "<b>TikZ Library</b> <kbd>patterns.meta</kbd>",
+    "defaultHtml": "",
+    "snippetHtml": "<p> <kbd>\\usepgflibrary{patterns.meta} % LaTeX and plain TeX and pure pgf</kbd><br> <kbd>\\usepgflibrary[patterns.meta] % ConTeXt and pure pgf</kbd><br> <kbd>\\usetikzlibrary{patterns.meta} % LaTeX and plain TeX when using TikZ</kbd><br> <kbd>\\usetikzlibrary[patterns.meta] % ConTeXt when using TikZ</kbd><br> <br> Define your own patterns with a syntax similar to <code>arrows.meta</code>. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf.patterns.meta",
+    "href": "https://tikz.dev/library-patterns#pgf.patterns.meta"
+  },
+  "\\pgfdeclarepattern": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\pgfdeclarepattern</kbd>{⟨<i>config</i>⟩}",
+    "defaultHtml": "",
+    "snippetHtml": "<p> This command is used to declare a new pattern. In contrast to the normal patterns and in the spirit of <code>arrows.meta</code> this command takes a list of keys and values to define the pattern. The following keys are available: </p>",
+    "page": "library-patterns",
+    "anchor": "pgf.back/pgfdeclarepattern",
+    "href": "https://tikz.dev/library-patterns#pgf.back/pgfdeclarepattern"
+  },
+  "/pgf/patterns/name": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/name=</kbd>⟨<i>name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>The name of the pattern by which it can be used later on.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/name",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/name"
+  },
+  "name": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/name=</kbd>⟨<i>name</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>The name of the pattern by which it can be used later on.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/name",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/name"
+  },
+  "/pgf/patterns/type": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/type=</kbd>⟨<i>type</i>⟩",
+    "defaultHtml": "(default <kbd>uncolored</kbd>)",
+    "snippetHtml": "<p> The type of the pattern maps to what was called “form only” and “inherently colored” in the language of the normal patterns. The available choices are: </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/type",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/type"
+  },
+  "type": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/type=</kbd>⟨<i>type</i>⟩",
+    "defaultHtml": "(default <kbd>uncolored</kbd>)",
+    "snippetHtml": "<p> The type of the pattern maps to what was called “form only” and “inherently colored” in the language of the normal patterns. The available choices are: </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/type",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/type"
+  },
+  "/pgf/patterns/x": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/x=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(default <kbd>1cm</kbd>)",
+    "snippetHtml": "<p>Unit vector of the coordinate system in the \\(x\\)-direction.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/x",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/x"
+  },
+  "x": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/x=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(default <kbd>1cm</kbd>)",
+    "snippetHtml": "<p>Unit vector of the coordinate system in the \\(x\\)-direction.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/x",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/x"
+  },
+  "/pgf/patterns/y": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/y=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(default <kbd>1cm</kbd>)",
+    "snippetHtml": "<p>Unit vector of the coordinate system in the \\(y\\)-direction.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/y",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/y"
+  },
+  "y": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/y=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(default <kbd>1cm</kbd>)",
+    "snippetHtml": "<p>Unit vector of the coordinate system in the \\(y\\)-direction.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/y",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/y"
+  },
+  "/pgf/patterns/parameters": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/parameters=</kbd>⟨<i>comma separated list</i>⟩",
+    "defaultHtml": "(default <kbd>empty</kbd>)",
+    "snippetHtml": "<p> A list of parameters that are passed to the pattern. This is usually a list of TeX macros. It is very important that these macros are fully expandable because the values they hold are being used for deduplication in the PDF file. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/parameters",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/parameters"
+  },
+  "parameters": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/parameters=</kbd>⟨<i>comma separated list</i>⟩",
+    "defaultHtml": "(default <kbd>empty</kbd>)",
+    "snippetHtml": "<p> A list of parameters that are passed to the pattern. This is usually a list of TeX macros. It is very important that these macros are fully expandable because the values they hold are being used for deduplication in the PDF file. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/parameters",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/parameters"
+  },
+  "/pgf/patterns/defaults": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/defaults=</kbd>⟨<i>comma separated list</i>⟩",
+    "defaultHtml": "(default <kbd>empty</kbd>)",
+    "snippetHtml": "<p> This list holds default assignments to the parameters passed to the pattern. The default keys can then be found under the <code>/pgf/pattern keys/</code> prefix. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/defaults",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/defaults"
+  },
+  "defaults": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/defaults=</kbd>⟨<i>comma separated list</i>⟩",
+    "defaultHtml": "(default <kbd>empty</kbd>)",
+    "snippetHtml": "<p> This list holds default assignments to the parameters passed to the pattern. The default keys can then be found under the <code>/pgf/pattern keys/</code> prefix. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/defaults",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/defaults"
+  },
+  "/pgf/patterns/bottom left": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/bottom left=</kbd>⟨<i>pgfpoint</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Bottom left corner of the pattern’s bounding box, e.g. <code>\\pgfqpoint{-.1pt}{-.1pt}</code>.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/bottom:left",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/bottom%3Aleft"
+  },
+  "bottom left": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/patterns/bottom left=</kbd>⟨<i>point</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Instead of a pgf name point, this key takes a TikZ point, e.g. <code>(-.1,-.1)</code>. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./tikz/patterns/bottom:left",
+    "href": "https://tikz.dev/library-patterns#pgf./tikz/patterns/bottom%3Aleft"
+  },
+  "/pgf/patterns/top right": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/top right=</kbd>⟨<i>pgfpoint</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p>Top right corner of the pattern’s bounding box, e.g. <code>\\pgfqpoint{3.1pt}{3.1pt}</code>.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/top:right",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/top%3Aright"
+  },
+  "top right": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/patterns/top right=</kbd>⟨<i>point</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Instead of a pgf name point, this key takes a TikZ point, e.g. <code>(3.1,3.1)</code>. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./tikz/patterns/top:right",
+    "href": "https://tikz.dev/library-patterns#pgf./tikz/patterns/top%3Aright"
+  },
+  "/pgf/patterns/tile size": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/tile size=</kbd>⟨<i>pgfpoint</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Width and height of a single of the pattern as a pgf point specification, i.e. the \\(x\\) coordinate is the width and the \\(y\\) coordinate is the height, e.g. <code>\\pgfqpoint{3pt}{3pt}</code>. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/tile:size",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/tile%3Asize"
+  },
+  "tile size": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/patterns/tile size=</kbd>⟨<i>point</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Instead of a pgf name point, this key takes a TikZ point, e.g. <code>(3,3)</code>. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./tikz/patterns/tile:size",
+    "href": "https://tikz.dev/library-patterns#pgf./tikz/patterns/tile%3Asize"
+  },
+  "/pgf/patterns/tile transformation": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/tile transformation=</kbd>⟨<i>pgftransformation</i>⟩",
+    "defaultHtml": "(default <kbd>empty</kbd>)",
+    "snippetHtml": "<p>A pgf transformation, e.g. <code>\\pgftransformrotate{30}</code>.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/tile:transformation",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/tile%3Atransformation"
+  },
+  "tile transformation": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/patterns/tile transformation=</kbd>⟨<i>transformation</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Instead of a pgf transformation, this key takes a list of keys and value and extracts the resulting transformation from them, e.g. <code>rotate=30</code>. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./tikz/patterns/tile:transformation",
+    "href": "https://tikz.dev/library-patterns#pgf./tikz/patterns/tile%3Atransformation"
+  },
+  "/pgf/patterns/code": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/code=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The code should be pgf code that can be protocolled. It should not contain any color code or nodes. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/code",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/code"
+  },
+  "code": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/code=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> The code should be pgf code that can be protocolled. It should not contain any color code or nodes. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/code",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/code"
+  },
+  "/pgf/patterns/set up code": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/set up code=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(default <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This code can be set if parameters have to be preprocessed before the actual pattern code can be run.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/set:up:code",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/set%3Aup%3Acode"
+  },
+  "set up code": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/patterns/set up code=</kbd>⟨<i>code</i>⟩",
+    "defaultHtml": "(default <kbd>empty</kbd>)",
+    "snippetHtml": "<p>This code can be set if parameters have to be preprocessed before the actual pattern code can be run.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/patterns/set:up:code",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/patterns/set%3Aup%3Acode"
+  },
+  "/pgf/pattern keys/distance": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/pattern keys/distance</kbd>",
+    "defaultHtml": "(initially <kbd>3pt</kbd>)",
+    "snippetHtml": "<p>Distance between lines.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/pattern:keys/distance",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/pattern%3Akeys/distance"
+  },
+  "distance": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/pattern keys/distance</kbd>",
+    "defaultHtml": "(initially <kbd>3pt</kbd>)",
+    "snippetHtml": "<p>Distance between lines.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/pattern:keys/distance",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/pattern%3Akeys/distance"
+  },
+  "/pgf/pattern keys/angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/pattern keys/angle</kbd>",
+    "defaultHtml": "(initially <kbd>0</kbd>)",
+    "snippetHtml": "<p> By default the lines are horizontal. The whole pattern is rotated by this angle. The rotation angle is measured in the mathematically positive sense. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/pattern:keys/angle",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/pattern%3Akeys/angle"
+  },
+  "angle": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/pattern keys/angle</kbd>",
+    "defaultHtml": "(initially <kbd>0</kbd>)",
+    "snippetHtml": "<p> By default the lines are horizontal. The whole pattern is rotated by this angle. The rotation angle is measured in the mathematically positive sense. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/pattern:keys/angle",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/pattern%3Akeys/angle"
+  },
+  "/pgf/pattern keys/xshift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/pattern keys/xshift</kbd>",
+    "defaultHtml": "(initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p>Shifts the whole pattern in \\(x\\)-direction (before applying the rotation).</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/pattern:keys/xshift",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/pattern%3Akeys/xshift"
+  },
+  "xshift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/pattern keys/xshift</kbd>",
+    "defaultHtml": "(initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p>Shifts the whole pattern in \\(x\\)-direction (before applying the rotation).</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/pattern:keys/xshift",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/pattern%3Akeys/xshift"
+  },
+  "/pgf/pattern keys/yshift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/pattern keys/yshift</kbd>",
+    "defaultHtml": "(initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p>Shifts the whole pattern in \\(y\\)-direction (before applying the rotation).</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/pattern:keys/yshift",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/pattern%3Akeys/yshift"
+  },
+  "yshift": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/pattern keys/yshift</kbd>",
+    "defaultHtml": "(initially <kbd>0pt</kbd>)",
+    "snippetHtml": "<p>Shifts the whole pattern in \\(y\\)-direction (before applying the rotation).</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/pattern:keys/yshift",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/pattern%3Akeys/yshift"
+  },
+  "/pgf/pattern keys/line width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/pattern keys/line width</kbd>",
+    "defaultHtml": "(initially <kbd>\\the\\pgflinewidth</kbd>)",
+    "snippetHtml": "<p>Thickness of the lines.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/pattern:keys/line:width",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/pattern%3Akeys/line%3Awidth"
+  },
+  "line width": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/pattern keys/line width</kbd>",
+    "defaultHtml": "(initially <kbd>\\the\\pgflinewidth</kbd>)",
+    "snippetHtml": "<p>Thickness of the lines.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/pattern:keys/line:width",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/pattern%3Akeys/line%3Awidth"
+  },
+  "/pgf/pattern keys/radius": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/pattern keys/radius</kbd>",
+    "defaultHtml": "(initially <kbd>0.5pt</kbd>)",
+    "snippetHtml": "<p>Radius of the dots.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/pattern:keys/radius",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/pattern%3Akeys/radius"
+  },
+  "radius": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/pattern keys/radius</kbd>",
+    "defaultHtml": "(initially <kbd>0.5pt</kbd>)",
+    "snippetHtml": "<p>Radius of the dots.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/pattern:keys/radius",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/pattern%3Akeys/radius"
+  },
+  "/pgf/pattern keys/points": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/pattern keys/points</kbd>",
+    "defaultHtml": "(initially <kbd>5</kbd>)",
+    "snippetHtml": "<p>Number of pointy ends of the stars.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/pattern:keys/points",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/pattern%3Akeys/points"
+  },
+  "points": {
+    "type": "key",
+    "signatureHtml": "<kbd>/pgf/pattern keys/points</kbd>",
+    "defaultHtml": "(initially <kbd>5</kbd>)",
+    "snippetHtml": "<p>Number of pointy ends of the stars.</p>",
+    "page": "library-patterns",
+    "anchor": "pgf./pgf/pattern:keys/points",
+    "href": "https://tikz.dev/library-patterns#pgf./pgf/pattern%3Akeys/points"
+  },
+  "\\tikzdeclarepattern": {
+    "type": "command",
+    "signatureHtml": "<kbd>\\tikzdeclarepattern</kbd>{⟨<i>config</i>⟩}",
+    "defaultHtml": "",
+    "snippetHtml": "<p> A pattern declared with <code>\\pgfdeclarepattern</code> can only execute pgf code. This command extends the functionality to also allow TikZ code. All the same keys of <code>\\pgfdeclarepattern</code> are valid, but some of them have been overloaded to give a more natural TikZ syntax. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf.back/tikzdeclarepattern",
+    "href": "https://tikz.dev/library-patterns#pgf.back/tikzdeclarepattern"
+  },
+  "/tikz/patterns/bottom left": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/patterns/bottom left=</kbd>⟨<i>point</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Instead of a pgf name point, this key takes a TikZ point, e.g. <code>(-.1,-.1)</code>. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./tikz/patterns/bottom:left",
+    "href": "https://tikz.dev/library-patterns#pgf./tikz/patterns/bottom%3Aleft"
+  },
+  "/tikz/patterns/top right": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/patterns/top right=</kbd>⟨<i>point</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Instead of a pgf name point, this key takes a TikZ point, e.g. <code>(3.1,3.1)</code>. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./tikz/patterns/top:right",
+    "href": "https://tikz.dev/library-patterns#pgf./tikz/patterns/top%3Aright"
+  },
+  "/tikz/patterns/tile size": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/patterns/tile size=</kbd>⟨<i>point</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Instead of a pgf name point, this key takes a TikZ point, e.g. <code>(3,3)</code>. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./tikz/patterns/tile:size",
+    "href": "https://tikz.dev/library-patterns#pgf./tikz/patterns/tile%3Asize"
+  },
+  "/tikz/patterns/tile transformation": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/patterns/tile transformation=</kbd>⟨<i>transformation</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> Instead of a pgf transformation, this key takes a list of keys and value and extracts the resulting transformation from them, e.g. <code>rotate=30</code>. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./tikz/patterns/tile:transformation",
+    "href": "https://tikz.dev/library-patterns#pgf./tikz/patterns/tile%3Atransformation"
+  },
+  "/tikz/patterns/bounding box": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/patterns/bounding box=</kbd>⟨<i>point</i>⟩ and ⟨<i>point</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This is a shorthand to set the bounding box. It will assign the first point to <code>bottom left</code> and the second point to <code>top right</code>. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./tikz/patterns/bounding:box",
+    "href": "https://tikz.dev/library-patterns#pgf./tikz/patterns/bounding%3Abox"
+  },
+  "bounding box": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/patterns/bounding box=</kbd>⟨<i>point</i>⟩ and ⟨<i>point</i>⟩",
+    "defaultHtml": "(no default)",
+    "snippetHtml": "<p> This is a shorthand to set the bounding box. It will assign the first point to <code>bottom left</code> and the second point to <code>top right</code>. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./tikz/patterns/bounding:box",
+    "href": "https://tikz.dev/library-patterns#pgf./tikz/patterns/bounding%3Abox"
+  },
+  "/tikz/patterns/infer tile bounding box": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/patterns/infer tile bounding box=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(default <kbd>0pt</kbd>)",
+    "snippetHtml": "<p> Instead of specifying the bounding box by hand, you can ask TikZ to infer the size of the bounding box for you. The ⟨<i>dimension</i>⟩ parameter is padding that is added around the bounding box. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./tikz/patterns/infer:tile:bounding:box",
+    "href": "https://tikz.dev/library-patterns#pgf./tikz/patterns/infer%3Atile%3Abounding%3Abox"
+  },
+  "infer tile bounding box": {
+    "type": "key",
+    "signatureHtml": "<kbd>/tikz/patterns/infer tile bounding box=</kbd>⟨<i>dimension</i>⟩",
+    "defaultHtml": "(default <kbd>0pt</kbd>)",
+    "snippetHtml": "<p> Instead of specifying the bounding box by hand, you can ask TikZ to infer the size of the bounding box for you. The ⟨<i>dimension</i>⟩ parameter is padding that is added around the bounding box. </p>",
+    "page": "library-patterns",
+    "anchor": "pgf./tikz/patterns/infer:tile:bounding:box",
+    "href": "https://tikz.dev/library-patterns#pgf./tikz/patterns/infer%3Atile%3Abounding%3Abox"
+  }
+}
