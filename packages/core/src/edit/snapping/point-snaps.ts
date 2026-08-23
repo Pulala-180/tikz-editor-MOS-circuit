@@ -142,9 +142,6 @@ export function pointSnapOffset(nearest: AxisSnapBuckets): WorldPoint {
 export function createPointSnapLines(nearest: AxisSnapBuckets): SnapLine[] {
   const lines: SnapLine[] = [];
   const seen = new Set<string>();
-  const is2DSnapped =
-    nearest.x.some((snap) => snap.kind === "point") &&
-    nearest.y.some((snap) => snap.kind === "point");
 
   for (const snap of nearest.x) {
     if (snap.kind !== "point") {
@@ -157,11 +154,12 @@ export function createPointSnapLines(nearest: AxisSnapBuckets): SnapLine[] {
       continue;
     }
     seen.add(key);
+    const isCoincident = Math.abs(from.x - to.x) < 1e-4 && Math.abs(from.y - to.y) < 1e-4;
     lines.push({
       type: "points",
       axis: "x",
       points: [from, to],
-      is2DSnapped
+      is2DSnapped: isCoincident
     });
   }
 
@@ -176,11 +174,12 @@ export function createPointSnapLines(nearest: AxisSnapBuckets): SnapLine[] {
       continue;
     }
     seen.add(key);
+    const isCoincident = Math.abs(from.x - to.x) < 1e-4 && Math.abs(from.y - to.y) < 1e-4;
     lines.push({
       type: "points",
       axis: "y",
       points: [from, to],
-      is2DSnapped
+      is2DSnapped: isCoincident
     });
   }
 
