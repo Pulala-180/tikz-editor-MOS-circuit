@@ -108,8 +108,9 @@ function wireMoveAxis(
   const componentPortSourceIds = new Set<string>();
   for (const el of sceneElements) {
     if (selected.has(el.sourceRef.sourceId)) continue;
-    if (el.kind === "Node" || el.kind === "Scope" || (el.kind === "Path" && el.sourceRef.sourceId.includes("node_"))) {
-      componentPortSourceIds.add(el.sourceRef.sourceId);
+    const sId = el.sourceRef.sourceId;
+    if (sId.includes("node_") || sId.startsWith("scope:")) {
+      componentPortSourceIds.add(sId);
     }
   }
 

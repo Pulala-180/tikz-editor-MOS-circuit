@@ -244,13 +244,13 @@ export function applyMoveElementsAction(
     }
   }
   const shouldApplyWireFollow =
-    scopeElementIds.length > 0 ||
+    topLevelScopeElementIds.length > 0 ||
     normalizedIds.some((elementId) => pathPointSourceIds.has(elementId));
   if (shouldApplyWireFollow) {
     const wireFollow = applyWireEndpointFollowPatches(
       source,
       editHandles,
-      scopeElementIds,
+      topLevelScopeElementIds,
       normalizedIds,
       delta,
       parseOptions
