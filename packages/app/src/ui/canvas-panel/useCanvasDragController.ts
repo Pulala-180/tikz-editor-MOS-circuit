@@ -893,7 +893,9 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
           }
         }
         let rawTotalDelta = makeWorldVector(world.x - drag.startWorld.x, world.y - drag.startWorld.y);
-        if (drag.movementAxis === "x") {
+        if (drag.movementAxis === "locked") {
+          rawTotalDelta = makeWorldVector(0, 0);
+        } else if (drag.movementAxis === "x") {
           // 元件级水平锁定（例如连接了导线的横向电阻）：只保留 x 分量
           rawTotalDelta = makeWorldVector(rawTotalDelta.x, 0);
         } else if (drag.movementAxis === "y") {
@@ -907,7 +909,7 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
             rawTotalDelta = makeWorldVector(0, rawTotalDelta.y);
           }
         }
-        const snapped = drag.snapContext && drag.initialSelection
+        const snapped = drag.snapContext && drag.initialSelection && drag.movementAxis !== "locked"
           ? snapSelectionTranslation({
               context: drag.snapContext,
               selection: drag.initialSelection,
@@ -929,9 +931,11 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
           formatPrecision === undefined
             ? "fine"
             : formatPrecision;
-        const totalDelta = snapped.snappedDelta
-          ? makeWorldVector(snapped.snappedDelta.x, snapped.snappedDelta.y)
-          : rawTotalDelta;
+        const totalDelta = drag.movementAxis === "locked"
+          ? makeWorldVector(0, 0)
+          : snapped.snappedDelta
+            ? makeWorldVector(snapped.snappedDelta.x, snapped.snappedDelta.y)
+            : rawTotalDelta;
         setSnapLines(snapped.lines);
         maybeTriggerSnapFeedback(snapped.lines.length > 0);
         logSnapDebug({

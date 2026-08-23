@@ -131,7 +131,7 @@ export type DragState =
         movingSvg: { x: number; y: number };
         movingEndpointIndex: 0 | 1;
       }>;
-      movementAxis?: "x" | "y" | "orthogonal" | null;
+      movementAxis?: "x" | "y" | "orthogonal" | "locked" | null;
       adornmentDrag?: {
         ownerPoint: WorldPoint;
         ownerGeometry?: AdornmentOwnerGeometry;

@@ -220,12 +220,12 @@ export const TOOL_COLOR_OPTIONS = BASIC_PICKER_COLORS;
 // Tool buttons in display order (bucket moved to end)
 export const TOOL_BUTTONS: readonly ToolButtonDef[] = [
   { mode: "select",     label: "Select",   title: "Select (V)",   shortcut: "v", icon: SelectIcon },
-  { mode: "magnify",    label: "Magnify",  title: "Magnify (M)",  shortcut: "m", icon: MagnifyIcon },
+  { mode: "magnify",    label: "Magnify",  title: "Magnify",                     icon: MagnifyIcon },
   { mode: "addNode",    label: "Node",     title: "Node (N)",     shortcut: "n", icon: NodeIcon,     separatorBefore: true },
   { mode: "addShape",   label: "Shape",    title: "Shape (S)",    shortcut: "s", icon: ShapeIcon,    popupKind: "shape-picker" },
   { mode: "addMatrix",  label: "Matrix",   title: "Matrix",                      icon: MatrixIcon,   popupKind: "matrix-picker" },
   { mode: "addLine",    label: "Line",     title: "Line (L)",     shortcut: "l", icon: LineIcon,     separatorBefore: true },
-  { mode: "addOrthoWire", label: "Ortho Wire", title: "Orthogonal Wire (X)", shortcut: "x", icon: OrthoWireIcon },
+  { mode: "addOrthoWire", label: "Ortho Wire", title: "Orthogonal Wire (M)", shortcut: "m", icon: OrthoWireIcon },
   { mode: "addArrow",   label: "Arrow",    title: "Arrow (A)",    shortcut: "a", icon: ArrowIcon },
   { mode: "addBezier",  label: "Bezier",   title: "Bezier (B)",   shortcut: "b", icon: BezierIcon },
   { mode: "addPath",    label: "Path",     title: "Path (P)",     shortcut: "p", icon: PathIcon },

@@ -2117,7 +2117,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
           currentToolMode={toolMode}
           onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
         />
-        <RenderedTooltip content="多段正交线 (X)">
+        <RenderedTooltip content="多段正交线 (M)">
           <button
             type="button"
             className={[css.btn, toolMode === "addOrthoWire" ? css.btnActive : ""].filter(Boolean).join(" ")}

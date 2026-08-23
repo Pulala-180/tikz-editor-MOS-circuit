@@ -391,8 +391,8 @@ export function resolveSelectModeInitialTool(key: string, vKeyDown: boolean): To
   // 1. 连接线 (W)
   if (k === "w") return "addWireLead_V_Top";
 
-  // 多段正交连接线 (X)
-  if (k === "x") return "addOrthoWire";
+  // 多段正交连接线 (M)
+  if (k === "m") return "addOrthoWire";
 
   // 2. nMOS 管 (Z) - 默认栅极在左，加号在栅极
   if (k === "z") return "addNMOS_Left_G";
