@@ -50,6 +50,78 @@ An intuitive, high-performance visual TikZ editor tailored for electronic schema
 
 ---
 
+## 🎨 Toolbar & Custom Component Extension (个性化定制工具栏与元件库指南)
+
+本项目采用高度模块化的分层设计，开发者只需 4 步即可轻松扩展自定义电路元件或工具栏按钮：
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                 【4 步扩展全新自定义电路元件】              │
+├─────────────────────────────────────────────────────────────┤
+│ 1. 注册类型 (types.ts)       -> 声明全新 ToolMode 枚举名称  │
+│ 2. 工具栏图标 (tool-config)   -> 绘制 SVG 图标与加入按钮组   │
+│ 3. 动态光标预览 (preview)    -> 定义鼠标跟随高刷轻量预览图   │
+│ 4. TikZ 代码模板 (interaction)-> 定义点击后生成的 LaTeX 源码│
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 步骤 1：声明 ToolMode 类型
+在 `packages/app/src/store/types.ts` 中的 `ToolMode` 联合类型中增加您的新元件模式名称：
+```ts
+export type ToolMode =
+  | "select"
+  | "addMyComponent" // 新增自定义元件
+  // ...
+```
+
+### 步骤 2：在工具栏中注册按钮与图标
+在 `packages/app/src/ui/tool-config.tsx` 中绘制 SVG 图标并配置按钮：
+```tsx
+function MyComponentIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 20 20" width={size} height={size} fill="none" stroke="currentColor">
+      {/* 您的 SVG 路径 */}
+    </svg>
+  );
+}
+
+// 在 TOOL_BUTTONS 数组中添加：
+{
+  mode: "addMyComponent",
+  label: "My Component",
+  icon: MyComponentIcon,
+  shortcut: "K" // 自定义一键呼出快捷键
+}
+```
+
+### 步骤 3：定义鼠标悬停高刷预览 (Preview Builder)
+在 `packages/app/src/ui/canvas-panel/circuit-preview-builder.ts` 中添加轻量几何渲染：
+```ts
+if (toolMode === "addMyComponent") {
+  return {
+    paths: [
+      line(0, 0, 0, -0.5),
+      circle(0, -0.25, 0.25)
+    ],
+    texts: [{ x: 0.3, y: -0.25, main: "X_1" }]
+  };
+}
+```
+
+### 步骤 4：定义点击落盘生成的 TikZ LaTeX 模板
+在 `packages/app/src/ui/canvas-panel/useCanvasToolInteractions.ts` 中配置标准 LaTeX 源码：
+```ts
+} else if (toolMode === "addMyComponent") {
+  snippet = `\\begin{scope}[shift={(${xCm},${yCm})}]
+    \\coordinate (node_X.top) at (0,0);
+    \\draw[thick] (0,0) -- (0,-0.5);
+    \\node at (0.3,-0.25) {$X_1$};
+  \\end{scope}`;
+}
+```
+
+---
+
 ## ⌨️ Circuit Shortcut Keys Cheatsheet (电路设计快捷键速查表)
 
 ### 1. 🔌 Component Quick-Insert (选择模式下一键呼出元件)
