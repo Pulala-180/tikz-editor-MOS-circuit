@@ -1,0 +1,74 @@
+\begin{tikzpicture}
+
+
+  \begin{scope}[shift={(0.00,3.20)}]
+      \coordinate (node_Mx.g) at (0,0);
+      \draw[thick, line cap=round] (0,0) -- (0.26,0);
+      \draw[ultra thick] (0.25,-0.25) -- (0.25,0.25);
+      \draw[ultra thick] (0.41,-0.3) -- (0.41,0.3);
+      \draw[thick, line cap=round, line join=round] (0.40,0.2) -- (0.73,0.2) -- (0.73,0.5);
+      \draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, thick, line cap=round] (0.40,-0.2) -- (0.70,-0.2);
+      \draw[thick, line cap=round] (0.73,-0.21) -- (0.73,-0.5);
+      \node[node font=\sffamily\bfseries] at (1.04,0) {$M_1$};
+      \coordinate (node_Mx.d) at (0.73,0.5);
+      \coordinate (node_Mx.s) at (0.73,-0.5);
+    \end{scope}
+
+
+  \draw[thick, line cap=round] (0.73,2.70) -- (0.73,2.40);
+
+  \begin{scope}[shift={(0.73,2.40)}]
+      \coordinate (node_Rx.t) at (0,0);
+      \draw[thick, line cap=round] (0,0) -- (0,-0.15) -- (0.15,-0.19) -- (-0.15,-0.27) -- (0.15,-0.35) -- (-0.15,-0.43) -- (0.15,-0.51) -- (-0.15,-0.59) -- (0,-0.63) -- (0,-0.78);
+      \node[right] at (0.25,-0.39) {$R_S
+$};
+      \coordinate (node_Rx.b) at (0,-0.78);
+    \end{scope}
+
+  \draw[thick, line cap=round] (0.73,1.62) -- (0.73,1.32);
+
+  \draw[thick, line cap=round] (0.73,1.32) -- (0.73,1.11);
+    \begin{scope}[shift={(0.73,1.11)}]
+      \coordinate (node_GND.top) at (0,0);
+      \draw[ultra thick] (-0.17,0) -- (0.17,0);
+      \draw[ultra thick] (-0.11,-0.14) -- (0.11,-0.14);
+      \draw[ultra thick] (-0.08,-0.28) -- (0.08,-0.28);
+    \end{scope}
+
+
+  \draw[thick, line cap=round] (0.73,3.70) -- (0.73,4.27);
+
+  \begin{scope}[shift={(0.73,4.27)}]
+      \coordinate (node_Rx2.b) at (0,0);
+      \draw[thick, line cap=round] (0,0) -- (0,0.15) -- (0.15,0.19) -- (-0.15,0.27) -- (0.15,0.35) -- (-0.15,0.43) -- (0.15,0.51) -- (-0.15,0.59) -- (0,0.63) -- (0,0.78);
+      \node[right] at (0.25,0.39) {$R_D$};
+      \coordinate (node_Rx2.t) at (0,0.78);
+    \end{scope}
+
+  \draw[thick, line cap=round] (0.73,5.05) -- (0.73,5.35);
+
+  \draw[thick, line cap=round] (0.73,5.35) -- (0.73,5.57);
+    \begin{scope}[shift={(0.73,5.57)}]
+      \coordinate (node_VDD.bottom) at (0,0);
+      \draw[ultra thick] (-0.95,0) -- (0.9,0);
+      \node[draw=none] at (1.2,0) {$V_{DD}$};
+    \end{scope}
+
+
+
+  \draw[thick, line cap=round] (0.73,4.00) -- (1.76,4);
+
+  \begin{scope}[shift={(1.606,4)}]
+      \node at (0.85,-0.30) {$V_{out}$};
+      \draw[thick, line cap=round] (0.6,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.15,0);
+      \coordinate (node_IOx3.port) at (0.15,0);
+    \end{scope}
+
+  \draw[thick, line cap=round] (0.00,3.20) -- (-0.30,3.20);
+
+  \begin{scope}[shift={(-0.90,3.20)}]
+      \node at (-0.01,-0.30) {$V_{in}$};
+      \draw[thick, line cap=round] (0.15,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.6,0);
+      \coordinate (node_IOx.port) at (0.6,0);
+    \end{scope}
+\end{tikzpicture}
