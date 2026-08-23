@@ -261,13 +261,13 @@ export function flipCircuitToolModeVertical(mode: ToolMode): ToolMode | null {
 export function switchCircuitToolModeWithKey(currentMode: ToolMode, key: string): ToolMode | null {
   const k = key.toLowerCase();
 
-  // H 键: Y 轴对称翻转
-  if (k === "h") {
+  // H / Y 键: Y 轴对称翻转 (水平镜像)
+  if (k === "h" || k === "y") {
     return flipCircuitToolModeHorizontal(currentMode);
   }
 
-  // V 键: X 轴对称翻转 (如果不是在触发 VDD)
-  if (k === "v") {
+  // V / X 键: X 轴对称翻转 (垂直镜像)
+  if (k === "v" || k === "x") {
     return flipCircuitToolModeVertical(currentMode);
   }
 

@@ -221,23 +221,9 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
 
         // 1. 如果处于选择模式 (select):
         if (currentToolMode === "select") {
-          // 若有选中元件，H 键实现 Y 轴对称翻转 (水平镜像)，V 键实现 X 轴对称翻转 (垂直镜像)
+          // 若有选中元件，X/V 键实现 X 轴对称翻转 (垂直镜像)，Y/H 键实现 Y 轴对称翻转 (水平镜像)
           if (currentSelectedIds.size > 0) {
-            if (key === "h") {
-              const didFlip = flipSelection({
-                source: currentSource,
-                snapshotSource: currentSnapshot.source,
-                scene: currentSnapshot.scene,
-                editHandles: currentSnapshot.editHandles,
-                selectedElementIds: currentSelectedIds,
-                dispatch
-              }, "horizontal");
-              if (didFlip) {
-                event.preventDefault();
-                return;
-              }
-            }
-            if (key === "v") {
+            if (key === "x" || key === "v") {
               const didFlip = flipSelection({
                 source: currentSource,
                 snapshotSource: currentSnapshot.source,
@@ -246,6 +232,20 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
                 selectedElementIds: currentSelectedIds,
                 dispatch
               }, "vertical");
+              if (didFlip) {
+                event.preventDefault();
+                return;
+              }
+            }
+            if (key === "y" || key === "h") {
+              const didFlip = flipSelection({
+                source: currentSource,
+                snapshotSource: currentSnapshot.source,
+                scene: currentSnapshot.scene,
+                editHandles: currentSnapshot.editHandles,
+                selectedElementIds: currentSelectedIds,
+                dispatch
+              }, "horizontal");
               if (didFlip) {
                 event.preventDefault();
                 return;
@@ -291,14 +291,14 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
               event.preventDefault();
               return;
             }
-          } else if (key === "h") {
+          } else if (key === "h" || key === "y") {
             const nextMode = flipCircuitToolModeHorizontal(currentToolMode);
             if (nextMode) {
               dispatch({ type: "SET_TOOL_MODE", mode: nextMode });
               event.preventDefault();
               return;
             }
-          } else if (key === "v") {
+          } else if (key === "v" || key === "x") {
             const nextMode = flipCircuitToolModeVertical(currentToolMode);
             if (nextMode) {
               dispatch({ type: "SET_TOOL_MODE", mode: nextMode });
@@ -432,21 +432,7 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
         // 处于选择模式 (select): 若有选中元件，H/V 键实现对称翻转；否则敲击主键一键呼出对应元件工具模式
         if (currentToolMode === "select") {
           if (currentSelectedIds.size > 0) {
-            if (key === "h") {
-              const didFlip = flipSelection({
-                source: currentSource,
-                snapshotSource: currentSnapshot.source,
-                scene: currentSnapshot.scene,
-                editHandles: currentSnapshot.editHandles,
-                selectedElementIds: currentSelectedIds,
-                dispatch
-              }, "horizontal");
-              if (didFlip) {
-                event.preventDefault();
-                return;
-              }
-            }
-            if (key === "v") {
+            if (key === "x" || key === "v") {
               const didFlip = flipSelection({
                 source: currentSource,
                 snapshotSource: currentSnapshot.source,
@@ -455,6 +441,20 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
                 selectedElementIds: currentSelectedIds,
                 dispatch
               }, "vertical");
+              if (didFlip) {
+                event.preventDefault();
+                return;
+              }
+            }
+            if (key === "y" || key === "h") {
+              const didFlip = flipSelection({
+                source: currentSource,
+                snapshotSource: currentSnapshot.source,
+                scene: currentSnapshot.scene,
+                editHandles: currentSnapshot.editHandles,
+                selectedElementIds: currentSelectedIds,
+                dispatch
+              }, "horizontal");
               if (didFlip) {
                 event.preventDefault();
                 return;
@@ -483,7 +483,7 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
             return;
           }
         } else {
-          // 处于元件放置模式: 支持 R 键 90度顺时针旋转，H/V 键对称翻转，以及 W / A / S / D / G 子形态/锚点切换
+          // 处于元件放置模式: 支持 R 键 90度顺时针旋转，H/Y/V/X 键对称翻转，以及 W / A / S / D / G 子形态/锚点切换
           if (key === "d" && (vKeyDownRef.current || (Date.now() - lastVKeyDownTimestampRef.current < 600) || currentToolMode.startsWith("addVoltageSource"))) {
             dispatch({ type: "SET_TOOL_MODE", mode: "addVDD" });
             setWarning(null);
@@ -498,14 +498,14 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
               event.preventDefault();
               return;
             }
-          } else if (key === "h") {
+          } else if (key === "h" || key === "y") {
             const nextMode = flipCircuitToolModeHorizontal(currentToolMode);
             if (nextMode) {
               dispatch({ type: "SET_TOOL_MODE", mode: nextMode });
               event.preventDefault();
               return;
             }
-          } else if (key === "v") {
+          } else if (key === "v" || key === "x") {
             const nextMode = flipCircuitToolModeVertical(currentToolMode);
             if (nextMode) {
               dispatch({ type: "SET_TOOL_MODE", mode: nextMode });
