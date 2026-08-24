@@ -1453,7 +1453,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
     \\draw[ultra thick] (0,-0.25) -- (0,0.25);
     \\draw[ultra thick] (0.15,-0.3) -- (0.15,0.3);
     \\draw[thick, line cap=round, line join=round] (0.15,0.2) -- (0.48,0.2) -- (0.48,0.5);
-    \\draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, thick, line cap=round] (0.15,-0.2) -- (0.45,-0.2);
+    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0.15,-0.2) -- (0.45,-0.2);
     \\draw[thick, line cap=round] (0.48,-0.209) -- (0.48,-0.5);
     \\node[node font=\\sffamily\\bfseries] at (-0.55,0.04) {$M_1$};
     \\coordinate (node_Mx.d) at (0.48,0.5);
@@ -1479,8 +1479,8 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
     \\draw[ultra thick] (0,-0.25) -- (0,0.25);
     \\draw[ultra thick] (0.15,-0.3) -- (0.15,0.3);
     \\draw[thick, line cap=round, line join=round] (0.15,-0.2) -- (0.48,-0.2) -- (0.48,-0.5);
-    \\draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, thick, line cap=round] (0.15,0.2) -- (0.45,0.2);
-    \\draw[thick, line cap=round] (0.48,0.5) -- (0.48,0.21);
+    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0.48,0.2) -- (0.19,0.2);
+    \\draw[thick, line cap=round] (0.48,0.5) -- (0.48,0.2);
     \\node[node font=\\sffamily\\bfseries] at (-0.55,0.04) {$M_1$};
     \\coordinate (node_Mx.d) at (0.48,-0.5);
     \\coordinate (node_Mx.s) at (0.48,0.5);

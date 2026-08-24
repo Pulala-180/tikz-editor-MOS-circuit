@@ -21,6 +21,7 @@ import type { CanvasTransform, ToolMode } from "../../store/types";
 import { clientToWorldPoint } from "./geometry";
 import { makeMergeKey, selectionAnchorRatioFromPoint } from "./panel-helpers";
 import {
+  collectAllScopeDescendantSourceIds,
   isSourceWithinScope,
   type ScopeOverlayIndex,
   resolveFocusedScopeIdForSelection,
@@ -170,6 +171,7 @@ export function useCanvasElementInteractions(args: UseCanvasElementInteractionsA
       }
 
       const snapExcludedSourceIds = collectSnapExcludedSourceIds(draggedIds, scopeOverlay, snapshot.scene?.elements);
+      const scopeInternalSourceIds = collectAllScopeDescendantSourceIds(scopeOverlay);
       const selectedForSnap = new Set(snapExcludedSourceIds);
       const endpointSourceIds = snapshot.scene
         ? collectOpenPathEndpointSourceIds(snapshot.scene.elements, snapshot.editHandles)
@@ -183,7 +185,8 @@ export function useCanvasElementInteractions(args: UseCanvasElementInteractionsA
             guides: snapGuideInput,
             settings: snapSettingsPatch,
             zoom: canvasTransform.scale,
-            viewportWorld: viewportWorldBounds
+            viewportWorld: viewportWorldBounds,
+            excludedSourceIds: scopeInternalSourceIds
           })
         : null;
       const worldBoundsBySource = snapshot.scene

@@ -1,3 +1,5 @@
+import { worldPoint } from "../../coords/points.js";
+import { pt } from "../../coords/scalars.js";
 import { buildVisibleGaps } from "./gap-snaps.js";
 import {
   boundsIntersect,
@@ -5,7 +7,8 @@ import {
   collectPathEndpointSnapPoints,
   collectSourceReferenceBounds,
   collectSourceSnapPoints,
-  expandBounds
+  expandBounds,
+  pointWithinBounds
 } from "./geometry.js";
 import {
   DEFAULT_SNAP_SETTINGS,
@@ -48,6 +51,12 @@ export function buildSnapContext(input: BuildSnapContextInput): SnapContext {
   const settings = resolveSnapSettings(input.settings);
   const zoom = Math.max(input.zoom, 1e-6);
   const selectedSet = new Set(input.selectedSourceIds);
+  const excludedSet =
+    input.excludedSourceIds instanceof Set
+      ? input.excludedSourceIds
+      : input.excludedSourceIds
+        ? new Set(input.excludedSourceIds)
+        : null;
   const viewportWorld = input.viewportWorld ?? null;
   const viewportPaddingWorld = settings.viewportPaddingPx / zoom;
   const viewportFilter = viewportWorld ? expandBounds(viewportWorld, viewportPaddingWorld) : null;
@@ -56,7 +65,7 @@ export function buildSnapContext(input: BuildSnapContextInput): SnapContext {
   const referenceBounds: SnapBounds[] = [];
 
   for (const bounds of sourceBounds.values()) {
-    if (selectedSet.has(bounds.sourceId)) {
+    if (selectedSet.has(bounds.sourceId) || excludedSet?.has(bounds.sourceId)) {
       continue;
     }
 
@@ -71,13 +80,33 @@ export function buildSnapContext(input: BuildSnapContextInput): SnapContext {
   if (input.editHandles) {
     const endpointSourceIds = collectOpenPathEndpointSourceIds(input.sceneElements, input.editHandles);
     for (const point of collectPathEndpointSnapPoints(input.editHandles, endpointSourceIds)) {
-      if (selectedSet.has(point.sourceId)) {
+      if (selectedSet.has(point.sourceId) || excludedSet?.has(point.sourceId)) {
         continue;
       }
       if (viewportFilter && !pointWithinBounds(point, viewportFilter)) {
         continue;
       }
       referencePoints.push(point);
+    }
+  }
+  if (input.nodeAnchorTargets) {
+    for (const target of input.nodeAnchorTargets) {
+      if (target.tier !== "basic") {
+        continue;
+      }
+      const targetSourceId = target.nodeSourceId || target.nodeName;
+      if (selectedSet.has(targetSourceId)) {
+        continue;
+      }
+      if (viewportFilter && !pointWithinBounds(target.world, viewportFilter)) {
+        continue;
+      }
+      referencePoints.push(
+        Object.assign(
+          worldPoint(pt(target.world.x), pt(target.world.y)),
+          { sourceId: targetSourceId, role: "endpoint" as const }
+        )
+      );
     }
   }
   const visibleGaps = settings.gaps.enabled

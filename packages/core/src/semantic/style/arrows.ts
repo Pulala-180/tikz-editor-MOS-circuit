@@ -472,22 +472,10 @@ function makeDefaultArrowTip(kind: ArrowTipKind, lineWidth = 0.4): ArrowTip {
   }
 
   if (kind === "triangle") {
+    const tip = buildStealthTip(DEFAULT_GEOMETRIC_LENGTH_BASE_PT + DEFAULT_GEOMETRIC_LENGTH_LINE_FACTOR * baseLineWidth, null, 0, baseLineWidth);
     return {
-      kind,
-      open: false,
-      round: false,
-      reversed: false,
-      bend: false,
-      afterLineEnd: false,
-      color: null,
-      fill: null,
-      length: 8,
-      width: 8,
-      inset: null,
-      sep: 0,
-      lineWidth: baseLineWidth,
-      arc: null,
-      rayCount: null
+      ...tip,
+      kind: "triangle"
     };
   }
 
@@ -665,7 +653,8 @@ function applyArrowTipOptions(base: ArrowTip, optionsRaw: string | null, context
   let nominalInset = nominalLength * DEFAULT_STEALTH_INSET_FACTOR;
   let widthExplicit = false;
   let insetExplicit = false;
-  const isGeometricMetaTip = tip.kind === "stealth" || tip.kind === "latex" || tip.kind === "kite";
+  let lineWidthExplicit = false;
+  const isGeometricMetaTip = tip.kind === "stealth" || tip.kind === "latex" || tip.kind === "kite" || tip.kind === "triangle";
   if (!isGeometricMetaTip) {
     nominalLength = length;
     nominalWidth = width;
@@ -802,12 +791,13 @@ function applyArrowTipOptions(base: ArrowTip, optionsRaw: string | null, context
       const parsed = parseArrowDimension(entry.valueRaw, normalizedContextLineWidth);
       if (parsed != null && parsed >= 0) {
         lineWidth = parsed;
+        lineWidthExplicit = true;
       }
       continue;
     }
     if (key === "sep") {
       const parsed = parseArrowDimension(entry.valueRaw, normalizedContextLineWidth);
-      if (parsed != null && parsed >= 0) {
+      if (parsed != null && Number.isFinite(parsed)) {
         sep = parsed;
       }
       continue;
@@ -828,7 +818,7 @@ function applyArrowTipOptions(base: ArrowTip, optionsRaw: string | null, context
       nominalWidth = nominalLength * DEFAULT_GEOMETRIC_WIDTH_FACTOR;
     }
     if (!insetExplicit) {
-      nominalInset = nominalLength * DEFAULT_STEALTH_INSET_FACTOR;
+      nominalInset = tip.kind === "triangle" ? 0 : nominalLength * DEFAULT_STEALTH_INSET_FACTOR;
     }
 
     if (tip.kind === "stealth") {
@@ -838,7 +828,16 @@ function applyArrowTipOptions(base: ArrowTip, optionsRaw: string | null, context
         length: stealth.length,
         width: stealth.width,
         inset: stealth.inset,
-        lineWidth: stealth.lineWidth
+        lineWidth: lineWidthExplicit ? stealth.lineWidth : null
+      };
+    } else if (tip.kind === "triangle") {
+      const triangle = buildStealthTip(nominalLength, nominalWidth, 0, lineWidth);
+      tip = {
+        ...tip,
+        length: triangle.length,
+        width: triangle.width,
+        inset: 0,
+        lineWidth: lineWidthExplicit ? triangle.lineWidth : null
       };
     } else if (tip.kind === "kite") {
       const kite = buildKiteTip(nominalLength, nominalWidth, nominalInset, lineWidth);
@@ -847,7 +846,7 @@ function applyArrowTipOptions(base: ArrowTip, optionsRaw: string | null, context
         length: kite.length,
         width: kite.width,
         inset: kite.inset,
-        lineWidth: kite.lineWidth
+        lineWidth: lineWidthExplicit ? kite.lineWidth : null
       };
     } else {
       const latex = buildLatexTip(nominalLength, nominalWidth, lineWidth);
@@ -855,7 +854,7 @@ function applyArrowTipOptions(base: ArrowTip, optionsRaw: string | null, context
         ...tip,
         length: latex.length,
         width: latex.width,
-        lineWidth: latex.lineWidth
+        lineWidth: lineWidthExplicit ? latex.lineWidth : null
       };
     }
   } else {
@@ -864,7 +863,7 @@ function applyArrowTipOptions(base: ArrowTip, optionsRaw: string | null, context
       length: Math.max(0, length),
       width: Math.max(0, width),
       inset: tip.inset == null && inset <= EPSILON ? null : Math.max(0, inset),
-      lineWidth: Math.max(0, lineWidth)
+      lineWidth: lineWidthExplicit ? Math.max(0, lineWidth) : null
     };
   }
 
@@ -874,7 +873,7 @@ function applyArrowTipOptions(base: ArrowTip, optionsRaw: string | null, context
 
   return {
     ...tip,
-    sep: Math.max(0, sep)
+    sep: Number.isFinite(sep) ? sep : 0
   };
 }
 

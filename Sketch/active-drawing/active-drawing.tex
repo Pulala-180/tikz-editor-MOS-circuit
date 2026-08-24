@@ -1,14 +1,95 @@
-\begin{tikzpicture}
-  \begin{scope}[shift={(0,0)}]
-    \coordinate (node_Mx.g) at (0,0);
-    \draw[thick, line cap=round] (0,0) -- (0.26,0);
-    \draw[ultra thick] (0.25,-0.25) -- (0.25,0.25);
-    \draw[ultra thick] (0.41,-0.3) -- (0.41,0.3);
-    \draw[thick, line cap=round, line join=round] (0.40,0.2) -- (0.73,0.2) -- (0.73,0.5);
-    \draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, thick, line cap=round] (0.40,-0.2) -- (0.70,-0.2);
-    \draw[thick, line cap=round] (0.73,-0.21) -- (0.73,-0.5);
-    \node[node font=\sffamily\bfseries] at (1.04,0) {\textit{M}\textsubscript{\textup{1}}};
-    \coordinate (node_Mx.d) at (0.73,0.5);
-    \coordinate (node_Mx.s) at (0.73,-0.5);
+\begin{tikzpicture}[font=\sffamily, >=latex]
+  % Exact matching colors for dots and coordinate text
+  \definecolor{ptgreen}{RGB}{70, 180, 20}
+  \definecolor{ptred}{RGB}{210, 40, 40}
+  \definecolor{linepurple}{RGB}{135, 90, 235}
+  \definecolor{lineteal}{RGB}{25, 115, 105}
+  \definecolor{lineblue}{RGB}{30, 100, 220}
+  \definecolor{lineorange}{RGB}{215, 105, 30}
+
+  \tikzset{
+    frame line/.style={thick, color=black},
+    tick line/.style={thick, color=black},
+    tick font/.style={font=\sffamily\fontsize{6.2pt}{7.5pt}\selectfont, color=black},
+    curve Ix/.style={line width=1.4pt, color=linepurple},
+    curve gm/.style={line width=1.4pt, color=lineteal},
+    curve Vout/.style={line width=1.4pt, color=lineteal},
+    ref line/.style={line width=1.1pt, color=lineorange},
+    guide line/.style={dashed, line width=0.7pt, color=gray!80},
+    dot green/.style={circle, fill=ptgreen, draw=black, line width=0.5pt, inner sep=1.4pt},
+    dot red/.style={circle, fill=ptred, draw=black, line width=0.5pt, inner sep=1.4pt},
+    lbl green/.style={font=\sffamily\fontsize{7pt}{8pt}\selectfont\bfseries, color=ptgreen},
+    lbl red/.style={font=\sffamily\fontsize{7pt}{8pt}\selectfont\bfseries, color=ptred}
+  }
+  % ========================================================
+  % LEFT PLOT: Ix vs Vx (width=5.4cm, height=5.4cm)
+  % ========================================================
+  \begin{scope}[x=1.8cm, y=4.5cm]
+    \draw[frame line] (0,-0.8) rectangle (3,0.4);
+    \node[above=8pt] at (1.5, 0.4) {\large $V_G = 1.9\text{ V},\, V_S = 1.0\text{ V}$};
+    \node[rotate=90, anchor=south, color=linepurple] at (-0.32, -0.2) {$I_x\text{ / (mA)}$};
+    \node[anchor=north] at (1.5, -0.89) {$V_x\text{ / (V)}$};
+
+    % X Ticks on BOTTOM (13 ticks)
+    \foreach \x in {0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0} {
+      \draw[tick line] (\x, -0.8) -- (\x, -0.76);
+    }
+    \foreach \x/\lbl in {0/0, 0.25/0.25, 0.5/0.5, 0.75/0.75, 1.0/1, 1.25/1.25, 1.5/1.5, 1.75/1.75, 2.0/2, 2.25/2.25, 2.5/2.5, 2.75/2.75, 3.0/3} {
+      \node[below=2pt, tick font] at (\x, -0.8) {\lbl};
+    }
+
+    % Y Ticks on LEFT only
+    \foreach \y in {-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4} {
+      \draw[tick line] (0, \y) -- (0.025, \y);
+      \node[left=2pt, tick font] at (0, \y) {\y};
+    }
+
+    % Curves: Exact C1 continuous piecewise formula:
+    % 1. S-D interchange triode (0 to 1.0): -0.5 * (1-t) * (1.4-t)
+    % 2. Normal triode (1.0 to 1.2): 0.2*(t-1) - 0.5*(t-1)^2 -> at 1.2, value is 0.02, slope is 0
+    % 3. Flat sat plateau (1.2 to 3.0): 0.02 (perfect seamless horizontal connection)
+    \draw[curve Ix] plot[domain=0:1.0, samples=35, variable=\t] (\t, {-0.5 * (1-\t)*(1.4 - \t)});
+    \draw[curve Ix] plot[domain=1.0:1.2, samples=25, variable=\t] (\t, {0.2*(\t-1) - 0.5*(\t-1)^2});
+    \draw[curve Ix] (1.2, 0.02) -- (3.0, 0.02);
+
+    % Points
+    \node[dot green] at (1.0, 0) {};
+    \node[lbl green, above left=1pt] at (1.0, 0.02) {(1.0, 0)};
+    \node[dot green] at (1.2, 0.02) {};
+    \node[lbl green, above=3pt] at (1.2, 0.02) {(1.2, 0.02)};
+  \end{scope}
+
+  % ========================================================
+  % RIGHT PLOT: gm vs Vx (width=5.4cm, height=5.4cm)
+  % ========================================================
+  \begin{scope}[shift={(6.8cm, 4.05cm)}, x=1.8cm, y=3.375cm]
+    \draw[frame line] (0,-1.2) rectangle (3,0.4);
+    \node[above=8pt] at (1.5, 0.4) {\large $V_G = 1.9\text{ V},\, V_S = 1.0\text{ V}$};
+    \node[rotate=90, anchor=south, color=ptred] at (-0.32, -0.4) {$g_m\text{ / (mS)}$};
+    \node[anchor=north] at (1.5, -1.29) {$V_x\text{ / (V)}$};
+
+    % X Ticks on BOTTOM (13 ticks)
+    \foreach \x in {0, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5, 2.75, 3.0} {
+      \draw[tick line] (\x, -1.2) -- (\x, -1.15);
+    }
+    \foreach \x/\lbl in {0/0, 0.25/0.25, 0.5/0.5, 0.75/0.75, 1.0/1, 1.25/1.25, 1.5/1.5, 1.75/1.75, 2.0/2, 2.25/2.25, 2.5/2.5, 2.75/2.75, 3.0/3} {
+      \node[below=2pt, tick font] at (\x, -1.2) {\lbl};
+    }
+
+    % Y Ticks on LEFT only
+    \foreach \y in {-1.2, -1.0, -0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4} {
+      \draw[tick line] (0, \y) -- (0.025, \y);
+      \node[left=2pt, tick font] at (0, \y) {\y};
+    }
+
+    % Curves: Linear rise from (0, -1.0) to (1.2, 0.2), then flat horizontal line at 0.2
+    \draw[curve gm] (0, -1.0) -- (1.2, 0.2);
+    \draw[curve gm] (1.2, 0.2) -- (3.0, 0.2);
+
+    % Points
+    \node[dot red] at (1.0, 0) {};
+    \node[lbl red, below=3pt] at (1.0, 0) {(1.0, 0)};
+    \node[dot red] at (1.2, 0.2) {};
+    \node[lbl red, above=2pt] at (1.2, 0.2) {(1.2, 0.2)};
   \end{scope}
 \end{tikzpicture}

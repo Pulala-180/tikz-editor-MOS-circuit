@@ -290,11 +290,11 @@ export function ToolPreviewOverlay({
             <path
               key={`circuit-preview-path-${idx}`}
               d={path.d}
-              stroke={path.fill === "currentColor" ? "none" : "currentColor"}
-              fill={path.fill === "currentColor" ? "currentColor" : "none"}
+              stroke={path.stroke === "none" ? "none" : "currentColor"}
+              fill={path.fill === "none" || !path.fill ? "none" : "currentColor"}
               strokeWidth={path.strokeWidth ?? 0.8}
               strokeLinecap={path.strokeLinecap ?? "butt"}
-              strokeLinejoin="miter"
+              strokeLinejoin={path.strokeLinejoin ?? "miter"}
             />
           ))}
           {toolPreview.data.texts?.map((t, idx) => (
@@ -309,7 +309,7 @@ export function ToolPreviewOverlay({
               stroke="none"
               style={{
                 userSelect: "none",
-                fontFamily: "Arial, sans-serif",
+                fontFamily: "MJX-NCM-Sans, CMU Sans Serif, Latin Modern Sans, Helvetica, Arial, sans-serif",
                 fontWeight: "bold"
               }}
             >

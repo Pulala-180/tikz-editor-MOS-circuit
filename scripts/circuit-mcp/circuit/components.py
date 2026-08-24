@@ -59,7 +59,7 @@ _NMOS_BODY = "\n".join([
     r"\draw[ultra thick] (0.55,0.25) -- (0.55,0.75);",
     r"\draw[ultra thick] (0.7,0.2) -- (0.7,0.8);",
     r"\draw[thick, line cap=round, line join=round] (0.7,0.70) -- (1.03,0.70) --(1.03,1);",
-    r"\draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, thick, line cap=round] (0.7,0.3) -- (1.0,0.3);",
+    r"\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0.7,0.3) -- (1.0,0.3);",
     r"\draw[thick, line cap=round] (1.03,0.291) -- (1.03,0);",
 ])
 _NMOS_LABEL = r"""\node[node font=\sffamily\bfseries] at (0,0.54) {{LABEL}};"""
@@ -69,8 +69,8 @@ _PMOS_BODY = "\n".join([
     r"\draw[ultra thick] (0.55,0.25) -- (0.55,0.75);",
     r"\draw[ultra thick] (0.7,0.2) -- (0.7,0.8);",
     r"\draw[thick, line cap=round, line join=round] (0.7,0.30) -- (1.03,0.30) --(1.03,0);",
-    r"\draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, thick, line cap=round] (0.7,0.7) -- (1.0,0.7);",
-    r"\draw[thick, line cap=round] (1.03,1) -- (1.03,0.71);",
+    r"\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (1.03,0.7) -- (0.74,0.7);",
+    r"\draw[thick, line cap=round] (1.03,1) -- (1.03,0.7);",
 ])
 _PMOS_LABEL = r"""\node[node font=\sffamily\bfseries] at (0,0.54) {{LABEL}};"""
 

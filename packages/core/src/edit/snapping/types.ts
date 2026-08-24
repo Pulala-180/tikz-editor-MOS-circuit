@@ -27,14 +27,14 @@ export const GRID_MINOR_TARGET_PX = 22;
 export const DEFAULT_SNAP_SETTINGS: SnapSettings = {
   thresholdPx: px(20),
   grid: {
-    enabled: true,
+    enabled: false,
     minorTargetPx: px(GRID_MINOR_TARGET_PX)
   },
   points: {
     enabled: true
   },
   gaps: {
-    enabled: true,
+    enabled: false,
     maxPairsPerAxis: 100000
   },
   bypassWithCtrlOrMeta: true,
@@ -122,10 +122,12 @@ export type BuildSnapContextInput = {
   sceneElements: SceneElement[];
   selectedSourceIds: readonly string[];
   editHandles?: readonly EditHandle[];
+  nodeAnchorTargets?: readonly NodeAnchorTarget[];
   zoom: number;
   viewportWorld?: WorldBounds | null;
   guides?: SnapGuideInput;
   settings?: SnapSettingsPatch;
+  excludedSourceIds?: ReadonlySet<string> | readonly string[];
 };
 
 export type SnapSelectionTranslationInput = {

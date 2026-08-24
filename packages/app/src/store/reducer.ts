@@ -51,10 +51,10 @@ function initialUiState(): WorkspaceEphemeralState {
     showGrid: true,
     showTransparencyGrid: false,
     snapModes: {
-      grid: true,
-      guides: true,
+      grid: false,
+      guides: false,
       points: true,
-      gaps: true
+      gaps: false
     },
     showRulers: true,
     showGuides: true,

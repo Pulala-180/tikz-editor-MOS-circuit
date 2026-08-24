@@ -2876,7 +2876,9 @@ export const CanvasPanel = memo(function CanvasPanel({
     viewportWorldBounds,
     resizeFramesBySource,
     setDragState,
-    interactionSvgRef
+    interactionSvgRef,
+    scopeOverlay,
+    nodeAnchorTargets
   });
 
   const { onElementPointerDown, onElementDoubleClick } = useCanvasElementInteractions({
@@ -3109,6 +3111,7 @@ export const CanvasPanel = memo(function CanvasPanel({
     setRoundedLineDraft,
     orthoWireDraft,
     setOrthoWireDraft,
+    scopeOverlay,
     parseOptions: editParseOptions,
     magnifierState
   });

@@ -52,57 +52,40 @@ export function resolveEndpointAnchorSnap(input: {
     }
   }
 
-  let nearestNodeAnchors: NodeAnchorTarget[] | null = null;
-  let nearestNodeDistanceSq = Number.POSITIVE_INFINITY;
+  const visibleAnchorGroups: NodeAnchorTarget[][] = [];
   const nearestMatrixCellHint = resolveNearestMatrixCellHint(input.pointerWorld, input.matrixCellAnchorHints ?? []);
   const preferredMatrixCellAnchors = nearestMatrixCellHint
     ? resolvePreferredMatrixCellAnchors(byNode, nearestMatrixCellHint.row, nearestMatrixCellHint.column, input.pointerWorld)
     : null;
-  if (preferredMatrixCellAnchors && preferredMatrixCellAnchors.distanceSq <= revealNodeRadiusSq) {
-    nearestNodeAnchors = preferredMatrixCellAnchors.anchors;
-    nearestNodeDistanceSq = preferredMatrixCellAnchors.distanceSq;
-  }
+
   for (const anchors of byNode.values()) {
     const extent = deriveNodeExtent(anchors);
     if (!extent) {
       continue;
     }
     const distSq = distanceSquaredToBounds(input.pointerWorld, extent);
-    if (distSq < nearestNodeDistanceSq) {
-      nearestNodeDistanceSq = distSq;
-      nearestNodeAnchors = anchors;
+    if (distSq <= revealNodeRadiusSq) {
+      visibleAnchorGroups.push(anchors);
     }
   }
 
-  if (!nearestNodeAnchors || nearestNodeDistanceSq > revealNodeRadiusSq) {
-    return {
-      visibleAnchors: [],
-      snappedAnchor: null
-    };
-  }
-
-  const visibleAnchorGroups: NodeAnchorTarget[][] = [nearestNodeAnchors];
-  const nearestNodeName = nearestNodeAnchors[0] ? nodeAnchorTargetKey(nearestNodeAnchors[0]) : null;
   if (
     preferredMatrixCellAnchors &&
     preferredMatrixCellAnchors.distanceSq <= revealNodeRadiusSq &&
     preferredMatrixCellAnchors.anchors.length > 0
   ) {
-    const preferredName = preferredMatrixCellAnchors.anchors[0] ? nodeAnchorTargetKey(preferredMatrixCellAnchors.anchors[0]) : null;
-    if (preferredName && preferredName !== nearestNodeName) {
-      visibleAnchorGroups.push(preferredMatrixCellAnchors.anchors);
-    }
+    visibleAnchorGroups.push(preferredMatrixCellAnchors.anchors);
     const relatedMatrixAnchors = resolveRelatedMatrixNodeAnchors(byNode, preferredMatrixCellAnchors.anchors, input.pointerWorld);
     if (relatedMatrixAnchors && relatedMatrixAnchors.distanceSq <= revealNodeRadiusSq) {
-      const relatedName = relatedMatrixAnchors.anchors[0] ? nodeAnchorTargetKey(relatedMatrixAnchors.anchors[0]) : null;
-      if (
-        relatedName &&
-        relatedName !== nearestNodeName &&
-        relatedName !== preferredName
-      ) {
-        visibleAnchorGroups.push(relatedMatrixAnchors.anchors);
-      }
+      visibleAnchorGroups.push(relatedMatrixAnchors.anchors);
     }
+  }
+
+  if (visibleAnchorGroups.length === 0) {
+    return {
+      visibleAnchors: [],
+      snappedAnchor: null
+    };
   }
 
   const uniqueVisibleAnchors = new Map<string, NodeAnchorTarget>();

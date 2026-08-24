@@ -83,6 +83,16 @@ export function buildScopeOverlayIndex(
   };
 }
 
+export function collectAllScopeDescendantSourceIds(scopeOverlay: ScopeOverlayIndex): Set<string> {
+  const set = new Set<string>();
+  for (const [sourceId, ancestors] of scopeOverlay.ancestorScopeIdsBySourceId.entries()) {
+    if (ancestors.length > 0) {
+      set.add(sourceId);
+    }
+  }
+  return set;
+}
+
 export function augmentScopeOverlayWithMatrices(
   baseOverlay: ScopeOverlayIndex,
   sceneElements: readonly SceneElement[] | undefined,

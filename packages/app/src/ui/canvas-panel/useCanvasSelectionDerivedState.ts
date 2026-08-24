@@ -894,6 +894,7 @@ function deriveUnnamedNodeAnchorTargets(input: {
   sourceBoundsWorld: ReadonlyMap<string, WorldBounds>;
 }): NodeAnchorTarget[] {
   const nodeNamesBySourceId = collectNodeNamesBySourceId(input.statements);
+  const scopeInternalIds = collectScopeDescendantStatementIds(input.statements);
   const targets: NodeAnchorTarget[] = [];
   const seen = new Set<string>();
   for (const handle of input.editHandles) {
@@ -901,6 +902,9 @@ function deriveUnnamedNodeAnchorTargets(input: {
       continue;
     }
     const sourceId = handle.sourceRef.sourceId;
+    if (scopeInternalIds.has(sourceId)) {
+      continue;
+    }
     if (!nodeNamesBySourceId.has(sourceId) || nodeNamesBySourceId.get(sourceId)) {
       continue;
     }
@@ -942,6 +946,22 @@ function deriveUnnamedNodeAnchorTargets(input: {
     }
   }
   return targets;
+}
+
+function collectScopeDescendantStatementIds(statements: readonly Statement[]): Set<string> {
+  const set = new Set<string>();
+  const visit = (items: readonly Statement[], inScope: boolean) => {
+    for (const item of items) {
+      if (inScope) {
+        set.add(item.id);
+      }
+      if (item.kind === "Scope") {
+        visit(item.body, true);
+      }
+    }
+  };
+  visit(statements, false);
+  return set;
 }
 
 function collectNodeNamesBySourceId(statements: readonly Statement[]): Map<string, string> {

@@ -827,7 +827,7 @@ export function collectNodeAnchorTargets(context: SemanticContext): NodeAnchorTa
   }
 
   for (const [nodeName, geometry] of context.namedNodeGeometries) {
-    const addTarget = (anchor: string, world: WorldPoint) => {
+    const addTarget = (anchor: string, world: WorldPoint, explicitTier?: "basic" | "special") => {
       const normalizedAnchor = anchor.trim().toLowerCase();
       if (normalizedAnchor.length === 0) {
         return;
@@ -842,7 +842,7 @@ export function collectNodeAnchorTargets(context: SemanticContext): NodeAnchorTa
         nodeSourceId: geometry.sourceId,
         anchor: normalizedAnchor,
         world: worldPoint(pt(world.x), pt(world.y)),
-        tier: BASIC_ANCHORS.has(normalizedAnchor) ? "basic" : "special"
+        tier: explicitTier ?? (BASIC_ANCHORS.has(normalizedAnchor) ? "basic" : "special")
       });
     };
 
@@ -852,7 +852,7 @@ export function collectNodeAnchorTargets(context: SemanticContext): NodeAnchorTa
       continue;
     }
     for (const entry of anchors) {
-      addTarget(entry.anchor, entry.world);
+      addTarget(entry.anchor, entry.world, "basic");
     }
   }
 
@@ -869,7 +869,7 @@ export function collectNodeAnchorTargets(context: SemanticContext): NodeAnchorTa
         nodeSourceId: "",
         anchor: normalizedAnchor,
         world: worldPoint(pt(entry.world.x), pt(entry.world.y)),
-        tier: BASIC_ANCHORS.has(normalizedAnchor) ? "basic" : "special"
+        tier: "basic"
       });
     }
   }

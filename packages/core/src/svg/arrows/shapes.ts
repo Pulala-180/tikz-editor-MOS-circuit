@@ -107,7 +107,12 @@ function buildRawTipPaths(tip: NormalizedArrowTip): ArrowLocalPathCommand[][] {
   }
 
   if (tip.kind === "triangle") {
-    return [[moveTo(0, halfWidth), lineTo(tip.length, 0), lineTo(0, -halfWidth), close()]];
+    const params = computeStealthShapeParameters({ ...tip, inset: 0 });
+    const tipX = params.innerLength + params.backMiter;
+    const topX = params.backMiter;
+    const insetX = params.insetMiter;
+    const innerHalfWidth = params.innerHalfWidth;
+    return [[moveTo(tipX, 0), lineTo(topX, innerHalfWidth), lineTo(insetX, 0), lineTo(topX, -innerHalfWidth), close()]];
   }
 
   if (tip.kind === "triangle-cap") {

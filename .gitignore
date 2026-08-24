@@ -1,4 +1,4 @@
-﻿# Dependencies
+# Dependencies
 node_modules/
 .pnp
 .pnp.js
@@ -45,3 +45,9 @@ Thumbs.db
 .env
 .env.local
 .env.*.local
+
+# Courseware & Private drafts
+Sketch/模*
+**/模*
+*模*
+

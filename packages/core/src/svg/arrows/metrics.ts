@@ -36,7 +36,7 @@ export function normalizeArrowTip(tip: ArrowTipInput, contextLineWidth: number, 
     afterLineEnd: tip.afterLineEnd ?? false,
     length: Math.max(0.01, tip.length),
     width: Math.max(0.01, tip.width),
-    sep: Math.max(0, tip.sep),
+    sep: tip.sep,
     lineWidth,
     color: tip.color ?? fallbackColor
   };
@@ -197,7 +197,25 @@ export function buildArrowTipMetrics(tip: NormalizedArrowTip, contextLineWidth: 
     return metrics;
   }
 
-  if (tip.kind === "triangle" || tip.kind === "triangle-cap") {
+  if (tip.kind === "triangle") {
+    const params = computeStealthShapeParameters({ ...tip, inset: 0 });
+    let metrics: ArrowTipMetrics = {
+      tipEnd: tip.round ? params.innerLength + params.backMiter + 0.5 * params.lineWidth : params.length,
+      backEnd: tip.round ? params.backMiter - 0.5 * params.lineWidth : 0,
+      lineEnd: tip.reversed
+        ? params.innerLength + params.backMiter - 0.25 * normalizeLineWidth(contextLineWidth, contextLineWidth)
+        : params.insetMiter - 0.25 * params.lineWidth,
+      visualTipEnd: tip.round ? params.innerLength + params.backMiter + 0.5 * params.lineWidth : params.length,
+      visualBackEnd: 0,
+      sep: tip.sep
+    };
+    if (tip.reversed) {
+      metrics = reverseMetrics(metrics);
+    }
+    return metrics;
+  }
+
+  if (tip.kind === "triangle-cap") {
     let metrics: ArrowTipMetrics = {
       tipEnd: tip.length,
       backEnd: 0,

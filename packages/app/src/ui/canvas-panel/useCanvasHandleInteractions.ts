@@ -25,6 +25,7 @@ import {
   resolveScenePathShapeHint,
   resizeCursorForRole
 } from "./panel-helpers";
+import { collectAllScopeDescendantSourceIds, type ScopeOverlayIndex } from "./scope-overlay";
 import type { DragCapability } from "./drag-capability";
 import type {
   CanvasDispatch,
@@ -59,6 +60,8 @@ export type UseCanvasHandleInteractionsArgs = {
   resizeFramesBySource: ReadonlyMap<string, ResizeFrame | null>;
   setDragState: ValueSetter<DragState | null>;
   interactionSvgRef: RefObject<SVGSVGElement | null>;
+  scopeOverlay?: ScopeOverlayIndex;
+  nodeAnchorTargets?: readonly NodeAnchorTarget[];
   parseOptions?: CanvasEditParseOptions;
 };
 
@@ -150,6 +153,8 @@ export function useCanvasHandleInteractions(args: UseCanvasHandleInteractionsArg
     resizeFramesBySource,
     setDragState,
     interactionSvgRef,
+    scopeOverlay,
+    nodeAnchorTargets,
     parseOptions
   } = args;
 
@@ -197,15 +202,18 @@ export function useCanvasHandleInteractions(args: UseCanvasHandleInteractionsArg
         return;
       }
 
+      const scopeInternalSourceIds = scopeOverlay ? collectAllScopeDescendantSourceIds(scopeOverlay) : undefined;
       const snapContext = snapshot.scene
         ? buildSnapContext({
             sceneElements: snapshot.scene.elements,
             selectedSourceIds: [handle.sourceRef.sourceId],
             editHandles: snapshot.editHandles,
+            nodeAnchorTargets,
             guides: snapGuideInput,
             settings: snapSettingsPatch,
             zoom: canvasTransform.scale,
-            viewportWorld: viewportWorldBounds
+            viewportWorld: viewportWorldBounds,
+            excludedSourceIds: scopeInternalSourceIds
           })
         : null;
       setSnapLines([]);
