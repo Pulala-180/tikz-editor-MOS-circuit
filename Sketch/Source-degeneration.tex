@@ -13,8 +13,8 @@
       \coordinate (node_Mx.d) at (0.73,0.5);
       \coordinate (node_Mx.s) at (0.73,-0.5);
     \end{scope}
-  \draw[thick, line cap=round] (0.73,2.6) -- (0.73,1.82);
-  \begin{scope}[shift={(0.73,1.822)}]
+  \draw[thick, line cap=round] (0.73,2.6) -- (0.73,1.59);
+  \begin{scope}[shift={(0.73,1.59)}]
       \coordinate (node_Rx.t) at (0,0);
       \draw[thick, line cap=round] (0,0) -- (0,-0.15) -- (0.15,-0.19) -- (-0.15,-0.27) -- (0.15,-0.35) -- (-0.15,-0.43) -- (0.15,-0.51) -- (-0.15,-0.59) -- (0,-0.63) -- (0,-0.78);
       \node[right] at (0.25,-0.39) {$R_S
@@ -27,30 +27,31 @@ $};
       \draw[thick, line cap=round] (0.15,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.6,0);
       \coordinate (node_IOx.port) at (0.6,0);
     \end{scope}
-  \draw[thick, line cap=round] (0.73,3.6) -- (0.73,4.58);
-  \begin{scope}[shift={(0.73,4.58)}]
+  \draw[thick, line cap=round] (0.73,3.6) -- (0.73,5.92);
+  \begin{scope}[shift={(0.73,5.92)}]
       \coordinate (node_Rx2.b) at (0,0);
       \draw[thick, line cap=round] (0,0) -- (0,0.15) -- (0.15,0.19) -- (-0.15,0.27) -- (0.15,0.35) -- (-0.15,0.43) -- (0.15,0.51) -- (-0.15,0.59) -- (0,0.63) -- (0,0.78);
       \node[right] at (0.25,0.39) {$R_D$};
       \coordinate (node_Rx2.t) at (0,0.78);
     \end{scope}
-  \draw[thick, line cap=round] (0.73,5.36) -- (0.73,6.12);
-  \begin{scope}[shift={(0.73,6.12)}]
+  \draw[thick, line cap=round] (0.73,6.7) -- (0.73,7.36);
+  \begin{scope}[shift={(0.73,7.36)}]
       \coordinate (node_VDD.bottom) at (0,0);
       \draw[ultra thick] (-0.95,0) -- (0.9,0);
-      \node[draw=none] at (1.2,0) {$V_{DD}$};
+      \node[draw=none] at (1.22,-0.22) {$V_{DD}$};
     \end{scope}
   \draw[thick, fill=black] (0.73,4) circle (0.06);
-  \draw[thick, line cap=round] (0.75,4) -- (1.63,4);
-  \begin{scope}[shift={(1.48,4)}]
+  \draw[thick, line cap=round] (0.75,4) -- (1.38,4);
+  \begin{scope}[shift={(1.235,4)}]
       \node at (0.85,-0.30) {$V_{out}$};
       \draw[thick, line cap=round] (0.6,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.15,0);
       \coordinate (node_IOx2.port) at (0.15,0);
     \end{scope}
-  \draw[thick, line cap=round] (0.73,1.04) -- (0.73,0.94);
-  \draw[thick, line cap=round] (0.73,0.94) -- (0.73,0.56);
 
-  \begin{scope}[shift={(0.73,0.56)}]
+
+  \draw[thick, line cap=round] (0.73,0.81) -- (0.73,0.2);
+
+  \begin{scope}[shift={(0.73,0.21)}]
       \coordinate (node_GND.top) at (0,0);
       \draw[thick, line cap=round] (0,0) -- (0,-0.21);
       \draw[ultra thick] (-0.17,-0.21) -- (0.17,-0.21);
