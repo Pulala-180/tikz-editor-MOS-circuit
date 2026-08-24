@@ -50,4 +50,7 @@ Thumbs.db
 Sketch/模*
 **/模*
 *模*
+Sketch/[0-9]*
+Sketch/2.*
+
 

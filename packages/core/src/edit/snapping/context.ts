@@ -7,8 +7,7 @@ import {
   collectPathEndpointSnapPoints,
   collectSourceReferenceBounds,
   collectSourceSnapPoints,
-  expandBounds,
-  pointWithinBounds
+  expandBounds
 } from "./geometry.js";
 import {
   DEFAULT_SNAP_SETTINGS,

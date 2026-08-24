@@ -1,7 +1,7 @@
 import { px } from "../../coords/scalars.js";
 import type { Px } from "../../coords/scalars.js";
 import type { WorldBounds, WorldPoint } from "../../coords/points.js";
-import type { EditHandle, SceneElement } from "../../semantic/types.js";
+import type { EditHandle, NodeAnchorTarget, SceneElement } from "../../semantic/types.js";
 
 export type Axis = "x" | "y";
 
