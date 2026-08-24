@@ -538,7 +538,8 @@ export function buildCanvasContextMenuDefinition(
       {
         kind: "command",
         commandId: APP_MENU_COMMAND_IDS.FIT_TO_CONTENT,
-        label: "Fit to Content"
+        label: "Fit to Content",
+        accelerator: "F"
       },
       { kind: "separator" },
       {

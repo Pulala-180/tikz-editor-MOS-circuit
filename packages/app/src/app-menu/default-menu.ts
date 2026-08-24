@@ -472,7 +472,7 @@ export const APP_MENU_DEFINITION = [
         kind: "command",
         commandId: APP_MENU_COMMAND_IDS.FIT_TO_CONTENT,
         label: "Fit to Content",
-        accelerator: "CmdOrCtrl+0"
+        accelerator: "F"
       },
       {
         kind: "command",

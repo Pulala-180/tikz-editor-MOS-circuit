@@ -1649,7 +1649,10 @@ export function App() {
         e.preventDefault();
         return;
       }
-      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && key === "0") {
+      if (
+        (((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && key === "0") ||
+          (!e.ctrlKey && !e.metaKey && !e.shiftKey && !e.altKey && key === "f"))
+      ) {
         if (commandRuntime.runCommand(APP_MENU_COMMAND_IDS.FIT_TO_CONTENT, "shortcut")) {
           e.preventDefault();
         }

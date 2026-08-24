@@ -1,20 +1,26 @@
 # TikZ Editor 电路元件库开发与增改标准操作规范 (SOP)
 
-本文档规定了在 **TikZ Editor** 中新增电路元件、修改现有元件、配置旋转镜像以及 AI Agent 协助开发时的标准工作流程与规范。
+本文档规定了在 **TikZ Editor** 中新增电路元件、修改现有元件、配置旋转镜像、快捷键分配原则以及 AI Agent 协助开发时的标准工作流程与规范。
 
 ---
 
 ## 目录
 - [一、 AI Agent 交互准则（缺失信息主动询问规范）](#一-ai-agent-交互准则缺失信息主动询问规范)
-- [二、 系统架构原理（单一真实数据源）](#二-系统架构原理单一真实数据源)
-- [三、 新增/修改元件的标准 5 步流水线](#三-新增修改元件的标准-5-步流水线)
+- [二、 全局电路快捷键占用与空闲推荐清单 (Hotkeys Map)](#二-全局电路快捷键占用与空闲推荐清单-hotkeys-map)
+  - [1. 选择模式下已占用的“一键呼出”主键 (13个)](#1-选择模式下已占用的一键呼出主键-13个)
+  - [2. 选中有元件时的系统级翻转键 (3个)](#2-选中有元件时的系统级翻转键-3个)
+  - [3. ⭐ 选择模式下【完全空闲可用】的 10 个黄金主键 (推荐清单)](#3--选择模式下完全空闲可用的-10-个黄金主键-推荐清单)
+  - [4. 元件放置模式下的二次变换键 (不占用初次呼出)](#4-元件放置模式下的二次变换键-不占用初次呼出)
+  - [5. 组合键扩展机制 (Combo Hotkeys)](#5-组合键扩展机制-combo-hotkeys)
+- [三、 系统架构原理（单一真实数据源）](#三-系统架构原理单一真实数据源)
+- [四、 新增/修改元件的标准 5 步流水线](#四-新增修改元件的标准-5-步流水线)
   - [Step 1: 声明工具模式枚举 (types.ts)](#step-1-声明工具模式枚举-typests)
   - [Step 2: 注册工具能力 (capabilities.ts)](#step-2-注册工具能力-capabilitiests)
   - [Step 3: 编写标准 TikZ 模板 (circuit-snippets.ts)](#step-3-编写标准-tikz-模板-circuit-snippetsts)
   - [Step 4: 注册画布点击捕获 (useCanvasToolInteractions.ts)](#step-4-注册画布点击捕获-usecanvastoolinteractionsts)
   - [Step 5: 挂载工具栏与快捷键 (Toolbar.tsx & circuit-hotkeys.ts)](#step-5-挂载工具栏与快捷键-toolbartsx--circuit-hotkeysts)
-- [四、 TikZ 元件代码编写与坐标规范](#四-tikz-元件代码编写与坐标规范)
-- [五、 编译打包与验证交付](#五-编译打包与验证交付)
+- [五、 TikZ 元件代码编写与坐标规范](#五-tikz-元件代码编写与坐标规范)
+- [六、 编译打包与验证交付](#六-编译打包与验证交付)
 
 ---
 
@@ -33,13 +39,81 @@
 4. **标称文字与下标位置（Label & Math）**：
    * 元件的默认标称文字是什么（如 `$M_1$`, `$R_D$`, `$C_{in}$`, `$v$`, `$i$`）？
    * 标签文字相对于元件主体放置在什么方位（如上方、右侧、偏移距离）？
-5. **快捷键与工具栏展示（Hotkeys & Toolbar）**：
-   * 是否需要分配单字母快捷键（如 `Z` 为 NMOS，`R` 为电阻，`L` 为电感）？
-   * 是否需要右键旋转菜单（`CircuitElementSubmenu` / `MosfetElementSubmenu`）？
+5. **快捷键冲突排查与空闲推荐（Hotkeys Recommendation）**：
+   * Agent **必须主动向使用者推荐尚未被占用的主快捷键**（如推荐 `L` 对应电感、`B` 对应三极管/电池、`O` 对应运放、`P` 对应电位器等）；
+   * 严禁将已占用的核心呼出热键重复分配给新元件，避免快捷键冲突。
 
 ---
 
-## 二、 系统架构原理（单一真实数据源）
+## 二、 全局电路快捷键占用与空闲推荐清单 (Hotkeys Map)
+
+为确保新元件快捷键不发生冲突，以下是当前系统 **26 个英文字母的全面分配与空闲状态**：
+
+### 1. 选择模式下已占用的“一键呼出”主键 (13个)
+
+| 按键 | 触发元件 / 对应工具 | 英文助记 |
+| :---: | :--- | :--- |
+| **`A`** | **电流箭头** (`addCurrentArrow`) | Arrow |
+| **`C`** | **电容** (`addCapacitor`) | Capacitor |
+| **`D`** | **实心连接圆点** (`addDotNode`) / 配合 V 键出 **VDD** | Dot / VDD |
+| **`E`** | **理想电流源** (`addCurrentSource`) | Current source |
+| **`F`** | **自适应画布内容聚焦** (`Fit to Content`) | Fit view |
+| **`G`** | **接地端 GND** (`addGND`) | Ground |
+| **`I`** | **理想电流源 (别名)** (`addCurrentSource`) | Current $i$ |
+| **`M`** | **正交多段折线导线** (`addOrthoWire`) | Multiline Wire |
+| **`N`** | **普通文本节点** (`addNode`) | Node |
+| **`Q`** | **pMOSFET 管** (`addPMOS`) | pMOS（Q为晶体管代号） |
+| **`R`** | **电阻** (`addResistor`) | Resistor |
+| **`T`** | **IO 端口 Terminal** (`addIoNode`) | Terminal ($V_{in}/V_{out}$) |
+| **`V`** | **理想电压源** (`addVoltageSource`) | Voltage source |
+| **`W`** | **基础连接引线** (`addWireLead`) | Wire |
+| **`Z`** | **nMOSFET 管** (`addNMOS`) | nMOS |
+
+---
+
+### 2. 选中有元件时的系统级翻转键 (3个)
+* **`H`** / **`Y`**：对当前选中的元件进行 **水平左右镜像翻转** (Y 轴对称)
+* **`X`**：对当前选中的元件进行 **垂直上下镜像翻转** (X 轴对称)
+
+---
+
+### 3. ⭐ 选择模式下【完全空闲可用】的 9 个黄金主键 (推荐清单)
+
+若使用者需要给新元件添加**初次一键呼出快捷键**，Agent **优先从以下 9 个空闲字母中推荐**：
+
+| 推荐主键 | 推荐适用的元件类型 | 推荐理由与行业标准 |
+| :---: | :--- | :--- |
+| **`L`** | **电感 (Inductor)** | ⭐ **首选黄金键**。完全空闲，电感国际标准符号为 $L_1$ |
+| **`B`** | **三极管 (BJT) / 电池 (Battery) / 偏置 (Bias)** | ⭐ **首选黄金键**。完全空闲，BJT / Battery 首字母 |
+| **`O`** | **运算放大器 (Op-Amp)** | ⭐ **首选黄金键**。完全空闲，Op-Amp 首字母 |
+| **`P`** | **电位器 (Potentiometer) / 探针 (Probe) / 脉冲源** | ⭐ **首选黄金键**。完全空闲（因 pMOS 使用的是 Q 键） |
+| **`K`** | **开关 (Key/Switch) / 继电器 (Relay)** | ⭐ **首选黄金键**。完全空闲，电路原理图中常以 $K_1$ 命名开关 |
+| **`J`** | **结型场效应管 (JFET)** | 完全空闲，JFET 首字母 |
+| **`U`** | **集成芯片 (IC Unit) / 变压器 (Transformer)** | 完全空闲，芯片在原理图中常用 $U_1$ 代号 |
+| **`S`** | **开关 (Switch) / 信号源 (Signal)** | 备选。选择模式下尚未绑定呼出工具，按 S 可直接召唤 |
+| **`H`** / **`X`** | **高频元件 / 扩展元件** | 备选。未选中元件时可绑定呼出工具 |
+
+---
+
+### 4. 元件放置模式下的二次变换键 (不占用初次呼出)
+当用户已经进入某个元件放置状态（鼠标带着灰色虚影在画布上移动）时，以下按键用于**微调当前虚影的姿态与端口**，不影响选择模式下的主快捷键：
+* **`R`**：顺时针旋转 90°
+* **`H` / `Y`**：沿 Y 轴水平左右镜像
+* **`V` / `X`**：沿 X 轴垂直上下镜像
+* **`W / A / S / D`**：快速切换 上 / 左 / 下 / 右 朝向与端口
+* **`G / D / S`**：快速切换 Gate / Drain / Source 极基准点
+
+---
+
+### 5. 组合键扩展机制 (Combo Hotkeys)
+系统支持通过组合键或按住前缀键来扩展更多元件，例如：
+* **`按住 V + 敲 D`**：快速召唤 $V_{DD}$ 电源；
+* **`Shift + <字母>`**：如 `Shift + R` 召唤可变电阻 / 滑动变阻器；
+* **`按住 C + <字母>`**：如 `C + P` 召唤有极性电解电容（Polar Capacitor）。
+
+---
+
+## 三、 系统架构原理（单一真实数据源）
 
 系统采用 **Single Source of Truth（单一数据源）** 架构：
 1. 所有元件的 TikZ LaTeX 源码集中由 [`circuit-snippets.ts`](file:///E:/tikz-editor-master/tikz-editor-master/packages/app/src/ui/canvas-panel/circuit-snippets.ts) 管理；
@@ -49,9 +123,9 @@
 
 ---
 
-## 三、 新增/修改元件的标准 5 步流水线
+## 四、 新增/修改元件的标准 5 步流水线
 
-以添加 **电感（Inductor）** 为例：
+以添加 **电感（Inductor，分配快捷键 L）** 为例：
 
 ### Step 1: 声明工具模式枚举 (types.ts)
 📁 **文件**：[`packages/app/src/store/types.ts`](file:///E:/tikz-editor-master/tikz-editor-master/packages/app/src/store/types.ts)
@@ -137,9 +211,12 @@ toolMode.startsWith("addInductor") ||
 />
 ```
 
-📁 **文件 2 (可选快捷键与旋转交互)**：[`packages/app/src/ui/canvas-panel/circuit-hotkeys.ts`](file:///E:/tikz-editor-master/tikz-editor-master/packages/app/src/ui/canvas-panel/circuit-hotkeys.ts)
-* 配置单键呼出（如按 `L` 切换为电感模式）；
-* 配置旋转状态机 `getNextRotatedCircuitMode(currentMode)`：
+📁 **文件 2 (快捷键与旋转交互)**：[`packages/app/src/ui/canvas-panel/circuit-hotkeys.ts`](file:///E:/tikz-editor-master/tikz-editor-master/packages/app/src/ui/canvas-panel/circuit-hotkeys.ts)
+* 在 `resolveSelectModeInitialTool` 中配置单键呼出：
+  ```ts
+  if (k === "l") return "addInductor_H_Left";
+  ```
+* 在 `rotateCircuitToolMode` 中配置顺时针旋转状态机：
   ```ts
   if (mode.startsWith("addInductor")) {
     if (mode === "addInductor_H_Left") return "addInductor_V_Top";
@@ -151,7 +228,7 @@ toolMode.startsWith("addInductor") ||
 
 ---
 
-## 四、 TikZ 元件代码编写与坐标规范
+## 五、 TikZ 元件代码编写与坐标规范
 
 为了确保元件在画布上精准吸附、端点不漂移、预选虚影与实物完全重合，编写 TikZ 代码时**必须严格遵守以下规范**：
 
@@ -174,7 +251,7 @@ toolMode.startsWith("addInductor") ||
 
 ---
 
-## 五、 编译打包与验证交付
+## 六、 编译打包与验证交付
 
 完成代码编辑后，在项目根目录执行生产构建：
 ```bash

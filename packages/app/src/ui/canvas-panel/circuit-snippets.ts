@@ -24,6 +24,15 @@ export function getCircuitComponentSnippet(toolMode: ToolMode, xCm: string, yCm:
   if (toolMode === "addNMOS_Left_S") {
     return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[thick, line cap=round] (-0.73,0.5) -- (-0.47,0.5);\n    \\draw[ultra thick] (-0.48,0.25) -- (-0.48,0.75);\n    \\draw[ultra thick] (-0.32,0.2) -- (-0.32,0.8);\n    \\draw[thick, line cap=round, line join=round] (-0.33,0.7) -- (0,0.7) -- (0,1.0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (-0.33,0.3) -- (-0.03,0.3);\n    \\draw[thick, line cap=round] (0,0.29) -- (0,0);\n    \\node[node font=\\sffamily\\bfseries] at (0.31,0.5) {$M_1$};\n    \\coordinate (node_Mx.d) at (0,1.0);\n    \\coordinate (node_Mx.g) at (-0.73,0.5);\n  \\end{scope}`;
   }
+  if (toolMode === "addNMOS_Top_G") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[thick, line cap=round] (0,0) -- (0,-0.26);\n    \\draw[ultra thick] (-0.25,-0.25) -- (0.25,-0.25);\n    \\draw[ultra thick] (-0.3,-0.41) -- (0.3,-0.41);\n    \\draw[thick, line cap=round, line join=round] (0.2,-0.40) -- (0.2,-0.73) -- (0.5,-0.73);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (-0.2,-0.40) -- (-0.2,-0.70);\n    \\draw[thick, line cap=round] (-0.21,-0.73) -- (-0.5,-0.73);\n    \\node[node font=\\sffamily\\bfseries] at (0,-1.04) {$M_1$};\n    \\coordinate (node_Mx.d) at (0.5,-0.73);\n    \\coordinate (node_Mx.s) at (-0.5,-0.73);\n  \\end{scope}`;
+  }
+  if (toolMode === "addNMOS_Top_D") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[thick, line cap=round] (-0.5,0.73) -- (-0.5,0.47);\n    \\draw[ultra thick] (-0.75,0.48) -- (-0.25,0.48);\n    \\draw[ultra thick] (-0.8,0.32) -- (-0.2,0.32);\n    \\draw[thick, line cap=round, line join=round] (-0.3,0.33) -- (-0.3,0) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (-0.7,0.33) -- (-0.7,0.03);\n    \\draw[thick, line cap=round] (-0.71,0) -- (-1.0,0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.5,-0.31) {$M_1$};\n    \\coordinate (node_Mx.g) at (-0.5,0.73);\n    \\coordinate (node_Mx.s) at (-1.0,0);\n  \\end{scope}`;
+  }
+  if (toolMode === "addNMOS_Top_S") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[thick, line cap=round] (0.5,0.73) -- (0.5,0.47);\n    \\draw[ultra thick] (0.25,0.48) -- (0.75,0.48);\n    \\draw[ultra thick] (0.2,0.32) -- (0.8,0.32);\n    \\draw[thick, line cap=round, line join=round] (0.7,0.33) -- (0.7,0) -- (1.0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0.3,0.33) -- (0.3,0.03);\n    \\draw[thick, line cap=round] (0.29,0) -- (0,0);\n    \\node[node font=\\sffamily\\bfseries] at (0.5,-0.31) {$M_1$};\n    \\coordinate (node_Mx.g) at (0.5,0.73);\n    \\coordinate (node_Mx.d) at (1.0,0);\n  \\end{scope}`;
+  }
   if (toolMode === "addNMOS_Right_G") {
     return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[thick, line cap=round] (0,0) -- (-0.26,0);\n    \\draw[ultra thick] (-0.25,-0.25) -- (-0.25,0.25);\n    \\draw[ultra thick] (-0.41,-0.3) -- (-0.41,0.3);\n    \\draw[thick, line cap=round, line join=round] (-0.40,0.2) -- (-0.73,0.2) -- (-0.73,0.5);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (-0.40,-0.2) -- (-0.70,-0.2);\n    \\draw[thick, line cap=round] (-0.73,-0.21) -- (-0.73,-0.5);\n    \\node[node font=\\sffamily\\bfseries] at (-1.04,0) {$M_1$};\n    \\coordinate (node_Mx.d) at (-0.73,0.5);\n    \\coordinate (node_Mx.s) at (-0.73,-0.5);\n  \\end{scope}`;
   }
@@ -32,6 +41,15 @@ export function getCircuitComponentSnippet(toolMode: ToolMode, xCm: string, yCm:
   }
   if (toolMode === "addNMOS_Right_S") {
     return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[thick, line cap=round] (0.73,0.5) -- (0.47,0.5);\n    \\draw[ultra thick] (0.48,0.25) -- (0.48,0.75);\n    \\draw[ultra thick] (0.32,0.2) -- (0.32,0.8);\n    \\draw[thick, line cap=round, line join=round] (0.33,0.7) -- (0,0.7) -- (0,1.0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0.33,0.3) -- (0.03,0.3);\n    \\draw[thick, line cap=round] (0,0.29) -- (0,0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.31,0.5) {$M_1$};\n    \\coordinate (node_Mx.d) at (0,1.0);\n    \\coordinate (node_Mx.g) at (0.73,0.5);\n  \\end{scope}`;
+  }
+  if (toolMode === "addNMOS_Bottom_G") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[thick, line cap=round] (0,0) -- (0,0.26);\n    \\draw[ultra thick] (-0.25,0.25) -- (0.25,0.25);\n    \\draw[ultra thick] (-0.3,0.41) -- (0.3,0.41);\n    \\draw[thick, line cap=round, line join=round] (-0.2,0.40) -- (-0.2,0.73) -- (-0.5,0.73);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0.2,0.40) -- (0.2,0.70);\n    \\draw[thick, line cap=round] (0.21,0.73) -- (0.5,0.73);\n    \\node[node font=\\sffamily\\bfseries] at (0,1.04) {$M_1$};\n    \\coordinate (node_Mx.d) at (-0.5,0.73);\n    \\coordinate (node_Mx.s) at (0.5,0.73);\n  \\end{scope}`;
+  }
+  if (toolMode === "addNMOS_Bottom_D") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[thick, line cap=round] (0.5,-0.73) -- (0.5,-0.47);\n    \\draw[ultra thick] (0.25,-0.48) -- (0.75,-0.48);\n    \\draw[ultra thick] (0.2,-0.32) -- (0.8,-0.32);\n    \\draw[thick, line cap=round, line join=round] (0.3,-0.33) -- (0.3,0) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0.7,-0.33) -- (0.7,-0.03);\n    \\draw[thick, line cap=round] (0.71,0) -- (1.0,0);\n    \\node[node font=\\sffamily\\bfseries] at (0.5,0.31) {$M_1$};\n    \\coordinate (node_Mx.g) at (0.5,-0.73);\n    \\coordinate (node_Mx.s) at (1.0,0);\n  \\end{scope}`;
+  }
+  if (toolMode === "addNMOS_Bottom_S") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[thick, line cap=round] (-0.5,-0.73) -- (-0.5,-0.47);\n    \\draw[ultra thick] (-0.75,-0.48) -- (-0.25,-0.48);\n    \\draw[ultra thick] (-0.8,-0.32) -- (-0.2,-0.32);\n    \\draw[thick, line cap=round, line join=round] (-0.7,-0.33) -- (-0.7,0) -- (-1.0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (-0.3,-0.33) -- (-0.3,-0.03);\n    \\draw[thick, line cap=round] (-0.29,0) -- (0,0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.5,0.31) {$M_1$};\n    \\coordinate (node_Mx.g) at (-0.5,-0.73);\n    \\coordinate (node_Mx.d) at (-1.0,0);\n  \\end{scope}`;
   }
 
   // PMOS
@@ -44,6 +62,15 @@ export function getCircuitComponentSnippet(toolMode: ToolMode, xCm: string, yCm:
   if (toolMode === "addPMOS_Left_S") {
     return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[thick, line cap=round] (-0.73,-0.5) -- (-0.47,-0.5);\n    \\draw[ultra thick] (-0.48,-0.75) -- (-0.48,-0.25);\n    \\draw[ultra thick] (-0.32,-0.8) -- (-0.32,-0.2);\n    \\draw[thick, line cap=round, line join=round] (-0.33,-0.7) -- (0,-0.7) -- (0,-1.0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0,-0.3) -- (-0.29,-0.3);\n    \\draw[thick, line cap=round] (0,0) -- (0,-0.3);\n    \\node[node font=\\sffamily\\bfseries] at (0.31,-0.5) {$M_1$};\n    \\coordinate (node_Mx.g) at (-0.73,-0.5);\n    \\coordinate (node_Mx.d) at (0,-1.0);\n  \\end{scope}`;
   }
+  if (toolMode === "addPMOS_Top_G") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[thick, line cap=round] (0,0) -- (0,-0.26);\n    \\draw[ultra thick] (-0.25,-0.25) -- (0.25,-0.25);\n    \\draw[ultra thick] (-0.3,-0.41) -- (0.3,-0.41);\n    \\draw[thick, line cap=round, line join=round] (-0.2,-0.40) -- (-0.2,-0.73) -- (-0.5,-0.73);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0.2,-0.73) -- (0.2,-0.44);\n    \\draw[thick, line cap=round] (0.5,-0.73) -- (0.2,-0.73);\n    \\node[node font=\\sffamily\\bfseries] at (0,-1.04) {$M_1$};\n    \\coordinate (node_Mx.d) at (-0.5,-0.73);\n    \\coordinate (node_Mx.s) at (0.5,-0.73);\n  \\end{scope}`;
+  }
+  if (toolMode === "addPMOS_Top_D") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[thick, line cap=round] (0.5,0.73) -- (0.5,0.47);\n    \\draw[ultra thick] (0.25,0.48) -- (0.75,0.48);\n    \\draw[ultra thick] (0.2,0.32) -- (0.8,0.32);\n    \\draw[thick, line cap=round, line join=round] (0.3,0.33) -- (0.3,0) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0.7,0) -- (0.7,0.29);\n    \\draw[thick, line cap=round] (1.0,0) -- (0.7,0);\n    \\node[node font=\\sffamily\\bfseries] at (0.5,-0.31) {$M_1$};\n    \\coordinate (node_Mx.g) at (0.5,0.73);\n    \\coordinate (node_Mx.s) at (1.0,0);\n  \\end{scope}`;
+  }
+  if (toolMode === "addPMOS_Top_S") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[thick, line cap=round] (-0.5,0.73) -- (-0.5,0.47);\n    \\draw[ultra thick] (-0.75,0.48) -- (-0.25,0.48);\n    \\draw[ultra thick] (-0.8,0.32) -- (-0.2,0.32);\n    \\draw[thick, line cap=round, line join=round] (-0.7,0.33) -- (-0.7,0) -- (-1.0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (-0.3,0) -- (-0.3,0.29);\n    \\draw[thick, line cap=round] (0,0) -- (-0.3,0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.5,-0.31) {$M_1$};\n    \\coordinate (node_Mx.g) at (-0.5,0.73);\n    \\coordinate (node_Mx.d) at (-1.0,0);\n  \\end{scope}`;
+  }
   if (toolMode === "addPMOS_Right_G") {
     return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[thick, line cap=round] (0,0) -- (-0.26,0);\n    \\draw[ultra thick] (-0.25,-0.25) -- (-0.25,0.25);\n    \\draw[ultra thick] (-0.41,-0.3) -- (-0.41,0.3);\n    \\draw[thick, line cap=round, line join=round] (-0.40,-0.2) -- (-0.73,-0.2) -- (-0.73,-0.5);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (-0.73,0.2) -- (-0.44,0.2);\n    \\draw[thick, line cap=round] (-0.73,0.5) -- (-0.73,0.2);\n    \\node[node font=\\sffamily\\bfseries] at (-1.04,0) {$M_1$};\n    \\coordinate (node_Mx.d) at (-0.73,-0.5);\n    \\coordinate (node_Mx.s) at (-0.73,0.5);\n  \\end{scope}`;
   }
@@ -52,6 +79,15 @@ export function getCircuitComponentSnippet(toolMode: ToolMode, xCm: string, yCm:
   }
   if (toolMode === "addPMOS_Right_S") {
     return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[thick, line cap=round] (0.73,-0.5) -- (0.47,-0.5);\n    \\draw[ultra thick] (0.48,-0.75) -- (0.48,-0.25);\n    \\draw[ultra thick] (0.32,-0.8) -- (0.32,-0.2);\n    \\draw[thick, line cap=round, line join=round] (0.33,-0.7) -- (0,-0.7) -- (0,-1.0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0,-0.3) -- (0.29,-0.3);\n    \\draw[thick, line cap=round] (0,0) -- (0,-0.3);\n    \\node[node font=\\sffamily\\bfseries] at (-0.31,-0.5) {$M_1$};\n    \\coordinate (node_Mx.g) at (0.73,-0.5);\n    \\coordinate (node_Mx.d) at (0,-1.0);\n  \\end{scope}`;
+  }
+  if (toolMode === "addPMOS_Bottom_G") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[thick, line cap=round] (0,0) -- (0,0.26);\n    \\draw[ultra thick] (-0.25,0.25) -- (0.25,0.25);\n    \\draw[ultra thick] (-0.3,0.41) -- (0.3,0.41);\n    \\draw[thick, line cap=round, line join=round] (0.2,0.40) -- (0.2,0.73) -- (0.5,0.73);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (-0.2,0.73) -- (-0.2,0.44);\n    \\draw[thick, line cap=round] (-0.5,0.73) -- (-0.2,0.73);\n    \\node[node font=\\sffamily\\bfseries] at (0,1.04) {$M_1$};\n    \\coordinate (node_Mx.d) at (0.5,0.73);\n    \\coordinate (node_Mx.s) at (-0.5,0.73);\n  \\end{scope}`;
+  }
+  if (toolMode === "addPMOS_Bottom_D") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[thick, line cap=round] (-0.5,-0.73) -- (-0.5,-0.47);\n    \\draw[ultra thick] (-0.75,-0.48) -- (-0.25,-0.48);\n    \\draw[ultra thick] (-0.8,-0.32) -- (-0.2,-0.32);\n    \\draw[thick, line cap=round, line join=round] (-0.3,-0.33) -- (-0.3,0) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (-0.7,0) -- (-0.7,-0.29);\n    \\draw[thick, line cap=round] (-1.0,0) -- (-0.7,0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.5,0.31) {$M_1$};\n    \\coordinate (node_Mx.g) at (-0.5,-0.73);\n    \\coordinate (node_Mx.s) at (-1.0,0);\n  \\end{scope}`;
+  }
+  if (toolMode === "addPMOS_Bottom_S") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[thick, line cap=round] (0.5,-0.73) -- (0.5,-0.47);\n    \\draw[ultra thick] (0.25,-0.48) -- (0.75,-0.48);\n    \\draw[ultra thick] (0.2,-0.32) -- (0.8,-0.32);\n    \\draw[thick, line cap=round, line join=round] (0.7,-0.33) -- (0.7,0) -- (1.0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0.3,0) -- (0.3,-0.29);\n    \\draw[thick, line cap=round] (0,0) -- (0.3,0);\n    \\node[node font=\\sffamily\\bfseries] at (0.5,0.31) {$M_1$};\n    \\coordinate (node_Mx.g) at (0.5,-0.73);\n    \\coordinate (node_Mx.d) at (1.0,0);\n  \\end{scope}`;
   }
 
   // Dot Node
@@ -64,17 +100,29 @@ export function getCircuitComponentSnippet(toolMode: ToolMode, xCm: string, yCm:
     const scopeX = (parseFloat(xCm) - 0.6).toFixed(2);
     return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (-0.01,-0.30) {$V_{in}$};\n    \\draw[thick, line cap=round] (0.15,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.6,0);\n    \\coordinate (node_IOx.port) at (0.6,0);\n  \\end{scope}`;
   }
+  if (toolMode === "addIoNode_Vin_Top") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,0.45) {$V_{in}$};\n    \\draw[thick, line cap=round] (0,0.45) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0,0);\n    \\coordinate (node_IOx.port) at (0,0);\n  \\end{scope}`;
+  }
   if (toolMode === "addIoNode_Vin_Right") {
     const scopeX = (parseFloat(xCm) - 0.15).toFixed(2);
     return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (0.85,-0.30) {$V_{in}$};\n    \\draw[thick, line cap=round] (0.6,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.15,0);\n    \\coordinate (node_IOx.port) at (0.15,0);\n  \\end{scope}`;
+  }
+  if (toolMode === "addIoNode_Vin_Bottom") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,-0.45) {$V_{in}$};\n    \\draw[thick, line cap=round] (0,-0.45) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0,0);\n    \\coordinate (node_IOx.port) at (0,0);\n  \\end{scope}`;
   }
   if (toolMode === "addIoNode_Vout_Left") {
     const scopeX = (parseFloat(xCm) - 0.6).toFixed(2);
     return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (-0.01,-0.30) {$V_{out}$};\n    \\draw[thick, line cap=round] (0.15,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.6,0);\n    \\coordinate (node_IOx.port) at (0.6,0);\n  \\end{scope}`;
   }
+  if (toolMode === "addIoNode_Vout_Top") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,0.45) {$V_{out}$};\n    \\draw[thick, line cap=round] (0,0.45) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0,0);\n    \\coordinate (node_IOx.port) at (0,0);\n  \\end{scope}`;
+  }
   if (toolMode === "addIoNode_Vout_Right") {
     const scopeX = (parseFloat(xCm) - 0.15).toFixed(2);
     return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (0.85,-0.30) {$V_{out}$};\n    \\draw[thick, line cap=round] (0.6,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.15,0);\n    \\coordinate (node_IOx.port) at (0.15,0);\n  \\end{scope}`;
+  }
+  if (toolMode === "addIoNode_Vout_Bottom") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,-0.45) {$V_{out}$};\n    \\draw[thick, line cap=round] (0,-0.45) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0,0);\n    \\coordinate (node_IOx.port) at (0,0);\n  \\end{scope}`;
   }
 
   // VDD

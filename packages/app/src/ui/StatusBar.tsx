@@ -222,7 +222,7 @@ export function StatusBar() {
           </button>
         </RenderedTooltip>
 
-        <RenderedTooltip content="Fit to content">
+        <RenderedTooltip content="Fit to content (F)">
           <button
             type="button"
             className={[css.iconButton, fitToContentModeActive ? css.iconButtonActive : ""].filter(Boolean).join(" ")}

@@ -267,6 +267,14 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
             return;
           }
 
+          // F 键：Fit to Content 自适应画布居中聚焦
+          if (key === "f") {
+            dispatch({ type: "SET_FIT_TO_CONTENT_MODE", active: false });
+            dispatch({ type: "REQUEST_FIT_TO_CONTENT" });
+            event.preventDefault();
+            return;
+          }
+
           const initialTool = resolveSelectModeInitialTool(key, vKeyDownRef.current);
           if (initialTool) {
             dispatch({ type: "SET_TOOL_MODE", mode: initialTool });
@@ -471,6 +479,14 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
           if (key === "d" && (vKeyDownRef.current || (Date.now() - lastVKeyDownTimestampRef.current < 600))) {
             dispatch({ type: "SET_TOOL_MODE", mode: "addVDD" });
             setWarning(null);
+            event.preventDefault();
+            return;
+          }
+
+          // F 键：Fit to Content 自适应画布居中聚焦
+          if (key === "f") {
+            dispatch({ type: "SET_FIT_TO_CONTENT_MODE", active: false });
+            dispatch({ type: "REQUEST_FIT_TO_CONTENT" });
             event.preventDefault();
             return;
           }

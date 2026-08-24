@@ -76,35 +76,35 @@ export function rotateCircuitToolMode(mode: ToolMode): ToolMode | null {
     return "addGND_V_Bottom";
   }
 
-  // 8. IO 端口 (Terminal)
+  // 8. IO 端口 (Terminal) - 顺时针 90 度旋转: Left -> Top -> Right -> Bottom -> Left
   if (mode.startsWith("addIoNode")) {
-    if (mode === "addIoNode" || mode === "addIoNode_Vin_Left") return "addIoNode_Vout_Left";
-    if (mode === "addIoNode_Vout_Left") return "addIoNode_Vin_Right";
-    if (mode === "addIoNode_Vin_Right") return "addIoNode_Vout_Right";
-    if (mode === "addIoNode_Vout_Right") return "addIoNode_Vin_Left";
-    return "addIoNode_Vin_Left";
+    const isVout = mode.includes("Vout");
+    const prefix = isVout ? "addIoNode_Vout" : "addIoNode_Vin";
+    if (mode.endsWith("Left") || mode === "addIoNode") return `${prefix}_Top` as ToolMode;
+    if (mode.endsWith("Top")) return `${prefix}_Right` as ToolMode;
+    if (mode.endsWith("Right")) return `${prefix}_Bottom` as ToolMode;
+    if (mode.endsWith("Bottom")) return `${prefix}_Left` as ToolMode;
+    return `${prefix}_Top` as ToolMode;
   }
 
-  // 9. nMOS 管 (左右开口镜像翻转，保持当前锚点)
+  // 9. nMOS 管 - 顺时针 90 度旋转: Left -> Top -> Right -> Bottom -> Left，保持当前引脚锚点
   if (mode.startsWith("addNMOS")) {
-    if (mode.includes("Left")) {
-      return mode.replace("Left", "Right") as ToolMode;
-    }
-    if (mode.includes("Right")) {
-      return mode.replace("Right", "Left") as ToolMode;
-    }
-    return "addNMOS_Right_D";
+    const anchor = mode.endsWith("_D") ? "D" : mode.endsWith("_S") ? "S" : "G";
+    if (mode.includes("Left") || mode === "addNMOS") return `addNMOS_Top_${anchor}` as ToolMode;
+    if (mode.includes("Top")) return `addNMOS_Right_${anchor}` as ToolMode;
+    if (mode.includes("Right")) return `addNMOS_Bottom_${anchor}` as ToolMode;
+    if (mode.includes("Bottom")) return `addNMOS_Left_${anchor}` as ToolMode;
+    return `addNMOS_Top_${anchor}` as ToolMode;
   }
 
-  // 10. pMOS 管 (左右开口镜像翻转，保持当前锚点)
+  // 10. pMOS 管 - 顺时针 90 度旋转: Left -> Top -> Right -> Bottom -> Left，保持当前引脚锚点
   if (mode.startsWith("addPMOS")) {
-    if (mode.includes("Left")) {
-      return mode.replace("Left", "Right") as ToolMode;
-    }
-    if (mode.includes("Right")) {
-      return mode.replace("Right", "Left") as ToolMode;
-    }
-    return "addPMOS_Right_D";
+    const anchor = mode.endsWith("_D") ? "D" : mode.endsWith("_S") ? "S" : "G";
+    if (mode.includes("Left") || mode === "addPMOS") return `addPMOS_Top_${anchor}` as ToolMode;
+    if (mode.includes("Top")) return `addPMOS_Right_${anchor}` as ToolMode;
+    if (mode.includes("Right")) return `addPMOS_Bottom_${anchor}` as ToolMode;
+    if (mode.includes("Bottom")) return `addPMOS_Left_${anchor}` as ToolMode;
+    return `addPMOS_Top_${anchor}` as ToolMode;
   }
 
   // 11. VDD & 实心节点 (不可旋转)
@@ -121,14 +121,20 @@ export function rotateCircuitToolMode(mode: ToolMode): ToolMode | null {
 export function flipCircuitToolModeHorizontal(mode: ToolMode): ToolMode | null {
   // 1. nMOS (关于Y轴对称翻转)
   if (mode.startsWith("addNMOS")) {
-    if (mode.includes("Left")) return mode.replace("Left", "Right") as ToolMode;
-    if (mode.includes("Right")) return mode.replace("Right", "Left") as ToolMode;
+    const anchor = mode.endsWith("_D") ? "D" : mode.endsWith("_S") ? "S" : "G";
+    if (mode.includes("Left")) return `addNMOS_Right_${anchor}` as ToolMode;
+    if (mode.includes("Right")) return `addNMOS_Left_${anchor}` as ToolMode;
+    if (mode.includes("Top")) return `addNMOS_Top_${anchor === "D" ? "S" : anchor === "S" ? "D" : "G"}` as ToolMode;
+    if (mode.includes("Bottom")) return `addNMOS_Bottom_${anchor === "D" ? "S" : anchor === "S" ? "D" : "G"}` as ToolMode;
     return "addNMOS_Right_G";
   }
   // 2. pMOS (关于Y轴对称翻转)
   if (mode.startsWith("addPMOS")) {
-    if (mode.includes("Left")) return mode.replace("Left", "Right") as ToolMode;
-    if (mode.includes("Right")) return mode.replace("Right", "Left") as ToolMode;
+    const anchor = mode.endsWith("_D") ? "D" : mode.endsWith("_S") ? "S" : "G";
+    if (mode.includes("Left")) return `addPMOS_Right_${anchor}` as ToolMode;
+    if (mode.includes("Right")) return `addPMOS_Left_${anchor}` as ToolMode;
+    if (mode.includes("Top")) return `addPMOS_Top_${anchor === "D" ? "S" : anchor === "S" ? "D" : "G"}` as ToolMode;
+    if (mode.includes("Bottom")) return `addPMOS_Bottom_${anchor === "D" ? "S" : anchor === "S" ? "D" : "G"}` as ToolMode;
     return "addPMOS_Right_G";
   }
   // 3. 电阻
@@ -175,11 +181,11 @@ export function flipCircuitToolModeHorizontal(mode: ToolMode): ToolMode | null {
   }
   // 9. IO 端口
   if (mode.startsWith("addIoNode")) {
-    if (mode === "addIoNode_Vin_Left") return "addIoNode_Vin_Right";
-    if (mode === "addIoNode_Vin_Right") return "addIoNode_Vin_Left";
-    if (mode === "addIoNode_Vout_Left") return "addIoNode_Vout_Right";
-    if (mode === "addIoNode_Vout_Right") return "addIoNode_Vout_Left";
-    return "addIoNode_Vin_Left";
+    const isVout = mode.includes("Vout");
+    const prefix = isVout ? "addIoNode_Vout" : "addIoNode_Vin";
+    if (mode.endsWith("Left") || mode === "addIoNode") return `${prefix}_Right` as ToolMode;
+    if (mode.endsWith("Right")) return `${prefix}_Left` as ToolMode;
+    return `${prefix}_Left` as ToolMode;
   }
   // 10. 连接线
   if (mode.startsWith("addWireLead")) {
@@ -196,16 +202,20 @@ export function flipCircuitToolModeHorizontal(mode: ToolMode): ToolMode | null {
 export function flipCircuitToolModeVertical(mode: ToolMode): ToolMode | null {
   // 1. nMOS (D <-> S 垂直镜像; 若为 G 则切换到 D)
   if (mode.startsWith("addNMOS")) {
-    if (mode.endsWith("_D")) return mode.replace("_D", "_S") as ToolMode;
-    if (mode.endsWith("_S")) return mode.replace("_S", "_D") as ToolMode;
-    if (mode.endsWith("_G")) return mode.replace("_G", "_D") as ToolMode;
+    const anchor = mode.endsWith("_D") ? "D" : mode.endsWith("_S") ? "S" : "G";
+    if (mode.includes("Top")) return `addNMOS_Bottom_${anchor}` as ToolMode;
+    if (mode.includes("Bottom")) return `addNMOS_Top_${anchor}` as ToolMode;
+    if (mode.includes("Left")) return `addNMOS_Left_${anchor === "D" ? "S" : anchor === "S" ? "D" : "G"}` as ToolMode;
+    if (mode.includes("Right")) return `addNMOS_Right_${anchor === "D" ? "S" : anchor === "S" ? "D" : "G"}` as ToolMode;
     return "addNMOS_Left_D";
   }
   // 2. pMOS (D <-> S 垂直镜像; 若为 G 则切换到 D)
   if (mode.startsWith("addPMOS")) {
-    if (mode.endsWith("_D")) return mode.replace("_D", "_S") as ToolMode;
-    if (mode.endsWith("_S")) return mode.replace("_S", "_D") as ToolMode;
-    if (mode.endsWith("_G")) return mode.replace("_G", "_D") as ToolMode;
+    const anchor = mode.endsWith("_D") ? "D" : mode.endsWith("_S") ? "S" : "G";
+    if (mode.includes("Top")) return `addPMOS_Bottom_${anchor}` as ToolMode;
+    if (mode.includes("Bottom")) return `addPMOS_Top_${anchor}` as ToolMode;
+    if (mode.includes("Left")) return `addPMOS_Left_${anchor === "D" ? "S" : anchor === "S" ? "D" : "G"}` as ToolMode;
+    if (mode.includes("Right")) return `addPMOS_Right_${anchor === "D" ? "S" : anchor === "S" ? "D" : "G"}` as ToolMode;
     return "addPMOS_Left_D";
   }
   // 3. 电阻
@@ -283,47 +293,47 @@ export function switchCircuitToolModeWithKey(currentMode: ToolMode, key: string)
     return flipCircuitToolModeVertical(currentMode);
   }
 
-  // 1. nMOS 子模式控制 (a: 开向左, d: 开向右/切D极, s: 切S极, g: 切G极)
+  // 1. nMOS 子模式控制 (g: 切G极, d: 切D极, s: 切S极, w: 朝上, a: 朝左)
   if (currentMode.startsWith("addNMOS")) {
-    const isRight = currentMode.includes("Right");
     const currentAnchor = currentMode.endsWith("_S") ? "S" : currentMode.endsWith("_G") ? "G" : "D";
+    const dir = currentMode.includes("Top") ? "Top" : currentMode.includes("Bottom") ? "Bottom" : currentMode.includes("Right") ? "Right" : "Left";
 
+    if (k === "g") {
+      return `addNMOS_${dir}_G` as ToolMode;
+    }
+    if (k === "s") {
+      return `addNMOS_${dir}_S` as ToolMode;
+    }
+    if (k === "d") {
+      return `addNMOS_${dir}_D` as ToolMode;
+    }
+    if (k === "w") {
+      return `addNMOS_Top_${currentAnchor}` as ToolMode;
+    }
     if (k === "a") {
       return `addNMOS_Left_${currentAnchor}` as ToolMode;
     }
-    if (k === "g") {
-      return (isRight ? "addNMOS_Right_G" : "addNMOS_Left_G") as ToolMode;
-    }
-    if (k === "s") {
-      return (isRight ? "addNMOS_Right_S" : "addNMOS_Left_S") as ToolMode;
-    }
-    if (k === "d") {
-      if (currentAnchor !== "D") {
-        return (isRight ? "addNMOS_Right_D" : "addNMOS_Left_D") as ToolMode;
-      }
-      return isRight ? "addNMOS_Left_D" : "addNMOS_Right_D";
-    }
   }
 
-  // 2. pMOS 子模式控制 (a: 开向左, d: 开向右/切D极, s: 切S极, g: 切G极)
+  // 2. pMOS 子模式控制 (g: 切G极, d: 切D极, s: 切S极, w: 朝上, a: 朝左)
   if (currentMode.startsWith("addPMOS")) {
-    const isRight = currentMode.includes("Right");
     const currentAnchor = currentMode.endsWith("_S") ? "S" : currentMode.endsWith("_G") ? "G" : "D";
+    const dir = currentMode.includes("Top") ? "Top" : currentMode.includes("Bottom") ? "Bottom" : currentMode.includes("Right") ? "Right" : "Left";
 
-    if (k === "a") {
-      return `addPMOS_Left_${currentAnchor}` as ToolMode;
-    }
     if (k === "g") {
-      return (isRight ? "addPMOS_Right_G" : "addPMOS_Left_G") as ToolMode;
+      return `addPMOS_${dir}_G` as ToolMode;
     }
     if (k === "s") {
-      return (isRight ? "addPMOS_Right_S" : "addPMOS_Left_S") as ToolMode;
+      return `addPMOS_${dir}_S` as ToolMode;
     }
     if (k === "d") {
-      if (currentAnchor !== "D") {
-        return (isRight ? "addPMOS_Right_D" : "addPMOS_Left_D") as ToolMode;
-      }
-      return isRight ? "addPMOS_Left_D" : "addPMOS_Right_D";
+      return `addPMOS_${dir}_D` as ToolMode;
+    }
+    if (k === "w") {
+      return `addPMOS_Top_${currentAnchor}` as ToolMode;
+    }
+    if (k === "a") {
+      return `addPMOS_Left_${currentAnchor}` as ToolMode;
     }
   }
 
@@ -383,12 +393,18 @@ export function switchCircuitToolModeWithKey(currentMode: ToolMode, key: string)
     if (k === "d") return "addGND_H_Right";
   }
 
-  // 10. IO 端口
+  // 10. IO 端口 (i: 切Vin, o: 切Vout, w: 朝上, a: 朝左, s: 朝下, d: 朝右)
   if (currentMode.startsWith("addIoNode")) {
-    if (k === "a") return "addIoNode_Vin_Left";
-    if (k === "d") return "addIoNode_Vin_Right";
-    if (k === "w") return "addIoNode_Vout_Left";
-    if (k === "s") return "addIoNode_Vout_Right";
+    const isVout = currentMode.includes("Vout");
+    const dir = currentMode.endsWith("Top") ? "Top" : currentMode.endsWith("Bottom") ? "Bottom" : currentMode.endsWith("Right") ? "Right" : "Left";
+    const prefix = isVout ? "addIoNode_Vout" : "addIoNode_Vin";
+
+    if (k === "i") return `addIoNode_Vin_${dir}` as ToolMode;
+    if (k === "o") return `addIoNode_Vout_${dir}` as ToolMode;
+    if (k === "w") return `${prefix}_Top` as ToolMode;
+    if (k === "a") return `${prefix}_Left` as ToolMode;
+    if (k === "s") return `${prefix}_Bottom` as ToolMode;
+    if (k === "d") return `${prefix}_Right` as ToolMode;
   }
 
   return null;
