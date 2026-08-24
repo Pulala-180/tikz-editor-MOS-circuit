@@ -9,7 +9,7 @@
     "ws": "^8.16.0",
     "openai": "^4.24.1",
     "@anthropic-ai/sdk": "^0.14.0",
-    "@google/genai": "^0.1.2",
+    "@google/genai": "^2.18.0",
     "dotenv": "^16.4.1"
   },
   "devDependencies": {

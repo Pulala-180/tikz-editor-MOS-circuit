@@ -7,6 +7,11 @@ const profilingBuild = process.env.TIKZ_PROFILE_BUILD === "1";
 
 export default defineConfig(({ command }) => ({
   base: command === "build" ? "/editor/web/" : "/",
+  server: {
+    port: 8888,
+    host: true,
+    open: true,
+  },
   plugins: [react(), agentSyncPlugin()],
   publicDir: path.resolve(__dirname, "../../packages/app/public"),
   define: {

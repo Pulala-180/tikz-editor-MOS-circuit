@@ -6,6 +6,28 @@ TikZ Editor 是一款直观、高性能的可视化 TikZ 编辑器，专为**电
 
 ---
 
+## ⚡ 极速上手：小白 / 群友一键启动（双击即用）
+
+> 💡 **如果您是新手或直接下载了源码压缩包**：
+> 1. 确保电脑已安装 **[Node.js](https://nodejs.org/)** (>= 18.0.0)。
+> 2. **Windows 用户**：直接双击项目根目录下的 **`一键启动.bat`**（或 `start.bat`）。
+> 3. 脚本将**全自动安装依赖包、启动服务器并在浏览器自动弹出打开** [http://localhost:8888](http://localhost:8888)！
+
+> ⚠️ **关于 `localhost` 的特别说明**：
+> `localhost` 代表的是您自己的本机电脑。如果您将 `http://localhost:8888` 链接直接发给群友，群友电脑上由于没有运行本程序是打不开的。如需分享给其他人使用，请让群友下载本仓库并双击 `一键启动.bat`，或者在同一局域网下分享您的局域网 IP（启动黑框中显示的 Network 地址）。
+
+---
+
+## 🤖 AI Agent 协同与自动执行 (AI Assistant Guide)
+
+如果您使用 **Cursor / Claude Code / Antigravity / GitHub Copilot** 等 AI 助手打开本项目：
+- **依赖安装**：`npm install`
+- **启动服务**：`npm run dev`（内置 Vite `open: true`，启动后自动拉起浏览器）
+- **AI 系统指令**：详见项目根目录下的 [`AGENTS.md`](./AGENTS.md)。
+- **双向实时同步**：外部 Agent 写入 `Sketch/active-drawing/active-drawing.tex` 时，浏览器画布会自动触发 120 FPS 极速热重载。
+
+---
+
 ## 🚀 核心适配性设计与深度优化（全景复盘）
 
 ### 1. ⚡ 瞬态 DOM 极速拖拽引擎（160+ FPS）
@@ -200,7 +222,20 @@ npm install
 npm run dev
 ```
 
-启动完成后，在浏览器打开 [http://localhost:5173](http://localhost:5173) 即可开始绘制！
+启动完成后，在浏览器打开 [http://localhost:8888](http://localhost:8888) 即可开始绘制！
+
+---
+
+## ❓ 常见问题排错 (FAQ)
+
+### Q1: 为什么不能直接双击 `index.html` 打开？
+> **解答**：本项目基于 React 19 + TypeScript + Vite 模块化架构构建，浏览器受安全策略限制无法通过 `file://` 协议直接加载 ES 模块。请务必使用 `一键启动.bat` 或运行 `npm run dev` 启动本地服务。
+
+### Q2: 提示 `'node'` 或 `'npm'` 不是内部或外部命令？
+> **解答**：说明电脑尚未安装 Node.js 或未将 Node.js 添加到系统环境变量。请前往 [Node.js 官网](https://nodejs.org/) 下载 LTS 版本安装，安装时勾选 "Add to PATH"，安装后重新双击 `一键启动.bat` 即可。
+
+### Q3: 为什么发给群友 `http://localhost:8888` 对方打不开？
+> **解答**：`localhost` 仅代表您当前使用的这台电脑。若想让同一局域网（同一 Wi-Fi）下的同学访问，请将启动黑框中显示的 `Network: http://192.168.x.x:8888/` 分享给对方。若想让任何人随时访问，可部署到 GitHub Pages 或 Vercel。
 
 ---
 
