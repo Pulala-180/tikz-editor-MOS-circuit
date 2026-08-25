@@ -567,15 +567,17 @@ export function buildClusterPastePreview(
             fill: el.style.fill ?? "none"
           });
         }
-        if (rendered.tipCommands.length > 0) {
-          paths.push({
-            d: encodeCommandsWithOffset(rendered.tipCommands, dxWorld, dyWorld, viewBox),
-            strokeWidth: el.style.lineWidth,
-            strokeLinecap: el.style.lineCap,
-            strokeLinejoin: el.style.lineJoin,
-            stroke: el.style.stroke ?? "black",
-            fill: el.style.stroke ?? "black"
-          });
+        if (rendered.tipPaths && rendered.tipPaths.length > 0) {
+          for (const tip of rendered.tipPaths) {
+            paths.push({
+              d: encodeCommandsWithOffset(tip.commands, dxWorld, dyWorld, viewBox),
+              strokeWidth: tip.strokeWidth,
+              strokeLinecap: "butt",
+              strokeLinejoin: "miter",
+              stroke: tip.stroke ?? "black",
+              fill: tip.fill ?? "black"
+            });
+          }
         }
       } else if (el.kind === "Text") {
         const svgPt = worldToSvgPoint(
