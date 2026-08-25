@@ -76,15 +76,17 @@ export function rotateCircuitToolMode(mode: ToolMode): ToolMode | null {
     return "addGND_V_Bottom";
   }
 
-  // 8. IO 端口 (Terminal) - 顺时针 90 度旋转: Left -> Top -> Right -> Bottom -> Left
+  // 8. IO 端口 (Terminal) - 8态轮回交替: Vin (Left -> Top -> Right -> Bottom) -> Vout (Left -> Top -> Right -> Bottom) -> Vin ...
   if (mode.startsWith("addIoNode")) {
-    const isVout = mode.includes("Vout");
-    const prefix = isVout ? "addIoNode_Vout" : "addIoNode_Vin";
-    if (mode.endsWith("Left") || mode === "addIoNode") return `${prefix}_Top` as ToolMode;
-    if (mode.endsWith("Top")) return `${prefix}_Right` as ToolMode;
-    if (mode.endsWith("Right")) return `${prefix}_Bottom` as ToolMode;
-    if (mode.endsWith("Bottom")) return `${prefix}_Left` as ToolMode;
-    return `${prefix}_Top` as ToolMode;
+    if (mode === "addIoNode" || mode === "addIoNode_Vin_Left") return "addIoNode_Vin_Top";
+    if (mode === "addIoNode_Vin_Top") return "addIoNode_Vin_Right";
+    if (mode === "addIoNode_Vin_Right") return "addIoNode_Vin_Bottom";
+    if (mode === "addIoNode_Vin_Bottom") return "addIoNode_Vout_Left";
+    if (mode === "addIoNode_Vout_Left") return "addIoNode_Vout_Top";
+    if (mode === "addIoNode_Vout_Top") return "addIoNode_Vout_Right";
+    if (mode === "addIoNode_Vout_Right") return "addIoNode_Vout_Bottom";
+    if (mode === "addIoNode_Vout_Bottom") return "addIoNode_Vin_Left";
+    return "addIoNode_Vin_Top";
   }
 
   // 9. nMOS 管 - 顺时针 90 度旋转: Left -> Top -> Right -> Bottom -> Left，保持当前引脚锚点
@@ -262,6 +264,10 @@ export function flipCircuitToolModeVertical(mode: ToolMode): ToolMode | null {
   }
   // 9. IO 端口
   if (mode.startsWith("addIoNode")) {
+    const isVout = mode.includes("Vout");
+    const prefix = isVout ? "addIoNode_Vout" : "addIoNode_Vin";
+    if (mode.endsWith("Top")) return `${prefix}_Bottom` as ToolMode;
+    if (mode.endsWith("Bottom")) return `${prefix}_Top` as ToolMode;
     if (mode === "addIoNode_Vin_Left") return "addIoNode_Vout_Left";
     if (mode === "addIoNode_Vout_Left") return "addIoNode_Vin_Left";
     if (mode === "addIoNode_Vin_Right") return "addIoNode_Vout_Right";
