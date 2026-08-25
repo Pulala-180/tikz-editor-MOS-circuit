@@ -8,6 +8,7 @@ import { resolveScopeAwareContextMenuTarget, type ScopeOverlayIndex } from "./sc
 import { clientToWorldPoint } from "./geometry";
 import type { CanvasSnapshot } from "./types";
 import type { HitRegion } from "./hit-regions";
+import type { PastePlacementDraft } from "./paste-cluster-builder";
 
 export type UseCanvasSelectionInteractionsArgs = {
   openCanvasContextMenuAt: (clientPoint: ClientPoint, clickedSourceId: string | null, clickedHandleId?: string | null) => void;
@@ -19,6 +20,8 @@ export type UseCanvasSelectionInteractionsArgs = {
   svgResult: CanvasSnapshot["svg"];
   interactionSvgRef: RefObject<SVGSVGElement | null>;
   canvasTransform: CanvasTransform;
+  pastePlacementDraft?: PastePlacementDraft | null;
+  setPastePlacementDraft?: (draft: PastePlacementDraft | null) => void;
 };
 
 export function useCanvasSelectionInteractions(args: UseCanvasSelectionInteractionsArgs) {
@@ -31,13 +34,28 @@ export function useCanvasSelectionInteractions(args: UseCanvasSelectionInteracti
     snapshot,
     svgResult,
     interactionSvgRef,
-    canvasTransform
+    canvasTransform,
+    pastePlacementDraft,
+    setPastePlacementDraft
   } = args;
 
   const onElementContextMenu = useCallback(
     (event: ReactMouseEvent<SVGElement>, sourceId: string, region?: HitRegion, handleId?: string | null) => {
       event.preventDefault();
       event.stopPropagation();
+
+      if (pastePlacementDraft && setPastePlacementDraft) {
+        const total = pastePlacementDraft.candidateAnchors.length;
+        if (total > 1) {
+          const nextIndex = (pastePlacementDraft.activeAnchorIndex + 1) % total;
+          setPastePlacementDraft({
+            ...pastePlacementDraft,
+            activeAnchorIndex: nextIndex
+          });
+        }
+        return;
+      }
+
       const hitSourceId = typeof region?.sourceId === "string" ? region.sourceId : sourceId;
       const resolvedSourceId = resolveScopeAwareContextMenuTarget({
         hitTargetId: sourceId,
@@ -62,17 +80,30 @@ export function useCanvasSelectionInteractions(args: UseCanvasSelectionInteracti
 
       openCanvasContextMenuAt(clientPoint, resolvedSourceId, resolvedHandleId);
     },
-    [focusedScopeId, openCanvasContextMenuAt, scopeOverlay, selectedElementIds, snapshot.editHandles, svgResult, interactionSvgRef, canvasTransform.scale]
+    [focusedScopeId, openCanvasContextMenuAt, pastePlacementDraft, scopeOverlay, selectedElementIds, setPastePlacementDraft, snapshot.editHandles, svgResult, interactionSvgRef, canvasTransform.scale]
   );
 
   const onCanvasContextMenu = useCallback(
     (event: ReactMouseEvent<SVGElement | HTMLDivElement>) => {
       event.preventDefault();
       event.stopPropagation();
+
+      if (pastePlacementDraft && setPastePlacementDraft) {
+        const total = pastePlacementDraft.candidateAnchors.length;
+        if (total > 1) {
+          const nextIndex = (pastePlacementDraft.activeAnchorIndex + 1) % total;
+          setPastePlacementDraft({
+            ...pastePlacementDraft,
+            activeAnchorIndex: nextIndex
+          });
+        }
+        return;
+      }
+
       closeTextEditingSession();
       openCanvasContextMenuAt(makeClientPoint(px(event.clientX), px(event.clientY)), null);
     },
-    [closeTextEditingSession, openCanvasContextMenuAt]
+    [closeTextEditingSession, openCanvasContextMenuAt, pastePlacementDraft, setPastePlacementDraft]
   );
 
   return {

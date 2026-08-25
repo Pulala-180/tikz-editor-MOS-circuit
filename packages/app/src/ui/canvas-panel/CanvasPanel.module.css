@@ -666,6 +666,19 @@
   color: rgba(220, 220, 220, 0.85);
 }
 
+.toolPreviewClusterPaste {
+  pointer-events: none;
+}
+
+.pasteCandidateAnchor {
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+.pasteActiveAnchor {
+  pointer-events: none;
+}
+
 .toolPreviewStroke {
   fill: none;
   stroke: rgba(60, 60, 60, 0.48);

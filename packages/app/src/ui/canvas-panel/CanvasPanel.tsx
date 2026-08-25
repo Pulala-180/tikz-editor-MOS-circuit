@@ -138,6 +138,7 @@ OrthoWireToolDraft,
 SnapDebugLogInput,
 SourceBoundsMap
 } from "./types";
+import type { PastePlacementDraft } from "./paste-cluster-builder";
 import { useCanvasDerivedState } from "./useCanvasDerivedState";
 import { useCanvasDragController } from "./useCanvasDragController";
 import { useCanvasElementInteractions } from "./useCanvasElementInteractions";
@@ -897,6 +898,13 @@ export const CanvasPanel = memo(function CanvasPanel({
   const [pendingBezier, setPendingBezier] = useState<PendingBezier | null>(null);
   const [marqueeDraft, setMarqueeDraft] = useState<Extract<DragState, { kind: "marquee" }> | null>(null);
   const [nodeAnchorOverlay, setNodeAnchorOverlay] = useState<NodeAnchorOverlayState | null>(null);
+  const [pastePlacementDraft, setPastePlacementDraft] = useState<PastePlacementDraft | null>(null);
+  const lastPointerWorldRef = useRef<WorldPoint | null>(null);
+  useEffect(() => {
+    if (toolMode !== "select") {
+      setPastePlacementDraft(null);
+    }
+  }, [toolMode]);
   const [canvasTextEditState, setCanvasTextEditState] = useState(INITIAL_CANVAS_TEXT_EDIT_STATE);
   const canvasTextEditStateRef = useRef(INITIAL_CANVAS_TEXT_EDIT_STATE);
   const textEditingSession = canvasTextEditState.session;
@@ -1757,7 +1765,8 @@ export const CanvasPanel = memo(function CanvasPanel({
     bezierBendDraft,
     roundedLineDraft,
     orthoWireDraft,
-    canvasTransform
+    canvasTransform,
+    pastePlacementDraft
   });
 
   const { maxZoomScale } = useCanvasViewportPersistence({
@@ -3045,7 +3054,9 @@ export const CanvasPanel = memo(function CanvasPanel({
     snapshot,
     svgResult,
     interactionSvgRef,
-    canvasTransform
+    canvasTransform,
+    pastePlacementDraft,
+    setPastePlacementDraft
   });
 
   const {
@@ -3061,6 +3072,8 @@ export const CanvasPanel = memo(function CanvasPanel({
   } = useCanvasToolInteractions({
     viewportRef,
     toolMode,
+    pastePlacementDraft,
+    setPastePlacementDraft,
     closeTextEditingSession,
     startMarqueeSelection,
     pendingTouchViewportRef,
@@ -3167,7 +3180,10 @@ export const CanvasPanel = memo(function CanvasPanel({
     DESKTOP_SVG_CLIPBOARD_FORMATS,
     DESKTOP_KEYNOTE_CLIPBOARD_FORMATS,
     DESKTOP_POWERPOINT_GVML_CLIPBOARD_FORMATS,
-    computeAutoScaleForImportedTikz
+    computeAutoScaleForImportedTikz,
+    pastePlacementDraft,
+    setPastePlacementDraft,
+    lastPointerWorldRef
   });
 
   useCanvasViewportEffects({

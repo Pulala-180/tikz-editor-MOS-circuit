@@ -34,10 +34,13 @@ import type {
   RoundedLineToolDraft,
   OrthoWireToolDraft
 } from "./types";
+import type { PastePlacementDraft } from "./paste-cluster-builder";
 
 export type UseCanvasToolInteractionsArgs = {
   viewportRef: RefObject<HTMLDivElement | null>;
   toolMode: ToolMode;
+  pastePlacementDraft?: PastePlacementDraft | null;
+  setPastePlacementDraft?: StateSetter<PastePlacementDraft | null>;
   closeTextEditingSession: () => void;
   startMarqueeSelection: (pointerId: number, clientPoint: ClientPoint, additiveSelection: boolean) => boolean;
   pendingTouchViewportRef: MutableRefObject<PendingTouchViewport | null>;
@@ -97,6 +100,8 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
   const {
     viewportRef,
     toolMode,
+    pastePlacementDraft,
+    setPastePlacementDraft,
     closeTextEditingSession,
     startMarqueeSelection,
     pendingTouchViewportRef,
@@ -290,10 +295,66 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
         return;
       }
 
-      if (event.button === 0 && toolMode !== "select") {
+      if (event.button === 0 && (toolMode !== "select" || pastePlacementDraft)) {
         const clientPoint = makeClientPoint(px(event.clientX), px(event.clientY));
         const world = clientToWorldPoint(clientPoint, interactionSvgRef.current, svgResult.viewBox);
         if (!world) {
+          return;
+        }
+
+        if (pastePlacementDraft) {
+          event.preventDefault();
+          event.stopPropagation();
+          setDragTooltip(null);
+          const bypassSnap = event.ctrlKey || event.metaKey;
+          const snapContext = snapshot.scene
+            ? buildSnapContext({
+                sceneElements: snapshot.scene.elements,
+                selectedSourceIds: [],
+                editHandles: snapshot.editHandles,
+                nodeAnchorTargets,
+                guides: snapGuideInput,
+                settings: snapSettingsPatch,
+                zoom: canvasTransform.scale,
+                viewportWorld: viewportWorldBounds
+              })
+            : null;
+          const snapResult = snapContext
+            ? snapToolPointer({
+                context: snapContext,
+                pointer: world,
+                kind: "node",
+                modifiers: { ctrlOrMeta: bypassSnap }
+              })
+            : { snappedPoint: world, offset: undefined, lines: [] as SnapLine[] };
+          const snapSettings = resolveSnapSettings(snapSettingsPatch);
+          const previewToleranceWorld = snapSettings.thresholdPx / Math.max(canvasTransform.scale, 1e-6);
+          const previewMatchesClick =
+            !bypassSnap &&
+            toolCursorWorld != null &&
+            distanceSquared(world, toolCursorWorld) <= previewToleranceWorld * previewToleranceWorld;
+          const nodeAt = previewMatchesClick ? toolCursorWorld : (snapResult.snappedPoint ?? world);
+
+          const activeAnchor =
+            pastePlacementDraft.candidateAnchors[pastePlacementDraft.activeAnchorIndex] ??
+            pastePlacementDraft.candidateAnchors[0];
+          if (activeAnchor) {
+            setToolCursorWorld(nodeAt);
+            const deltaX = nodeAt.x - activeAnchor.world.x;
+            const deltaY = nodeAt.y - activeAnchor.world.y;
+            const ok = applyActionWithFeedback({
+              kind: "pasteStatements",
+              snippets: pastePlacementDraft.snippets,
+              delta: worldPoint(pt(deltaX), pt(deltaY))
+            });
+            if (!ok.sourceChanged) {
+              pendingAddedSelectionRef.current = null;
+            }
+            if (ok.sourceChanged) {
+              suppressNextBackgroundClickRef.current = true;
+              setSnapLines([]);
+            }
+          }
           return;
         }
         if (toolMode === "addBucket") {
@@ -844,7 +905,7 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
       if (event.button !== 0 || event.target !== event.currentTarget) {
         return;
       }
-      if (toolMode !== "select") {
+      if (toolMode !== "select" || pastePlacementDraft) {
         if (toolMode !== "magnify") {
           onInteractionPointerDown(event as unknown as ReactPointerEvent<SVGSVGElement>);
         }
@@ -857,12 +918,12 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
         event.preventDefault();
       }
     },
-    [closeTextEditingSession, onInteractionPointerDown, startMarqueeSelection, toolMode, viewportRef]
+    [closeTextEditingSession, onInteractionPointerDown, pastePlacementDraft, startMarqueeSelection, toolMode, viewportRef]
   );
 
   const onInteractionPointerMove = useCallback(
     (event: ReactPointerEvent<SVGSVGElement>) => {
-      if (!svgResult || toolMode === "select") {
+      if (!svgResult || (toolMode === "select" && !pastePlacementDraft)) {
         setNodeAnchorOverlay(null);
         setDragTooltip(null);
         return;
@@ -1040,7 +1101,8 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
       parseOptions,
       magnifierState,
       setMagnifierState,
-      viewportRef
+      viewportRef,
+      pastePlacementDraft
     ]
   );
 

@@ -1064,7 +1064,7 @@ export function actionAvailability(
   return availabilityFor(context);
 }
 
-function selectedSnippets(context: SelectionCommandContext): string[] {
+export function selectedSnippets(context: SelectionCommandContext): string[] {
   const { source, selectedElementIds } = context;
   const parseOptions = parseOptionsForContext(context);
   if (selectedElementIds.size === 0) {
@@ -1090,14 +1090,27 @@ function selectedSnippets(context: SelectionCommandContext): string[] {
 
   if (statementIds.length > 0) {
     const snapshot = parseStatementSnapshot(source, parseOptions);
-    const refs = resolveStatementRefs(snapshot, statementIds);
-    refs.sort((left, right) => {
+    const rawRefs = resolveStatementRefs(snapshot, statementIds);
+    const refIds = new Set(rawRefs.map((r) => r.id));
+    const topLevelRefs = rawRefs.filter((ref) => {
+      let curr = ref.parentKey;
+      while (curr && curr !== "root") {
+        if (refIds.has(curr)) {
+          return false;
+        }
+        const parentRef = snapshot.all.find((r) => r.id === curr);
+        curr = parentRef ? parentRef.parentKey : null;
+      }
+      return true;
+    });
+
+    topLevelRefs.sort((left, right) => {
       if (left.span.from !== right.span.from) {
         return left.span.from - right.span.from;
       }
       return left.span.to - right.span.to;
     });
-    snippets.push(...refs.map((ref) => statementSnippet(source, ref)));
+    snippets.push(...topLevelRefs.map((ref) => statementSnippet(source, ref)));
   }
 
   return snippets;

@@ -17,6 +17,7 @@ import type {
 } from "./types";
 import { fmt, worldToSvgPoint } from "./geometry";
 import type { CircuitPreviewData } from "./circuit-preview-builder";
+import type { ClusterPastePreviewData } from "./paste-cluster-builder";
 import css from "./CanvasPanel.module.css";
 
 const SNAP_GAP_ARROW_MARKER_ID = "snap-gap-arrow-marker";
@@ -27,6 +28,7 @@ const ROTATE_GLYPH_PATH_2 = "M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.
 export type ToolPreview =
   | { kind: "cursor"; x: number; y: number }
   | { kind: "circuit"; data: CircuitPreviewData }
+  | { kind: "cluster-paste"; data: ClusterPastePreviewData }
   | { kind: "node"; x: number; y: number }
   | {
       kind: "line";
@@ -321,6 +323,131 @@ export function ToolPreviewOverlay({
               )}
             </text>
           ))}
+        </g>
+      )}
+      {toolPreview.kind === "cluster-paste" && (
+        <g className={css.toolPreviewClusterPaste}>
+          <g className={css.toolPreviewCircuit}>
+            {toolPreview.data.paths.map((path, idx) => (
+              <path
+                key={`cluster-paste-path-${idx}`}
+                d={path.d}
+                stroke={path.stroke === "none" ? "none" : "currentColor"}
+                fill={path.fill === "none" || !path.fill ? "none" : "currentColor"}
+                strokeWidth={path.strokeWidth ?? 0.8}
+                strokeLinecap={path.strokeLinecap ?? "butt"}
+                strokeLinejoin={path.strokeLinejoin ?? "miter"}
+              />
+            ))}
+            {toolPreview.data.texts?.map((t, idx) => (
+              <text
+                key={`cluster-paste-text-${idx}`}
+                x={t.x}
+                y={t.y}
+                fontSize={t.fontSize ?? 11}
+                textAnchor={t.anchor ?? "middle"}
+                dominantBaseline="middle"
+                fill="currentColor"
+                stroke="none"
+                style={{
+                  userSelect: "none",
+                  fontFamily: "MJX-NCM-Sans, CMU Sans Serif, Latin Modern Sans, Helvetica, Arial, sans-serif",
+                  fontWeight: "bold"
+                }}
+              >
+                <tspan fontStyle={t.italic === false ? "normal" : "italic"}>{t.main}</tspan>
+                {t.sub && (
+                  <tspan fontSize="0.75em" dy="0.25em" fontStyle={t.sub === "1" ? "normal" : "italic"}>
+                    {t.sub}
+                  </tspan>
+                )}
+              </text>
+            ))}
+          </g>
+
+          {toolPreview.data.candidateAnchors.map((anchor, idx) => {
+            if (anchor.isActive) return null;
+            const crossSize = 5 / Math.max(scale, 1e-3);
+            return (
+              <g key={`cluster-inactive-anchor-${idx}`} className={css.pasteCandidateAnchor}>
+                <line
+                  x1={anchor.x - crossSize}
+                  y1={anchor.y - crossSize}
+                  x2={anchor.x + crossSize}
+                  y2={anchor.y + crossSize}
+                  stroke="#6b7280"
+                  strokeWidth={handleStrokeWidth * 0.9}
+                />
+                <line
+                  x1={anchor.x - crossSize}
+                  y1={anchor.y + crossSize}
+                  x2={anchor.x + crossSize}
+                  y2={anchor.y - crossSize}
+                  stroke="#6b7280"
+                  strokeWidth={handleStrokeWidth * 0.9}
+                />
+              </g>
+            );
+          })}
+
+          {(() => {
+            const active = toolPreview.data.activeAnchor;
+            const crossSize = 8 / Math.max(scale, 1e-3);
+            const badgeOffset = 12 / Math.max(scale, 1e-3);
+            return (
+              <g className={css.pasteActiveAnchor}>
+                <circle
+                  cx={active.x}
+                  cy={active.y}
+                  r={crossSize * 1.1}
+                  fill="none"
+                  stroke="#ef4444"
+                  strokeWidth={handleStrokeWidth * 0.75}
+                  strokeDasharray="2,2"
+                />
+                <line
+                  x1={active.x - crossSize}
+                  y1={active.y}
+                  x2={active.x + crossSize}
+                  y2={active.y}
+                  stroke="#ef4444"
+                  strokeWidth={handleStrokeWidth * 1.5}
+                />
+                <line
+                  x1={active.x}
+                  y1={active.y - crossSize}
+                  x2={active.x}
+                  y2={active.y + crossSize}
+                  stroke="#ef4444"
+                  strokeWidth={handleStrokeWidth * 1.5}
+                />
+                <g transform={`translate(${active.x + badgeOffset} ${active.y - badgeOffset})`}>
+                  <rect
+                    x={-4}
+                    y={-12}
+                    width={Math.max(40, (active.label.length + 5) * 8)}
+                    height={18}
+                    rx={3}
+                    fill="rgba(15, 23, 42, 0.85)"
+                    stroke="#ef4444"
+                    strokeWidth={0.75}
+                  />
+                  <text
+                    x={2}
+                    y={1}
+                    fill="#ffffff"
+                    fontSize={11}
+                    fontFamily="system-ui, -apple-system, sans-serif"
+                    fontWeight="500"
+                    textAnchor="start"
+                    dominantBaseline="middle"
+                  >
+                    {`[${active.index}/${active.total}] ${active.label}`}
+                  </text>
+                </g>
+              </g>
+            );
+          })()}
         </g>
       )}
       {toolPreview.kind === "line" && (

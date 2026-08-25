@@ -19,6 +19,7 @@ import { buildAnchoredGridPreviewLines } from "./panel-helpers";
 import type { CanvasSnapshot, DragState, FreehandToolDraft, OrthoWireToolDraft, PathToolDraft, PendingBezier, RoundedLineToolDraft } from "./types";
 import type { ToolPreview } from "./overlays";
 import { buildCircuitPreview } from "./circuit-preview-builder";
+import { buildClusterPastePreview, type PastePlacementDraft } from "./paste-cluster-builder";
 
 const TOOL_PREVIEW_CIRCLE_RADIUS_PT = 0.8 * PT_PER_CM;
 const TOOL_PREVIEW_GRID_STEP_PT = PT_PER_CM;
@@ -43,6 +44,7 @@ export type UseCanvasDerivedStateArgs = {
   roundedLineDraft: RoundedLineToolDraft | null;
   orthoWireDraft: OrthoWireToolDraft | null;
   canvasTransform: CanvasTransform;
+  pastePlacementDraft?: PastePlacementDraft | null;
 };
 
 export function useCanvasDerivedState(args: UseCanvasDerivedStateArgs) {
@@ -58,11 +60,27 @@ export function useCanvasDerivedState(args: UseCanvasDerivedStateArgs) {
     pathSegmentDraft,
     pendingBezier,
     bezierBendDraft,
-    canvasTransform
+    canvasTransform,
+    pastePlacementDraft
   } = args;
 
   const toolPreview = useMemo((): ToolPreview | null => {
-    if (!svgResult || toolMode === "select") {
+    if (!svgResult) {
+      return null;
+    }
+
+    if (pastePlacementDraft) {
+      const liveWorld =
+        toolCursorWorld ??
+        pastePlacementDraft.candidateAnchors[pastePlacementDraft.activeAnchorIndex]?.world ??
+        worldPoint(pt(0), pt(0));
+      const previewData = buildClusterPastePreview(pastePlacementDraft, liveWorld, svgResult.viewBox);
+      if (previewData) {
+        return { kind: "cluster-paste", data: previewData };
+      }
+    }
+
+    if (toolMode === "select") {
       return null;
     }
 
@@ -445,7 +463,7 @@ export function useCanvasDerivedState(args: UseCanvasDerivedStateArgs) {
       cy: start.y,
       r: radius > 1e-4 ? radius : TOOL_PREVIEW_CIRCLE_RADIUS_PT
     };
-  }, [bezierBendDraft, canvasTransform.scale, freehandDraft, freehandSmoothingPx, pathDraft, pathSegmentDraft, pendingBezier, selectedAddShape, svgResult, toolCursorWorld, toolDraft, toolMode]);
+  }, [bezierBendDraft, canvasTransform.scale, freehandDraft, freehandSmoothingPx, pastePlacementDraft, pathDraft, pathSegmentDraft, pendingBezier, selectedAddShape, svgResult, toolCursorWorld, toolDraft, toolMode]);
 
   return {
     toolPreview

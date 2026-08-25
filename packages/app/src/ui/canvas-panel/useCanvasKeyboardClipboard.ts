@@ -32,9 +32,11 @@ import {
   flipSelection,
   pasteSelectionFromPayload,
   pasteSelectionFromClipboardData,
-  pasteSnippetsWithOffset
+  pasteSnippetsWithOffset,
+  selectedSnippets
 } from "../editor-commands";
 import { parseClipboardPayloadJson } from "../editor-clipboard";
+import { createPastePlacementDraft, type PastePlacementDraft } from "./paste-cluster-builder";
 import {
   buildScopeWrappedSnippet,
   convertKeynoteClipboardToScopeSnippet,
@@ -97,6 +99,9 @@ export type UseCanvasKeyboardClipboardArgs = {
     currentScene: { elements: SceneElement[] } | null,
     currentViewBox: SvgViewBox | null
   ) => number | null;
+  pastePlacementDraft?: PastePlacementDraft | null;
+  setPastePlacementDraft?: StateSetter<PastePlacementDraft | null>;
+  lastPointerWorldRef?: MutableRefObject<WorldPoint | null>;
 };
 
 function logClipboardImportDebug(message: string, error: unknown): void {
@@ -173,7 +178,10 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
     DESKTOP_SVG_CLIPBOARD_FORMATS,
     DESKTOP_KEYNOTE_CLIPBOARD_FORMATS,
     DESKTOP_POWERPOINT_GVML_CLIPBOARD_FORMATS,
-    computeAutoScaleForImportedTikz
+    computeAutoScaleForImportedTikz,
+    pastePlacementDraft,
+    setPastePlacementDraft,
+    lastPointerWorldRef
   } = args;
 
   const selectedElementIdsRef = useRef(selectedElementIds);
@@ -208,13 +216,43 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
       const currentSource = sourceRef.current;
       const currentSnapshot = snapshotRef.current;
 
-      if (event.key === "Escape" && currentToolMode !== "select") {
-        dispatch({ type: "SET_TOOL_MODE", mode: "select" });
-        setToolDraft(null);
-        setToolCursorWorld(null);
-        setSnapLines([]);
-        event.preventDefault();
-        return;
+      if ((event.key === "Escape" || event.key === "Esc")) {
+        if (pastePlacementDraft) {
+          setPastePlacementDraft?.(null);
+          setToolCursorWorld(null);
+          setSnapLines([]);
+          event.preventDefault();
+          return;
+        }
+        if (currentToolMode !== "select") {
+          dispatch({ type: "SET_TOOL_MODE", mode: "select" });
+          setToolDraft(null);
+          setToolCursorWorld(null);
+          setSnapLines([]);
+          event.preventDefault();
+          return;
+        }
+      }
+
+      if ((event.ctrlKey || event.metaKey) && rawKey === "c") {
+        if (currentSelectedIds.size > 0 && setPastePlacementDraft) {
+          const snippets = selectedSnippets({
+            source: currentSource,
+            snapshotSource: currentSnapshot.source,
+            scene: currentSnapshot.scene,
+            editHandles: currentSnapshot.editHandles,
+            selectedElementIds: currentSelectedIds,
+            dispatch
+          });
+          if (snippets.length > 0) {
+            const draft = createPastePlacementDraft(snippets);
+            if (draft) {
+              setPastePlacementDraft(draft);
+              const fallback = draft.candidateAnchors[draft.activeAnchorIndex]?.world;
+              setToolCursorWorld(lastPointerWorldRef?.current ?? fallback ?? null);
+            }
+          }
+        }
       }
       if (!event.ctrlKey && !event.metaKey && !event.altKey) {
         const key = rawKey;
@@ -945,6 +983,24 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
       if (isEditableClipboardTarget(event.target)) {
         return;
       }
+      if (selectedElementIds.size > 0 && setPastePlacementDraft) {
+        const snippets = selectedSnippets({
+          source,
+          snapshotSource: snapshot.source,
+          scene: snapshot.scene,
+          editHandles: snapshot.editHandles,
+          selectedElementIds,
+          dispatch
+        });
+        if (snippets.length > 0) {
+          const draft = createPastePlacementDraft(snippets);
+          if (draft) {
+            setPastePlacementDraft(draft);
+            const fallback = draft.candidateAnchors[draft.activeAnchorIndex]?.world;
+            setToolCursorWorld(lastPointerWorldRef?.current ?? fallback ?? null);
+          }
+        }
+      }
       const supportsNativeClipboardBundle = typeof platform.clipboard?.writeBundle === "function";
       if (supportsNativeClipboardBundle) {
         event.preventDefault();
@@ -978,7 +1034,7 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
       }
       event.preventDefault();
     },
-    [dispatch, platform, selectedElementIds, snapshot.editHandles, snapshot.scene, snapshot.source, source]
+    [dispatch, lastPointerWorldRef, platform, selectedElementIds, setPastePlacementDraft, setToolCursorWorld, snapshot.editHandles, snapshot.scene, snapshot.source, source]
   );
 
   const onViewportCut = useCallback(
