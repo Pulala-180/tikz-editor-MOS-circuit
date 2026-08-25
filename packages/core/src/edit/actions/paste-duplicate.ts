@@ -174,10 +174,23 @@ export function applyDuplicateElementsAction(
   }
 
   const initialSnapshot = getStatementSnapshot(source, parseOptions, caches);
-  const initialRefs = resolveStatementRefs(initialSnapshot, normalizedIds);
-  if (initialRefs.length === 0) {
+  const rawRefs = resolveStatementRefs(initialSnapshot, normalizedIds);
+  if (rawRefs.length === 0) {
     return { kind: "unsupported", reason: "No duplicable statements were found for the selected element ids." };
   }
+
+  const refIds = new Set(rawRefs.map((r) => r.id));
+  const initialRefs = rawRefs.filter((ref) => {
+    let curr: string | null = ref.parentKey;
+    while (curr && curr !== "root") {
+      if (refIds.has(curr)) {
+        return false;
+      }
+      const parentRef = initialSnapshot.all.find((r) => r.id === curr);
+      curr = parentRef ? parentRef.parentKey : null;
+    }
+    return true;
+  });
 
   const groups = groupStatementRefsByParent(initialRefs);
   let currentSource = source;
@@ -258,12 +271,59 @@ export function applyDuplicateElementsAction(
   };
 }
 
+import { ptToCm } from "../../coords/source.js";
+
+function offsetSnippetDirect(snippet: string, deltaXCm: number, deltaYCm: number): string {
+  const trimmed = snippet.trimStart();
+  if (trimmed.startsWith("\\begin{scope}")) {
+    const shiftMatch = snippet.match(/\\begin\{scope\}\s*\[(.*?)shift=\s*\{?\s*\(\s*([-0-9.]+)\s*,\s*([-0-9.]+)\s*\)\s*\}?(.*?)\]/s);
+    if (shiftMatch) {
+      const prefix = shiftMatch[1];
+      const oldX = parseFloat(shiftMatch[2]);
+      const oldY = parseFloat(shiftMatch[3]);
+      const suffix = shiftMatch[4];
+      const newX = (oldX + deltaXCm).toFixed(2);
+      const newY = (oldY + deltaYCm).toFixed(2);
+      return snippet.replace(
+        shiftMatch[0],
+        `\\begin{scope}[${prefix}shift={(${newX},${newY})}${suffix}]`
+      );
+    }
+    const scopeOpenWithOptions = snippet.match(/\\begin\{scope\}\s*\[(.*?)\]/s);
+    if (scopeOpenWithOptions) {
+      const existingOpts = scopeOpenWithOptions[1].trim();
+      const newShift = `shift={(${deltaXCm.toFixed(2)},${deltaYCm.toFixed(2)})}`;
+      const newOpts = existingOpts ? `${newShift}, ${existingOpts}` : newShift;
+      return snippet.replace(scopeOpenWithOptions[0], `\\begin{scope}[${newOpts}]`);
+    }
+    const scopeOpenNoOptions = snippet.match(/\\begin\{scope\}/s);
+    if (scopeOpenNoOptions) {
+      return snippet.replace(
+        scopeOpenNoOptions[0],
+        `\\begin{scope}[shift={(${deltaXCm.toFixed(2)},${deltaYCm.toFixed(2)})}]`
+      );
+    }
+    return snippet;
+  }
+
+  return snippet.replace(/\(\s*([-0-9.]+)\s*,\s*([-0-9.]+)\s*\)/g, (match, xStr, yStr) => {
+    const x = parseFloat(xStr);
+    const y = parseFloat(yStr);
+    if (Number.isFinite(x) && Number.isFinite(y)) {
+      const newX = (x + deltaXCm).toFixed(2);
+      const newY = (y + deltaYCm).toFixed(2);
+      return `(${newX},${newY})`;
+    }
+    return match;
+  });
+}
+
 function offsetSnippetsByDelta(
   snippets: readonly string[],
   delta: WorldPoint,
-  deps: PasteDuplicateDeps,
-  parseOptions: EditParseOptions,
-  caches: PasteDuplicateCaches
+  _deps: PasteDuplicateDeps,
+  _parseOptions: EditParseOptions,
+  _caches: PasteDuplicateCaches
 ): OffsetSnippetsResult {
   const normalized = snippets
     .map((snippet) => snippet.replace(/\r\n?/g, "\n").trimEnd())
@@ -272,54 +332,12 @@ function offsetSnippetsByDelta(
     return { snippets: normalized, skippedHandles: [] };
   }
 
-  const preparation = getOffsetPreparation(normalized, parseOptions, caches);
-  if (preparation.rootIds.length === 0) {
-    return { snippets: normalized, skippedHandles: [] };
-  }
-
-  const moved = deps.applyMoveElements(
-    preparation.wrappedSource,
-    preparation.editHandles,
-    preparation.rootIds,
-    delta,
-    parseOptions
-  );
-
-  if (moved.kind !== "success" && moved.kind !== "partial") {
-    return {
-      snippets: normalized,
-      skippedHandles: [],
-      partialReason:
-        moved.kind === "unsupported"
-          ? `Could not offset all pasted/duplicated statements: ${moved.reason}`
-          : `Could not offset all pasted/duplicated statements: ${moved.message}`
-    };
-  }
-
-  const movedSnapshot = getStatementSnapshot(moved.newSource, parseOptions, caches);
-  const movedRootRefs = movedSnapshot.byParentKey.get("root") ?? [];
-  const movedSnippets = movedRootRefs.map((ref) => statementSnippet(moved.newSource, ref));
-  if (movedSnippets.length !== normalized.length) {
-    return {
-      snippets: normalized,
-      skippedHandles: moved.kind === "partial" ? moved.skippedHandles : [],
-      partialReason:
-        moved.kind === "partial"
-          ? `Some pasted/duplicated coordinates could not be offset: ${moved.reason}`
-          : "Some pasted/duplicated statements could not be offset."
-    };
-  }
-
-  if (moved.kind === "partial") {
-    return {
-      snippets: movedSnippets,
-      partialReason: `Some pasted/duplicated coordinates could not be offset: ${moved.reason}`,
-      skippedHandles: moved.skippedHandles
-    };
-  }
+  const deltaXCm = ptToCm(pt(delta.x));
+  const deltaYCm = ptToCm(pt(delta.y));
+  const shiftedSnippets = normalized.map((s) => offsetSnippetDirect(s, deltaXCm, deltaYCm));
 
   return {
-    snippets: movedSnippets,
+    snippets: shiftedSnippets,
     skippedHandles: []
   };
 }
