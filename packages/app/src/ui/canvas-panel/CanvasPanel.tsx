@@ -905,6 +905,22 @@ export const CanvasPanel = memo(function CanvasPanel({
       setPastePlacementDraft(null);
     }
   }, [toolMode]);
+  useEffect(() => {
+    if (!pastePlacementDraft) return;
+    const handleGlobalEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" || e.key === "Esc") {
+        e.preventDefault();
+        e.stopPropagation();
+        setPastePlacementDraft(null);
+        setToolCursorWorld(null);
+        setSnapLines([]);
+      }
+    };
+    window.addEventListener("keydown", handleGlobalEscape, true);
+    return () => {
+      window.removeEventListener("keydown", handleGlobalEscape, true);
+    };
+  }, [pastePlacementDraft]);
   const [canvasTextEditState, setCanvasTextEditState] = useState(INITIAL_CANVAS_TEXT_EDIT_STATE);
   const canvasTextEditStateRef = useRef(INITIAL_CANVAS_TEXT_EDIT_STATE);
   const textEditingSession = canvasTextEditState.session;

@@ -367,7 +367,8 @@ export function ToolPreviewOverlay({
 
           {toolPreview.data.candidateAnchors.map((anchor, idx) => {
             if (anchor.isActive) return null;
-            const crossSize = 5 / Math.max(scale, 1e-3);
+            const crossSize = 3.5 / Math.max(scale, 1e-3);
+            const sw = Math.max(0.75, handleStrokeWidth * 0.75);
             return (
               <g key={`cluster-inactive-anchor-${idx}`} className={css.pasteCandidateAnchor}>
                 <line
@@ -375,16 +376,16 @@ export function ToolPreviewOverlay({
                   y1={anchor.y - crossSize}
                   x2={anchor.x + crossSize}
                   y2={anchor.y + crossSize}
-                  stroke="#6b7280"
-                  strokeWidth={handleStrokeWidth * 0.9}
+                  stroke="#9ca3af"
+                  strokeWidth={sw}
                 />
                 <line
                   x1={anchor.x - crossSize}
                   y1={anchor.y + crossSize}
                   x2={anchor.x + crossSize}
                   y2={anchor.y - crossSize}
-                  stroke="#6b7280"
-                  strokeWidth={handleStrokeWidth * 0.9}
+                  stroke="#9ca3af"
+                  strokeWidth={sw}
                 />
               </g>
             );
@@ -392,18 +393,26 @@ export function ToolPreviewOverlay({
 
           {(() => {
             const active = toolPreview.data.activeAnchor;
-            const crossSize = 8 / Math.max(scale, 1e-3);
-            const badgeOffset = 12 / Math.max(scale, 1e-3);
+            const invScale = 1 / Math.max(scale, 1e-3);
+            const crossSize = 4 * invScale;
+            const circleRadius = 5.5 * invScale;
+            const badgeOffsetX = 6 * invScale;
+            const badgeOffsetY = 6 * invScale;
+            const badgeText = `[${active.index}/${active.total}] ${active.label}`;
+            const badgeWidth = Math.max(32 * invScale, (badgeText.length * 5.2 + 8) * invScale);
+            const badgeHeight = 13 * invScale;
+            const fontSize = 8.5 * invScale;
+
             return (
               <g className={css.pasteActiveAnchor}>
                 <circle
                   cx={active.x}
                   cy={active.y}
-                  r={crossSize * 1.1}
+                  r={circleRadius}
                   fill="none"
                   stroke="#ef4444"
-                  strokeWidth={handleStrokeWidth * 0.75}
-                  strokeDasharray="2,2"
+                  strokeWidth={0.8 * invScale}
+                  strokeDasharray={`${1.5 * invScale},${1.5 * invScale}`}
                 />
                 <line
                   x1={active.x - crossSize}
@@ -411,7 +420,7 @@ export function ToolPreviewOverlay({
                   x2={active.x + crossSize}
                   y2={active.y}
                   stroke="#ef4444"
-                  strokeWidth={handleStrokeWidth * 1.5}
+                  strokeWidth={1.1 * invScale}
                 />
                 <line
                   x1={active.x}
@@ -419,30 +428,30 @@ export function ToolPreviewOverlay({
                   x2={active.x}
                   y2={active.y + crossSize}
                   stroke="#ef4444"
-                  strokeWidth={handleStrokeWidth * 1.5}
+                  strokeWidth={1.1 * invScale}
                 />
-                <g transform={`translate(${active.x + badgeOffset} ${active.y - badgeOffset})`}>
+                <g transform={`translate(${active.x + badgeOffsetX}, ${active.y - badgeOffsetY - badgeHeight})`}>
                   <rect
-                    x={-4}
-                    y={-12}
-                    width={Math.max(40, (active.label.length + 5) * 8)}
-                    height={18}
-                    rx={3}
-                    fill="rgba(15, 23, 42, 0.85)"
+                    x={0}
+                    y={0}
+                    width={badgeWidth}
+                    height={badgeHeight}
+                    rx={2 * invScale}
+                    fill="rgba(15, 23, 42, 0.88)"
                     stroke="#ef4444"
-                    strokeWidth={0.75}
+                    strokeWidth={0.6 * invScale}
                   />
                   <text
-                    x={2}
-                    y={1}
+                    x={badgeWidth / 2}
+                    y={badgeHeight / 2}
                     fill="#ffffff"
-                    fontSize={11}
+                    fontSize={fontSize}
                     fontFamily="system-ui, -apple-system, sans-serif"
                     fontWeight="500"
-                    textAnchor="start"
-                    dominantBaseline="middle"
+                    textAnchor="middle"
+                    dominantBaseline="central"
                   >
-                    {`[${active.index}/${active.total}] ${active.label}`}
+                    {badgeText}
                   </text>
                 </g>
               </g>

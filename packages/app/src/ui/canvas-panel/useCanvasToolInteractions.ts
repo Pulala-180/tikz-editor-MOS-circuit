@@ -353,6 +353,7 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
             if (ok.sourceChanged) {
               suppressNextBackgroundClickRef.current = true;
               setSnapLines([]);
+              dispatch({ type: "SELECT_ELEMENTS", ids: [] });
             }
           }
           return;

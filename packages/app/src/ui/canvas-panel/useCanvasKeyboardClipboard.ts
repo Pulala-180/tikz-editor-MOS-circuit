@@ -35,8 +35,12 @@ import {
   pasteSnippetsWithOffset,
   selectedSnippets
 } from "../editor-commands";
-import { parseClipboardPayloadJson } from "../editor-clipboard";
-import { createPastePlacementDraft, type PastePlacementDraft } from "./paste-cluster-builder";
+import {
+  createPastePlacementDraft,
+  flipPastePlacementDraft,
+  cyclePastePlacementDraftAnchor,
+  type PastePlacementDraft
+} from "./paste-cluster-builder";
 import {
   buildScopeWrappedSnippet,
   convertKeynoteClipboardToScopeSnippet,
@@ -192,6 +196,8 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
   sourceRef.current = source;
   const toolModeRef = useRef(toolMode);
   toolModeRef.current = toolMode;
+  const pastePlacementDraftRef = useRef(pastePlacementDraft);
+  pastePlacementDraftRef.current = pastePlacementDraft;
 
   const vKeyDownRef = useRef(false);
   const lastVKeyDownTimestampRef = useRef(0);
@@ -215,13 +221,15 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
       const currentSelectedIds = selectedElementIdsRef.current;
       const currentSource = sourceRef.current;
       const currentSnapshot = snapshotRef.current;
+      const currentDraft = pastePlacementDraftRef.current;
 
       if ((event.key === "Escape" || event.key === "Esc")) {
-        if (pastePlacementDraft) {
+        if (currentDraft) {
           setPastePlacementDraft?.(null);
           setToolCursorWorld(null);
           setSnapLines([]);
           event.preventDefault();
+          event.stopPropagation();
           return;
         }
         if (currentToolMode !== "select") {
@@ -250,12 +258,36 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
               setPastePlacementDraft(draft);
               const fallback = draft.candidateAnchors[draft.activeAnchorIndex]?.world;
               setToolCursorWorld(lastPointerWorldRef?.current ?? fallback ?? null);
+              // Clear selection so original elements don't show bounding boxes and aren't transformed
+              dispatch({ type: "SELECT_ELEMENTS", ids: [] });
             }
           }
         }
       }
       if (!event.ctrlKey && !event.metaKey && !event.altKey) {
         const key = rawKey;
+
+        // 如果处于复制虚影预放置状态，按键直接作用于虚影（X/V 垂直对称，Y/H 水平对称，Tab/Q 切换引脚）
+        if (currentDraft && setPastePlacementDraft) {
+          if (key === "x" || key === "v") {
+            const nextDraft = flipPastePlacementDraft(currentDraft, "vertical");
+            setPastePlacementDraft(nextDraft);
+            event.preventDefault();
+            return;
+          }
+          if (key === "y" || key === "h") {
+            const nextDraft = flipPastePlacementDraft(currentDraft, "horizontal");
+            setPastePlacementDraft(nextDraft);
+            event.preventDefault();
+            return;
+          }
+          if (key === "tab" || key === "q") {
+            const nextDraft = cyclePastePlacementDraftAnchor(currentDraft, event.shiftKey ? "prev" : "next");
+            setPastePlacementDraft(nextDraft);
+            event.preventDefault();
+            return;
+          }
+        }
 
         // 1. 如果处于选择模式 (select):
         if (currentToolMode === "select") {
@@ -407,6 +439,14 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
       }
 
       if (event.key === "Escape") {
+        if (pastePlacementDraftRef.current) {
+          setPastePlacementDraft?.(null);
+          setToolCursorWorld(null);
+          setSnapLines([]);
+          event.preventDefault();
+          event.stopPropagation();
+          return;
+        }
         if (currentToolMode === "addPath") {
           finalizePathDraft(false);
           setWarning(null);
@@ -474,6 +514,28 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
 
       if (!event.ctrlKey && !event.metaKey && !event.altKey) {
         const key = rawKey;
+
+        // 如果处于复制虚影预放置状态，按键直接作用于虚影
+        if (pastePlacementDraftRef.current && setPastePlacementDraft) {
+          if (key === "x" || key === "v") {
+            const nextDraft = flipPastePlacementDraft(pastePlacementDraftRef.current, "vertical");
+            setPastePlacementDraft(nextDraft);
+            event.preventDefault();
+            return;
+          }
+          if (key === "y" || key === "h") {
+            const nextDraft = flipPastePlacementDraft(pastePlacementDraftRef.current, "horizontal");
+            setPastePlacementDraft(nextDraft);
+            event.preventDefault();
+            return;
+          }
+          if (key === "tab" || key === "q") {
+            const nextDraft = cyclePastePlacementDraftAnchor(pastePlacementDraftRef.current, event.shiftKey ? "prev" : "next");
+            setPastePlacementDraft(nextDraft);
+            event.preventDefault();
+            return;
+          }
+        }
 
         // 处于选择模式 (select): 若有选中元件，H/V 键实现对称翻转；否则敲击主键一键呼出对应元件工具模式
         if (currentToolMode === "select") {
@@ -998,6 +1060,7 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
             setPastePlacementDraft(draft);
             const fallback = draft.candidateAnchors[draft.activeAnchorIndex]?.world;
             setToolCursorWorld(lastPointerWorldRef?.current ?? fallback ?? null);
+            dispatch({ type: "SELECT_ELEMENTS", ids: [] });
           }
         }
       }

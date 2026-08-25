@@ -393,3 +393,55 @@ export function buildClusterPastePreview(
     candidateAnchors
   };
 }
+
+function toggleScopeScaleOption(snippet: string, optionKey: "xscale" | "yscale"): string {
+  const scopeRegex = /\\begin\{scope\}\s*\[(.*?)\]/s;
+  const match = snippet.match(scopeRegex);
+  if (match) {
+    const rawOpts = match[1];
+    const keyRegex = new RegExp(`(^|[,\\s])${optionKey}\\s*=\\s*(-?[0-9.]+)`, "i");
+    const keyMatch = rawOpts.match(keyRegex);
+    let newOpts: string;
+    if (keyMatch) {
+      const val = parseFloat(keyMatch[2]);
+      const newVal = -val;
+      if (newVal === 1) {
+        newOpts = rawOpts.replace(keyMatch[0], "").replace(/^,\s*|,\s*$/g, "").replace(/,\s*,/g, ",");
+      } else {
+        newOpts = rawOpts.replace(keyMatch[0], `${keyMatch[1]}${optionKey}=${newVal}`);
+      }
+    } else {
+      newOpts = rawOpts.trim().length > 0 ? `${rawOpts}, ${optionKey}=-1` : `${optionKey}=-1`;
+    }
+    return snippet.replace(match[0], `\\begin{scope}[${newOpts}]`);
+  } else if (snippet.startsWith("\\begin{scope}")) {
+    return snippet.replace("\\begin{scope}", `\\begin{scope}[${optionKey}=-1]`);
+  }
+  return snippet;
+}
+
+export function flipPastePlacementDraft(
+  draft: PastePlacementDraft,
+  axis: "vertical" | "horizontal"
+): PastePlacementDraft {
+  const optionKey = axis === "vertical" ? "yscale" : "xscale";
+  const newSnippets = draft.snippets.map((snippet) => toggleScopeScaleOption(snippet, optionKey));
+  const newDraft = createPastePlacementDraft(newSnippets);
+  if (!newDraft) return draft;
+
+  newDraft.activeAnchorIndex = Math.min(draft.activeAnchorIndex, newDraft.candidateAnchors.length - 1);
+  return newDraft;
+}
+
+export function cyclePastePlacementDraftAnchor(
+  draft: PastePlacementDraft,
+  direction: "next" | "prev" = "next"
+): PastePlacementDraft {
+  const total = draft.candidateAnchors.length;
+  if (total <= 1) return draft;
+  const step = direction === "prev" ? total - 1 : 1;
+  return {
+    ...draft,
+    activeAnchorIndex: (draft.activeAnchorIndex + step) % total
+  };
+}
