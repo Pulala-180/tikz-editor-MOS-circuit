@@ -1,5 +1,6 @@
 import { useCallback, useEffect, type MouseEvent as ReactMouseEvent, type MutableRefObject, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
-import { viewportPoint, clientPoint as makeClientPoint, worldPoint, pt, px } from "tikz-editor/coords/index";
+import { viewportPoint, clientPoint as makeClientPoint, worldPoint, pt, px, scalarValue } from "tikz-editor/coords/index";
+import { ptToCm } from "tikz-editor/coords/source";
 import { buildSnapContext, resolveSnapSettings, snapToolPointer, type SnapGuideInput, type SnapLine, type SnapSettingsPatch } from "tikz-editor/edit/snapping";
 import type { NodeAnchorTarget } from "tikz-editor/semantic/types";
 import type { ClientPoint, WorldBounds, WorldPoint } from "../coords/types";
@@ -34,7 +35,7 @@ import type {
   RoundedLineToolDraft,
   OrthoWireToolDraft
 } from "./types";
-import type { PastePlacementDraft } from "./paste-cluster-builder";
+import { unwrapPasteClusterSnippets, type PastePlacementDraft } from "./paste-cluster-builder";
 
 export type UseCanvasToolInteractionsArgs = {
   viewportRef: RefObject<HTMLDivElement | null>;
@@ -342,10 +343,17 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
             setToolCursorWorld(nodeAt);
             const deltaX = nodeAt.x - activeAnchor.world.x;
             const deltaY = nodeAt.y - activeAnchor.world.y;
+            const deltaXCm = scalarValue(ptToCm(pt(deltaX)));
+            const deltaYCm = scalarValue(ptToCm(pt(deltaY)));
+            const flatSnippets = unwrapPasteClusterSnippets(
+              pastePlacementDraft.snippets,
+              deltaXCm,
+              deltaYCm
+            );
             const ok = applyActionWithFeedback({
               kind: "pasteStatements",
-              snippets: pastePlacementDraft.snippets,
-              delta: worldPoint(pt(deltaX), pt(deltaY))
+              snippets: flatSnippets,
+              delta: worldPoint(pt(0), pt(0))
             });
             if (!ok.sourceChanged) {
               pendingAddedSelectionRef.current = null;
