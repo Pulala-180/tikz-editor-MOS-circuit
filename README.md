@@ -1,8 +1,20 @@
 # TikZ Editor（MOS 电路与高性能定制版）
 
 > 💡 **上游致谢**：本项目基于 Dominik Peters 的开源项目 [**tikz-editor**](https://github.com/DominikPeters/tikz-editor) 进行了深度重构、性能动力学优化与电路专业化适配。
+>
+> 📄 **新手必读·图文完整教程 PDF**：👉 [**《TikZ Editor 电路绘制简易教程与使用指南.pdf》**](./TikZ%20Editor%20电路绘制简易教程与使用指南.pdf)（包含简易绘制全流程、技巧与自定义元件指引）
 
 TikZ Editor 是一款直观、高性能的可视化 TikZ 编辑器，专为**电子原理图（尤其是 MOS 模拟/数字集成电路）**及通用科技论文插图量身定制。具备实时双向 AST 同步、160+ FPS 瞬态 DOM 动力学渲染、弹性导线拓扑跟随、单轴约束导线拉伸、Sketch 草稿文件管理系统以及引脚纳米级精准磁吸等核心特性。
+
+---
+
+## 📚 教程与开发文档导航 (Documentation Index)
+
+| 文档名称 | 形式 | 核心内容 |
+| :--- | :---: | :--- |
+| 📄 [**TikZ Editor 电路绘制简易教程与使用指南.pdf**](./TikZ%20Editor%20电路绘制简易教程与使用指南.pdf) | **PDF 图文指南** | **从零开始的电路绘制图文全流程、快捷键使用、极速拖拽微调技巧与 BJT 接入实战** |
+| 📖 [**元器件扩展开发与引脚节点标准指南 (SOP)**](./docs/COMPONENT_DEVELOPMENT_GUIDE.md) | **Markdown 规范** | **自定义新元件、引脚命名军规、快捷键分配与 6 步接入流水线 CheckList** |
+| 🤖 [**AI Agent 协同与系统指令**](./AGENTS.md) | **Markdown 指令** | **AI 助手（Cursor / Claude / Copilot）自动化开发与热重载规范** |
 
 ---
 
