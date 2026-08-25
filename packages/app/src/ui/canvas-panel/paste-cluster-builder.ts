@@ -43,7 +43,10 @@ export type ClusterPastePreviewData = {
   }>;
 };
 
-function parseNodeText(raw: string): { main: string; sub?: string; italic?: boolean } {
+function parseNodeText(raw: string | undefined | null): { main: string; sub?: string; italic?: boolean } {
+  if (!raw || typeof raw !== "string") {
+    return { main: "", italic: false };
+  }
   const textSubMatch = raw.match(/\\textit\{([^}]+)\}\textsubscript\{(?:\s*\\textup\{)?([^}]+)\}?/);
   if (textSubMatch) {
     return { main: textSubMatch[1], sub: textSubMatch[2], italic: true };
@@ -71,6 +74,7 @@ function encodeCommandsWithOffset(
       continue;
     }
     if (cmd.kind === "C") {
+      if (!cmd.c1 || !cmd.c2 || !cmd.to) continue;
       const c1 = worldToSvgPoint(worldPoint(pt(cmd.c1.x + dxWorld), pt(cmd.c1.y + dyWorld)), viewBox);
       const c2 = worldToSvgPoint(worldPoint(pt(cmd.c2.x + dxWorld), pt(cmd.c2.y + dyWorld)), viewBox);
       const to = worldToSvgPoint(worldPoint(pt(cmd.to.x + dxWorld), pt(cmd.to.y + dyWorld)), viewBox);
@@ -78,13 +82,16 @@ function encodeCommandsWithOffset(
       continue;
     }
     if (cmd.kind === "A") {
+      if (!cmd.to) continue;
       const to = worldToSvgPoint(worldPoint(pt(cmd.to.x + dxWorld), pt(cmd.to.y + dyWorld)), viewBox);
       const sweep = cmd.sweep ? 0 : 1;
       parts.push(`A ${cmd.rx.toFixed(2)} ${cmd.ry.toFixed(2)} ${(-cmd.xAxisRotation).toFixed(2)} ${cmd.largeArc ? 1 : 0} ${sweep} ${to.x.toFixed(2)} ${to.y.toFixed(2)}`);
       continue;
     }
-    const to = worldToSvgPoint(worldPoint(pt(cmd.to.x + dxWorld), pt(cmd.to.y + dyWorld)), viewBox);
-    parts.push(`${cmd.kind} ${to.x.toFixed(2)} ${to.y.toFixed(2)}`);
+    if (cmd.to) {
+      const to = worldToSvgPoint(worldPoint(pt(cmd.to.x + dxWorld), pt(cmd.to.y + dyWorld)), viewBox);
+      parts.push(`${cmd.kind} ${to.x.toFixed(2)} ${to.y.toFixed(2)}`);
+    }
   }
   return parts.join(" ");
 }
@@ -218,40 +225,44 @@ function offsetSnippetDirect(snippet: string, deltaXCm: number, deltaYCm: number
 }
 
 function computeSnippetsCenterCm(snippets: readonly string[]): { xCm: number; yCm: number } {
-  const code = `\\begin{tikzpicture}\n${snippets.join("\n")}\n\\end{tikzpicture}`;
-  const parsed = parseTikz(code);
-  const sem = evaluateTikzFigure(parsed.figure, code);
+  try {
+    const code = `\\begin{tikzpicture}\n${snippets.join("\n")}\n\\end{tikzpicture}`;
+    const parsed = parseTikz(code);
+    const sem = evaluateTikzFigure(parsed.figure, code);
 
-  let minX = Infinity;
-  let maxX = -Infinity;
-  let minY = Infinity;
-  let maxY = -Infinity;
-  for (const el of sem.scene.elements) {
-    if (el.kind === "Path") {
-      for (const cmd of el.commands) {
-        if (cmd.kind !== "Z" && cmd.to) {
-          minX = Math.min(minX, cmd.to.x);
-          maxX = Math.max(maxX, cmd.to.x);
-          minY = Math.min(minY, cmd.to.y);
-          maxY = Math.max(maxY, cmd.to.y);
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minY = Infinity;
+    let maxY = -Infinity;
+    for (const el of sem.scene.elements) {
+      if (el.kind === "Path") {
+        for (const cmd of el.commands) {
+          if (cmd.kind !== "Z" && cmd.to) {
+            minX = Math.min(minX, cmd.to.x);
+            maxX = Math.max(maxX, cmd.to.x);
+            minY = Math.min(minY, cmd.to.y);
+            maxY = Math.max(maxY, cmd.to.y);
+          }
         }
+      } else if (el.kind === "Text") {
+        minX = Math.min(minX, el.position.x);
+        maxX = Math.max(maxX, el.position.x);
+        minY = Math.min(minY, el.position.y);
+        maxY = Math.max(maxY, el.position.y);
       }
-    } else if (el.kind === "Text") {
-      minX = Math.min(minX, el.position.x);
-      maxX = Math.max(maxX, el.position.x);
-      minY = Math.min(minY, el.position.y);
-      maxY = Math.max(maxY, el.position.y);
     }
-  }
-  if (!Number.isFinite(minX)) {
+    if (!Number.isFinite(minX)) {
+      return { xCm: 0, yCm: 0 };
+    }
+    const centerXPt = (minX + maxX) / 2;
+    const centerYPt = (minY + maxY) / 2;
+    return {
+      xCm: parseFloat(scalarValue(ptToCm(pt(centerXPt))).toFixed(2)),
+      yCm: parseFloat(scalarValue(ptToCm(pt(centerYPt))).toFixed(2))
+    };
+  } catch {
     return { xCm: 0, yCm: 0 };
   }
-  const centerXPt = (minX + maxX) / 2;
-  const centerYPt = (minY + maxY) / 2;
-  return {
-    xCm: parseFloat(scalarValue(ptToCm(pt(centerXPt))).toFixed(2)),
-    yCm: parseFloat(scalarValue(ptToCm(pt(centerYPt))).toFixed(2))
-  };
 }
 
 function parseScopeOptions(optString: string): { shiftX: number; shiftY: number; xscale: number; yscale: number } {
@@ -402,10 +413,14 @@ export function createPastePlacementDraft(snippets: readonly string[]): PastePla
     return null;
   }
 
-  const effectiveSnippets =
-    normalizedSnippets.length > 1 && !normalizedSnippets.some((s) => s.includes("clusterScope=true"))
-      ? wrapSnippetsIntoClusterScope(normalizedSnippets)
-      : normalizedSnippets;
+  let effectiveSnippets = normalizedSnippets;
+  if (normalizedSnippets.length > 1 && !normalizedSnippets.some((s) => s.includes("clusterScope=true"))) {
+    try {
+      effectiveSnippets = wrapSnippetsIntoClusterScope(normalizedSnippets);
+    } catch {
+      effectiveSnippets = normalizedSnippets;
+    }
+  }
 
   const code = effectiveSnippets.some((s) => s.includes("\\begin{tikzpicture}"))
     ? effectiveSnippets.join("\n")
@@ -449,7 +464,7 @@ export function createPastePlacementDraft(snippets: readonly string[]): PastePla
         const pts: WorldPoint[] = [];
         for (const cmd of el.commands) {
           if (cmd.kind === "M" || cmd.kind === "L" || cmd.kind === "C" || cmd.kind === "A") {
-            pts.push(cmd.to);
+            if (cmd.to) pts.push(cmd.to);
           }
         }
         if (pts.length >= 2) {
@@ -528,88 +543,92 @@ export function buildClusterPastePreview(
   liveWorld: WorldPoint,
   viewBox: SvgViewBox
 ): ClusterPastePreviewData | null {
-  const activeAnchor = draft.candidateAnchors[draft.activeAnchorIndex] ?? draft.candidateAnchors[0];
-  if (!activeAnchor) return null;
+  try {
+    const activeAnchor = draft.candidateAnchors[draft.activeAnchorIndex] ?? draft.candidateAnchors[0];
+    if (!activeAnchor) return null;
 
-  // 将整个图平移，使得 activeAnchor 的世界坐标对齐 liveWorld
-  const dxWorld = liveWorld.x - activeAnchor.world.x;
-  const dyWorld = liveWorld.y - activeAnchor.world.y;
+    // 将整个图平移，使得 activeAnchor 的世界坐标对齐 liveWorld
+    const dxWorld = liveWorld.x - activeAnchor.world.x;
+    const dyWorld = liveWorld.y - activeAnchor.world.y;
 
-  const paths: CircuitPreviewPath[] = [];
-  const texts: CircuitPreviewText[] = [];
+    const paths: CircuitPreviewPath[] = [];
+    const texts: CircuitPreviewText[] = [];
 
-  for (const el of draft.scene.elements) {
-    if (el.kind === "Path") {
-      const rendered = renderPathWithArrows(el);
-      if (rendered.shaftCommands.length > 0) {
-        paths.push({
-          d: encodeCommandsWithOffset(rendered.shaftCommands, dxWorld, dyWorld, viewBox),
-          strokeWidth: el.style.lineWidth,
-          strokeLinecap: el.style.lineCap,
-          strokeLinejoin: el.style.lineJoin,
-          stroke: el.style.stroke ?? "black",
-          fill: el.style.fill ?? "none"
+    for (const el of draft.scene.elements) {
+      if (el.kind === "Path") {
+        const rendered = renderPathWithArrows(el);
+        if (rendered.shaftCommands.length > 0) {
+          paths.push({
+            d: encodeCommandsWithOffset(rendered.shaftCommands, dxWorld, dyWorld, viewBox),
+            strokeWidth: el.style.lineWidth,
+            strokeLinecap: el.style.lineCap,
+            strokeLinejoin: el.style.lineJoin,
+            stroke: el.style.stroke ?? "black",
+            fill: el.style.fill ?? "none"
+          });
+        }
+        if (rendered.tipCommands.length > 0) {
+          paths.push({
+            d: encodeCommandsWithOffset(rendered.tipCommands, dxWorld, dyWorld, viewBox),
+            strokeWidth: el.style.lineWidth,
+            strokeLinecap: el.style.lineCap,
+            strokeLinejoin: el.style.lineJoin,
+            stroke: el.style.stroke ?? "black",
+            fill: el.style.stroke ?? "black"
+          });
+        }
+      } else if (el.kind === "Text") {
+        const svgPt = worldToSvgPoint(
+          worldPoint(pt(el.position.x + dxWorld), pt(el.position.y + dyWorld)),
+          viewBox
+        );
+        const parsed = parseNodeText(el.text);
+        texts.push({
+          main: parsed.main,
+          sub: parsed.sub,
+          italic: parsed.italic,
+          x: svgPt.x,
+          y: svgPt.y,
+          fontSize: el.style.fontSize ?? 11,
+          anchor: el.anchor ?? "center"
         });
       }
-      if (rendered.tipCommands.length > 0) {
-        paths.push({
-          d: encodeCommandsWithOffset(rendered.tipCommands, dxWorld, dyWorld, viewBox),
-          strokeWidth: el.style.lineWidth,
-          strokeLinecap: el.style.lineCap,
-          strokeLinejoin: el.style.lineJoin,
-          stroke: el.style.stroke ?? "black",
-          fill: el.style.stroke ?? "black"
-        });
-      }
-    } else if (el.kind === "Text") {
+    }
+
+    const candidateAnchors = draft.candidateAnchors.map((anchor, idx) => {
       const svgPt = worldToSvgPoint(
-        worldPoint(pt(el.position.x + dxWorld), pt(el.position.y + dyWorld)),
+        worldPoint(pt(anchor.world.x + dxWorld), pt(anchor.world.y + dyWorld)),
         viewBox
       );
-      const parsed = parseNodeText(el.text);
-      texts.push({
-        text: parsed.main,
-        sub: parsed.sub,
-        italic: parsed.italic,
+      return {
         x: svgPt.x,
         y: svgPt.y,
-        fontSize: el.style.fontSize ?? 11,
-        anchor: el.anchor ?? "center",
-        fill: el.style.textColor ?? "black"
-      });
-    }
-  }
+        label: anchor.label,
+        isActive: idx === draft.activeAnchorIndex
+      };
+    });
 
-  const candidateAnchors = draft.candidateAnchors.map((anchor, idx) => {
-    const svgPt = worldToSvgPoint(
-      worldPoint(pt(anchor.world.x + dxWorld), pt(anchor.world.y + dyWorld)),
+    const activeSvgPt = worldToSvgPoint(
+      worldPoint(pt(activeAnchor.world.x + dxWorld), pt(activeAnchor.world.y + dyWorld)),
       viewBox
     );
+
     return {
-      x: svgPt.x,
-      y: svgPt.y,
-      label: anchor.label,
-      isActive: idx === draft.activeAnchorIndex
+      paths,
+      texts,
+      activeAnchor: {
+        x: activeSvgPt.x,
+        y: activeSvgPt.y,
+        label: activeAnchor.label,
+        index: draft.activeAnchorIndex + 1,
+        total: draft.candidateAnchors.length
+      },
+      candidateAnchors
     };
-  });
-
-  const activeSvgPt = worldToSvgPoint(
-    worldPoint(pt(activeAnchor.world.x + dxWorld), pt(activeAnchor.world.y + dyWorld)),
-    viewBox
-  );
-
-  return {
-    paths,
-    texts,
-    activeAnchor: {
-      x: activeSvgPt.x,
-      y: activeSvgPt.y,
-      label: activeAnchor.label,
-      index: draft.activeAnchorIndex + 1,
-      total: draft.candidateAnchors.length
-    },
-    candidateAnchors
-  };
+  } catch (error) {
+    console.error("[paste-cluster-builder] buildClusterPastePreview failed", error);
+    return null;
+  }
 }
 
 function toggleScopeScaleOption(snippet: string, optionKey: "xscale" | "yscale"): string {

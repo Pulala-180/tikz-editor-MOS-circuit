@@ -355,7 +355,7 @@ export function ToolPreviewOverlay({
                   fontWeight: "bold"
                 }}
               >
-                <tspan fontStyle={t.italic === false ? "normal" : "italic"}>{t.main}</tspan>
+                <tspan fontStyle={t.italic === false ? "normal" : "italic"}>{t.main || ""}</tspan>
                 {t.sub && (
                   <tspan fontSize="0.75em" dy="0.25em" fontStyle={t.sub === "1" ? "normal" : "italic"}>
                     {t.sub}
@@ -365,7 +365,7 @@ export function ToolPreviewOverlay({
             ))}
           </g>
 
-          {toolPreview.data.candidateAnchors.map((anchor, idx) => {
+          {toolPreview.data.candidateAnchors?.map((anchor, idx) => {
             if (anchor.isActive) return null;
             const crossSize = 3.5 / Math.max(scale, 1e-3);
             const sw = Math.max(0.75, handleStrokeWidth * 0.75);
@@ -391,7 +391,7 @@ export function ToolPreviewOverlay({
             );
           })}
 
-          {(() => {
+          {toolPreview.data.activeAnchor && (() => {
             const active = toolPreview.data.activeAnchor;
             const invScale = 1 / Math.max(scale, 1e-3);
             const crossSize = 4 * invScale;
