@@ -158,35 +158,40 @@ export default function agentSyncPlugin(): Plugin {
       });
 
       server.ws.on("sketch:open-folder-dialog", () => {
-        const safeStart = currentSketchDir.replace(/'/g, "''");
-        const psScript = [
-          'Add-Type -AssemblyName System.Windows.Forms',
-          '$d = New-Object System.Windows.Forms.OpenFileDialog',
-          '$d.ValidateNames = $false',
-          '$d.CheckFileExists = $false',
-          '$d.CheckPathExists = $true',
-          `$d.InitialDirectory = '${safeStart}'`,
-          '$d.FileName = "选择当前文件夹"',
-          '$d.Title = "请进入您想要切换的目标文件夹，然后点击【打开】"',
-          'if ($d.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {',
-          '    $folder = [System.IO.Path]::GetDirectoryName($d.FileName)',
-          '    Write-Output $folder',
-          '}'
-        ].join('; ');
+        const pickerScript = path.resolve(__dirname, "../../scripts/native-folder-picker.ps1");
+        const safeStart = currentSketchDir;
+        const isWin = process.platform === "win32";
+        const isMac = process.platform === "darwin";
 
-        const psCommand = `powershell -NoProfile -Command "& { ${psScript} }"`;
-
-        exec(psCommand, (err, stdout) => {
-          if (!err && stdout && stdout.trim()) {
-            const selectedPath = stdout.trim();
-            if (fs.existsSync(selectedPath) && fs.statSync(selectedPath).isDirectory()) {
-              server.watcher.unwatch(currentSketchDir);
-              currentSketchDir = path.resolve(selectedPath);
-              server.watcher.add(currentSketchDir);
-              broadcastSketchTree();
-            }
+        const handleResult = (selectedPath: string | null | undefined) => {
+          if (selectedPath && fs.existsSync(selectedPath) && fs.statSync(selectedPath).isDirectory()) {
+            server.watcher.unwatch(currentSketchDir);
+            currentSketchDir = path.resolve(selectedPath);
+            server.watcher.add(currentSketchDir);
+            broadcastSketchTree();
           }
-        });
+        };
+
+        if (isWin) {
+          const cmd = `powershell -NoProfile -ExecutionPolicy Bypass -File "${pickerScript}" -InitialDir "${safeStart}" -Title "选择草稿工作区文件夹"`;
+          exec(cmd, (err, stdout) => {
+            if (!err && stdout && stdout.trim()) {
+              handleResult(stdout.trim());
+            }
+          });
+        } else if (isMac) {
+          exec(`osascript -e 'POSIX path of (choose folder with prompt "选择草稿工作区文件夹")'`, (err, stdout) => {
+            if (!err && stdout && stdout.trim()) {
+              handleResult(stdout.trim());
+            }
+          });
+        } else {
+          exec(`zenity --file-selection --directory --title="选择草稿工作区文件夹"`, (err, stdout) => {
+            if (!err && stdout && stdout.trim()) {
+              handleResult(stdout.trim());
+            }
+          });
+        }
       });
 
       server.ws.on("sketch:create-folder", (data: { parentRelPath?: string; folderName: string }) => {
