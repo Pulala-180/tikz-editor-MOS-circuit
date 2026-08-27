@@ -1,11 +1,20 @@
-﻿
-param(
+﻿param(
     [string]$InitialDir = "",
+    [string]$InitialDirBase64 = "",
     [string]$Title = "选择草稿工作区文件夹"
 )
 
-$code = @'
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
 
+if ($InitialDirBase64) {
+    try {
+        $bytes = [Convert]::FromBase64String($InitialDirBase64)
+        $InitialDir = [System.Text.Encoding]::UTF8.GetString($bytes)
+    } catch {}
+}
+
+$code = @'
 using System;
 using System.Runtime.InteropServices;
 
@@ -74,7 +83,7 @@ public class NativeFolderPicker {
         var dialog = (IFileOpenDialog)new FileOpenDialogRCW();
         uint options;
         dialog.GetOptions(out options);
-        // FOS_PICKFOLDERS (0x20) | FOS_FORCEFILESYSTEM (0x40) | FOS_NOVALIDATE (0x100)
+        // FOS_PICKFOLDERS (0x20) | FOS_FORCEFILESYSTEM (0x40)
         dialog.SetOptions(options | 0x00000020 | 0x00000040);
         if (!string.IsNullOrEmpty(title)) {
             dialog.SetTitle(title);
@@ -98,14 +107,15 @@ public class NativeFolderPicker {
         return null;
     }
 }
-
 '@
 
 try {
     Add-Type -TypeDefinition $code -Language CSharp
     $res = [NativeFolderPicker]::PickFolder($InitialDir, $Title)
     if ($res) {
-        [Console]::WriteLine($res)
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes($res)
+        $b64 = [Convert]::ToBase64String($bytes)
+        [Console]::WriteLine("BASE64:" + $b64)
     }
 } catch {
     Add-Type -AssemblyName System.Windows.Forms
@@ -114,6 +124,8 @@ try {
     $fbd.SelectedPath = $InitialDir
     $fbd.ShowNewFolderButton = $true
     if ($fbd.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
-        [Console]::WriteLine($fbd.SelectedPath)
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes($fbd.SelectedPath)
+        $b64 = [Convert]::ToBase64String($bytes)
+        [Console]::WriteLine("BASE64:" + $b64)
     }
 }

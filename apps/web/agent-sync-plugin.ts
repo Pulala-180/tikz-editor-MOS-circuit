@@ -163,17 +163,29 @@ export default function agentSyncPlugin(): Plugin {
         const isWin = process.platform === "win32";
         const isMac = process.platform === "darwin";
 
-        const handleResult = (selectedPath: string | null | undefined) => {
+        const handleResult = (rawOutput: string | null | undefined) => {
+          if (!rawOutput) return;
+          let selectedPath = rawOutput.trim();
+          if (selectedPath.startsWith("BASE64:")) {
+            try {
+              selectedPath = Buffer.from(selectedPath.slice(7).trim(), "base64").toString("utf-8");
+            } catch (e) {
+              console.error("Failed to decode base64 path", e);
+            }
+          }
           if (selectedPath && fs.existsSync(selectedPath) && fs.statSync(selectedPath).isDirectory()) {
             server.watcher.unwatch(currentSketchDir);
             currentSketchDir = path.resolve(selectedPath);
             server.watcher.add(currentSketchDir);
             broadcastSketchTree();
+          } else {
+            console.error("Selected directory not found or invalid:", selectedPath);
           }
         };
 
         if (isWin) {
-          const cmd = `powershell -NoProfile -ExecutionPolicy Bypass -File "${pickerScript}" -InitialDir "${safeStart}" -Title "选择草稿工作区文件夹"`;
+          const b64Start = Buffer.from(safeStart, "utf-8").toString("base64");
+          const cmd = `powershell -NoProfile -ExecutionPolicy Bypass -File "${pickerScript}" -InitialDirBase64 "${b64Start}" -Title "选择草稿工作区文件夹"`;
           exec(cmd, (err, stdout) => {
             if (!err && stdout && stdout.trim()) {
               handleResult(stdout.trim());

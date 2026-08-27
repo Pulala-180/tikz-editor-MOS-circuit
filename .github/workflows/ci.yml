@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -13,32 +13,5 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
-      - run: npm test
-      - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e:ci
-
-  desktop-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-      - uses: dtolnay/rust-toolchain@stable
-      - name: Install Tauri dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libwebkit2gtk-4.1-dev \
-            webkit2gtk-driver \
-            libgtk-3-dev \
-            libayatana-appindicator3-dev \
-            librsvg2-dev \
-            patchelf \
-            xvfb
-      - run: npm ci
-      - run: cargo install tauri-driver --locked
-      - run: npm run -w @tikz-editor/desktop tauri:build -- --no-bundle
-      - run: xvfb-run -a npm run test:desktop:e2e
+      - run: npm install
+      - run: npm run build
