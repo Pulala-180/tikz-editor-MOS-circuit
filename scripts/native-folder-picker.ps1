@@ -14,9 +14,13 @@ if ($InitialDirBase64) {
     } catch {}
 }
 
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+
 $code = @'
 using System;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 public class NativeFolderPicker {
     [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
@@ -97,12 +101,22 @@ public class NativeFolderPicker {
                 dialog.SetFolder(item);
             }
         }
-        if (dialog.Show(IntPtr.Zero) == 0) {
-            IShellItem result;
-            dialog.GetResult(out result);
-            string path;
-            result.GetDisplayName(0x80058000, out path); // SIGDN_FILESYSPATH
-            return path;
+
+        using (var topForm = new Form()) {
+            topForm.TopMost = true;
+            topForm.StartPosition = FormStartPosition.CenterScreen;
+            topForm.ShowInTaskbar = false;
+            topForm.FormBorderStyle = FormBorderStyle.None;
+            topForm.Size = new System.Drawing.Size(0, 0);
+            topForm.Visible = false;
+
+            if (dialog.Show(topForm.Handle) == 0) {
+                IShellItem result;
+                dialog.GetResult(out result);
+                string path;
+                result.GetDisplayName(0x80058000, out path);
+                return path;
+            }
         }
         return null;
     }
@@ -110,7 +124,7 @@ public class NativeFolderPicker {
 '@
 
 try {
-    Add-Type -TypeDefinition $code -Language CSharp
+    Add-Type -TypeDefinition $code -ReferencedAssemblies @("System.Windows.Forms", "System.Drawing") -Language CSharp
     $res = [NativeFolderPicker]::PickFolder($InitialDir, $Title)
     if ($res) {
         $bytes = [System.Text.Encoding]::UTF8.GetBytes($res)

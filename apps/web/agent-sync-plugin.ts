@@ -157,13 +157,23 @@ export default function agentSyncPlugin(): Plugin {
         }
       });
 
+      let activeFolderPickerChild: any = null;
+
       server.ws.on("sketch:open-folder-dialog", () => {
+        if (activeFolderPickerChild) {
+          try {
+            activeFolderPickerChild.kill();
+          } catch (e) {}
+          activeFolderPickerChild = null;
+        }
+
         const pickerScript = path.resolve(__dirname, "../../scripts/native-folder-picker.ps1");
         const safeStart = currentSketchDir;
         const isWin = process.platform === "win32";
         const isMac = process.platform === "darwin";
 
         const handleResult = (rawOutput: string | null | undefined) => {
+          activeFolderPickerChild = null;
           if (!rawOutput) return;
           let selectedPath = rawOutput.trim();
           if (selectedPath.startsWith("BASE64:")) {
@@ -186,19 +196,22 @@ export default function agentSyncPlugin(): Plugin {
         if (isWin) {
           const b64Start = Buffer.from(safeStart, "utf-8").toString("base64");
           const cmd = `powershell -NoProfile -ExecutionPolicy Bypass -File "${pickerScript}" -InitialDirBase64 "${b64Start}" -Title "选择草稿工作区文件夹"`;
-          exec(cmd, (err, stdout) => {
+          activeFolderPickerChild = exec(cmd, (err, stdout) => {
+            activeFolderPickerChild = null;
             if (!err && stdout && stdout.trim()) {
               handleResult(stdout.trim());
             }
           });
         } else if (isMac) {
-          exec(`osascript -e 'POSIX path of (choose folder with prompt "选择草稿工作区文件夹")'`, (err, stdout) => {
+          activeFolderPickerChild = exec(`osascript -e 'POSIX path of (choose folder with prompt "选择草稿工作区文件夹")'`, (err, stdout) => {
+            activeFolderPickerChild = null;
             if (!err && stdout && stdout.trim()) {
               handleResult(stdout.trim());
             }
           });
         } else {
-          exec(`zenity --file-selection --directory --title="选择草稿工作区文件夹"`, (err, stdout) => {
+          activeFolderPickerChild = exec(`zenity --file-selection --directory --title="选择草稿工作区文件夹"`, (err, stdout) => {
+            activeFolderPickerChild = null;
             if (!err && stdout && stdout.trim()) {
               handleResult(stdout.trim());
             }
