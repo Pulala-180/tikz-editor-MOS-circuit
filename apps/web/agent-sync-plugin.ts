@@ -120,11 +120,58 @@ export default function agentSyncPlugin(): Plugin {
         }
       }
 
+      function getQuickDirs(): string[] {
+        const results = new Set<string>();
+        try {
+          const defaultDir = path.resolve(__dirname, "../../Sketch");
+          results.add(defaultDir);
+
+          const projectRoot = path.resolve(__dirname, "../..");
+          const rootParent = path.dirname(projectRoot);
+
+          const checkCandidate = (cand: string) => {
+            try {
+              if (fs.existsSync(cand) && fs.statSync(cand).isDirectory()) {
+                results.add(cand);
+              }
+            } catch {}
+          };
+
+          if (fs.existsSync(rootParent)) {
+            const siblings = fs.readdirSync(rootParent, { withFileTypes: true });
+            for (const s of siblings) {
+              if (s.isDirectory() && !s.name.startsWith(".")) {
+                checkCandidate(path.resolve(rootParent, s.name));
+              }
+            }
+          }
+
+          if (fs.existsSync(projectRoot)) {
+            const children = fs.readdirSync(projectRoot, { withFileTypes: true });
+            for (const c of children) {
+              if (c.isDirectory() && !c.name.startsWith(".") && c.name !== "node_modules" && c.name !== "dist" && c.name !== ".git") {
+                checkCandidate(path.resolve(projectRoot, c.name));
+              }
+            }
+          }
+        } catch (e) {
+          console.error("Failed to discover quick dirs", e);
+        }
+        return Array.from(results);
+      }
+
       function broadcastSketchTree() {
         const tree = scanTree(currentSketchDir);
+        const defaultDir = path.resolve(__dirname, "../../Sketch");
+        const parentDir = path.dirname(currentSketchDir) !== currentSketchDir ? path.dirname(currentSketchDir) : null;
+        const quickDirs = getQuickDirs();
+
         server.ws.send("sketch:tree-update", {
           currentDir: currentSketchDir,
           dirName: path.basename(currentSketchDir),
+          defaultDir,
+          parentDir,
+          quickDirs,
           tree
         });
       }
@@ -137,29 +184,42 @@ export default function agentSyncPlugin(): Plugin {
       });
 
       server.ws.on("sketch:request-tree", (data, client) => {
+        const defaultDir = path.resolve(__dirname, "../../Sketch");
+        const parentDir = path.dirname(currentSketchDir) !== currentSketchDir ? path.dirname(currentSketchDir) : null;
+        const quickDirs = getQuickDirs();
+
         client.send("sketch:tree-update", {
           currentDir: currentSketchDir,
           dirName: path.basename(currentSketchDir),
+          defaultDir,
+          parentDir,
+          quickDirs,
           tree: scanTree(currentSketchDir)
         });
       });
 
       server.ws.on("sketch:switch-dir", (data: { dirPath: string }, client) => {
         try {
-          if (fs.existsSync(data.dirPath) && fs.statSync(data.dirPath).isDirectory()) {
+          const raw = data?.dirPath ? data.dirPath.trim().replace(/^["']|["']$/g, "") : "";
+          const target = raw ? path.resolve(raw) : path.resolve(__dirname, "../../Sketch");
+          if (fs.existsSync(target) && fs.statSync(target).isDirectory()) {
             server.watcher.unwatch(currentSketchDir);
-            currentSketchDir = path.resolve(data.dirPath);
+            currentSketchDir = target;
             server.watcher.add(currentSketchDir);
             broadcastSketchTree();
+            client.send("sketch:switch-dir-status", { success: true, targetPath: currentSketchDir });
+          } else {
+            client.send("sketch:switch-dir-status", { success: false, message: `路径不存在或不是有效文件夹: ${raw}` });
           }
-        } catch (e) {
+        } catch (e: any) {
           console.error("Failed to switch directory", e);
+          client.send("sketch:switch-dir-status", { success: false, message: e.message || "切换文件夹异常" });
         }
       });
 
       let activeFolderPickerChild: any = null;
 
-      server.ws.on("sketch:open-folder-dialog", () => {
+      server.ws.on("sketch:open-folder-dialog", (data, client) => {
         if (activeFolderPickerChild) {
           try {
             activeFolderPickerChild.kill();
@@ -172,9 +232,14 @@ export default function agentSyncPlugin(): Plugin {
         const isWin = process.platform === "win32";
         const isMac = process.platform === "darwin";
 
+        client.send("sketch:picker-status", { status: "opening" });
+
         const handleResult = (rawOutput: string | null | undefined) => {
           activeFolderPickerChild = null;
-          if (!rawOutput) return;
+          if (!rawOutput || rawOutput.trim() === "CANCEL") {
+            client.send("sketch:picker-status", { status: "cancelled" });
+            return;
+          }
           let selectedPath = rawOutput.trim();
           if (selectedPath.startsWith("BASE64:")) {
             try {
@@ -188,18 +253,25 @@ export default function agentSyncPlugin(): Plugin {
             currentSketchDir = path.resolve(selectedPath);
             server.watcher.add(currentSketchDir);
             broadcastSketchTree();
+            client.send("sketch:picker-status", { status: "success", selectedPath: currentSketchDir });
           } else {
             console.error("Selected directory not found or invalid:", selectedPath);
+            client.send("sketch:picker-status", { status: "error", message: `选择的目录无效: ${selectedPath}` });
           }
         };
 
         if (isWin) {
           const b64Start = Buffer.from(safeStart, "utf-8").toString("base64");
-          const cmd = `powershell -NoProfile -ExecutionPolicy Bypass -File "${pickerScript}" -InitialDirBase64 "${b64Start}" -Title "选择草稿工作区文件夹"`;
+          const b64Title = Buffer.from("选择草稿工作区文件夹", "utf-8").toString("base64");
+          const cmd = `powershell -Sta -NoProfile -ExecutionPolicy Bypass -File "${pickerScript}" -InitialDirBase64 "${b64Start}" -TitleBase64 "${b64Title}"`;
           activeFolderPickerChild = exec(cmd, (err, stdout) => {
             activeFolderPickerChild = null;
-            if (!err && stdout && stdout.trim()) {
+            if (err) {
+              client.send("sketch:picker-status", { status: "error", message: err.message });
+            } else if (stdout && stdout.trim()) {
               handleResult(stdout.trim());
+            } else {
+              client.send("sketch:picker-status", { status: "cancelled" });
             }
           });
         } else if (isMac) {
@@ -207,6 +279,8 @@ export default function agentSyncPlugin(): Plugin {
             activeFolderPickerChild = null;
             if (!err && stdout && stdout.trim()) {
               handleResult(stdout.trim());
+            } else {
+              client.send("sketch:picker-status", { status: "cancelled" });
             }
           });
         } else {
@@ -214,6 +288,8 @@ export default function agentSyncPlugin(): Plugin {
             activeFolderPickerChild = null;
             if (!err && stdout && stdout.trim()) {
               handleResult(stdout.trim());
+            } else {
+              client.send("sketch:picker-status", { status: "cancelled" });
             }
           });
         }

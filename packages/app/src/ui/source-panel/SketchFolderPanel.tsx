@@ -41,10 +41,36 @@ function FileIcon() {
   );
 }
 
+const RECENT_DIRS_KEY = "tikz-editor:recent-sketch-dirs";
+
+function getStoredRecentDirs(): string[] {
+  try {
+    const raw = localStorage.getItem(RECENT_DIRS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveStoredRecentDirs(dirs: string[]) {
+  try {
+    localStorage.setItem(RECENT_DIRS_KEY, JSON.stringify(dirs.slice(0, 10)));
+  } catch {}
+}
+
 export function SketchFolderPanel() {
   const [tree, setTree] = useState<FileTreeItem[]>([]);
   const [currentDir, setCurrentDir] = useState<string>("");
   const [dirName, setDirName] = useState<string>("Sketch");
+  const [inputPath, setInputPath] = useState<string>("");
+  const [pathError, setPathError] = useState<string | null>(null);
+  const [isPickerLoading, setIsPickerLoading] = useState<boolean>(false);
+  const [defaultDir, setDefaultDir] = useState<string>("");
+  const [parentDir, setParentDir] = useState<string | null>(null);
+  const [quickDirs, setQuickDirs] = useState<string[]>([]);
+  const [recentDirs, setRecentDirs] = useState<string[]>(getStoredRecentDirs);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(() => {
     if (typeof localStorage !== "undefined") {
       return localStorage.getItem("tikz-editor:sketch-collapsed") === "true";
@@ -79,13 +105,31 @@ export function SketchFolderPanel() {
     }
     const hot = import.meta.hot;
 
-    const handleTreeUpdate = (data: { currentDir: string; dirName: string; tree: FileTreeItem[] }) => {
+    const handleTreeUpdate = (data: {
+      currentDir: string;
+      dirName: string;
+      defaultDir?: string;
+      parentDir?: string | null;
+      quickDirs?: string[];
+      tree: FileTreeItem[];
+    }) => {
       if (data && Array.isArray(data.tree)) {
         setTree(data.tree);
         if (data.currentDir) {
           setCurrentDir(data.currentDir);
+          setInputPath(data.currentDir);
+          setRecentDirs((prev) => {
+            const next = [data.currentDir, ...prev.filter((d) => d !== data.currentDir)].slice(0, 10);
+            saveStoredRecentDirs(next);
+            return next;
+          });
         }
         if (data.dirName) setDirName(data.dirName);
+        if (data.defaultDir) setDefaultDir(data.defaultDir);
+        if (data.parentDir !== undefined) setParentDir(data.parentDir);
+        if (Array.isArray(data.quickDirs)) setQuickDirs(data.quickDirs);
+        setIsPickerLoading(false);
+        setPathError(null);
       }
     };
 
@@ -121,9 +165,38 @@ export function SketchFolderPanel() {
       }
     };
 
+    const handlePickerStatus = (data: {
+      status: "opening" | "success" | "cancelled" | "error";
+      message?: string;
+      selectedPath?: string;
+    }) => {
+      if (data.status === "opening") {
+        setIsPickerLoading(true);
+      } else if (data.status === "cancelled") {
+        setIsPickerLoading(false);
+      } else if (data.status === "error") {
+        setIsPickerLoading(false);
+        setPathError(data.message || "调起文件夹选择器失败");
+      } else if (data.status === "success") {
+        setIsPickerLoading(false);
+        setShowDirSwitcher(false);
+      }
+    };
+
+    const handleSwitchDirStatus = (data: { success: boolean; message?: string; targetPath?: string }) => {
+      if (!data.success) {
+        setPathError(data.message || "切换文件夹失败");
+      } else {
+        setPathError(null);
+        setShowDirSwitcher(false);
+      }
+    };
+
     hot.on("sketch:tree-update", handleTreeUpdate);
     hot.on("sketch:file-data", handleFileData);
     hot.on("sketch:rename-success", handleRenameSuccess);
+    hot.on("sketch:picker-status", handlePickerStatus);
+    hot.on("sketch:switch-dir-status", handleSwitchDirStatus);
 
     hot.send("sketch:request-tree");
 
@@ -131,6 +204,8 @@ export function SketchFolderPanel() {
       hot.off("sketch:tree-update", handleTreeUpdate);
       hot.off("sketch:file-data", handleFileData);
       hot.off("sketch:rename-success", handleRenameSuccess);
+      hot.off("sketch:picker-status", handlePickerStatus);
+      hot.off("sketch:switch-dir-status", handleSwitchDirStatus);
     };
   }, [documents, dispatch, selectedFolderRelPath]);
 
@@ -270,16 +345,28 @@ export function SketchFolderPanel() {
     }
   };
 
+  const handleSwitchDir = (targetPath: string) => {
+    setPathError(null);
+    import.meta.hot?.send("sketch:switch-dir", { dirPath: targetPath });
+  };
+
+  const handleSwitchToInputPath = () => {
+    const trimmed = inputPath.trim();
+    if (!trimmed) {
+      setPathError("请输入有效文件夹路径");
+      return;
+    }
+    handleSwitchDir(trimmed);
+  };
+
   const handleOpenNativeFolderDialog = () => {
+    setIsPickerLoading(true);
+    setPathError(null);
     import.meta.hot?.send("sketch:open-folder-dialog");
-    setShowDirSwitcher(false);
-    setSelectedFolderRelPath(null);
   };
 
   const handleRestoreDefaultSketchDir = () => {
-    import.meta.hot?.send("sketch:switch-dir", { dirPath: "" });
-    import.meta.hot?.send("sketch:request-tree");
-    setShowDirSwitcher(false);
+    handleSwitchDir("");
     setSelectedFolderRelPath(null);
   };
 
@@ -482,9 +569,10 @@ export function SketchFolderPanel() {
               type="button"
               className={css.nativeBrowseBtn}
               onClick={handleOpenNativeFolderDialog}
-              title="直接弹出系统的文件夹选择窗口浏览并选择文件夹"
+              disabled={isPickerLoading}
+              title="调出系统文件资源管理器窗口选择文件夹"
             >
-              📂 浏览选择文件夹...
+              {isPickerLoading ? "⏳ 正在调出窗口..." : "📂 浏览选择文件夹..."}
             </button>
             <button
               type="button"
@@ -495,6 +583,86 @@ export function SketchFolderPanel() {
               ⭐ 默认 Sketch
             </button>
           </div>
+
+          <div className={css.pathInputRow}>
+            <input
+              type="text"
+              className={css.pathInput}
+              value={inputPath}
+              placeholder="输入或粘贴文件夹完整绝对路径..."
+              onChange={(e) => {
+                setInputPath(e.target.value);
+                setPathError(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSwitchToInputPath();
+              }}
+            />
+            <button
+              type="button"
+              className={css.switchGoBtn}
+              onClick={handleSwitchToInputPath}
+              title="前往并加载该文件夹下的 TeX 文件"
+            >
+              前往
+            </button>
+          </div>
+
+          {pathError && (
+            <div className={css.pathErrorMsg}>
+              ⚠️ {pathError}
+            </div>
+          )}
+
+          {/* Quick directories */}
+          <div className={css.quickDirsRow}>
+            <span className={css.quickDirLabel}>快捷:</span>
+            {parentDir && parentDir !== currentDir && (
+              <button
+                type="button"
+                className={css.quickChip}
+                onClick={() => handleSwitchDir(parentDir)}
+                title={`上一级: ${parentDir}`}
+              >
+                ⬆ 上一级
+              </button>
+            )}
+            {quickDirs
+              .filter((d) => d && d !== currentDir && d !== defaultDir)
+              .slice(0, 4)
+              .map((d) => {
+                const base = d.split(/[\\/]/).pop() || d;
+                return (
+                  <button
+                    key={d}
+                    type="button"
+                    className={css.quickChip}
+                    onClick={() => handleSwitchDir(d)}
+                    title={`切换到: ${d}`}
+                  >
+                    📁 {base}
+                  </button>
+                );
+              })}
+            {recentDirs
+              .filter((d) => d && d !== currentDir && d !== defaultDir && !quickDirs.includes(d))
+              .slice(0, 3)
+              .map((d) => {
+                const base = d.split(/[\\/]/).pop() || d;
+                return (
+                  <button
+                    key={d}
+                    type="button"
+                    className={css.quickChip}
+                    onClick={() => handleSwitchDir(d)}
+                    title={`历史: ${d}`}
+                  >
+                    🕒 {base}
+                  </button>
+                );
+              })}
+          </div>
+
           <div className={css.currentPathDisplay} title={currentDir}>
             当前路径: {currentDir || "Sketch"}
           </div>

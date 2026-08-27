@@ -1,7 +1,8 @@
-﻿param(
+param(
     [string]$InitialDir = "",
     [string]$InitialDirBase64 = "",
-    [string]$Title = "选择草稿工作区文件夹"
+    [string]$Title = "选择草稿工作区文件夹",
+    [string]$TitleBase64 = ""
 )
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -14,15 +15,21 @@ if ($InitialDirBase64) {
     } catch {}
 }
 
-Add-Type -AssemblyName System.Windows.Forms
-Add-Type -AssemblyName System.Drawing
+if ($TitleBase64) {
+    try {
+        $bytes = [Convert]::FromBase64String($TitleBase64)
+        $Title = [System.Text.Encoding]::UTF8.GetString($bytes)
+    } catch {}
+}
 
 $code = @'
 using System;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 public class NativeFolderPicker {
+    [DllImport("user32.dll")]
+    private static extern IntPtr GetForegroundWindow();
+
     [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
     private static extern int SHCreateItemFromParsingName(
         [MarshalAs(UnmanagedType.LPWStr)] string pszPath,
@@ -92,8 +99,9 @@ public class NativeFolderPicker {
         if (!string.IsNullOrEmpty(title)) {
             dialog.SetTitle(title);
         }
-        dialog.SetOkButtonLabel("选择文件夹");
-        dialog.SetFileNameLabel("文件夹:");
+        dialog.SetOkButtonLabel("\u9009\u62e9\u6587\u4ef6\u5939");
+        dialog.SetFileNameLabel("\u6587\u4ef6\u5939:");
+
         if (!string.IsNullOrEmpty(initialFolder) && System.IO.Directory.Exists(initialFolder)) {
             IntPtr item;
             Guid guid = new Guid("43826D1E-E718-42EE-BC55-A1E261C37BFE");
@@ -102,21 +110,13 @@ public class NativeFolderPicker {
             }
         }
 
-        using (var topForm = new Form()) {
-            topForm.TopMost = true;
-            topForm.StartPosition = FormStartPosition.CenterScreen;
-            topForm.ShowInTaskbar = false;
-            topForm.FormBorderStyle = FormBorderStyle.None;
-            topForm.Size = new System.Drawing.Size(0, 0);
-            topForm.Visible = false;
-
-            if (dialog.Show(topForm.Handle) == 0) {
-                IShellItem result;
-                dialog.GetResult(out result);
-                string path;
-                result.GetDisplayName(0x80058000, out path);
-                return path;
-            }
+        IntPtr foreground = GetForegroundWindow();
+        if (dialog.Show(foreground) == 0) {
+            IShellItem result;
+            dialog.GetResult(out result);
+            string path;
+            result.GetDisplayName(0x80058000, out path);
+            return path;
         }
         return null;
     }
