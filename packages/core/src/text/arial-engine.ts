@@ -336,15 +336,20 @@ function estimateSegmentWidthPt(seg: FormattedSegment, fontSizePt: number): numb
   if (ctx) {
     const style = seg.italic ? "italic" : "normal";
     ctx.font = `${style} bold ${effectiveSize}pt Arial, sans-serif`;
-    return ctx.measureText(seg.text).width;
+    const pxWidth = ctx.measureText(seg.text).width;
+    // In CSS Canvas 2D, measureText always returns advance width in CSS pixels (96 DPI).
+    // TikZ Editor uses Points (pt, 72 DPI) for its coordinate space (1pt = 96/72 px = 4/3 px).
+    // Width in points must be scaled by (72 / 96) = 0.75.
+    return pxWidth * 0.75;
   }
 
   // Node.js fallback metrics
-  let charWidthRatio = 0.58;
-  if (seg.italic) charWidthRatio = 0.60;
-  if (seg.text.length === 1 && /[A-Z]/.test(seg.text)) charWidthRatio = 0.70;
-  if (seg.text.length === 1 && /[ijl1tf]/.test(seg.text)) charWidthRatio = 0.32;
-  if (seg.text.length === 1 && /[mwMW]/.test(seg.text)) charWidthRatio = 0.85;
+  let charWidthRatio = 0.52;
+  if (seg.italic) charWidthRatio = 0.52;
+  if (/^\s+$/.test(seg.text)) charWidthRatio = 0.28;
+  else if (seg.text.length === 1 && /[A-Z]/.test(seg.text)) charWidthRatio = 0.66;
+  else if (seg.text.length === 1 && /[ijl1tf(),;:.!]/.test(seg.text)) charWidthRatio = 0.26;
+  else if (seg.text.length === 1 && /[mwMW]/.test(seg.text)) charWidthRatio = 0.80;
 
   return seg.text.length * effectiveSize * charWidthRatio;
 }
@@ -369,9 +374,11 @@ export function createArialNodeTextEngine(): NodeTextEngine {
       totalWidth = Math.max(totalWidth, fontSizePt * 0.4);
 
       const height = fontSizePt * 1.25;
-      const baselineY = fontSizePt * 0.88;
-      const midLineY = fontSizePt * 0.52;
-      const cacheKey = `arial:${request.text}:${fontSizePt}`;
+      const svgBaselineY = fontSizePt * 0.88;
+      // TikZ coordinates relative to the node center: baseline is below the center
+      const baselineY = -fontSizePt * 0.28;
+      const midLineY = -fontSizePt * 0.065;
+      const cacheKey = `arial:${request.text}:${fontSizePt}:${request.alignment ?? "default"}`;
 
       // Build SVG Tspans body
       const tspans = segments
@@ -393,7 +400,22 @@ export function createArialNodeTextEngine(): NodeTextEngine {
         })
         .join("");
 
-      const body = `<text x="${(totalWidth / 2).toFixed(2)}" y="${baselineY.toFixed(2)}" text-anchor="middle" dominant-baseline="alphabetic" font-family="Arial, 'Helvetica Neue', Helvetica, sans-serif" font-weight="bold" font-size="${fontSizePt}" fill="currentColor">${tspans}</text>`;
+      // Alignment handling:
+      // When alignment is explicit center, position at center with middle anchor;
+      // When alignment is explicit right, position at totalWidth with end anchor;
+      // For default / single line nodes (like circuit labels with west anchor),
+      // anchor at start (x=0) to align strictly with TikZ node anchor geometry.
+      let textAnchor = "start";
+      let textX = 0;
+      if (request.alignment === "center") {
+        textAnchor = "middle";
+        textX = Number((totalWidth / 2).toFixed(2));
+      } else if (request.alignment === "ragged-left") {
+        textAnchor = "end";
+        textX = Number(totalWidth.toFixed(2));
+      }
+
+      const body = `<text x="${textX}" y="${svgBaselineY.toFixed(2)}" text-anchor="${textAnchor}" dominant-baseline="alphabetic" font-family="Arial, 'Helvetica Neue', Helvetica, sans-serif" font-weight="bold" font-size="${fontSizePt}" fill="currentColor">${tspans}</text>`;
 
       const payload: NodeTextRenderPayload = {
         cacheKey,
