@@ -40,8 +40,18 @@ export type MathJaxFont =
   | "mathjax-termes"
   | "mathjax-tex";
 
+export type BaseFontSize = 9 | 10 | 11 | 12;
+
+export const BASE_FONT_SIZE_OPTIONS: Array<{ value: BaseFontSize; label: string }> = [
+  { value: 9, label: "9 pt (IEEE Figure standard)" },
+  { value: 10, label: "10 pt (Default / Journal standard)" },
+  { value: 11, label: "11 pt (Medium)" },
+  { value: 12, label: "12 pt (Book / Thesis / Report)" }
+];
+
 export type RenderingSettings = {
   mathJaxFont: MathJaxFont;
+  baseFontSize: BaseFontSize;
 };
 
 export type AppSettings = {
@@ -91,6 +101,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
     accuracy: "approximate"
   },
   rendering: {
-    mathJaxFont: "arial-bold"
+    mathJaxFont: "arial-bold",
+    baseFontSize: 10
   }
 };

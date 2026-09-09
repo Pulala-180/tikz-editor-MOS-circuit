@@ -200,12 +200,14 @@ export function createSemanticEvaluationRun(
   const diagnostics: Diagnostic[] = [];
   const featureUsage = initializeFeatureUsage();
   markForeachFeaturesFromFigure(figure, featureUsage);
+  const baseFontSize = opts.baseFontSize ?? DEFAULT_TEXT_FONT_SIZE;
   const context = createSemanticContext(
-    defaultStyle(),
+    defaultStyle(baseFontSize),
     identityMatrix(),
     opts.textEngine ?? null,
     source,
-    opts.sourceFingerprint
+    opts.sourceFingerprint,
+    baseFontSize
   );
   const expanded = withPgfMathRuntime(
     { rng: context.mathRandom },
@@ -1803,7 +1805,7 @@ function applyStandaloneCommandStatement(
       const frame = currentFrame(context);
       frame.style = {
         ...frame.style,
-        fontSize: DEFAULT_TEXT_FONT_SIZE * fontFactor
+        fontSize: (context.baseFontSize ?? DEFAULT_TEXT_FONT_SIZE) * fontFactor
       };
       return true;
     }

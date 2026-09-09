@@ -14,7 +14,7 @@ import {
 import { cloneArrowMarker, makeDefaultArrowMarker } from "./arrows.js";
 import { DEFAULT_PATTERN } from "./patterns.js";
 
-export function defaultStyle(): ResolvedStyle {
+export function defaultStyle(baseFontSize: number = DEFAULT_TEXT_FONT_SIZE): ResolvedStyle {
   const defaultTip = makeDefaultArrowMarker("cm-rightarrow");
   return {
     stroke: "black",
@@ -26,7 +26,7 @@ export function defaultStyle(): ResolvedStyle {
     useAsBoundingBox: false,
     textColor: null,
     textOpacity: 1,
-    fontSize: DEFAULT_TEXT_FONT_SIZE,
+    fontSize: baseFontSize,
     fontStyle: "normal",
     fontWeight: "normal",
     fontFamily: "serif",

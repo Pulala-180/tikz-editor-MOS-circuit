@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { useSettingsStore } from "../settings/useSettingsStore";
-import { EDITOR_FONT_SIZE_OPTIONS, type ColorPickerAccuracy, type ColorScheme, type GridSize, type MathJaxFont } from "../settings/types";
+import {
+  BASE_FONT_SIZE_OPTIONS,
+  EDITOR_FONT_SIZE_OPTIONS,
+  type BaseFontSize,
+  type ColorPickerAccuracy,
+  type ColorScheme,
+  type GridSize,
+  type MathJaxFont
+} from "../settings/types";
 import { Modal } from "./Modal";
 import css from "./SettingsModal.module.css";
 
@@ -376,6 +384,22 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
                 <div className={css.panelTitle}>Rendering</div>
                 <div className={css.settingsGroup}>
+                  <div className={css.settingRow}>
+                    <label className={css.settingLabel} htmlFor="setting-base-font-size">
+                      Base Font Size
+                      <span className={css.settingDesc}>Document class base font size (\normalsize).</span>
+                    </label>
+                    <select
+                      id="setting-base-font-size"
+                      className={css.select}
+                      value={settings.rendering.baseFontSize}
+                      onChange={(e) => { updateRenderingSettings({ baseFontSize: Number(e.target.value) as BaseFontSize }); }}
+                    >
+                      {BASE_FONT_SIZE_OPTIONS.map(({ value, label }) => (
+                        <option key={value} value={value}>{label}</option>
+                      ))}
+                    </select>
+                  </div>
                   <div className={css.settingRow}>
                     <label className={css.settingLabel} htmlFor="setting-mathjax-font">
                       Math Font

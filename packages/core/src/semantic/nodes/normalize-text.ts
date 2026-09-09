@@ -42,7 +42,7 @@ export function normalizeNodeTextFontSize(text: string, baseFontSizePt: number):
 
     const factor = FONT_SIZE_COMMAND_FACTORS[match];
     if (factor != null) {
-      fontSizePt = DEFAULT_TEXT_FONT_SIZE * factor;
+      fontSizePt = (baseFontSizePt > 0 ? baseFontSizePt : DEFAULT_TEXT_FONT_SIZE) * factor;
     }
     return "";
   });

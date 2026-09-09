@@ -81,7 +81,8 @@ const FONT_FAMILY_BY_COMMAND: Record<string, ResolvedStyle["fontFamily"]> = {
 const CONTROL_SEQUENCE_PATTERN = /\\[A-Za-z@]+/g;
 
 export function parseFontStyle(
-  raw: string
+  raw: string,
+  baseFontSize: number = DEFAULT_TEXT_FONT_SIZE
 ): Partial<Pick<ResolvedStyle, "fontStyle" | "fontWeight" | "fontFamily" | "fontSize">> | null {
   const trimmed = raw.trim();
   if (trimmed.length === 0) {
@@ -112,7 +113,7 @@ export function parseFontStyle(
 
     const mappedScale = FONT_SIZE_COMMAND_FACTORS[command.name];
     if (mappedScale != null) {
-      fontSize = DEFAULT_TEXT_FONT_SIZE * mappedScale;
+      fontSize = baseFontSize * mappedScale;
       continue;
     }
 

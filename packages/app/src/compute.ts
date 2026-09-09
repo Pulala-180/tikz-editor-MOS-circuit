@@ -224,7 +224,7 @@ export async function computeSnapshot(request: ComputeRequest): Promise<ComputeR
         activeFigureId: request.activeFigureId,
         includeContextDefinitions: true
       },
-      evaluate: { sourceFingerprint },
+      evaluate: { sourceFingerprint, baseFontSize: currentBaseFontSize },
       svg: { padding: resolveSvgPadding(request.source, request.activeFigureId) },
       textEngine
     });
@@ -246,7 +246,7 @@ export async function computeSnapshot(request: ComputeRequest): Promise<ComputeR
     semanticSession.evaluate({
       figure: result.parse.figure,
       source: request.source,
-      options: { sourceFingerprint, textEngine },
+      options: { sourceFingerprint, textEngine, baseFontSize: currentBaseFontSize },
       hints: { trigger: "other" }
     });
     phases.primeSemantic = performance.now() - phaseStartedAt;
@@ -363,7 +363,7 @@ async function computeSnapshotIncremental(
   let incremental = session.evaluate({
     figure: parseResult.figure,
     source: parseResult.source,
-    options: { sourceFingerprint, textEngine },
+    options: { sourceFingerprint, textEngine, baseFontSize: currentBaseFontSize },
     hints: {
       changedSourceIds,
       sourcePatches: patches,
@@ -400,7 +400,7 @@ async function computeSnapshotIncremental(
     incremental = session.evaluate({
       figure: parseResult.figure,
       source: parseResult.source,
-      options: { sourceFingerprint, textEngine },
+      options: { sourceFingerprint, textEngine, baseFontSize: currentBaseFontSize },
       hints: {
         changedSourceIds,
         sourcePatches: patches,
@@ -609,6 +609,15 @@ function getIncrementalParseSession(): IncrementalParseSession {
   }
   incrementalParseSession = createIncrementalParseSession();
   return incrementalParseSession;
+}
+
+let currentBaseFontSize = 10;
+
+export function setBaseFontSize(size: number): void {
+  if (size === currentBaseFontSize) return;
+  currentBaseFontSize = size;
+  incrementalSemanticSession?.reset();
+  incrementalWarmSource = null;
 }
 
 export function setMathJaxFont(font: MathJaxFont): void {

@@ -196,6 +196,7 @@ export type SemanticContext = {
   currentPoint: WorldPoint | null;
   pathStartPoint: WorldPoint | null;
   textEngine: NodeTextEngine | null;
+  baseFontSize: number;
   macroTraceCollector: MacroExpansionTraceEvent[] | null;
   picEvaluationStack: string[];
   editHandles: EditHandle[];
@@ -291,7 +292,8 @@ export function createSemanticContext(
   initialTransform: WorldTransform,
   textEngine: NodeTextEngine | null = null,
   source = "",
-  sourceFingerprint = computeSourceFingerprint(source)
+  sourceFingerprint = computeSourceFingerprint(source),
+  baseFontSize: number = initialStyle.fontSize
 ): SemanticContext {
   const defaultNodeDistance = 28.4527559055;
   const defaultTreeDistance = 15 * 2.84527559055;
@@ -394,6 +396,7 @@ export function createSemanticContext(
     currentPoint: null,
     pathStartPoint: null,
     textEngine,
+    baseFontSize,
     macroTraceCollector: null,
     picEvaluationStack: [],
     editHandles: [],

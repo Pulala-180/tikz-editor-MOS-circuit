@@ -8,7 +8,7 @@ import {
 } from "../app-menu";
 import { useEditorStore } from "../store/store";
 import { useWorkspaceListStore } from "../store/workspace-list-store";
-import { computeSnapshot, makeEmptySnapshot, setMathJaxFont, type ComputeRequest, type ComputeResponse } from "../compute";
+import { computeSnapshot, makeEmptySnapshot, setBaseFontSize, setMathJaxFont, type ComputeRequest, type ComputeResponse } from "../compute";
 import { applyEditAction } from "tikz-editor/edit/actions";
 import { getRepeatSelectionEligibility } from "tikz-editor/edit/actions/repeat";
 import { collectSourceWorldBounds } from "tikz-editor/edit/snapping";
@@ -265,11 +265,12 @@ export function App() {
     hoveredElementId: s.hoveredElementId,
     dispatch: s.dispatch
   })));
-  const { uiFontSizePx, colorScheme, canvasInvert, mathJaxFont } = useSettingsStore(useShallow((s) => ({
+  const { uiFontSizePx, colorScheme, canvasInvert, mathJaxFont, baseFontSize } = useSettingsStore(useShallow((s) => ({
     uiFontSizePx: s.settings.general.uiFontSizePx,
     colorScheme: s.settings.general.colorScheme,
     canvasInvert: s.settings.general.canvasInvert,
-    mathJaxFont: s.settings.rendering.mathJaxFont
+    mathJaxFont: s.settings.rendering.mathJaxFont,
+    baseFontSize: s.settings.rendering.baseFontSize
   })));
   const platform = getActiveEditorPlatform();
   const menuTarget = menuTargetFromPlatformId(platform.id);
@@ -966,6 +967,7 @@ export function App() {
     if (!scheduler || typingComputeDelay != null) {
       return;
     }
+    setBaseFontSize(baseFontSize);
     setMathJaxFont(mathJaxFont);
     scheduler.schedule({
       id: crypto.randomUUID(),
@@ -980,13 +982,14 @@ export function App() {
       trigger,
       renderViewBox
     });
-  }, [activeDocumentId, activeFigureId, changedSourceIds, dispatch, lastEditPatchBaseRevision, lastEditPatches, mathJaxFont, renderViewBox, source, sourceRevision, trigger, typingComputeDelay]);
+  }, [activeDocumentId, activeFigureId, baseFontSize, changedSourceIds, dispatch, lastEditPatchBaseRevision, lastEditPatches, mathJaxFont, renderViewBox, source, sourceRevision, trigger, typingComputeDelay]);
 
   useDebouncedEffect(() => {
     const scheduler = computeSchedulerRef.current;
     if (!scheduler || typingComputeDelay == null) {
       return;
     }
+    setBaseFontSize(baseFontSize);
     setMathJaxFont(mathJaxFont);
     scheduler.schedule({
       id: crypto.randomUUID(),
@@ -1000,7 +1003,7 @@ export function App() {
       patchBaseRevision: lastEditPatchBaseRevision,
       trigger
     });
-  }, typingComputeDelay, [activeDocumentId, activeFigureId, changedSourceIds, dispatch, lastEditPatchBaseRevision, lastEditPatches, mathJaxFont, source, sourceRevision, trigger, typingComputeDelay]);
+  }, typingComputeDelay, [activeDocumentId, activeFigureId, baseFontSize, changedSourceIds, dispatch, lastEditPatchBaseRevision, lastEditPatches, mathJaxFont, source, sourceRevision, trigger, typingComputeDelay]);
 
   const prewarmDelay = activeCanvasDragKind || activeSourceScrubSourceId || pendingRequestId != null || !hoveredElementId || snapshot.source !== source
     ? null

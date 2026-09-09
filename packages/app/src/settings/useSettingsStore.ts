@@ -92,7 +92,8 @@ export const useSettingsStore = create<SettingsStore>((set) => ({
     set((state) => {
       const next: AppSettings = {
         ...state.settings,
-        canvas: { ...DEFAULT_SETTINGS.canvas }
+        canvas: { ...DEFAULT_SETTINGS.canvas },
+        rendering: { ...DEFAULT_SETTINGS.rendering }
       };
       saveSettings(next);
       return { settings: next };

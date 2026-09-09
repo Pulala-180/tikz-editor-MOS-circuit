@@ -582,7 +582,8 @@ export function applyKvEntry(
     };
   }
   if (key === "node font" || key === "font") {
-    const parsed = parseFontStyle(valueRaw);
+    const baseFontSize = Number.isFinite(style.fontSize) && style.fontSize > 0 ? style.fontSize : DEFAULT_TEXT_FONT_SIZE;
+    const parsed = parseFontStyle(valueRaw, baseFontSize);
     if (!parsed) {
       return { style, transform, diagnostics: [] };
     }
@@ -592,7 +593,7 @@ export function applyKvEntry(
         fontStyle: parsed.fontStyle ?? "normal",
         fontWeight: parsed.fontWeight ?? "normal",
         fontFamily: parsed.fontFamily ?? "serif",
-        fontSize: parsed.fontSize ?? DEFAULT_TEXT_FONT_SIZE
+        fontSize: parsed.fontSize ?? baseFontSize
       },
       transform,
       diagnostics: []
