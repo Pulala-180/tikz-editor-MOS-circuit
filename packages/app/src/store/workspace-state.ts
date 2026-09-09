@@ -14,8 +14,8 @@ export const DEFAULT_SOURCE = String.raw`\begin{tikzpicture}
   \begin{scope}[shift={(0,0)}]
     \coordinate (node_Mx.g) at (0,0);
     \draw[thick, line cap=round] (0,0) -- (0.26,0);
-    \draw[ultra thick] (0.25,-0.25) -- (0.25,0.25);
-    \draw[ultra thick] (0.41,-0.3) -- (0.41,0.3);
+    \draw[line width=0.7mm] (0.25,-0.25) -- (0.25,0.25);
+    \draw[line width=0.7mm] (0.41,-0.3) -- (0.41,0.3);
     \draw[thick, line cap=round, line join=round] (0.40,0.2) -- (0.73,0.2) -- (0.73,0.5);
     \draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0.40,-0.2) -- (0.70,-0.2);
     \draw[thick, line cap=round] (0.73,-0.21) -- (0.73,-0.5);

@@ -58,6 +58,19 @@ export function rotateCircuitToolMode(mode: ToolMode): ToolMode | null {
     return "addCurrentSource_Up_Top";
   }
 
+  // 5.5 受控电流源 (Controlled Current Source)
+  if (mode.startsWith("addControlledCurrentSource")) {
+    if (mode === "addControlledCurrentSource" || mode === "addControlledCurrentSource_Down_Top" || mode === "addControlledCurrentSource_V_Top") return "addControlledCurrentSource_Right_Right";
+    if (mode === "addControlledCurrentSource_Right_Right" || mode === "addControlledCurrentSource_H_Right") return "addControlledCurrentSource_Down_Bottom";
+    if (mode === "addControlledCurrentSource_Down_Bottom" || mode === "addControlledCurrentSource_V_Bottom") return "addControlledCurrentSource_Left_Left";
+    if (mode === "addControlledCurrentSource_Left_Left" || mode === "addControlledCurrentSource_H_Left") return "addControlledCurrentSource_Up_Top";
+    if (mode === "addControlledCurrentSource_Up_Bottom") return "addControlledCurrentSource_Right_Left";
+    if (mode === "addControlledCurrentSource_Right_Left") return "addControlledCurrentSource_Down_Top";
+    if (mode === "addControlledCurrentSource_Up_Top") return "addControlledCurrentSource_Right_Left";
+    if (mode === "addControlledCurrentSource_Left_Right") return "addControlledCurrentSource_Up_Bottom";
+    return "addControlledCurrentSource_Down_Top";
+  }
+
   // 6. 电流箭头 (Current Arrow)
   if (mode.startsWith("addCurrentArrow")) {
     if (mode === "addCurrentArrow" || mode === "addCurrentArrow_Up_Top" || mode === "addCurrentArrow_Up_Bottom") return "addCurrentArrow_Right_Right";
@@ -167,6 +180,14 @@ export function flipCircuitToolModeHorizontal(mode: ToolMode): ToolMode | null {
     if (mode === "addCurrentSource_Right_Right" || mode === "addCurrentSource_H_Right") return "addCurrentSource_Left_Right";
     return "addCurrentSource_Left_Left";
   }
+  // 6.5 受控电流源
+  if (mode.startsWith("addControlledCurrentSource")) {
+    if (mode === "addControlledCurrentSource_Left_Left") return "addControlledCurrentSource_Right_Left";
+    if (mode === "addControlledCurrentSource_Right_Left" || mode === "addControlledCurrentSource_H_Left") return "addControlledCurrentSource_Left_Left";
+    if (mode === "addControlledCurrentSource_Left_Right") return "addControlledCurrentSource_Right_Right";
+    if (mode === "addControlledCurrentSource_Right_Right" || mode === "addControlledCurrentSource_H_Right") return "addControlledCurrentSource_Left_Right";
+    return "addControlledCurrentSource_Left_Left";
+  }
   // 7. 电流箭头
   if (mode.startsWith("addCurrentArrow")) {
     if (mode === "addCurrentArrow_Left_Left") return "addCurrentArrow_Right_Left";
@@ -247,6 +268,14 @@ export function flipCircuitToolModeVertical(mode: ToolMode): ToolMode | null {
     if (mode === "addCurrentSource_Up_Bottom" || mode === "addCurrentSource_V_Bottom") return "addCurrentSource_Down_Bottom";
     if (mode === "addCurrentSource_Down_Bottom") return "addCurrentSource_Up_Bottom";
     return "addCurrentSource_Up_Top";
+  }
+  // 6.5 受控电流源
+  if (mode.startsWith("addControlledCurrentSource")) {
+    if (mode === "addControlledCurrentSource_Up_Top" || mode === "addControlledCurrentSource_V_Top") return "addControlledCurrentSource_Down_Top";
+    if (mode === "addControlledCurrentSource_Down_Top" || mode === "addControlledCurrentSource") return "addControlledCurrentSource_Up_Top";
+    if (mode === "addControlledCurrentSource_Up_Bottom" || mode === "addControlledCurrentSource_V_Bottom") return "addControlledCurrentSource_Down_Bottom";
+    if (mode === "addControlledCurrentSource_Down_Bottom") return "addControlledCurrentSource_Up_Bottom";
+    return "addControlledCurrentSource_Down_Top";
   }
   // 7. 电流箭头
   if (mode.startsWith("addCurrentArrow")) {
@@ -361,10 +390,30 @@ export function switchCircuitToolModeWithKey(currentMode: ToolMode, key: string)
 
   // 5. 电容
   if (currentMode.startsWith("addCapacitor")) {
+    if (k === "c") {
+      if (currentMode === "addCapacitor_H_Left") return "addControlledCurrentSource_H_Left";
+      if (currentMode === "addCapacitor_H_Right") return "addControlledCurrentSource_H_Right";
+      if (currentMode === "addCapacitor_V_Bottom") return "addControlledCurrentSource_Down_Bottom";
+      return "addControlledCurrentSource_Down_Top";
+    }
     if (k === "w") return "addCapacitor_V_Top";
     if (k === "s") return "addCapacitor_V_Bottom";
     if (k === "a") return "addCapacitor_H_Left";
     if (k === "d") return "addCapacitor_H_Right";
+  }
+
+  // 5.5 受控电流源
+  if (currentMode.startsWith("addControlledCurrentSource")) {
+    if (k === "c") {
+      if (currentMode.includes("H_Left") || currentMode.includes("Left_Left")) return "addCapacitor_H_Left";
+      if (currentMode.includes("H_Right") || currentMode.includes("Right_Right")) return "addCapacitor_H_Right";
+      if (currentMode.includes("Bottom")) return "addCapacitor_V_Bottom";
+      return "addCapacitor_V_Top";
+    }
+    if (k === "w") return "addControlledCurrentSource_Up_Top";
+    if (k === "s") return "addControlledCurrentSource_Down_Bottom";
+    if (k === "a") return "addControlledCurrentSource_Left_Left";
+    if (k === "d") return "addControlledCurrentSource_Right_Right";
   }
 
   // 6. 电压源 / 交流小信号源
@@ -424,9 +473,6 @@ export function resolveSelectModeInitialTool(key: string, vKeyDown: boolean): To
 
   // 1. 连接线 (W)
   if (k === "w") return "addWireLead_V_Top";
-
-  // 多段正交连接线 (M)
-  if (k === "m") return "addOrthoWire";
 
   // 2. nMOS 管 (Z) - 默认栅极在左，加号在栅极
   if (k === "z") return "addNMOS_Left_G";

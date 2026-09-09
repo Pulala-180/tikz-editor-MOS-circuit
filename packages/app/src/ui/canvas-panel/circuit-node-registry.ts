@@ -15,6 +15,8 @@ export const CIRCUIT_PORT_DEFINITIONS: Record<string, CircuitPortDescriptor> = {
   // Passive Component 2-port
   "t": { portKey: "t", nameZh: "顶端口 (t)", nameEn: "Top (t)", priority: 1 },
   "b": { portKey: "b", nameZh: "底端口 (b)", nameEn: "Bottom (b)", priority: 2 },
+  "top": { portKey: "top", nameZh: "顶端口 (top)", nameEn: "Top", priority: 1 },
+  "bottom": { portKey: "bottom", nameZh: "底端口 (bottom)", nameEn: "Bottom", priority: 2 },
   "l": { portKey: "l", nameZh: "左端口 (l)", nameEn: "Left (l)", priority: 1 },
   "r": { portKey: "r", nameZh: "右端口 (r)", nameEn: "Right (r)", priority: 2 },
 
@@ -46,11 +48,11 @@ export function resolveComponentPort(nodeName: string, anchorName?: string | nul
   if (cleanNode.includes(".s") || cleanNode.endsWith("_s")) {
     return { label: "源极 (s)", priority: 3 };
   }
-  if (cleanNode.includes(".t") || cleanNode.endsWith("_t")) {
-    return { label: "顶端口 (t)", priority: 1 };
+  if (cleanNode.includes(".t") || cleanNode.endsWith("_t") || cleanNode.includes(".top") || cleanNode.endsWith("_top")) {
+    return { label: "顶端口 (top)", priority: 1 };
   }
-  if (cleanNode.includes(".b") || cleanNode.endsWith("_b")) {
-    return { label: "底端口 (b)", priority: 2 };
+  if (cleanNode.includes(".b") || cleanNode.endsWith("_b") || cleanNode.includes(".bottom") || cleanNode.endsWith("_bottom")) {
+    return { label: "底端口 (bottom)", priority: 2 };
   }
   if (cleanNode.includes(".l") || cleanNode.endsWith("_l")) {
     return { label: "左端口 (l)", priority: 1 };

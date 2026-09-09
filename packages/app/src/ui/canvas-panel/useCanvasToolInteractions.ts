@@ -683,6 +683,7 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
           toolMode.startsWith("addCapacitor") ||
           toolMode.startsWith("addGND") ||
           toolMode.startsWith("addCurrentSource") ||
+          toolMode.startsWith("addControlledCurrentSource") ||
           toolMode.startsWith("addVoltageSource") ||
           toolMode.startsWith("addCurrentArrow") ||
           toolMode.startsWith("addWireLead")
@@ -728,6 +729,7 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
             toolMode.startsWith("addCapacitor") ||
             toolMode.startsWith("addGND") ||
             toolMode.startsWith("addCurrentSource") ||
+            toolMode.startsWith("addControlledCurrentSource") ||
             toolMode.startsWith("addVoltageSource") ||
             toolMode.startsWith("addCurrentArrow") ||
             toolMode.startsWith("addWireLead")

@@ -64,6 +64,11 @@ function parseNodeText(raw: string): { main: string; sub?: string; italic?: bool
     return { main: subMatch[1], sub: subMatch[2], italic: true };
   }
 
+  if (clean.includes("{") || clean.includes("}") || clean.includes("_")) {
+    const simplified = clean.replace(/_\{?([A-Za-z0-9]+)\}?/g, "$1").replace(/[{}]/g, "");
+    return { main: simplified, italic: true };
+  }
+
   return { main: clean, italic: clean.length <= 2 };
 }
 

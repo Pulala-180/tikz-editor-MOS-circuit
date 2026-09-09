@@ -51,26 +51,26 @@ class ComponentTemplate:
 
 
 # fmt: off
-_RESISTOR_BODY = r"""\draw[thick, line cap=round] (-0.35,0) -- (-0.195,0) -- (-0.1625,0.15) -- (-0.0975,-0.15) -- (-0.0325,0.15) -- (0.0325,-0.15) -- (0.0975,0.15) -- (0.1625,-0.15) -- (0.195,0) -- (0.35,0);"""
+_RESISTOR_BODY = r"""\draw[line width=0.32mm, line cap=round] (-0.35,0) -- (-0.195,0) -- (-0.1625,0.15) -- (-0.0975,-0.15) -- (-0.0325,0.15) -- (0.0325,-0.15) -- (0.0975,0.15) -- (0.1625,-0.15) -- (0.195,0) -- (0.35,0);"""
 _RESISTOR_LABEL = r"""\node at (0.05,0.35) {{LABEL}};"""
 
 _NMOS_BODY = "\n".join([
-    r"\draw[thick, line cap=round] (0.3,0.5) -- (0.56,0.5);",
-    r"\draw[ultra thick] (0.55,0.25) -- (0.55,0.75);",
-    r"\draw[ultra thick] (0.7,0.2) -- (0.7,0.8);",
-    r"\draw[thick, line cap=round, line join=round] (0.7,0.70) -- (1.03,0.70) --(1.03,1);",
-    r"\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0.7,0.3) -- (1.0,0.3);",
-    r"\draw[thick, line cap=round] (1.03,0.291) -- (1.03,0);",
+    r"\draw[line width=0.32mm, line cap=round] (0.3,0.5) -- (0.56,0.5);",
+    r"\draw[line width=0.7mm] (0.55,0.25) -- (0.55,0.75);",
+    r"\draw[line width=0.7mm] (0.7,0.2) -- (0.7,0.8);",
+    r"\draw[line width=0.32mm, line cap=round, line join=round] (0.7,0.70) -- (1.03,0.70) --(1.03,1);",
+    r"\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.7,0.3) -- (1.0,0.3);",
+    r"\draw[line width=0.32mm, line cap=round] (1.03,0.291) -- (1.03,0);",
 ])
 _NMOS_LABEL = r"""\node[node font=\sffamily\bfseries] at (0,0.54) {{LABEL}};"""
 
 _PMOS_BODY = "\n".join([
-    r"\draw[thick, line cap=round] (0.3,0.5) -- (0.56,0.5);",
-    r"\draw[ultra thick] (0.55,0.25) -- (0.55,0.75);",
-    r"\draw[ultra thick] (0.7,0.2) -- (0.7,0.8);",
-    r"\draw[thick, line cap=round, line join=round] (0.7,0.30) -- (1.03,0.30) --(1.03,0);",
-    r"\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (1.03,0.7) -- (0.74,0.7);",
-    r"\draw[thick, line cap=round] (1.03,1) -- (1.03,0.7);",
+    r"\draw[line width=0.32mm, line cap=round] (0.3,0.5) -- (0.56,0.5);",
+    r"\draw[line width=0.7mm] (0.55,0.25) -- (0.55,0.75);",
+    r"\draw[line width=0.7mm] (0.7,0.2) -- (0.7,0.8);",
+    r"\draw[line width=0.32mm, line cap=round, line join=round] (0.7,0.30) -- (1.03,0.30) --(1.03,0);",
+    r"\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (1.03,0.7) -- (0.74,0.7);",
+    r"\draw[line width=0.32mm, line cap=round] (1.03,1) -- (1.03,0.7);",
 ])
 _PMOS_LABEL = r"""\node[node font=\sffamily\bfseries] at (0,0.54) {{LABEL}};"""
 
@@ -78,10 +78,10 @@ _PMOS_LABEL = r"""\node[node font=\sffamily\bfseries] at (0,0.54) {{LABEL}};"""
 # 方向由 {ARROW_LINE} 占位符决定（down=从上往下，up=从下往上）——两方向仅箭头线不同，
 # 铅垂线/圆/标签完全一致。端口 top/bottom 在 (0, ±0.4)。
 _ISOURCE_BODY = "\n".join([
-    r"\draw[thick] (0, 0) circle (0.25cm);",
-    r"\draw[-{Triangle[length=1.8mm, width=1.7mm]}, thick] {ARROW_LINE};",
-    r"\draw[thick, line cap=round] (0,-0.25) -- (0,-0.4);",
-    r"\draw[thick, line cap=round] (0,0.4) -- (0,0.25);",
+    r"\draw[line width=0.32mm] (0, 0) circle (0.25cm);",
+    r"\draw[-{Triangle[length=1.8mm, width=1.7mm]}, line width=0.32mm] {ARROW_LINE};",
+    r"\draw[line width=0.32mm, line cap=round] (0,-0.25) -- (0,-0.4);",
+    r"\draw[line width=0.32mm, line cap=round] (0,0.4) -- (0,0.25);",
 ])
 _ISOURCE_ARROW_DOWN = r"(0, 0.15) -- (0, -0.15)"
 _ISOURCE_ARROW_UP = r"(0, -0.15) -- (0, 0.15)"
@@ -91,25 +91,21 @@ ISOURCE_ARROWS: dict[str, str] = {
 }
 _ISOURCE_LABEL = r"""\node[right=0.15cm] at (0.15, -0.01) {\normalsize {LABEL}};"""
 
-# 电压源（用户 2026-08-07 定义）：0.25cm 圆 + rotate=90 极性短线（无箭头），
-# 标签在左侧。嵌套 scope 与 rotate=90 是符号本体，原样保留。
+# 电压源（用户 2026-08-29 定义）：0.25cm 圆 + 正负极标识线（0.32mm）+ 标签在左侧。
 _VSOURCE_BODY = "\n".join([
-    r"\draw[thick] (0, 0) circle (0.25cm);",
-    r"\draw[thick, line cap=round] (0,-0.25) -- (0,-0.4);",
-    r"\draw[thick, line cap=round] (0,0.4) -- (0,0.25);",
-    r"\begin{scope}",
-    r"  \draw[thick] (0.35,0.2) -- (0.35,0.35);",
-    r"  \draw[thick, rotate=90] (0.28,-0.42) -- (0.28,-0.28);",
-    r"\end{scope}",
-    r"\draw[thick, rotate=90] (-0.3,-0.42) -- (-0.3,-0.28);",
+    r"\draw[line width=0.32mm] (0, 0.4) -- (0, 0.25);",
+    r"\draw[line width=0.32mm] (0, 0) circle (0.25cm);",
+    r"\draw[line width=0.32mm, line cap=round] (0, -0.25) -- (0, -0.4);",
+    r"\draw[line width=0.32mm] (0.32, 0.30) -- (0.50, 0.30);",
+    r"\draw[line width=0.32mm] (0.41, 0.39) -- (0.41, 0.21);",
+    r"\draw[line width=0.32mm] (0.32, -0.35) -- (0.50, -0.35);",
 ])
-_VSOURCE_LABEL = r"""\node[right=0.15cm] at (-0.93, 0) {\normalsize {LABEL}};"""
+_VSOURCE_LABEL = r"""\node[right=0.15cm] at (-0.98, 0) {\normalsize {LABEL}};"""
 
-# 电流箭头（用户 2026-08-07 定义）：1.8mm/1.7mm 箭头从上往下 + 短引线 (0,-0.25)。
-# 无圆、无铅垂线——与电流源（圆 + 引线 ±0.4）形态区分。
+# 电流箭头（用户 2026-08-29 定义）：3.5mm/2mm 箭头从上往下 + 短引线。
 _CARROW_BODY = "\n".join([
-    r"\draw[-{Triangle[length=1.8mm, width=1.7mm]}, thick] (0, 0.15) -- (0, -0.15);",
-    r"\draw[thick, line cap=round] (0,-0.15) -- (0,-0.25);",
+    r"\draw[-{Triangle[length=3.5mm, width=2mm]}, line width=0.32mm] (0, 0.4) -- (0, -0.2);",
+    r"\draw[line width=0.32mm, line cap=round] (0,-0.1) -- (0,-0.4);",
 ])
 _CARROW_LABEL = r"""\node[right=0.15cm] at (-0.07, -0.04) {{LABEL}};"""
 # fmt: on

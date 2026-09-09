@@ -47,13 +47,13 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             r"\coordinate (node_{id}_g) at (-0.73, 0);",
             r"\coordinate (node_{id}_d) at (0, 0.5);",
             r"\coordinate (node_{id}_s) at (0, -0.6);",
-            r"\draw[thick] (node_{id}_s) |- ({parent});",
-            r"\draw[thick, line cap=round] (node_{id}_g) -- (-0.47,0);",
-            r"\draw[ultra thick] (-0.48,-0.25) -- (-0.48,0.25);",
-            r"\draw[ultra thick] (-0.32,-0.3) -- (-0.32,0.3);",
-            r"\draw[thick, line cap=round, line join=round] (-0.33,0.2) -- (0,0.2) -- (node_{id}_d);",
-            r"\draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, thick, line cap=round] (-0.33,-0.2) -- (-0.03,-0.2);",
-            r"\draw[thick, line cap=round, line join=round] (0,-0.21) -- (node_{id}_s);",
+            r"\draw[line width=0.32mm] (node_{id}_s) |- ({parent});",
+            r"\draw[line width=0.32mm, line cap=round] (node_{id}_g) -- (-0.47,0);",
+            r"\draw[line width=0.7mm] (-0.48,-0.25) -- (-0.48,0.25);",
+            r"\draw[line width=0.7mm] (-0.32,-0.3) -- (-0.32,0.3);",
+            r"\draw[line width=0.32mm, line cap=round, line join=round] (-0.33,0.2) -- (0,0.2) -- (node_{id}_d);",
+            r"\draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.33,-0.2) -- (-0.03,-0.2);",
+            r"\draw[line width=0.32mm, line cap=round, line join=round] (0,-0.21) -- (node_{id}_s);",
         ],
         "label": r"\node[right=0.08cm] at (0, 0) {{\\normalsize {label}}};",
     },
@@ -63,13 +63,13 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             r"\coordinate (node_{id}_g) at (0.73, 0);",
             r"\coordinate (node_{id}_d) at (0, 0.5);",
             r"\coordinate (node_{id}_s) at (0, -0.6);",
-            r"\draw[thick] (node_{id}_s) |- ({parent});",
-            r"\draw[thick, line cap=round] (node_{id}_g) -- (0.47,0);",
-            r"\draw[ultra thick] (0.48,-0.25) -- (0.48,0.25);",
-            r"\draw[ultra thick] (0.32,-0.3) -- (0.32,0.3);",
-            r"\draw[thick, line cap=round, line join=round] (0.33,0.2) -- (0,0.2) -- (node_{id}_d);",
-            r"\draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, thick, line cap=round] (0.33,-0.2) -- (0.03,-0.2);",
-            r"\draw[thick, line cap=round, line join=round] (0,-0.21) -- (node_{id}_s);",
+            r"\draw[line width=0.32mm] (node_{id}_s) |- ({parent});",
+            r"\draw[line width=0.32mm, line cap=round] (node_{id}_g) -- (0.47,0);",
+            r"\draw[line width=0.7mm] (0.48,-0.25) -- (0.48,0.25);",
+            r"\draw[line width=0.7mm] (0.32,-0.3) -- (0.32,0.3);",
+            r"\draw[line width=0.32mm, line cap=round, line join=round] (0.33,0.2) -- (0,0.2) -- (node_{id}_d);",
+            r"\draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.33,-0.2) -- (0.03,-0.2);",
+            r"\draw[line width=0.32mm, line cap=round, line join=round] (0,-0.21) -- (node_{id}_s);",
         ],
         "label": r"\node[left=0.15cm] at (0, 0) {{\\normalsize {label}}};",
     },
@@ -79,13 +79,13 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             r"\coordinate (node_{id}_g) at (-0.73, 0);",
             r"\coordinate (node_{id}_s) at (0, 0.5);",
             r"\coordinate (node_{id}_d) at (0, -0.6);",
-            r"\draw[thick] (node_{id}_d) |- ({parent});",
-            r"\draw[thick, line cap=round] (node_{id}_g) -- (-0.47,0);",
-            r"\draw[ultra thick] (-0.48,-0.25) -- (-0.48,0.25);",
-            r"\draw[ultra thick] (-0.32,-0.3) -- (-0.32,0.3);",
-            r"\draw[thick, line cap=round, line join=round] (-0.33,-0.2) -- (0,-0.2) -- (node_{id}_d);",
-            r"\draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, thick, line cap=round] (-0.33,0.2) -- (-0.03,0.2);",
-            r"\draw[thick, line cap=round, line join=round] (-0.33,0.2) -- (0,0.2) -- (node_{id}_s);",
+            r"\draw[line width=0.32mm] (node_{id}_d) |- ({parent});",
+            r"\draw[line width=0.32mm, line cap=round] (node_{id}_g) -- (-0.47,0);",
+            r"\draw[line width=0.7mm] (-0.48,-0.25) -- (-0.48,0.25);",
+            r"\draw[line width=0.7mm] (-0.32,-0.3) -- (-0.32,0.3);",
+            r"\draw[line width=0.32mm, line cap=round, line join=round] (-0.33,-0.2) -- (0,-0.2) -- (node_{id}_d);",
+            r"\draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.33,0.2) -- (-0.03,0.2);",
+            r"\draw[line width=0.32mm, line cap=round, line join=round] (-0.33,0.2) -- (0,0.2) -- (node_{id}_s);",
         ],
         "label": r"\node[right=0.08cm] at (0, 0) {{\\normalsize {label}}};",
     },
@@ -95,13 +95,13 @@ TEMPLATES: dict[str, dict[str, Any]] = {
             r"\coordinate (node_{id}_g) at (0.73, 0);",
             r"\coordinate (node_{id}_s) at (0, 0.5);",
             r"\coordinate (node_{id}_d) at (0, -0.6);",
-            r"\draw[thick] (node_{id}_d) |- ({parent});",
-            r"\draw[thick, line cap=round] (node_{id}_g) -- (0.47,0);",
-            r"\draw[ultra thick] (0.48,-0.25) -- (0.48,0.25);",
-            r"\draw[ultra thick] (0.32,-0.3) -- (0.32,0.3);",
-            r"\draw[thick, line cap=round, line join=round] (0.33,-0.2) -- (0,-0.2) -- (node_{id}_d);",
-            r"\draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, thick, line cap=round] (0.33,0.2) -- (0.03,0.2);",
-            r"\draw[thick, line cap=round, line join=round] (0,0.5) -- (0,0.21);",
+            r"\draw[line width=0.32mm] (node_{id}_d) |- ({parent});",
+            r"\draw[line width=0.32mm, line cap=round] (node_{id}_g) -- (0.47,0);",
+            r"\draw[line width=0.7mm] (0.48,-0.25) -- (0.48,0.25);",
+            r"\draw[line width=0.7mm] (0.32,-0.3) -- (0.32,0.3);",
+            r"\draw[line width=0.32mm, line cap=round, line join=round] (0.33,-0.2) -- (0,-0.2) -- (node_{id}_d);",
+            r"\draw[-{Triangle[length=1.6mm, width=1.1mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.33,0.2) -- (0.03,0.2);",
+            r"\draw[line width=0.32mm, line cap=round, line join=round] (0,0.5) -- (0,0.21);",
         ],
         "label": r"\node[left=0.15cm] at (0, 0) {{\\normalsize {label}}};",
     },
@@ -110,8 +110,8 @@ TEMPLATES: dict[str, dict[str, Any]] = {
         "body": [
             r"\coordinate (node_{id}_top) at (0, 0.35);",
             r"\coordinate (node_{id}_bottom) at (0, -0.35);",
-            r"\draw[thick] (node_{id}_top) |- ({parent});",
-            r"\draw[thick, line cap=round] (node_{id}_top) -- (0,0.195) -- (0.15,0.1625) -- (-0.15,0.0975) -- (0.15,0.0325) -- (-0.15,-0.0325) -- (0.15,-0.0975) -- (-0.15,-0.1625) -- (0,-0.195) -- (node_{id}_bottom);",
+            r"\draw[line width=0.32mm] (node_{id}_top) |- ({parent});",
+            r"\draw[line width=0.32mm, line cap=round] (node_{id}_top) -- (0,0.195) -- (0.15,0.1625) -- (-0.15,0.0975) -- (0.15,0.0325) -- (-0.15,-0.0325) -- (0.15,-0.0975) -- (-0.15,-0.1625) -- (0,-0.195) -- (node_{id}_bottom);",
         ],
         "label": r"\node[right=0.2cm] at (0.15, 0) {{\\normalsize {label}}};",
     },
@@ -119,7 +119,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
         "anchors": ["node_{id}_bottom"],
         "body": [
             r"\coordinate (node_{id}_bottom) at (0, -0.08);",
-            r"\draw[thick] (0, 0.08) |- ({parent});",
+            r"\draw[line width=0.32mm] (0, 0.08) |- ({parent});",
             r"\draw[ultra thick] (-0.25, 0.08) -- (0.25, 0.08);",
             r"\draw[ultra thick] (-0.25, -0.08) -- (0.25, -0.08);",
         ],
@@ -130,18 +130,18 @@ TEMPLATES: dict[str, dict[str, Any]] = {
         "body": [
             r"\coordinate (node_{id}_top) at (0, 0.4);",
             r"\coordinate (node_{id}_bottom) at (0, -0.4);",
-            r"\draw[thick] (0, 0.4) |- ({parent});",
-            r"\draw[thick] (0, 0) circle (0.25cm);",
-            r"\draw[-{Triangle[length=1.8mm, width=1.7mm]}, thick] (0, 0.15) -- (0, -0.15);",
-            r"\draw[thick, line cap=round] (0,-0.25) -- (0,-0.4);",
-            r"\draw[thick, line cap=round] (0,0.4) -- (0,0.25);",
+            r"\draw[line width=0.32mm] (0, 0.4) |- ({parent});",
+            r"\draw[line width=0.32mm] (0, 0) circle (0.25cm);",
+            r"\draw[-{Triangle[length=1.8mm, width=1.7mm]}, line width=0.32mm] (0, 0.15) -- (0, -0.15);",
+            r"\draw[line width=0.32mm, line cap=round] (0,-0.25) -- (0,-0.4);",
+            r"\draw[line width=0.32mm, line cap=round] (0,0.4) -- (0,0.25);",
         ],
         "label": r"\node[right=0.15cm] at (0.25, 0) {{\\normalsize {label}}};",
     },
     "gnd": {
         "anchors": [],
         "body": [
-            r"\draw[thick] (0, 0) |- ({parent});",
+            r"\draw[line width=0.32mm] (0, 0) |- ({parent});",
             r"\draw[ultra thick] (-0.2, 0) -- (0.2, 0);",
             r"\draw[ultra thick] (-0.13, -0.1) -- (0.13, -0.1);",
             r"\draw[ultra thick] (-0.06, -0.2) -- (0.06, -0.2);",
@@ -152,7 +152,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
         "anchors": ["node_{id}_branch_L"],
         "body": [
             r"\coordinate (node_{id}_branch_L) at (0, 0);",
-            r"\draw[thick] (node_{id}_branch_L) |- ({parent});",
+            r"\draw[line width=0.32mm] (node_{id}_branch_L) |- ({parent});",
             r"\draw[ultra thick] (-0.95, 0) -- (0.9, 0);",
         ],
         "label": r"\node[above=0.05cm] at (node_{id}_branch_L) {{\\normalsize {label}}};",
@@ -162,7 +162,7 @@ TEMPLATES: dict[str, dict[str, Any]] = {
         "body": [
             r"\coordinate (node_{id}_c) at (0, 0);",
             r"\node[minimum height=0.5cm, minimum width=0.5cm, fill=white, opacity=0.01] at (node_{id}_c) {};",
-            r"\draw[thick] (node_{id}_c) |- ({parent});",
+            r"\draw[line width=0.32mm] (node_{id}_c) |- ({parent});",
             r"\draw[fill=black] (node_{id}_c) circle (0.055cm);",
         ],
         "label": None,
@@ -171,8 +171,8 @@ TEMPLATES: dict[str, dict[str, Any]] = {
         "anchors": ["node_{id}_c"],
         "body": [
             r"\coordinate (node_{id}_c) at (0, 0);",
-            r"\draw[thick] (node_{id}_c) -| ({parent});",
-            r"\draw[fill=white, thick] (node_{id}_c) circle (0.055cm);",
+            r"\draw[line width=0.32mm] (node_{id}_c) -| ({parent});",
+            r"\draw[fill=white, line width=0.32mm] (node_{id}_c) circle (0.055cm);",
         ],
         "label": r"\node[{label_side}=0.12cm] at (node_{id}_c) {{\\normalsize {label}}};",
     },
@@ -258,7 +258,7 @@ def _render_component(comp: dict[str, Any]) -> list[str]:
         if (
             incoming
             and "({parent})" in raw
-            and raw.lstrip().startswith(r"\draw[thick]")
+            and raw.lstrip().startswith(r"\draw[line width=0.32mm]")
         ):
             line = incoming
         else:
@@ -289,7 +289,7 @@ def _render_component(comp: dict[str, Any]) -> list[str]:
 
 def _render_chord(chord: dict[str, Any]) -> list[str]:
     route = chord.get("route", "-|")
-    style = chord.get("style", "thick")
+    style = chord.get("style", "line width=0.32mm")
     cid = chord.get("id", "")
     lines = [f"% chord {cid}".rstrip()]
     if route in ("-|", "|-"):

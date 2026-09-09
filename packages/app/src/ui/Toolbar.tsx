@@ -927,6 +927,341 @@ function CurrentSourceSubmenu({
   );
 }
 
+type ControlledCurrentSourceSubmenuProps = {
+  tooltip: string;
+  buttonContent: React.ReactNode;
+  buttonStyle?: React.CSSProperties;
+  currentToolMode: ToolMode;
+  onSelectMode: (mode: ToolMode) => void;
+};
+
+function ControlledCurrentSourceSubmenu({
+  tooltip,
+  buttonContent,
+  buttonStyle,
+  currentToolMode,
+  onSelectMode
+}: ControlledCurrentSourceSubmenuProps) {
+  const [open, setOpen] = useState(false);
+  const [activeDirection, setActiveDirection] = useState<"up" | "down" | "left" | "right" | null>(null);
+  const timeoutRef = useRef<number | null>(null);
+
+  const isActive =
+    currentToolMode === "addControlledCurrentSource" ||
+    currentToolMode.startsWith("addControlledCurrentSource_");
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = window.setTimeout(() => {
+      setOpen(false);
+      setActiveDirection(null);
+    }, 180);
+  };
+
+  return (
+    <div
+      className={css.wireMenuContainer}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <RenderedTooltip content={tooltip}>
+        <button
+          type="button"
+          className={[css.btn, isActive ? css.btnActive : ""].filter(Boolean).join(" ")}
+          aria-label={tooltip}
+          onClick={() => onSelectMode(isActive ? "select" : "addControlledCurrentSource_Down_Top")}
+          style={buttonStyle}
+        >
+          {buttonContent}
+        </button>
+      </RenderedTooltip>
+
+      {open && (
+        <div className={css.wireDropdown}>
+          {/* 1. 向下 (Down) */}
+          <div
+            className={[
+              css.wireMenuItem,
+              activeDirection === "down" ? css.wireMenuItemActive : ""
+            ].filter(Boolean).join(" ")}
+            onMouseEnter={() => setActiveDirection("down")}
+            title="向下 (Down)"
+          >
+            <svg width="22" height="16" viewBox="0 0 22 16" style={{ display: "block" }}>
+              <polygon points="11,2 17,8 11,14 5,8" fill="none" stroke="currentColor" strokeWidth="1.5" />
+              <line x1="11" y1="5" x2="11" y2="11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <polyline points="9,9.5 11,11 13,9.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span style={{ fontSize: "10px", opacity: 0.5, marginLeft: "4px" }}>›</span>
+
+            {activeDirection === "down" && (
+              <div className={css.wireSubmenu}>
+                <div
+                  className={[
+                    css.wireSubmenuItem,
+                    currentToolMode === "addControlledCurrentSource_Down_Top" || currentToolMode === "addControlledCurrentSource_V_Top"
+                      ? css.wireSubmenuItemActive
+                      : ""
+                  ].filter(Boolean).join(" ")}
+                  title="加号在上端 (向下)"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectMode("addControlledCurrentSource_Down_Top");
+                    setOpen(false);
+                  }}
+                >
+                  <svg width="16" height="30" viewBox="0 0 16 30" style={{ display: "block" }}>
+                    <line x1="5.5" y1="3" x2="10.5" y2="3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="8" y1="0.5" x2="8" y2="5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="8" y1="6.5" x2="8" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <polygon points="8,10 14,15 8,20 2,15" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                    <line x1="8" y1="12" x2="8" y2="17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <polyline points="6.5,15.5 8,17 9.5,15.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <line x1="8" y1="20" x2="8" y2="28" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </div>
+                <div
+                  className={[
+                    css.wireSubmenuItem,
+                    currentToolMode === "addControlledCurrentSource_Down_Bottom" || currentToolMode === "addControlledCurrentSource_V_Bottom" || currentToolMode === "addControlledCurrentSource"
+                      ? css.wireSubmenuItemActive
+                      : ""
+                  ].filter(Boolean).join(" ")}
+                  title="加号在下端 (向下)"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectMode("addControlledCurrentSource_Down_Bottom");
+                    setOpen(false);
+                  }}
+                >
+                  <svg width="16" height="30" viewBox="0 0 16 30" style={{ display: "block" }}>
+                    <line x1="8" y1="2" x2="8" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <polygon points="8,10 14,15 8,20 2,15" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                    <line x1="8" y1="12" x2="8" y2="17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <polyline points="6.5,15.5 8,17 9.5,15.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <line x1="8" y1="20" x2="8" y2="23.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="5.5" y1="26.5" x2="10.5" y2="26.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="8" y1="24" x2="8" y2="29" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 2. 向上 (Up) */}
+          <div
+            className={[
+              css.wireMenuItem,
+              activeDirection === "up" ? css.wireMenuItemActive : ""
+            ].filter(Boolean).join(" ")}
+            onMouseEnter={() => setActiveDirection("up")}
+            title="向上 (Up)"
+          >
+            <svg width="22" height="16" viewBox="0 0 22 16" style={{ display: "block" }}>
+              <polygon points="11,2 17,8 11,14 5,8" fill="none" stroke="currentColor" strokeWidth="1.5" />
+              <line x1="11" y1="11" x2="11" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <polyline points="9,6.5 11,5 13,6.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span style={{ fontSize: "10px", opacity: 0.5, marginLeft: "4px" }}>›</span>
+
+            {activeDirection === "up" && (
+              <div className={css.wireSubmenu}>
+                <div
+                  className={[
+                    css.wireSubmenuItem,
+                    currentToolMode === "addControlledCurrentSource_Up_Top" ? css.wireSubmenuItemActive : ""
+                  ].filter(Boolean).join(" ")}
+                  title="加号在上端 (向上)"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectMode("addControlledCurrentSource_Up_Top");
+                    setOpen(false);
+                  }}
+                >
+                  <svg width="16" height="30" viewBox="0 0 16 30" style={{ display: "block" }}>
+                    <line x1="5.5" y1="3" x2="10.5" y2="3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="8" y1="0.5" x2="8" y2="5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="8" y1="6.5" x2="8" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <polygon points="8,10 14,15 8,20 2,15" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                    <line x1="8" y1="17" x2="8" y2="12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <polyline points="6.5,13.5 8,12 9.5,13.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <line x1="8" y1="20" x2="8" y2="28" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </div>
+                <div
+                  className={[
+                    css.wireSubmenuItem,
+                    currentToolMode === "addControlledCurrentSource_Up_Bottom" ? css.wireSubmenuItemActive : ""
+                  ].filter(Boolean).join(" ")}
+                  title="加号在下端 (向上)"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectMode("addControlledCurrentSource_Up_Bottom");
+                    setOpen(false);
+                  }}
+                >
+                  <svg width="16" height="30" viewBox="0 0 16 30" style={{ display: "block" }}>
+                    <line x1="8" y1="2" x2="8" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <polygon points="8,10 14,15 8,20 2,15" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                    <line x1="8" y1="17" x2="8" y2="12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <polyline points="6.5,13.5 8,12 9.5,13.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <line x1="8" y1="20" x2="8" y2="23.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="5.5" y1="26.5" x2="10.5" y2="26.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="8" y1="24" x2="8" y2="29" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 3. 向右 (Right) */}
+          <div
+            className={[
+              css.wireMenuItem,
+              activeDirection === "right" ? css.wireMenuItemActive : ""
+            ].filter(Boolean).join(" ")}
+            onMouseEnter={() => setActiveDirection("right")}
+            title="向右 (Right)"
+          >
+            <svg width="22" height="16" viewBox="0 0 22 16" style={{ display: "block" }}>
+              <polygon points="11,2 17,8 11,14 5,8" fill="none" stroke="currentColor" strokeWidth="1.5" />
+              <line x1="8" y1="8" x2="14" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <polyline points="12,6 14,8 12,10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span style={{ fontSize: "10px", opacity: 0.5, marginLeft: "4px" }}>›</span>
+
+            {activeDirection === "right" && (
+              <div className={css.wireSubmenu}>
+                <div
+                  className={[
+                    css.wireSubmenuItem,
+                    currentToolMode === "addControlledCurrentSource_Right_Left" || currentToolMode === "addControlledCurrentSource_H_Left"
+                      ? css.wireSubmenuItemActive
+                      : ""
+                  ].filter(Boolean).join(" ")}
+                  title="加号在左端 (向右)"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectMode("addControlledCurrentSource_Right_Left");
+                    setOpen(false);
+                  }}
+                >
+                  <svg width="30" height="16" viewBox="0 0 30 16" style={{ display: "block" }}>
+                    <line x1="1.5" y1="8" x2="5.5" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="3.5" y1="6" x2="3.5" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="7.5" y1="8" x2="11" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <polygon points="16,3 21,8 16,13 11,8" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                    <line x1="14" y1="8" x2="18" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <polyline points="16.5,6.5 18,8 16.5,9.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <line x1="21" y1="8" x2="28.5" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </div>
+                <div
+                  className={[
+                    css.wireSubmenuItem,
+                    currentToolMode === "addControlledCurrentSource_Right_Right" || currentToolMode === "addControlledCurrentSource_H_Right"
+                      ? css.wireSubmenuItemActive
+                      : ""
+                  ].filter(Boolean).join(" ")}
+                  title="加号在右端 (向右)"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectMode("addControlledCurrentSource_Right_Right");
+                    setOpen(false);
+                  }}
+                >
+                  <svg width="30" height="16" viewBox="0 0 30 16" style={{ display: "block" }}>
+                    <line x1="1.5" y1="8" x2="9" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <polygon points="14,3 19,8 14,13 9,8" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                    <line x1="12" y1="8" x2="16" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <polyline points="14.5,6.5 16,8 14.5,9.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <line x1="19" y1="8" x2="22.5" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="24.5" y1="8" x2="28.5" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="26.5" y1="6" x2="26.5" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 4. 向左 (Left) */}
+          <div
+            className={[
+              css.wireMenuItem,
+              activeDirection === "left" ? css.wireMenuItemActive : ""
+            ].filter(Boolean).join(" ")}
+            onMouseEnter={() => setActiveDirection("left")}
+            title="向左 (Left)"
+          >
+            <svg width="22" height="16" viewBox="0 0 22 16" style={{ display: "block" }}>
+              <polygon points="11,2 17,8 11,14 5,8" fill="none" stroke="currentColor" strokeWidth="1.5" />
+              <line x1="14" y1="8" x2="8" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <polyline points="10,6 8,8 10,10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <span style={{ fontSize: "10px", opacity: 0.5, marginLeft: "4px" }}>›</span>
+
+            {activeDirection === "left" && (
+              <div className={css.wireSubmenu}>
+                <div
+                  className={[
+                    css.wireSubmenuItem,
+                    currentToolMode === "addControlledCurrentSource_Left_Left" ? css.wireSubmenuItemActive : ""
+                  ].filter(Boolean).join(" ")}
+                  title="加号在左端 (向左)"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectMode("addControlledCurrentSource_Left_Left");
+                    setOpen(false);
+                  }}
+                >
+                  <svg width="30" height="16" viewBox="0 0 30 16" style={{ display: "block" }}>
+                    <line x1="1.5" y1="8" x2="5.5" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="3.5" y1="6" x2="3.5" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="7.5" y1="8" x2="11" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <polygon points="16,3 21,8 16,13 11,8" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                    <line x1="18" y1="8" x2="14" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <polyline points="15.5,6.5 14,8 15.5,9.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <line x1="21" y1="8" x2="28.5" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </div>
+                <div
+                  className={[
+                    css.wireSubmenuItem,
+                    currentToolMode === "addControlledCurrentSource_Left_Right" ? css.wireSubmenuItemActive : ""
+                  ].filter(Boolean).join(" ")}
+                  title="加号在右端 (向左)"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectMode("addControlledCurrentSource_Left_Right");
+                    setOpen(false);
+                  }}
+                >
+                  <svg width="30" height="16" viewBox="0 0 30 16" style={{ display: "block" }}>
+                    <line x1="1.5" y1="8" x2="9" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <polygon points="14,3 19,8 14,13 9,8" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                    <line x1="16" y1="8" x2="12" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <polyline points="13.5,6.5 12,8 13.5,9.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <line x1="19" y1="8" x2="22.5" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="24.5" y1="8" x2="28.5" y2="8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="26.5" y1="6" x2="26.5" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 type MosfetElementSubmenuProps = {
   tooltip: string;
   buttonContent: React.ReactNode;
@@ -1450,8 +1785,8 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
     const drawCode = `\\begin{scope}[shift={(${coord.x},${coord.y})}]
     \\coordinate (node_Mx.g) at (-0.25,0);
     \\draw[thick, line cap=round] (-0.25,0) -- (0.01,0);
-    \\draw[ultra thick] (0,-0.25) -- (0,0.25);
-    \\draw[ultra thick] (0.15,-0.3) -- (0.15,0.3);
+    \\draw[line width=0.7mm] (0,-0.25) -- (0,0.25);
+    \\draw[line width=0.7mm] (0.15,-0.3) -- (0.15,0.3);
     \\draw[thick, line cap=round, line join=round] (0.15,0.2) -- (0.48,0.2) -- (0.48,0.5);
     \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0.15,-0.2) -- (0.45,-0.2);
     \\draw[thick, line cap=round] (0.48,-0.209) -- (0.48,-0.5);
@@ -1476,8 +1811,8 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
     const drawCode = `\\begin{scope}[shift={(${coord.x},${coord.y})}]
     \\coordinate (node_Mx.g) at (-0.25,0);
     \\draw[thick, line cap=round] (-0.25,0) -- (0.01,0);
-    \\draw[ultra thick] (0,-0.25) -- (0,0.25);
-    \\draw[ultra thick] (0.15,-0.3) -- (0.15,0.3);
+    \\draw[line width=0.7mm] (0,-0.25) -- (0,0.25);
+    \\draw[line width=0.7mm] (0.15,-0.3) -- (0.15,0.3);
     \\draw[thick, line cap=round, line join=round] (0.15,-0.2) -- (0.48,-0.2) -- (0.48,-0.5);
     \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0.48,0.2) -- (0.19,0.2);
     \\draw[thick, line cap=round] (0.48,0.5) -- (0.48,0.2);
@@ -1537,7 +1872,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
     const coord = getPlacementCoord("0", "0");
     const drawCode = `\\begin{scope}[shift={(${coord.x},${coord.y})}]
     \\coordinate (node_VDD.bottom) at (0,0);
-    \\draw[thick, line cap=round] (0,0) -- (0,0.22);
+    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,0.22);
     \\draw[ultra thick] (-0.95,0.22) -- (0.9,0.22);
     \\node[draw=none] at (1.2,0.22) {$V_{DD}$};
   \\end{scope}`;
@@ -1559,8 +1894,8 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
     \\coordinate (node_Cx.l) at (-0.2,0);
     \\draw[ultra thick] (0,-0.25) -- (0,0.25);
     \\draw[ultra thick] (0.16,-0.25) -- (0.16,0.25);
-    \\draw[thick, line cap=round] (0,0) -- (-0.2,0);
-    \\draw[thick, line cap=round] (0.16,0) -- (0.36,0);
+    \\draw[line width=0.32mm, line cap=round] (0,0) -- (-0.2,0);
+    \\draw[line width=0.32mm, line cap=round] (0.16,0) -- (0.36,0);
     \\coordinate (node_Cx.r) at (0.36,0);
   \\end{scope}`;
     const lastEnd = source.lastIndexOf("\\end{tikzpicture}");
@@ -1579,7 +1914,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
     const coord = getPlacementCoord("0", "0");
     const drawCode = `\\begin{scope}[shift={(${coord.x},${coord.y})}]
     \\coordinate (node_GND.top) at (0,0);
-    \\draw[thick, line cap=round] (0,0) -- (0,-0.21);
+    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.21);
     \\draw[ultra thick] (-0.17,-0.21) -- (0.17,-0.21);
     \\draw[ultra thick] (-0.11,-0.35) -- (0.11,-0.35);
     \\draw[ultra thick] (-0.08,-0.49) -- (0.08,-0.49);
@@ -2117,17 +2452,6 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
           currentToolMode={toolMode}
           onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
         />
-        <RenderedTooltip content="多段正交线 (M)">
-          <button
-            type="button"
-            className={[css.btn, toolMode === "addOrthoWire" ? css.btnActive : ""].filter(Boolean).join(" ")}
-            aria-label="多段正交线"
-            onClick={() => dispatch({ type: "SET_TOOL_MODE", mode: toolMode === "addOrthoWire" ? "select" : "addOrthoWire" })}
-            style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-          >
-            <OrthoWireIcon size={18} />
-          </button>
-        </RenderedTooltip>
         <CircuitElementSubmenu
           tooltip="电阻 (R)"
           buttonContent={<ResistorIcon size={18} />}
@@ -2179,6 +2503,18 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
           tooltip="电流源 (E)"
           buttonContent="I"
           buttonStyle={{ fontSize: "14px", fontWeight: "bold", fontFamily: "serif" }}
+          currentToolMode={toolMode}
+          onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
+        />
+        <ControlledCurrentSourceSubmenu
+          tooltip="受控电流源 (按两下 C)"
+          buttonContent={
+            <svg width="18" height="18" viewBox="0 0 18 18" style={{ display: "block" }}>
+              <polygon points="9,1.5 16.5,9 9,16.5 1.5,9" fill="none" stroke="currentColor" strokeWidth="1.5" />
+              <line x1="9" y1="5.5" x2="9" y2="12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <polyline points="6.5,10.5 9,13 11.5,10.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          }
           currentToolMode={toolMode}
           onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
         />

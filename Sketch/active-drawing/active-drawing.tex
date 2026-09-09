@@ -1,0 +1,114 @@
+\begin{tikzpicture}
+
+  % ==============================
+  % 1. AC Voltage Source vin
+  % ==============================
+  \begin{scope}[shift={(-2.2, 1.3)}]
+    \coordinate (node_Vin.top) at (0,0);
+    \draw[line width=0.32mm] (0,0) -- (0,-0.15);
+    \draw[line width=0.32mm] (0,-0.4) circle (0.25cm);
+    \draw[line width=0.32mm] (-0.12,-0.4) sin (-0.06,-0.34) cos (0,-0.4) sin (0.06,-0.46) cos (0.12,-0.4);
+    \draw[line width=0.32mm, line cap=round] (0,-0.65) -- (0,-0.8);
+    \coordinate (node_Vin.bottom) at (0,-0.8);
+    \node[left=0.2cm] at (-0.25,-0.4) {$v_{in}$};
+    
+    % Polarity +/- near vin
+    \draw[line width=0.32mm] (0.20, -0.05) -- (0.38, -0.05);
+    \draw[line width=0.32mm] (0.29, 0.04) -- (0.29, -0.14);
+    \draw[line width=0.32mm] (0.20, -0.75) -- (0.38, -0.75);
+  \end{scope}
+
+  % vin Ground
+  \begin{scope}[shift={(-2.2, 0.5)}]
+    \coordinate (node_GND_vin.top) at (0,0);
+    \draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.21);
+    \draw[ultra thick] (-0.17,-0.21) -- (0.17,-0.21);
+    \draw[ultra thick] (-0.11,-0.35) -- (0.11,-0.35);
+    \draw[ultra thick] (-0.08,-0.49) -- (0.08,-0.49);
+  \end{scope}
+
+  % Wire from vin top to gate terminal
+  \draw[line width=0.32mm, line cap=round] (-2.2, 1.3) -- (-2.2, 1.8);
+  \draw[line width=0.32mm, line cap=round] (-2.2, 1.8) -- (-0.8, 1.8);
+
+  % ==============================
+  % 2. Gate-Source Voltage vgs
+  % ==============================
+  % Polarity + and - and label vgs
+  \draw[line width=0.32mm] (-0.89, 1.5) -- (-0.71, 1.5);
+  \draw[line width=0.32mm] (-0.8, 1.59) -- (-0.8, 1.41);
+  \node at (-0.8, 0.9) {$v_{gs}$};
+  \draw[line width=0.32mm] (-0.89, 0.3) -- (-0.71, 0.3);
+
+  % ==============================
+  % 3. Bottom Rail (Source Line)
+  % ==============================
+  \draw[line width=0.32mm, line cap=round] (-1.2, 0) -- (6.1, 0) node[circle, draw=black, fill=white, inner sep=1.5pt] {};
+  \node[right=0.08cm] at (6.1, 0) {$v_{out}$};
+
+  % ==============================
+  % 4. Resistor R Branch
+  % ==============================
+  \draw[line width=0.32mm, fill=black] (0, 0) circle (0.06);
+  \draw[line width=0.32mm] (0, 0) -- (0, -0.2);
+  \begin{scope}[shift={(0, -0.2)}]
+    \coordinate (node_R.t) at (0,0);
+    \draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.15) -- (0.15,-0.19) -- (-0.15,-0.27) -- (0.15,-0.35) -- (-0.15,-0.43) -- (0.15,-0.51) -- (-0.15,-0.59) -- (0,-0.63) -- (0,-0.78);
+    \node[right=0.15cm] at (0.2,-0.39) {$R$};
+    \coordinate (node_R.b) at (0,-0.78);
+  \end{scope}
+  \draw[line width=0.32mm] (0, -0.98) -- (0, -1.18);
+  \begin{scope}[shift={(0, -1.18)}]
+    \coordinate (node_GND_R.top) at (0,0);
+    \draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.21);
+    \draw[ultra thick] (-0.17,-0.21) -- (0.17,-0.21);
+    \draw[ultra thick] (-0.11,-0.35) -- (0.11,-0.35);
+    \draw[ultra thick] (-0.08,-0.49) -- (0.08,-0.49);
+  \end{scope}
+
+  % ==============================
+  % 5. Top Horizontal Rail (AC Ground)
+  % ==============================
+  \draw[line width=0.32mm, line cap=round] (1.0, 1.8) -- (5.4, 1.8);
+  \draw[line width=0.32mm, fill=black] (1.6, 1.8) circle (0.06);
+  \draw[line width=0.32mm, fill=black] (3.8, 1.8) circle (0.06);
+
+  % Upper right corner GND requested by user!
+  \draw[line width=0.32mm] (5.4, 1.8) -- (5.4, 1.6);
+  \begin{scope}[shift={(5.4, 1.6)}]
+    \coordinate (node_GND_top.top) at (0,0);
+    \draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.21);
+    \draw[ultra thick] (-0.17,-0.21) -- (0.17,-0.21);
+    \draw[ultra thick] (-0.11,-0.35) -- (0.11,-0.35);
+    \draw[ultra thick] (-0.08,-0.49) -- (0.08,-0.49);
+  \end{scope}
+
+  % ==============================
+  % 6. Dependent Source 1: gm vgs
+  % ==============================
+  \draw[line width=0.32mm, fill=black] (1.6, 0) circle (0.06);
+  \draw[line width=0.32mm] (1.6, 1.8) -- (1.6, 1.3);
+  \begin{scope}[shift={(1.6, 1.3)}]
+    \coordinate (node_gm.top) at (0,0);
+    \draw[line width=0.32mm] (0,0) -- (0.25,-0.4) -- (0,-0.8) -- (-0.25,-0.4) -- cycle;
+    \draw[-{Triangle[length=2mm, width=1.6mm]}, line width=0.32mm] (0,-0.15) -- (0,-0.65);
+    \node[right=0.15cm] at (0.25,-0.4) {$g_m v_{gs}$};
+    \coordinate (node_gm.bottom) at (0,-0.8);
+  \end{scope}
+  \draw[line width=0.32mm] (1.6, 0.5) -- (1.6, 0);
+
+  % ==============================
+  % 7. Dependent Source 2: gmb vbs
+  % ==============================
+  \draw[line width=0.32mm, fill=black] (3.8, 0) circle (0.06);
+  \draw[line width=0.32mm] (3.8, 1.8) -- (3.8, 1.3);
+  \begin{scope}[shift={(3.8, 1.3)}]
+    \coordinate (node_gmb.top) at (0,0);
+    \draw[line width=0.32mm] (0,0) -- (0.25,-0.4) -- (0,-0.8) -- (-0.25,-0.4) -- cycle;
+    \draw[-{Triangle[length=2mm, width=1.6mm]}, line width=0.32mm] (0,-0.15) -- (0,-0.65);
+    \node[right=0.15cm] at (0.25,-0.4) {$g_{mb} v_{bs}$};
+    \coordinate (node_gmb.bottom) at (0,-0.8);
+  \end{scope}
+  \draw[line width=0.32mm] (3.8, 0.5) -- (3.8, 0);
+
+\end{tikzpicture}
