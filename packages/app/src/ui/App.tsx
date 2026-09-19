@@ -1395,6 +1395,7 @@ export function App() {
     }
     const globalLike = globalThis as typeof globalThis & {
       __TIKZ_EDITOR_APP_TEST_API__?: {
+        dispatch: (action: unknown) => void;
         setSource: (nextSource: string) => void;
         getSource: () => string;
         getSourceRevision: () => number;
@@ -1407,6 +1408,7 @@ export function App() {
         selectAllElements: () => void;
         selectSourceIds: (sourceIds: string[]) => void;
         clearSelection: () => void;
+        getToolMode: () => string;
         getSelectedSourceIds: () => string[];
         getSceneSourceIds: () => string[];
         getActiveFigureId: () => string | null;
@@ -1815,6 +1817,28 @@ export function App() {
         const shortcutMode = toolModeFromShortcut(key);
         if (shortcutMode) {
           dispatch({ type: "SET_TOOL_MODE", mode: shortcutMode });
+          e.preventDefault();
+          return;
+        }
+      }
+
+      // Virtuoso 默认绑定：u / Shift+u = 撤销 / 重做，[ / ] = 缩小 / 放大。
+      // 只在画布聚焦时生效 —— 否则在源码面板里敲 [ ] 会被吞掉（TikZ 选项里全是方括号），
+      // u 也会打不出来。
+      if (!e.ctrlKey && !e.metaKey && !e.altKey && canvasShortcutContext) {
+        if (key === "u") {
+          commandRuntime.runCommand(
+            e.shiftKey ? APP_MENU_COMMAND_IDS.REDO : APP_MENU_COMMAND_IDS.UNDO,
+            "shortcut"
+          );
+          e.preventDefault();
+          return;
+        }
+        if (!e.shiftKey && (key === "[" || key === "]")) {
+          commandRuntime.runCommand(
+            key === "[" ? APP_MENU_COMMAND_IDS.ZOOM_OUT : APP_MENU_COMMAND_IDS.ZOOM_IN,
+            "shortcut"
+          );
           e.preventDefault();
           return;
         }

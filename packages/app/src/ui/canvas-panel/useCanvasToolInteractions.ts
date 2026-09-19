@@ -1,18 +1,18 @@
-import { useCallback, useEffect, type MouseEvent as ReactMouseEvent, type MutableRefObject, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
+import { useCallback, useEffect, useRef, type MouseEvent as ReactMouseEvent, type MutableRefObject, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
 import { viewportPoint, clientPoint as makeClientPoint, worldPoint, pt, px, scalarValue } from "tikz-editor/coords/index";
 import { ptToCm } from "tikz-editor/coords/source";
-import { buildSnapContext, resolveSnapSettings, snapToolPointer, type SnapGuideInput, type SnapLine, type SnapSettingsPatch } from "tikz-editor/edit/snapping";
+import { buildSnapContext, collectWireSegmentsFromScene, findWireSegmentAtPoint, resolveSnapSettings, snapToolPointer, type SnapGuideInput, type SnapLine, type SnapSettingsPatch } from "tikz-editor/edit/snapping";
 import type { NodeAnchorTarget } from "tikz-editor/semantic/types";
 import type { ClientPoint, WorldBounds, WorldPoint } from "../coords/types";
 import type { CanvasTransform, ToolMode } from "../../store/types";
-import { resolveEndpointAnchorSnap } from "./endpoint-anchor-snap";
-import { clientToWorldPoint, distanceSquared } from "./geometry";
+import { resolveEndpointAnchorSnap, resolveWireStartSource } from "./endpoint-anchor-snap";
+import { clientToWorldPoint, distanceSquared, worldToSvgPoint } from "./geometry";
 import { createPathToolDraft, pathToolCloseRadiusWorld, pathToolCurrentPoint, pathToolShouldClose } from "./path-tool";
 import { resolvePathEndpointSnap } from "./path-endpoint-snap";
 import { createFreehandToolDraft } from "./freehand-tool";
 import { isToolCreateMode } from "../tool-config";
 import { formatTooltipCoordinateRows } from "./interaction-helpers";
-import { getCircuitComponentSnippet } from "./circuit-snippets";
+import { assignUniqueCircuitInstanceIndex, getCircuitComponentSnippet, getPowerRailSnippetBetween } from "./circuit-snippets";
 import { collectAllScopeDescendantSourceIds, type ScopeOverlayIndex } from "./scope-overlay";
 import type { MatrixCellAnchorHint } from "./endpoint-anchor-snap";
 import type {
@@ -36,6 +36,39 @@ import type {
   OrthoWireToolDraft
 } from "./types";
 import { unwrapPasteClusterSnippets, type PastePlacementDraft } from "./paste-cluster-builder";
+import { computeWireWaypoints, formatJunctionDotSnippet, formatTikzWireSnippet } from "./wire-routing-helper";
+import { leadAxisAt, planWireRoute } from "./wire-auto-route";
+import { collectSourceBounds } from "./panel-helpers";
+
+/**
+ * How close (in world pt, ~0.0035cm) a committed wire endpoint must sit to an existing segment
+ * to count as a T-junction. The projection is mathematically exact, so this only needs to absorb
+ * float noise -- it stays far below the 0.01cm write precision and the snap threshold, so mere
+ * proximity never qualifies.
+ */
+const JUNCTION_TOLERANCE_WORLD = 0.1;
+
+/**
+ * While a wiring tool is active, surface EVERY connectable pin instead of only the ones inside the
+ * 60px reveal radius. With proximity alone there is no way to see where a wire may go — or even
+ * that a component has pins at all. Proximity still decides which pin is the active target, so the
+ * `snappedAnchor` is carried over untouched.
+ */
+function widenAnchorOverlayForWiring(
+  toolMode: ToolMode,
+  proximity: NodeAnchorOverlayState | null,
+  allTargets: readonly NodeAnchorTarget[]
+): NodeAnchorOverlayState | null {
+  if (toolMode !== "addOrthoWire" && toolMode !== "addLine" && toolMode !== "addArrow") {
+    return proximity;
+  }
+  return {
+    visibleAnchors: allTargets.filter((target) => target.tier === "basic"),
+    snappedAnchor: proximity?.snappedAnchor ?? null,
+    anchorStateBySourceId: proximity?.anchorStateBySourceId,
+    radiusScale: proximity?.radiusScale
+  };
+}
 
 export type UseCanvasToolInteractionsArgs = {
   viewportRef: RefObject<HTMLDivElement | null>;
@@ -167,6 +200,42 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
     [dispatch, pendingTouchViewportRef]
   );
 
+  // Mirror the clipboard-placement draft size into the store so the status bar can echo
+  // `Copied N components · click to place another · Esc exits`. Sourcing it from the prop means
+  // every place CanvasPanel clears the draft (Esc, leaving select mode) clears the readout too.
+  useEffect(() => {
+    dispatch({
+      type: "SET_CLIPBOARD_PLACEMENT",
+      count: pastePlacementDraft ? pastePlacementDraft.snippets.length : null
+    });
+  }, [dispatch, pastePlacementDraft]);
+
+  // Power rails are placed in two clicks (first end, then second end), so the first end has to
+  // survive between pointer events. A ref keeps it out of the render/state plumbing; it is dropped
+  // as soon as the rail tool is no longer active (Esc, tool switch, or after a completed rail).
+  const powerRailStartRef = useRef<WorldPoint | null>(null);
+  /**
+   * Set when a right-click press was consumed by the wire tool. The contextmenu event arrives AFTER
+   * the press handler has already run, and completing a wire switches the tool back to `select` -- so
+   * by then the "wire tool is armed" test no longer holds and the canvas menu would pop open right on
+   * top of the wire the user just drew. Remembering the consumed press closes that window.
+   */
+  const consumedWireRightClickRef = useRef(false);
+  useEffect(() => {
+    if (!toolMode.startsWith("addPowerRail")) {
+      powerRailStartRef.current = null;
+    }
+  }, [toolMode]);
+
+  // Mirror the wire-draft origin into the store so the status bar can render `Wire source: …`.
+  // Cleared whenever there is no live wire draft: leaving the tool, finishing the wire, Esc, or
+  // re-arming with the tool's own key (which drops the draft without changing the tool mode).
+  useEffect(() => {
+    if (toolMode !== "addOrthoWire" || !args.orthoWireDraft) {
+      dispatch({ type: "SET_WIRE_SOURCE", source: null });
+    }
+  }, [dispatch, toolMode, args.orthoWireDraft]);
+
   useEffect(() => {
     function onWorldPointerMove(event: PointerEvent) {
       const pending = pendingTouchViewportRef.current;
@@ -296,7 +365,12 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
         return;
       }
 
-      if (event.button === 0 && (toolMode !== "select" || pastePlacementDraft)) {
+      // A right-click while the wire tool is armed is the 45° gesture: press M, then right-click the
+      // two pins. It rides the SAME pick path as a left click -- anchor snapping, the two-click
+      // pin-to-pin route, the fallback hand routing -- with the routing mode forced to octagonal45.
+      // The contextmenu handler suppresses the canvas menu for this tool, so the two never fight.
+      const wireRightClick = event.button === 2 && toolMode === "addOrthoWire";
+      if ((event.button === 0 || wireRightClick) && (toolMode !== "select" || pastePlacementDraft)) {
         const clientPoint = makeClientPoint(px(event.clientX), px(event.clientY));
         const world = clientToWorldPoint(clientPoint, interactionSvgRef.current, svgResult.viewBox);
         if (!world) {
@@ -361,7 +435,8 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
             if (ok.sourceChanged) {
               suppressNextBackgroundClickRef.current = true;
               setSnapLines([]);
-              dispatch({ type: "SELECT_ELEMENTS", ids: [] });
+              // "SELECT_ELEMENTS" is not a real action type, so this clear silently did nothing.
+              dispatch({ type: "SELECT_RANGE", ids: [] });
             }
           }
           return;
@@ -486,39 +561,170 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
         }
 
         if (toolMode === "addOrthoWire") {
+          if (wireRightClick) {
+            consumedWireRightClickRef.current = true;
+          }
           const activeDraft = args.orthoWireDraft;
           if (!activeDraft) {
-            args.setOrthoWireDraft({
-              currentWorld: resolvedStart,
-              startAnchor: startEndpointAnchor
+            // Classify the origin (pin / trunk mid-span / junction dot / empty grid) before the
+            // draft exists, then mirror it into the store so the status bar can echo it.
+            const wireStart = resolveWireStartSource({
+              pointerWorld: world,
+              startWorld: resolvedStart,
+              snappedAnchor: startEndpointAnchor,
+              sceneElements: snapshot.scene?.elements ?? [],
+              zoom: toolSnapContext?.zoom ?? canvasTransform.scale
             });
+            args.setOrthoWireDraft({
+              currentWorld: wireStart.world,
+              startAnchor: startEndpointAnchor,
+              // A right-click always means the 45° connection, so it also fixes the mode that the
+              // completion click reads back off the draft.
+              ...(wireRightClick ? { routingMode: "octagonal45" as const } : {}),
+              emittedLegs: 0
+            });
+            dispatch({
+              type: "SET_WIRE_SOURCE",
+              source: { kind: wireStart.kind, id: wireStart.id }
+            });
+            setToolCursorWorld(wireStart.world);
             setSnapLines(startSnapResult.lines);
+            return;
+          }
+
+          // A right-click forces the 45° connection regardless of what Shift+F3 last selected.
+          const mode = wireRightClick ? "octagonal45" : activeDraft.routingMode ?? "orthogonal";
+          const orientation = activeDraft.orientation;
+          const emittedLegs = activeDraft.emittedLegs ?? 0;
+
+          // Two-click connection: when both ends are pins, lay the whole route in ONE action instead
+          // of making the user click once per leg. Hand routing (an end that is not a pin) keeps the
+          // documented "one click, one segment" feel.
+          //
+          // Only when NO leg has been emitted yet. If the user already hand-placed a waypoint, this
+          // must fall through to the per-leg path — re-planning from the origin here would draw a
+          // second, overlapping wire and discard the waypoint they just chose.
+          const routeAnchorKey = (
+            anchor: { nodeSourceId?: string | null; nodeName?: string } | null | undefined
+          ): string => (anchor ? `${anchor.nodeSourceId || ""}|${anchor.nodeName ?? ""}` : "");
+          const originAnchorForRoute = activeDraft.startAnchor ?? null;
+          const targetAnchor =
+            emittedLegs === 0 &&
+            originAnchorForRoute &&
+            startEndpointAnchor &&
+            routeAnchorKey(startEndpointAnchor) !== routeAnchorKey(originAnchorForRoute)
+              ? startEndpointAnchor
+              : null;
+          if (originAnchorForRoute && targetAnchor && snapshot.svg?.viewBox) {
+            const routeViewBox = snapshot.svg.viewBox;
+            const sceneElements = snapshot.scene?.elements ?? [];
+            const sceneSegments = collectWireSegmentsFromScene(sceneElements);
+            const route = planWireRoute({
+              start: originAnchorForRoute.world,
+              end: targetAnchor.world,
+              viewBox: routeViewBox,
+              mode,
+              orientation,
+              // Leave each pin along its own lead's direction and arrive along the other's — a wire
+              // that turns 90° right at the pin reads as a wrong connection.
+              startLeadAxis: leadAxisAt(originAnchorForRoute.world, sceneSegments),
+              endLeadAxis: leadAxisAt(targetAnchor.world, sceneSegments),
+              obstacles: [...collectSourceBounds(sceneElements, routeViewBox).values()],
+              existingSegments: sceneSegments.map((segment) => {
+                const a = worldToSvgPoint(segment.p1, routeViewBox);
+                const b = worldToSvgPoint(segment.p2, routeViewBox);
+                return { a: { x: a.x, y: a.y }, b: { x: b.x, y: b.y } };
+              })
+            });
+            const snippet = formatTikzWireSnippet(route, {
+              fromAnchor: { nodeName: originAnchorForRoute.nodeName, anchor: originAnchorForRoute.anchor },
+              toAnchor: { nodeName: targetAnchor.nodeName, anchor: targetAnchor.anchor }
+            });
+            applyActionWithFeedback({
+              kind: "pasteStatements",
+              snippets: [snippet],
+              delta: worldPoint(pt(0), pt(0))
+            });
+            args.setOrthoWireDraft(null);
+            dispatch({ type: "SET_TOOL_MODE", mode: "select" });
+            setToolCursorWorld(null);
+            setSnapLines([]);
+            setNodeAnchorOverlay(null);
             return;
           }
 
           const dx = Math.abs(resolvedStart.x - activeDraft.currentWorld.x);
           const dy = Math.abs(resolvedStart.y - activeDraft.currentWorld.y);
-          const nextPoint: WorldPoint = dx >= dy
-            ? worldPoint(pt(resolvedStart.x), pt(activeDraft.currentWorld.y))
-            : worldPoint(pt(activeDraft.currentWorld.x), pt(resolvedStart.y));
 
+          // 默认（没用 Space 显式选过朝向）沿用历史规则：拐角跟着位移大的那一轴走。
+          // 一旦显式选了 HV/VH，就以它为准；45°/任意角根本不用这个朝向。
+          const waypoints =
+            mode === "orthogonal" && !orientation
+              ? [
+                  activeDraft.currentWorld,
+                  dx >= dy
+                    ? worldPoint(pt(resolvedStart.x), pt(activeDraft.currentWorld.y))
+                    : worldPoint(pt(activeDraft.currentWorld.x), pt(resolvedStart.y)),
+                  resolvedStart
+                ]
+              : computeWireWaypoints(activeDraft.currentWorld, resolvedStart, mode, orientation ?? "HV");
+
+          // 正交保持"点一次出一段"的老手感；45°/任意角一次走完整条路径，再从末端继续。
+          const leg = mode === "orthogonal" ? waypoints.slice(0, 2) : waypoints;
+          const nextPoint = leg[leg.length - 1];
           if (Math.abs(nextPoint.x - activeDraft.currentWorld.x) < 1e-3 && Math.abs(nextPoint.y - activeDraft.currentWorld.y) < 1e-3) {
             return;
           }
 
-          const x1Cm = (activeDraft.currentWorld.x / 28.4527559).toFixed(2);
-          const y1Cm = (activeDraft.currentWorld.y / 28.4527559).toFixed(2);
-          const x2Cm = (nextPoint.x / 28.4527559).toFixed(2);
-          const y2Cm = (nextPoint.y / 28.4527559).toFixed(2);
-          const snippet = `\\draw[thick, line cap=round] (${x1Cm},${y1Cm}) -- (${x2Cm},${y2Cm});\n`;
+          // 首尾写成锚点引用，让导线真正"长在引脚上"——挪动元件时跟着走。
+          // 起点锚点只属于第一段；之后各段从上一段末端（普通坐标）续画。
+          const originAnchor = activeDraft.startAnchor ?? null;
+          const fromAnchor =
+            emittedLegs === 0 && originAnchor
+              ? { nodeName: originAnchor.nodeName, anchor: originAnchor.anchor }
+              : null;
+
+          // 本段末端正落在某个引脚上时，写成锚点引用并收线。
+          // 身份比较以 nodeName 兜底：纯 \coordinate 引脚的 nodeSourceId 是空串，
+          // 只比 sourceId 会把两个不同引脚误认成同一个。
+          const anchorKey = (
+            anchor: { nodeSourceId?: string | null; nodeName?: string } | null | undefined
+          ): string => (anchor ? `${anchor.nodeSourceId || ""}\u0000${anchor.nodeName ?? ""}` : "");
+          const endsOnPin =
+            startEndpointAnchor != null &&
+            Math.abs(startEndpointAnchor.world.x - nextPoint.x) < 1e-6 &&
+            Math.abs(startEndpointAnchor.world.y - nextPoint.y) < 1e-6;
+          const landingAnchor =
+            endsOnPin && anchorKey(startEndpointAnchor) !== anchorKey(originAnchor)
+              ? startEndpointAnchor
+              : null;
+          const toAnchor = landingAnchor
+            ? { nodeName: landingAnchor.nodeName, anchor: landingAnchor.anchor }
+            : null;
+
+          const snippet = formatTikzWireSnippet(leg, { fromAnchor, toAnchor });
+
+          // Landing on the trunk of an existing wire is a T-junction. The dot goes into the
+          // SAME action as the segment so a single undo removes both.
+          const snippets = [snippet];
+          if (snapshot.scene) {
+            const host = findWireSegmentAtPoint(
+              nextPoint,
+              collectWireSegmentsFromScene(snapshot.scene.elements),
+              JUNCTION_TOLERANCE_WORLD
+            );
+            if (host) {
+              snippets.push(formatJunctionDotSnippet(nextPoint));
+            }
+          }
 
           applyActionWithFeedback({
             kind: "pasteStatements",
-            snippets: [snippet],
+            snippets,
             delta: worldPoint(pt(0), pt(0))
           });
 
-          if (startEndpointAnchor && (!activeDraft.startAnchor || startEndpointAnchor.nodeSourceId !== activeDraft.startAnchor.nodeSourceId)) {
+          if (landingAnchor) {
             args.setOrthoWireDraft(null);
             dispatch({ type: "SET_TOOL_MODE", mode: "select" });
             setToolCursorWorld(null);
@@ -529,7 +735,10 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
 
           args.setOrthoWireDraft({
             currentWorld: nextPoint,
-            startAnchor: startEndpointAnchor
+            startAnchor: originAnchor,
+            routingMode: activeDraft.routingMode,
+            orientation: activeDraft.orientation,
+            emittedLegs: emittedLegs + 1
           });
           setToolCursorWorld(nextPoint);
           setSnapLines(startSnapResult.lines);
@@ -686,7 +895,8 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
           toolMode.startsWith("addControlledCurrentSource") ||
           toolMode.startsWith("addVoltageSource") ||
           toolMode.startsWith("addCurrentArrow") ||
-          toolMode.startsWith("addWireLead")
+          toolMode.startsWith("addWireLead") ||
+          toolMode.startsWith("addPowerRail")
         ) {
           event.preventDefault();
           event.stopPropagation();
@@ -732,12 +942,58 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
             toolMode.startsWith("addControlledCurrentSource") ||
             toolMode.startsWith("addVoltageSource") ||
             toolMode.startsWith("addCurrentArrow") ||
-            toolMode.startsWith("addWireLead")
+            toolMode.startsWith("addWireLead") ||
+            toolMode.startsWith("addPowerRail")
           ) {
+            // Power rail is a two-point shape (first end, then second end): the first click just
+            // arms the draft, the second closes the rail with the length-scaled taps.
+            if (toolMode.startsWith("addPowerRail")) {
+              const railStart = powerRailStartRef.current;
+              if (!railStart) {
+                powerRailStartRef.current = nodeAt;
+                setToolCursorWorld(nodeAt);
+                setSnapLines([]);
+                logSnapDebug({
+                  phase: "tool-power-rail-start",
+                  snapshotMatchesSource: true,
+                  dragKind: null,
+                  rawPoint: world,
+                  snappedPoint: nodeAt,
+                  lines: []
+                });
+                return;
+              }
+              const toCm = (value: number) => value / 28.4527559;
+              const rawSnippet = getPowerRailSnippetBetween(
+                toCm(railStart.x),
+                toCm(railStart.y),
+                toCm(nodeAt.x),
+                toCm(nodeAt.y)
+              );
+              const snippet = assignUniqueCircuitInstanceIndex(rawSnippet, source);
+              queueSelectionForAddedElement(nodeAt);
+              const ok = applyActionWithFeedback({
+                kind: "pasteStatements",
+                snippets: [snippet],
+                delta: worldPoint(pt(0), pt(0))
+              });
+              if (!ok.sourceChanged) {
+                pendingAddedSelectionRef.current = null;
+                return;
+              }
+              suppressNextBackgroundClickRef.current = true;
+              // Stay armed so the next pair of clicks lays another rail; Esc exits.
+              powerRailStartRef.current = null;
+              setToolCursorWorld(null);
+              setSnapLines([]);
+              return;
+            }
+
             const xCm = (nodeAt.x / 28.4527559).toFixed(2);
             const yCm = (nodeAt.y / 28.4527559).toFixed(2);
-            const snippet = getCircuitComponentSnippet(toolMode, xCm, yCm);
-            if (!snippet) return;
+            const rawSnippet = getCircuitComponentSnippet(toolMode, xCm, yCm);
+            if (!rawSnippet) return;
+            const snippet = assignUniqueCircuitInstanceIndex(rawSnippet, source);
 
             queueSelectionForAddedElement(nodeAt);
             const ok = applyActionWithFeedback({
@@ -750,7 +1006,9 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
             }
             if (ok.sourceChanged) {
               suppressNextBackgroundClickRef.current = true;
-              dispatch({ type: "SET_TOOL_MODE", mode: "select" });
+              // Sticky placement: stay armed so the next click stamps another part, matching the
+              // reference tool's "Added <part> · click to place another · Esc exits". Esc (which
+              // still routes through the SET_TOOL_MODE → select path) is the way out.
               setToolDraft(null);
               setToolCursorWorld(null);
               setSnapLines([]);
@@ -900,6 +1158,10 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
       setDragTooltip,
       closeTextEditingSession,
       setToolCursorWorld,
+      // The callback closes over args, so the in-progress wire draft must be a dependency.
+      // Without it, clearing the draft from the keyboard handler is invisible here and the
+      // next click extends the previous wire instead of starting a new one.
+      args.orthoWireDraft,
       setToolDraft,
       setWarning,
       parseOptions,
@@ -1040,6 +1302,11 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
             matrixCellAnchorHints
           })
         : null;
+      const hoverAnchorOverlay = widenAnchorOverlayForWiring(
+        toolMode,
+        hoverEndpointAnchorOverlay,
+        nodeAnchorTargets
+      );
       const hoverEndpointAnchor = hoverEndpointAnchorOverlay?.snappedAnchor ?? null;
       const hoverPathEndpoint =
         toolMode === "addPath" && !pathDraft && !pathSegmentDraft
@@ -1051,7 +1318,7 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
               parseOptions
             })
           : null;
-      const combinedOverlay = mergePathEndpointIntoOverlay(hoverEndpointAnchorOverlay, hoverPathEndpoint);
+      const combinedOverlay = mergePathEndpointIntoOverlay(hoverAnchorOverlay, hoverPathEndpoint);
       setNodeAnchorOverlay(
         combinedOverlay && combinedOverlay.visibleAnchors.length > 0
           ? combinedOverlay
@@ -1240,7 +1507,10 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
               parseOptions
             })
           : null;
-      const combinedOverlayEnter = mergePathEndpointIntoOverlay(hoverEndpointAnchorOverlay, hoverPathEndpointEnter);
+      const combinedOverlayEnter = mergePathEndpointIntoOverlay(
+        widenAnchorOverlayForWiring(toolMode, hoverEndpointAnchorOverlay, nodeAnchorTargets),
+        hoverPathEndpointEnter
+      );
       setNodeAnchorOverlay(
         combinedOverlayEnter && combinedOverlayEnter.visibleAnchors.length > 0
           ? combinedOverlayEnter
@@ -1363,6 +1633,26 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
     [finalizePendingTouchViewportTap]
   );
 
+  /**
+   * Capture-phase guard for the canvas context menu. While the wire tool is armed the right button
+   * belongs to the 45° gesture (M, then right-click two pins). Two cases must be suppressed: the
+   * press that only ARMS the draft (the tool is still `addOrthoWire`), and the press that COMPLETES
+   * the wire (that one already switched the tool back to `select` before `contextmenu` fired).
+   * Capturing parent-first is what also keeps the per-element menus shut -- the gesture has to be
+   * able to target a pin that sits on a component.
+   */
+  const onInteractionContextMenuCapture = useCallback(
+    (event: ReactMouseEvent<SVGElement>) => {
+      if (toolMode !== "addOrthoWire" && !consumedWireRightClickRef.current) {
+        return;
+      }
+      consumedWireRightClickRef.current = false;
+      event.preventDefault();
+      event.stopPropagation();
+    },
+    [toolMode]
+  );
+
   return {
     onBackgroundClick,
     onViewportPointerDown,
@@ -1372,7 +1662,8 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
     onInteractionLostPointerCapture,
     onInteractionPointerMove,
     onInteractionPointerLeave,
-    onInteractionPointerEnter
+    onInteractionPointerEnter,
+    onInteractionContextMenuCapture
   };
 }
 

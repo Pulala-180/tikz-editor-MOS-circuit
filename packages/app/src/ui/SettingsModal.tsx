@@ -15,7 +15,7 @@ import css from "./SettingsModal.module.css";
 type CategoryId = "general" | "editor" | "canvas";
 
 const MATHJAX_FONTS: { value: MathJaxFont; label: string }[] = [
-  { value: "arial-bold",      label: "Arial Bold (IEEE Circuit / Sans-Serif)" },
+  { value: "arial-bold",      label: "Arial Bold (IEEE 电路 / 无衬线)" },
   { value: "mathjax-newcm",   label: "New Computer Modern" },
   { value: "mathjax-asana",   label: "Asana Math" },
   { value: "mathjax-bonum",   label: "Gyre Bonum" },
@@ -26,13 +26,20 @@ const MATHJAX_FONTS: { value: MathJaxFont; label: string }[] = [
   { value: "mathjax-schola",  label: "Gyre Schola" },
   { value: "mathjax-stix2",   label: "STIX2" },
   { value: "mathjax-termes",  label: "Gyre Termes" },
-  { value: "mathjax-tex",     label: "TeX (classic MathJax v3)" },
+  { value: "mathjax-tex",     label: "TeX (经典 MathJax v3)" },
 ];
 
+const BASE_FONT_SIZE_LABELS: Record<BaseFontSize, string> = {
+  9: "9 pt (IEEE 图表标准)",
+  10: "10 pt (默认 / 期刊标准)",
+  11: "11 pt (中号)",
+  12: "12 pt (书籍 / 论文 / 报告)"
+};
+
 const CATEGORIES: { id: CategoryId; label: string }[] = [
-  { id: "general", label: "General" },
-  { id: "editor", label: "Code Editor" },
-  { id: "canvas", label: "Canvas" }
+  { id: "general", label: "常规设置" },
+  { id: "editor", label: "代码编辑器" },
+  { id: "canvas", label: "画板与渲染" }
 ];
 
 let rememberedCategory: CategoryId = "general";
@@ -94,11 +101,11 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
       className={css.dialog}
     >
       <Modal.Header
-        title="Settings"
+        title="设置"
         titleId="settings-title"
         showCloseButton
         onClose={onClose}
-        closeAriaLabel="Close settings"
+        closeAriaLabel="关闭设置"
       />
 
       <Modal.Body padding="none" scroll={false}>
@@ -120,12 +127,12 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
           <div className={css.content}>
             {activeCategory === "general" && (
               <div className={css.panel}>
-                <div className={css.panelTitle}>General</div>
+                <div className={css.panelTitle}>常规设置</div>
                 <div className={css.settingsGroup}>
                   <div className={css.settingRow}>
                     <label className={css.settingLabel} htmlFor="setting-ui-font-size">
-                      UI Font Size
-                      <span className={css.settingDesc}>Adjusts app chrome text size.</span>
+                      界面字体大小
+                      <span className={css.settingDesc}>调整应用程序界面的文本字体大小。</span>
                     </label>
                     <select
                       id="setting-ui-font-size"
@@ -141,8 +148,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
                   <div className={css.settingRow}>
                     <label className={css.settingLabel} htmlFor="setting-color-scheme">
-                      Color Scheme
-                      <span className={css.settingDesc}>Controls light/dark mode for the app UI.</span>
+                      色彩主题
+                      <span className={css.settingDesc}>控制应用程序界面的浅色/深色主题。</span>
                     </label>
                     <select
                       id="setting-color-scheme"
@@ -150,17 +157,17 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                       value={settings.general.colorScheme}
                       onChange={(e) => { updateGeneralSettings({ colorScheme: e.target.value as ColorScheme }); }}
                     >
-                      <option value="system">System (default)</option>
-                      <option value="light">Light</option>
-                      <option value="dark">Dark</option>
+                      <option value="system">跟随系统（默认）</option>
+                      <option value="light">浅色模式</option>
+                      <option value="dark">深色模式</option>
                     </select>
                   </div>
 
                   <div className={css.settingRow}>
                     <label className={css.settingLabel} htmlFor="setting-canvas-invert">
-                      Invert Canvas in Dark Mode
+                      深色模式下反转画板颜色
                       <span className={css.settingDesc}>
-                        Applies brightness inversion to the diagram in dark mode, keeping hue intact.
+                        深色模式下对图表应用亮度反转，同时保持色相不变。
                       </span>
                     </label>
                     <input
@@ -174,9 +181,9 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
                   <div className={css.settingRow}>
                     <label className={css.settingLabel} htmlFor="setting-color-picker-accuracy">
-                      Color Picker Precision
+                      取色器精度
                       <span className={css.settingDesc}>
-                        Approximate uses faster integer mixes. Exact enables higher-precision white-tail mixes.
+                        近似模式使用快速整数混合；精确模式支持更高精度的混色计算。
                       </span>
                     </label>
                     <select
@@ -185,8 +192,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                       value={settings.colorPicker.accuracy}
                       onChange={(e) => { updateColorPickerSettings({ accuracy: e.target.value as ColorPickerAccuracy }); }}
                     >
-                      <option value="approximate">Approximate (default)</option>
-                      <option value="exact">Exact</option>
+                      <option value="approximate">近似（默认）</option>
+                      <option value="exact">精确</option>
                     </select>
                   </div>
                 </div>
@@ -197,7 +204,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                     data-testid="settings-reset-general"
                     onClick={resetActiveCategoryToDefaults}
                   >
-                    Reset to Defaults
+                    恢复默认设置
                   </button>
                 </div>
               </div>
@@ -205,12 +212,12 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
             {activeCategory === "editor" && (
               <div className={css.panel}>
-                <div className={css.panelTitle}>Code Editor</div>
+                <div className={css.panelTitle}>代码编辑器</div>
                 <div className={css.settingsGroup}>
                   <div className={css.settingRow}>
                     <label className={css.settingLabel} htmlFor="setting-word-wrap">
-                      Word Wrap
-                      <span className={css.settingDesc}>Wrap long lines in the source editor.</span>
+                      自动换行
+                      <span className={css.settingDesc}>在源码编辑器中对超出宽度的长行自动换行。</span>
                     </label>
                     <input
                       id="setting-word-wrap"
@@ -223,8 +230,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
                   <div className={css.settingRow}>
                     <label className={css.settingLabel} htmlFor="setting-line-numbers">
-                      Line Numbers
-                      <span className={css.settingDesc}>Show line numbers in the source editor.</span>
+                      代码行号
+                      <span className={css.settingDesc}>在源码编辑器中显示代码行号。</span>
                     </label>
                     <input
                       id="setting-line-numbers"
@@ -237,8 +244,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
                   <div className={css.settingRow}>
                     <label className={css.settingLabel} htmlFor="setting-font-size">
-                      Font Size
-                      <span className={css.settingDesc}>Source editor font size.</span>
+                      字体大小
+                      <span className={css.settingDesc}>源码编辑器的字体大小。</span>
                     </label>
                     <select
                       id="setting-font-size"
@@ -254,8 +261,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
                   <div className={css.settingRow}>
                     <label className={css.settingLabel} htmlFor="setting-indent-size">
-                      Indent Size
-                      <span className={css.settingDesc}>Spaces inserted by Tab and formatting.</span>
+                      缩进空格数
+                      <span className={css.settingDesc}>按 Tab 键与代码格式化时插入的空格数。</span>
                     </label>
                     <select
                       id="setting-indent-size"
@@ -263,18 +270,18 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                       value={settings.editor.indentSize}
                       onChange={(e) => { updateEditorSettings({ indentSize: Number(e.target.value) as 2 | 4 }); }}
                     >
-                      <option value={2}>2 spaces</option>
-                      <option value={4}>4 spaces</option>
+                      <option value={2}>2 个空格</option>
+                      <option value={4}>4 个空格</option>
                     </select>
                   </div>
                 </div>
 
-                <div className={css.panelTitle}>Formatter</div>
+                <div className={css.panelTitle}>代码格式化</div>
                 <div className={css.settingsGroup}>
                   <div className={css.settingRow}>
                     <label className={css.settingLabel} htmlFor="setting-formatter-reflow-long-options">
-                      Reflow Long Option Lists
-                      <span className={css.settingDesc}>Split long option lists into one entry per line while formatting.</span>
+                      长选项列表自动折行
+                      <span className={css.settingDesc}>格式化代码时将过长的选项列表拆分为每行一项。</span>
                     </label>
                     <input
                       id="setting-formatter-reflow-long-options"
@@ -287,8 +294,8 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
                   <div className={css.settingRow}>
                     <label className={css.settingLabel} htmlFor="setting-formatter-max-line-length">
-                      Max Line Length
-                      <span className={css.settingDesc}>Longer option lists are reflowed when this limit is exceeded.</span>
+                      单行最大长度
+                      <span className={css.settingDesc}>选项列表超出此字符长度限制时将自动折行重排。</span>
                     </label>
                     <input
                       id="setting-formatter-max-line-length"
@@ -314,7 +321,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                     data-testid="settings-reset-editor"
                     onClick={resetActiveCategoryToDefaults}
                   >
-                    Reset to Defaults
+                    恢复默认设置
                   </button>
                 </div>
               </div>
@@ -322,12 +329,12 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
 
             {activeCategory === "canvas" && (
               <div className={css.panel}>
-                <div className={css.panelTitle}>Canvas</div>
+                <div className={css.panelTitle}>画板设置</div>
                 <div className={css.settingsGroup}>
                   <div className={css.settingRow}>
                     <label className={css.settingLabel} htmlFor="setting-grid-size">
-                      Grid Size
-                      <span className={css.settingDesc}>Controls how fine or coarse the snap grid is.</span>
+                      网格大小
+                      <span className={css.settingDesc}>控制对齐吸附网格的疏密程度。</span>
                     </label>
                     <select
                       id="setting-grid-size"
@@ -335,16 +342,16 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                       value={settings.canvas.gridSize}
                       onChange={(e) => { updateCanvasSettings({ gridSize: e.target.value as GridSize }); }}
                     >
-                      <option value="fine">Fine</option>
-                      <option value="standard">Standard</option>
-                      <option value="coarse">Coarse</option>
+                      <option value="fine">精细 (Fine)</option>
+                      <option value="standard">标准 (Standard)</option>
+                      <option value="coarse">粗放 (Coarse)</option>
                     </select>
                   </div>
 
                   <div className={css.settingRow}>
                     <label className={css.settingLabel} htmlFor="setting-handle-size">
-                      Edit Handle Size
-                      <span className={css.settingDesc}>Controls the size of draggable edit handles.</span>
+                      控制点手柄尺寸
+                      <span className={css.settingDesc}>控制画板上可拖拽控制点与手柄的显示大小。</span>
                     </label>
                     <select
                       id="setting-handle-size"
@@ -352,17 +359,17 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                       value={settings.canvas.handleSizePx}
                       onChange={(e) => { updateCanvasSettings({ handleSizePx: Number(e.target.value) }); }}
                     >
-                      <option value={7}>Small</option>
-                      <option value={9}>Medium</option>
-                      <option value={11}>Large</option>
+                      <option value={7}>小 (Small)</option>
+                      <option value={9}>中 (Medium)</option>
+                      <option value={11}>大 (Large)</option>
                     </select>
                   </div>
 
                   <div className={css.settingRow}>
                     <label className={css.settingLabel} htmlFor="setting-zoom-speed">
-                      Zoom Speed
+                      缩放速度
                       <span className={css.settingDesc}>
-                        Slow ↔ Fast ({settings.canvas.zoomSpeed.toFixed(4)})
+                        慢 ↔ 快 ({settings.canvas.zoomSpeed.toFixed(4)})
                       </span>
                     </label>
                     <input
@@ -382,12 +389,12 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                   </div>
                 </div>
 
-                <div className={css.panelTitle}>Rendering</div>
+                <div className={css.panelTitle}>渲染与字体</div>
                 <div className={css.settingsGroup}>
                   <div className={css.settingRow}>
                     <label className={css.settingLabel} htmlFor="setting-base-font-size">
-                      Base Font Size
-                      <span className={css.settingDesc}>Document class base font size (\normalsize).</span>
+                      基准字号
+                      <span className={css.settingDesc}>LaTeX 导言区基准字号（对应 \normalsize）。</span>
                     </label>
                     <select
                       id="setting-base-font-size"
@@ -396,14 +403,14 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                       onChange={(e) => { updateRenderingSettings({ baseFontSize: Number(e.target.value) as BaseFontSize }); }}
                     >
                       {BASE_FONT_SIZE_OPTIONS.map(({ value, label }) => (
-                        <option key={value} value={value}>{label}</option>
+                        <option key={value} value={value}>{BASE_FONT_SIZE_LABELS[value] ?? label}</option>
                       ))}
                     </select>
                   </div>
                   <div className={css.settingRow}>
                     <label className={css.settingLabel} htmlFor="setting-mathjax-font">
-                      Math Font
-                      <span className={css.settingDesc}>Font used to render math in text nodes.</span>
+                      数学公式字体
+                      <span className={css.settingDesc}>文本节点中数学公式渲染所使用的字体。</span>
                     </label>
                     <select
                       id="setting-mathjax-font"
@@ -421,7 +428,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                       key={settings.rendering.mathJaxFont}
                       className={css.fontPreviewImg}
                       src={`${import.meta.env.BASE_URL}font-previews/${settings.rendering.mathJaxFont}.svg`}
-                      alt={`Preview of ${settings.rendering.mathJaxFont}`}
+                      alt={`预览字体 ${settings.rendering.mathJaxFont}`}
                     />
                   </div>
                 </div>
@@ -433,7 +440,7 @@ export function SettingsModal({ onClose }: SettingsModalProps) {
                     data-testid="settings-reset-canvas"
                     onClick={resetActiveCategoryToDefaults}
                   >
-                    Reset to Defaults
+                    恢复默认设置
                   </button>
                 </div>
               </div>

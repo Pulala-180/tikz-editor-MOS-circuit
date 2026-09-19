@@ -243,7 +243,7 @@ function CircuitElementSubmenu({
                   ]
                     .filter(Boolean)
                     .join(" ")}
-                  title="加号在头顶 (上端)"
+                  title="加号在上端"
                   onClick={(e) => {
                     e.stopPropagation();
                     onSelectMode(toolModes.vTop);
@@ -263,7 +263,7 @@ function CircuitElementSubmenu({
                   ]
                     .filter(Boolean)
                     .join(" ")}
-                  title="加号在脚下 (下端)"
+                  title="加号在下端"
                   onClick={(e) => {
                     e.stopPropagation();
                     onSelectMode(toolModes.vBottom);
@@ -350,7 +350,7 @@ function CurrentArrowSubmenu({
               activeDirection === "right" ? css.wireMenuItemActive : ""
             ].filter(Boolean).join(" ")}
             onMouseEnter={() => setActiveDirection("right")}
-            title="向右 (Right)"
+            title="向右"
           >
             <svg width="20" height="14" viewBox="0 0 20 14" style={{ display: "block" }}>
               <line x1="2" y1="7" x2="16" y2="7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -413,7 +413,7 @@ function CurrentArrowSubmenu({
               activeDirection === "left" ? css.wireMenuItemActive : ""
             ].filter(Boolean).join(" ")}
             onMouseEnter={() => setActiveDirection("left")}
-            title="向左 (Left)"
+            title="向左"
           >
             <svg width="20" height="14" viewBox="0 0 20 14" style={{ display: "block" }}>
               <line x1="4" y1="7" x2="18" y2="7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -472,7 +472,7 @@ function CurrentArrowSubmenu({
               activeDirection === "up" ? css.wireMenuItemActive : ""
             ].filter(Boolean).join(" ")}
             onMouseEnter={() => setActiveDirection("up")}
-            title="向上 (Up)"
+            title="向上"
           >
             <svg width="18" height="16" viewBox="0 0 18 16" style={{ display: "block" }}>
               <line x1="9" y1="14" x2="9" y2="2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -531,7 +531,7 @@ function CurrentArrowSubmenu({
               activeDirection === "down" ? css.wireMenuItemActive : ""
             ].filter(Boolean).join(" ")}
             onMouseEnter={() => setActiveDirection("down")}
-            title="向下 (Down)"
+            title="向下"
           >
             <svg width="18" height="16" viewBox="0 0 18 16" style={{ display: "block" }}>
               <line x1="9" y1="2" x2="9" y2="14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
@@ -657,7 +657,7 @@ function CurrentSourceSubmenu({
               activeDirection === "right" ? css.wireMenuItemActive : ""
             ].filter(Boolean).join(" ")}
             onMouseEnter={() => setActiveDirection("right")}
-            title="向右 (Right)"
+            title="向右"
           >
             <svg width="22" height="16" viewBox="0 0 22 16" style={{ display: "block" }}>
               <circle cx="11" cy="8" r="6" stroke="currentColor" strokeWidth="1.5" fill="none" />
@@ -727,7 +727,7 @@ function CurrentSourceSubmenu({
               activeDirection === "left" ? css.wireMenuItemActive : ""
             ].filter(Boolean).join(" ")}
             onMouseEnter={() => setActiveDirection("left")}
-            title="向左 (Left)"
+            title="向左"
           >
             <svg width="22" height="16" viewBox="0 0 22 16" style={{ display: "block" }}>
               <circle cx="11" cy="8" r="6" stroke="currentColor" strokeWidth="1.5" fill="none" />
@@ -793,7 +793,7 @@ function CurrentSourceSubmenu({
               activeDirection === "up" ? css.wireMenuItemActive : ""
             ].filter(Boolean).join(" ")}
             onMouseEnter={() => setActiveDirection("up")}
-            title="向上 (Up)"
+            title="向上"
           >
             <svg width="18" height="20" viewBox="0 0 18 20" style={{ display: "block" }}>
               <circle cx="9" cy="10" r="6" stroke="currentColor" strokeWidth="1.5" fill="none" />
@@ -859,7 +859,7 @@ function CurrentSourceSubmenu({
               activeDirection === "down" ? css.wireMenuItemActive : ""
             ].filter(Boolean).join(" ")}
             onMouseEnter={() => setActiveDirection("down")}
-            title="向下 (Down)"
+            title="向下"
           >
             <svg width="18" height="20" viewBox="0 0 18 20" style={{ display: "block" }}>
               <circle cx="9" cy="10" r="6" stroke="currentColor" strokeWidth="1.5" fill="none" />
@@ -992,7 +992,7 @@ function ControlledCurrentSourceSubmenu({
               activeDirection === "down" ? css.wireMenuItemActive : ""
             ].filter(Boolean).join(" ")}
             onMouseEnter={() => setActiveDirection("down")}
-            title="向下 (Down)"
+            title="向下"
           >
             <svg width="22" height="16" viewBox="0 0 22 16" style={{ display: "block" }}>
               <polygon points="11,2 17,8 11,14 5,8" fill="none" stroke="currentColor" strokeWidth="1.5" />
@@ -1062,7 +1062,7 @@ function ControlledCurrentSourceSubmenu({
               activeDirection === "up" ? css.wireMenuItemActive : ""
             ].filter(Boolean).join(" ")}
             onMouseEnter={() => setActiveDirection("up")}
-            title="向上 (Up)"
+            title="向上"
           >
             <svg width="22" height="16" viewBox="0 0 22 16" style={{ display: "block" }}>
               <polygon points="11,2 17,8 11,14 5,8" fill="none" stroke="currentColor" strokeWidth="1.5" />
@@ -1128,7 +1128,7 @@ function ControlledCurrentSourceSubmenu({
               activeDirection === "right" ? css.wireMenuItemActive : ""
             ].filter(Boolean).join(" ")}
             onMouseEnter={() => setActiveDirection("right")}
-            title="向右 (Right)"
+            title="向右"
           >
             <svg width="22" height="16" viewBox="0 0 22 16" style={{ display: "block" }}>
               <polygon points="11,2 17,8 11,14 5,8" fill="none" stroke="currentColor" strokeWidth="1.5" />
@@ -1198,7 +1198,7 @@ function ControlledCurrentSourceSubmenu({
               activeDirection === "left" ? css.wireMenuItemActive : ""
             ].filter(Boolean).join(" ")}
             onMouseEnter={() => setActiveDirection("left")}
-            title="向左 (Left)"
+            title="向左"
           >
             <svg width="22" height="16" viewBox="0 0 22 16" style={{ display: "block" }}>
               <polygon points="11,2 17,8 11,14 5,8" fill="none" stroke="currentColor" strokeWidth="1.5" />
@@ -1322,7 +1322,7 @@ function MosfetElementSubmenu({
         ]
           .filter(Boolean)
           .join(" ")}
-        title="D (漏极)"
+        title="漏极 (D)"
         style={{ fontSize: "13px", fontWeight: "bold", fontFamily: "serif", padding: "4px 8px" }}
         onClick={(e) => {
           e.stopPropagation();
@@ -1339,7 +1339,7 @@ function MosfetElementSubmenu({
         ]
           .filter(Boolean)
           .join(" ")}
-        title="G (栅极)"
+        title="栅极 (G)"
         style={{ fontSize: "13px", fontWeight: "bold", fontFamily: "serif", padding: "4px 8px" }}
         onClick={(e) => {
           e.stopPropagation();
@@ -1356,7 +1356,7 @@ function MosfetElementSubmenu({
         ]
           .filter(Boolean)
           .join(" ")}
-        title="S (源极)"
+        title="源极 (S)"
         style={{ fontSize: "13px", fontWeight: "bold", fontFamily: "serif", padding: "4px 8px" }}
         onClick={(e) => {
           e.stopPropagation();
@@ -1455,7 +1455,10 @@ function IoNodeSubmenu({
   const [activeCategory, setActiveCategory] = useState<"vin" | "vout" | null>(null);
   const timeoutRef = useRef<number | null>(null);
 
-  const isActive = currentToolMode.startsWith("addIoNode");
+  const isActive =
+    currentToolMode.startsWith("addIoNode") &&
+    !currentToolMode.startsWith("addIoNode_VddPort") &&
+    !currentToolMode.startsWith("addIoNode_Port");
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) {
@@ -1502,7 +1505,7 @@ function IoNodeSubmenu({
               activeCategory === "vin" ? css.wireMenuItemActive : ""
             ].filter(Boolean).join(" ")}
             onMouseEnter={() => setActiveCategory("vin")}
-            title="Vin (输入端点)"
+            title="输入端点 (Vin)"
           >
             <span style={{ fontSize: "12px", fontWeight: "bold", fontFamily: "serif" }}>
               V<sub>in</sub>
@@ -1566,7 +1569,7 @@ function IoNodeSubmenu({
               activeCategory === "vout" ? css.wireMenuItemActive : ""
             ].filter(Boolean).join(" ")}
             onMouseEnter={() => setActiveCategory("vout")}
-            title="Vout (输出端点)"
+            title="输出端点 (Vout)"
           >
             <span style={{ fontSize: "12px", fontWeight: "bold", fontFamily: "serif" }}>
               V<sub>out</sub>
@@ -1622,6 +1625,101 @@ function IoNodeSubmenu({
               </div>
             )}
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+const PORT_ORIENTATION_ITEMS: ReadonlyArray<{
+  key: "left" | "top" | "right" | "bottom";
+  label: string;
+  title: string;
+}> = [
+  { key: "left", label: "◀", title: "端口在左 (连接点在右)" },
+  { key: "top", label: "▲", title: "端口在上 (连接点在下)" },
+  { key: "right", label: "▶", title: "端口在右 (连接点在左)" },
+  { key: "bottom", label: "▼", title: "端口在下 (连接点在上)" }
+];
+
+type PortSubmenuProps = {
+  tooltip: string;
+  buttonContent: React.ReactNode;
+  buttonStyle?: React.CSSProperties;
+  modes: { left: ToolMode; top: ToolMode; right: ToolMode; bottom: ToolMode };
+  currentToolMode: ToolMode;
+  onSelectMode: (mode: ToolMode) => void;
+};
+
+/**
+ * Port-object tile (vdd-port / generic port). The four placements mirror the IO terminal:
+ * the lead/circle sits on one side and the click anchor is always the `.port` pin.
+ */
+function PortSubmenu({
+  tooltip,
+  buttonContent,
+  buttonStyle,
+  modes,
+  currentToolMode,
+  onSelectMode
+}: PortSubmenuProps) {
+  const [open, setOpen] = useState(false);
+  const timeoutRef = useRef<number | null>(null);
+  const modeList = [modes.left, modes.top, modes.right, modes.bottom];
+  const isActive = modeList.includes(currentToolMode);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current != null) {
+      window.clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = window.setTimeout(() => {
+      setOpen(false);
+    }, 180);
+  };
+
+  return (
+    <div
+      className={css.wireMenuContainer}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <RenderedTooltip content={tooltip}>
+        <button
+          type="button"
+          className={[css.btn, isActive ? css.btnActive : ""].filter(Boolean).join(" ")}
+          aria-label={tooltip}
+          onClick={() => onSelectMode(isActive ? "select" : modes.left)}
+          style={buttonStyle}
+        >
+          {buttonContent}
+        </button>
+      </RenderedTooltip>
+
+      {open && (
+        <div className={css.wireDropdown} style={{ minWidth: "72px" }}>
+          {PORT_ORIENTATION_ITEMS.map((item) => (
+            <div
+              key={item.key}
+              className={[
+                css.wireMenuItem,
+                currentToolMode === modes[item.key] ? css.wireMenuItemActive : ""
+              ].filter(Boolean).join(" ")}
+              title={item.title}
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelectMode(modes[item.key]);
+                setOpen(false);
+              }}
+            >
+              <span style={{ fontSize: "11px", width: "12px", textAlign: "center" }}>{item.label}</span>
+              <span style={{ fontSize: "11px", marginLeft: "6px" }}>{item.title.split(" ")[0]}</span>
+            </div>
+          ))}
         </div>
       )}
     </div>
@@ -1983,7 +2081,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
 
   const renderPlotPopup = () => {
     return (
-      <ToolbarPopupSection title="Function Plot">
+      <ToolbarPopupSection title="函数绘图">
         <div className={popupCss.plotPopup}>
           {/* Preset selector */}
           <div className={popupCss.plotPresetRow}>
@@ -1993,7 +2091,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
                 type="button"
                 className={popupCss.plotPresetBtn}
                 onClick={() => applyPlotPreset(preset)}
-                title={`Add ${preset.label}`}
+                title={`添加 ${preset.label}`}
               >
                 {preset.label}
               </button>
@@ -2002,7 +2100,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
               type="button"
               className={popupCss.plotRefreshBtn}
               onClick={resetPlotForm}
-              title="Reset form"
+              title="重置表单"
             >
               ↺
             </button>
@@ -2015,7 +2113,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
 
           {/* Expression input */}
           <label className={popupCss.plotLabel}>
-            Expression
+            表达式
             <input
               type="text"
               className={popupCss.plotInput}
@@ -2029,7 +2127,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
           {/* Domain */}
           <div className={popupCss.plotDomainRow}>
             <label className={popupCss.plotLabel}>
-              x min
+              x 最小值
               <input
                 type="text"
                 className={popupCss.plotInputSmall}
@@ -2040,7 +2138,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
               />
             </label>
             <label className={popupCss.plotLabel}>
-              x max
+              x 最大值
               <input
                 type="text"
                 className={popupCss.plotInputSmall}
@@ -2055,32 +2153,32 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
           {/* Color and style */}
           <div className={popupCss.plotDomainRow}>
             <label className={popupCss.plotLabel}>
-              Color
+              颜色
               <select
                 className={popupCss.plotInputSmall}
                 value={plotColor}
                 onChange={(e) => setPlotColor(e.target.value)}
               >
-                <option value="black">black</option>
-                <option value="blue">blue</option>
-                <option value="red">red</option>
-                <option value="green">green</option>
-                <option value="orange">orange</option>
-                <option value="purple">purple</option>
-                <option value="cyan">cyan</option>
-                <option value="magenta">magenta</option>
+                <option value="black">黑色</option>
+                <option value="blue">蓝色</option>
+                <option value="red">红色</option>
+                <option value="green">绿色</option>
+                <option value="orange">橙色</option>
+                <option value="purple">紫色</option>
+                <option value="cyan">青色</option>
+                <option value="magenta">品红</option>
               </select>
             </label>
             <label className={popupCss.plotLabel}>
-              Style
+              线型
               <select
                 className={popupCss.plotInputSmall}
                 value={plotLineStyle}
                 onChange={(e) => setPlotLineStyle(e.target.value as "solid" | "dashed" | "dotted")}
               >
-                <option value="solid">solid</option>
-                <option value="dashed">dashed</option>
-                <option value="dotted">dotted</option>
+                <option value="solid">实线</option>
+                <option value="dashed">虚线</option>
+                <option value="dotted">点线</option>
               </select>
             </label>
           </div>
@@ -2094,7 +2192,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
               setOpenPopupMode(null);
             }}
           >
-            Insert Plot
+            插入绘图
           </button>
         </div>
       </ToolbarPopupSection>
@@ -2104,9 +2202,9 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
   const renderPopup = (popupKind: ToolPopupKind) => {
     if (popupKind === "bucket-color") {
       return (
-        <ToolbarPopupSection title="Bucket Color">
+        <ToolbarPopupSection title="填充颜色">
           <ColorPicker
-            ariaLabel="Bucket fill color"
+            ariaLabel="油漆桶填充颜色"
             value={bucketFillColor}
             syntaxValue={bucketFillColor}
             options={TOOL_COLOR_OPTIONS}
@@ -2123,7 +2221,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
     }
     if (popupKind === "shape-picker") {
       return (
-        <ToolbarPopupSection title="Shape">
+        <ToolbarPopupSection title="预设形状">
           <ToolbarPopupVisualChoiceGrid
             choices={SHAPE_POPUP_CHOICES}
             selectedId={selectedAddShape}
@@ -2144,7 +2242,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
       const isSelected = (row: number, column: number): boolean =>
         row <= matrixPreviewRows && column <= matrixPreviewColumns;
       return (
-        <ToolbarPopupSection title={`Insert Matrix (${matrixPreviewColumns} x ${matrixPreviewRows})`}>
+        <ToolbarPopupSection title={`插入矩阵 (${matrixPreviewColumns} × ${matrixPreviewRows})`}>
           <div
             className={popupCss.matrixPicker}
             data-testid="toolbar-matrix-picker-grid"
@@ -2169,7 +2267,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
                       setOpenPopupMode(null);
                     }}
                     data-testid={`toolbar-matrix-picker-cell-${row}-${column}`}
-                    aria-label={`${row} rows by ${column} columns`}
+                    aria-label={`${row} 行 ${column} 列`}
                     aria-selected={isSelected(row, column)}
                   />
                 ))}
@@ -2226,11 +2324,11 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
               />
             </button>
           </RenderedTooltip>
-          <RenderedTooltip content="Choose bucket color">
+          <RenderedTooltip content="选择填充颜色">
             <button
               type="button"
               className={[css.btn, css.splitButtonCaret, isActive ? css.btnActive : ""].filter(Boolean).join(" ")}
-              aria-label="Choose bucket color"
+              aria-label="选择填充颜色"
               aria-haspopup="dialog"
               aria-expanded={openPopupMode === mode}
               disabled={unsupported}
@@ -2392,11 +2490,11 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
           popupTestId="toolbar-tool-popup-plot"
           popupClassName={popupCss.plotPopupContainer}
         >
-          <RenderedTooltip content="Function Plot">
+          <RenderedTooltip content="函数绘图">
             <button
               type="button"
               className={[css.btn, openPopupMode === "function-plot" ? css.btnActive : ""].filter(Boolean).join(" ")}
-              aria-label="Function Plot"
+              aria-label="函数绘图"
               aria-haspopup="dialog"
               aria-expanded={openPopupMode === "function-plot"}
               onClick={() => {
@@ -2409,7 +2507,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
         </ToolbarToolPopup>
         <div className={css.separator} />
         <MosfetElementSubmenu
-          tooltip="nMOS (Z)"
+          tooltip="nMOS 管 (Z)"
           buttonContent="n"
           buttonStyle={{ fontSize: "16px", fontWeight: "bold", fontFamily: "serif" }}
           toolModes={{
@@ -2424,7 +2522,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
           onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
         />
         <MosfetElementSubmenu
-          tooltip="pMOS (Q)"
+          tooltip="pMOS 管 (Q)"
           buttonContent="p"
           buttonStyle={{ fontSize: "16px", fontWeight: "bold", fontFamily: "serif" }}
           toolModes={{
@@ -2525,19 +2623,49 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
           currentToolMode={toolMode}
           onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
         />
-        <RenderedTooltip content="VDD (按住V+D)">
+        <RenderedTooltip content="VDD 电源端 (按住 V+D)">
           <button
             type="button"
             className={[css.btn, toolMode === "addVDD" ? css.btnActive : ""].filter(Boolean).join(" ")}
-            aria-label="VDD"
+            aria-label="VDD 电源端"
             onClick={() => dispatch({ type: "SET_TOOL_MODE", mode: toolMode === "addVDD" ? "select" : "addVDD" })}
             style={{ fontSize: "12px", fontWeight: "bold", fontFamily: "serif" }}
           >
             VDD
           </button>
         </RenderedTooltip>
+        <PortSubmenu
+          tooltip="VDD 端口 (O)"
+          buttonContent={
+            <span style={{ fontSize: "9.5px", fontWeight: "bold", fontFamily: "serif" }}>
+              V<sub>DD</sub>p
+            </span>
+          }
+          modes={{
+            left: "addIoNode_VddPort_Left",
+            top: "addIoNode_VddPort_Top",
+            right: "addIoNode_VddPort_Right",
+            bottom: "addIoNode_VddPort_Bottom"
+          }}
+          currentToolMode={toolMode}
+          onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
+        />
+        <PortSubmenu
+          tooltip="通用端口 (J)"
+          buttonContent={
+            <span style={{ fontSize: "10px", fontWeight: "bold", fontFamily: "serif" }}>port</span>
+          }
+          modes={{
+            left: "addIoNode_Port_Left",
+            top: "addIoNode_Port_Top",
+            right: "addIoNode_Port_Right",
+            bottom: "addIoNode_Port_Bottom"
+          }}
+          currentToolMode={toolMode}
+          onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
+        />
         <CircuitElementSubmenu
-          tooltip="GND (G)"
+          tooltip="GND 接地端 (G)"
           buttonContent="GND"
           buttonStyle={{ fontSize: "12px", fontWeight: "bold", fontFamily: "serif" }}
           toolModes={{
@@ -2564,23 +2692,44 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
           </button>
         </RenderedTooltip>
         <IoNodeSubmenu
-          tooltip="I&O 端点 (T)"
+          tooltip="I/O 端口 (T)"
+          currentToolMode={toolMode}
+          onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
+        />
+        <CircuitElementSubmenu
+          tooltip="VDD 电源轨 (K)"
+          buttonContent={
+            <svg width="22" height="16" viewBox="0 0 22 16" style={{ display: "block" }}>
+              <line x1="1.5" y1="5" x2="20.5" y2="5" stroke="currentColor" strokeWidth="2.6" strokeLinecap="butt" />
+              <circle cx="8" cy="5" r="2" fill="none" stroke="currentColor" strokeWidth="1.1" />
+              <circle cx="14" cy="5" r="2" fill="none" stroke="currentColor" strokeWidth="1.1" />
+              <line x1="8" y1="5" x2="8" y2="14" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
+              <line x1="14" y1="5" x2="14" y2="14" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
+            </svg>
+          }
+          toolModes={{
+            hLeft: "addPowerRail_H_Left",
+            hRight: "addPowerRail_H_Right",
+            vTop: "addPowerRail_V_Top",
+            vBottom: "addPowerRail_V_Bottom"
+          }}
+          defaultMode="addPowerRail_H_Left"
           currentToolMode={toolMode}
           onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
         />
       </div>
       <div className={css.spacer} />
       {updateChip ? (
-        <RenderedTooltip content={`Install update ${updateChip.version}`}>
+        <RenderedTooltip content={`安装更新 ${updateChip.version}`}>
           <button
             type="button"
             className={css.updateChip}
             onClick={updateChip.onClick}
             data-testid="toolbar-update-chip"
-            aria-label={`Update available: ${updateChip.version}`}
+            aria-label={`有可用更新: ${updateChip.version}`}
           >
             <RiDownloadCloudLine size={15} aria-hidden="true" />
-            <span>Update available</span>
+            <span>有可用更新</span>
           </button>
         </RenderedTooltip>
       ) : null}

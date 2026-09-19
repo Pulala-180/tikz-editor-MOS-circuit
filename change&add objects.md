@@ -12,13 +12,15 @@
   - [1. 节点声明标准语法](#1-节点声明标准语法)
   - [2. 标准引脚后缀与自动识别映射表](#2-标准引脚后缀与自动识别映射表)
   - [3. 新引脚类型扩展方法](#3-新引脚类型扩展方法)
-- [五、 新增/修改元件的标准 6 步流水线 (CheckList)](#五-新增修改元件的标准-6-步流水线-checklist)
+- [五、 新增/修改元件的标准 8 步流水线 (CheckList)](#五-新增修改元件的标准-8-步流水线-checklist)
   - [Step 1: 声明工具模式枚举 (types.ts)](#step-1-声明工具模式枚举-typests)
   - [Step 2: 注册工具能力 (capabilities.ts)](#step-2-注册工具能力-capabilitiests)
   - [Step 3: 编写标准 TikZ 模板 (circuit-snippets.ts)](#step-3-编写标准-tikz-模板-circuit-snippetsts)
   - [Step 4: 注册引脚中文名与优先级 (circuit-node-registry.ts)](#step-4-注册引脚中文名与优先级-circuit-node-registryts)
   - [Step 5: 注册画布点击捕获 (useCanvasToolInteractions.ts)](#step-5-注册画布点击捕获-usecanvastoolinteractionsts)
   - [Step 6: 挂载工具栏与快捷键 (Toolbar.tsx & circuit-hotkeys.ts)](#step-6-挂载工具栏与快捷键-toolbartsx--circuit-hotkeysts)
+  - [Step 7: 注册状态栏操作提示 (StatusBar.tsx)](#step-7-注册状态栏操作提示-statusbartsx)
+  - [Step 8 (可选): 同步 Python MCP 助手元件库 (components.py)](#step-8-可选-同步-python-mcp-助手元件库-componentspy)
 - [六、 多选复制、整体镜像翻转与自动解包机制 (Cluster Copy & Paste)](#六-多选复制整体镜像翻转与自动解包机制-cluster-copy--paste)
 - [七、 TikZ 元件代码编写与坐标规范](#七-tikz-元件代码编写与坐标规范)
 - [八、 编译打包与验证交付](#八-编译打包与验证交付)
@@ -50,7 +52,7 @@
 
 为确保新元件快捷键不发生冲突，以下是当前系统 **26 个英文字母的全面分配与空闲状态**：
 
-### 1. 选择模式下已占用的“一键呼出”主键 (14个)
+### 1. 选择模式下已占用的“一键呼出”主键 (15个)
 
 | 按键 | 触发元件 / 对应工具 | 英文助记 |
 | :---: | :--- | :--- |
@@ -61,6 +63,7 @@
 | **`F`** | **自适应画布内容聚焦** (`Fit to Content`) | Fit view |
 | **`G`** | **接地端 GND** (`addGND`) | Ground |
 | **`I`** | **理想电流源 (别名)** (`addCurrentSource`) | Current $i$ |
+| **`K`** | **VDD 电源轨** (`addPowerRail`) | Power rail (K) |
 | **`M`** | **正交多段折线导线** (`addOrthoWire`) | Multiline Wire |
 | **`N`** | **普通文本节点** (`addNode`) | Node |
 | **`Q`** | **pMOSFET 管** (`addPMOS`) | pMOS（Q为晶体管代号） |
@@ -90,7 +93,6 @@
 | **`B`** | **三极管 (BJT) / 电池 (Battery) / 偏置 (Bias)** | ⭐ **首选黄金键**。完全空闲，BJT / Battery 首字母 |
 | **`O`** | **运算放大器 (Op-Amp)** | ⭐ **首选黄金键**。完全空闲，Op-Amp 首字母 |
 | **`P`** | **电位器 (Potentiometer) / 探针 (Probe)** | ⭐ **首选黄金键**。完全空闲（因 pMOS 使用 Q 键） |
-| **`K`** | **开关 (Key/Switch) / 继电器 (Relay)** | ⭐ **首选黄金键**。完全空闲，原理图中常以 $K_1$ 命名开关 |
 | **`J`** | **结型场效应管 (JFET)** | 完全空闲，JFET 首字母 |
 | **`U`** | **集成芯片 (IC Unit) / 变压器 (Transformer)** | 完全空闲，芯片在原理图中常用 $U_1$ 代号 |
 | **`S`** | **开关 (Switch) / 信号源 (Signal)** | 备选。选择模式下尚未绑定呼出工具 |
@@ -151,7 +153,7 @@ export const CIRCUIT_PORT_DEFINITIONS: Record<string, CircuitPortDescriptor> = {
 
 ---
 
-## 五、 新增/修改元件的标准 6 步流水线 (CheckList)
+## 五、 新增/修改元件的标准 8 步流水线 (CheckList)
 
 以添加 **电感（Inductor，分配快捷键 L）** 为例：
 
@@ -246,12 +248,13 @@ toolMode.startsWith("addInductor") ||
 />
 ```
 
-📁 **文件 2 (快捷键与旋转交互)**：`packages/app/src/ui/canvas-panel/circuit-hotkeys.ts`
-* 在 `resolveSelectModeInitialTool` 中配置单键呼出：
+📁 **文件 2 (快捷键与旋转/镜像/WASD交互)**：`packages/app/src/ui/canvas-panel/circuit-hotkeys.ts`
+必须实现以下 **4 大朝向状态机函数**，为新元件提供完整的快捷键交互能力：
+* **1. 单键快速呼出 (`resolveSelectModeInitialTool`)**：
   ```ts
   if (k === "l") return "addInductor_H_Left";
   ```
-* 在 `rotateCircuitToolMode` 中配置顺时针旋转状态机：
+* **2. 按 `R` 键顺时针旋转 (`rotateCircuitToolMode`)**：
   ```ts
   if (mode.startsWith("addInductor")) {
     if (mode === "addInductor_H_Left") return "addInductor_V_Top";
@@ -260,6 +263,58 @@ toolMode.startsWith("addInductor") ||
     return "addInductor_H_Left";
   }
   ```
+* **3. 镜像对称翻转 (`flipCircuitToolModeHorizontal` & `flipCircuitToolModeVertical`)**：
+  ```ts
+  // 水平镜像 (Y / H 键)
+  if (mode.startsWith("addInductor")) {
+    if (mode === "addInductor_H_Left") return "addInductor_H_Right";
+    if (mode === "addInductor_H_Right") return "addInductor_H_Left";
+    return mode;
+  }
+  // 垂直镜像 (X / V 键)
+  if (mode.startsWith("addInductor")) {
+    if (mode === "addInductor_V_Top") return "addInductor_V_Bottom";
+    if (mode === "addInductor_V_Bottom") return "addInductor_V_Top";
+    return mode;
+  }
+  ```
+* **4. WASD 四向直达切换 (`selectCircuitDirectionByWASD`)**：
+  ```ts
+  if (currentMode.startsWith("addInductor")) {
+    if (k === "w") return "addInductor_V_Top";
+    if (k === "a") return "addInductor_H_Left";
+    if (k === "s") return "addInductor_V_Bottom";
+    if (k === "d") return "addInductor_H_Right";
+  }
+  ```
+
+---
+
+### Step 7: 注册状态栏操作提示 (StatusBar.tsx)
+📁 **文件**：`packages/app/src/ui/StatusBar.tsx`
+为新元件增加底部状态栏引导文案，使用户一目了然快捷键操作：
+```tsx
+if (toolMode.startsWith("addInductor")) {
+  return "点击画布放置电感 (R 旋转 / WASD 选朝向 / X 上下翻转 / Y 左右翻转)";
+}
+```
+
+---
+
+### Step 8 (可选): 同步 Python MCP 助手元件库 (components.py)
+📁 **文件**：`scripts/circuit-mcp/circuit/components.py`
+若需要让 Antigravity 外部 AI 桥接助手也能通过自然语言指令生成该元件，在 `components.py` 中注册 `ComponentTemplate`：
+```python
+_INDUCTOR_BODY = r"""\draw[thick, line cap=round] (0,0) -- (0.15,0) arc[start angle=180, end angle=0, radius=0.1] arc[start angle=180, end angle=0, radius=0.1] arc[start angle=180, end angle=0, radius=0.1] -- (0.9,0);"""
+
+COMPONENTS["inductor"] = ComponentTemplate(
+    type="inductor",
+    ports=(Port("l", 0.0, 0.0), Port("r", 0.9, 0.0)),
+    tikz_body=_INDUCTOR_BODY,
+    default_label="L_1",
+    description="电感器 (Inductor)",
+)
+```
 
 ---
 

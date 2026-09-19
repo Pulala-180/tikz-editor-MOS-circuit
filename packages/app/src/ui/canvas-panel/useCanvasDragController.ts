@@ -24,7 +24,7 @@ import {
   type SnapLine
 } from "tikz-editor/edit/snapping";
 import { parseTikzForEdit } from "tikz-editor/edit/parse-options";
-import { findAttachedWiresForTransientDrag, findVddRails } from "tikz-editor/edit/actions/wire-follow";
+import { axisAlignedLeg, findAttachedWiresForTransientDrag, findVddRails, repairOrthogonalRoute } from "tikz-editor/edit/actions/wire-follow";
 import type { SceneElement } from "tikz-editor/semantic/types";
 import type { WorldPoint, WorldVector } from "../coords/types";
 import { applyMatrix, applyMatrixToVector, inverseMatrix } from "tikz-editor/semantic/transform";
@@ -135,6 +135,110 @@ function getDraggedDomElements(
   }
 
   return elements;
+}
+
+/**
+ * Parses a `d` attribute into its M/L points. Returns null when the path contains
+ * curves, arcs, or closes, so callers fall back to the plain two-point rewrite.
+ */
+function parsePolylinePoints(d: string): Array<{ x: number; y: number }> | null {
+  const commandPattern = /([MLml])\s*(-?\d*\.?\d+(?:e[-+]?\d+)?)[\s,]+(-?\d*\.?\d+(?:e[-+]?\d+)?)/g;
+  const points: Array<{ x: number; y: number }> = [];
+  let match: RegExpExecArray | null;
+  while ((match = commandPattern.exec(d)) !== null) {
+    const x = Number(match[2]);
+    const y = Number(match[3]);
+    if (!Number.isFinite(x) || !Number.isFinite(y)) {
+      return null;
+    }
+    points.push({ x, y });
+  }
+  if (points.length < 2) {
+    return null;
+  }
+  if (/[A-Za-z]/.test(d.replace(commandPattern, ""))) {
+    return null;
+  }
+  return points;
+}
+
+/**
+ * Rebuilds a polyline `d` while translating only the attached endpoint, so interior
+ * elbows survive the transient drag instead of collapsing to a straight segment.
+ *
+ * When `recomputeImplicitCorner` is set (the wire is an `|-` / `-|` route), the single interior
+ * point is NOT authored in the source -- TikZ derives it from the two endpoints -- so we recompute
+ * it here to preserve orthogonality: the bend keeps sharing one axis with the (moved) attached end
+ * and the other with the static end, exactly as `-|` / `|-` would.
+ *
+ * When the route is an EXPLICIT polyline (`A -- corner -- B`, `recomputeImplicitCorner` false), the
+ * interior corner IS authored and used to stay put while the attached end slid away -- dragging the
+ * leg between them into a diagonal (the reported "移动元件后导线被拉斜"). So we recompute the ONE
+ * interior point adjacent to the moving end: if that leg was horizontal keep it horizontal
+ * (corner.y = moving.y), if it was vertical keep it vertical (corner.x = moving.x). All other
+ * corners and the far end stay put.
+ */
+function buildTranslatedPolylineD(
+  points: readonly { x: number; y: number }[],
+  movingIndex: 0 | 1,
+  movingX: number,
+  movingY: number,
+  recomputeImplicitCorner = false,
+  repairSkew = false
+): string {
+  const target = movingIndex === 0 ? 0 : points.length - 1;
+  const translated = points.map((point, index) =>
+    index === target ? { x: movingX, y: movingY } : { x: point.x, y: point.y }
+  );
+  if (repairSkew) {
+    // Attached wire whose legs are already arbitrary diagonals: re-route the whole interior
+    // orthogonally between the (moved) ends, mirroring the commit-time repair.
+    const repaired = repairOrthogonalRoute(translated);
+    if (repaired) {
+      return formatPolylineD(repaired);
+    }
+  }
+  if (recomputeImplicitCorner && translated.length === 3) {
+    const staticIndex = movingIndex === 0 ? 2 : 0;
+    const bend = translated[1];
+    const originalBend = points[1];
+    const originalMoving = points[target] ?? originalBend;
+    const staticEnd = translated[staticIndex];
+    const EPS = 1e-6;
+    if (Math.abs(originalBend.x - originalMoving.x) < EPS && Math.abs(originalBend.y - staticEnd.y) < EPS) {
+      // `|-` (vertical first): bend = (moving.x, static.y)
+      translated[1] = { x: movingX, y: staticEnd.y };
+    } else if (Math.abs(originalBend.x - staticEnd.x) < EPS && Math.abs(originalBend.y - originalMoving.y) < EPS) {
+      // `-|` (horizontal first): bend = (static.x, moving.y)
+      translated[1] = { x: staticEnd.x, y: movingY };
+    }
+  } else if (!recomputeImplicitCorner && translated.length >= 3) {
+    // Explicit polyline: re-orthogonalise the leg between the moving end and its adjacent corner.
+    // The axis test must tolerate the source/shift quantization residual (2-decimal cm coords,
+    // 0.1–1pt scope shifts) exactly like the commit path does -- a 1e-6 exact test would read a
+    // "horizontal" leg with a ~1e-3 residual as neither axis and freeze the corner, letting the
+    // leg's tilt grow on every drag (the reported accumulation).
+    const adjacentIndex = target === 0 ? 1 : translated.length - 2;
+    const originalMoving = points[target];
+    const originalAdjacent = points[adjacentIndex];
+    if (originalMoving && originalAdjacent) {
+      const axis = axisAlignedLeg(originalMoving, originalAdjacent);
+      if (axis === "h") {
+        // horizontal leg -> corner keeps its x, adopts the moving end's y
+        translated[adjacentIndex] = { x: originalAdjacent.x, y: movingY };
+      } else if (axis === "v") {
+        // vertical leg -> corner keeps its y, adopts the moving end's x
+        translated[adjacentIndex] = { x: movingX, y: originalAdjacent.y };
+      }
+    }
+  }
+  return formatPolylineD(translated);
+}
+
+function formatPolylineD(points: readonly { x: number; y: number }[]): string {
+  return points
+    .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x.toFixed(2)},${point.y.toFixed(2)}`)
+    .join(" ");
 }
 
 function resetTransientDomTransforms(drag: DragState | null) {
@@ -405,25 +509,31 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
           drag.activeEndpointAnchor = endpointAnchorOverlay.snappedAnchor;
           if (endpointAnchorOverlay.snappedAnchor) {
             nextRawWorld = endpointAnchorOverlay.snappedAnchor.world;
-          } else if (!ctrlOrMeta && snapshot.parseResult?.figure.body) {
-            const vddRails = findVddRails(snapshot.parseResult.figure.body, snapshot.editHandles, source);
-            const threshold = (drag.snapContext?.settings.thresholdPx ?? 20) / (drag.snapContext?.zoom ?? 1);
-            for (const rail of vddRails) {
-              if (
-                Math.abs(world.y - rail.y) <= threshold &&
-                world.x >= rail.minX - threshold &&
-                world.x <= rail.maxX + threshold
-              ) {
-                nextRawWorld = makeWorldPoint(nextRawWorld.x, rail.y);
-                snapped.lines.push({
-                  type: "points",
-                  axis: "y",
-                  points: [
-                    makeWorldPoint(rail.minX, rail.y),
-                    makeWorldPoint(rail.maxX, rail.y)
-                  ]
-                });
-                break;
+          } else if (!ctrlOrMeta) {
+            // VDD rail snapping. This used to read a `snapshot` binding that does not exist in this
+            // scope, so `snapshot.parseResult…` threw ReferenceError on every wire drag and rail
+            // snapping never took effect. Parse the source the same way the sibling path below does.
+            const parsed = parseTikzForEdit(source);
+            if (parsed.figure.body) {
+              const vddRails = findVddRails(parsed.figure.body, snapshotEditHandles, source);
+              const threshold = (drag.snapContext?.settings.thresholdPx ?? 20) / (drag.snapContext?.zoom ?? 1);
+              for (const rail of vddRails) {
+                if (
+                  Math.abs(world.y - rail.y) <= threshold &&
+                  world.x >= rail.minX - threshold &&
+                  world.x <= rail.maxX + threshold
+                ) {
+                  nextRawWorld = makeWorldPoint(nextRawWorld.x, rail.y);
+                  snapped.lines.push({
+                    type: "points",
+                    axis: "y",
+                    points: [
+                      makeWorldPoint(rail.minX, rail.y),
+                      makeWorldPoint(rail.maxX, rail.y)
+                    ]
+                  });
+                  break;
+                }
               }
             }
           }
@@ -801,7 +911,15 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
               rawWorld.y - pathAttachedNodeDrag.pointerOffsetFromCenter.y
             );
             const closest = closestPointOnPlacementSegment(pathAttachedNodeDrag.segment, desiredCenter);
-            const snapped = resolvePathPositionPreset(closest.t, pathAttachedNodeDrag.segment);
+            // A TEXT label does not snap: no position-preset magnetism (start / 0.25 / 0.5 / 0.75 /
+            // end / named anchors) -- the label goes exactly where it is dropped. Components and
+            // wires keep every snap they had.
+            const draggedNodeIsText = (snapshotScene?.elements ?? []).some(
+              (element) => element.kind === "Text" && element.sourceRef.sourceId === pathAttachedNodeDrag!.nodeId
+            );
+            const snapped = draggedNodeIsText
+              ? { preset: null, snappedT: closest.t }
+              : resolvePathPositionPreset(closest.t, pathAttachedNodeDrag.segment);
             const targetWorldPoint = pointAtPlacementSegment(pathAttachedNodeDrag.segment, snapped.snappedT);
             const currentCenter =
               resolvePrimarySourceCenter(snapshotScene?.elements ?? [], pathAttachedNodeDrag.nodeId) ??
@@ -884,7 +1002,8 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
                 preserveRegime: true,
                 sideUpdate,
                 distanceUpdatePt,
-                formatPrecision
+                formatPrecision,
+                snapPosition: !draggedNodeIsText
               },
               drag.historyMergeKey
             );
@@ -990,9 +1109,12 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
                 transientWires.push({
                   element: pathEl,
                   initialD,
+                  initialPoints: parsePolylinePoints(initialD),
                   staticSvg,
                   movingSvg,
-                  movingEndpointIndex: wire.movingEndpointIndex
+                  movingEndpointIndex: wire.movingEndpointIndex,
+                  implicitCorner: wire.implicitCorner,
+                  skewedRepair: wire.skewedRepair
                 });
               }
             }
@@ -1014,13 +1136,45 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
           for (const wire of drag.transientAttachedWires) {
             const curMovingX = wire.movingSvg.x + svgDx;
             const curMovingY = wire.movingSvg.y + svgDy;
-            const newD = wire.movingEndpointIndex === 0
-              ? `M ${curMovingX.toFixed(2)},${curMovingY.toFixed(2)} L ${wire.staticSvg.x.toFixed(2)},${wire.staticSvg.y.toFixed(2)}`
-              : `M ${wire.staticSvg.x.toFixed(2)},${wire.staticSvg.y.toFixed(2)} L ${curMovingX.toFixed(2)},${curMovingY.toFixed(2)}`;
+            const newD = wire.initialPoints
+              ? buildTranslatedPolylineD(
+                  wire.initialPoints,
+                  wire.movingEndpointIndex,
+                  curMovingX,
+                  curMovingY,
+                  wire.implicitCorner,
+                  wire.skewedRepair
+                )
+              : wire.movingEndpointIndex === 0
+                ? `M ${curMovingX.toFixed(2)},${curMovingY.toFixed(2)} L ${wire.staticSvg.x.toFixed(2)},${wire.staticSvg.y.toFixed(2)}`
+                : `M ${wire.staticSvg.x.toFixed(2)},${wire.staticSvg.y.toFixed(2)} L ${curMovingX.toFixed(2)},${curMovingY.toFixed(2)}`;
             wire.element.setAttribute("d", newD);
           }
         }
 
+        return;
+      }
+
+      if (drag.kind === "ortho-corner") {
+        // Dragging the IMPLICIT corner of a `|-` / `-|` operator wire. Materialise / re-materialise
+        // the route as `A -- (corner) -- B` at the moved point: both endpoints (anchors included)
+        // are preserved byte-for-byte, so only the corner moves and the wire never "flies".
+        setNodeAnchorOverlay(null);
+        setDragTooltip(null);
+        setSnapLines([]);
+        maybeTriggerSnapFeedback(false);
+        const ok = applyActionWithFeedback(
+          {
+            kind: "rewriteImplicitOrthoCorner",
+            elementId: drag.elementId,
+            corner: world,
+            baselineSource: drag.baselineSource
+          },
+          drag.historyMergeKey
+        );
+        if (ok.sourceChanged) {
+          drag.lastKnownWorld = world;
+        }
         return;
       }
 
@@ -1555,6 +1709,8 @@ function propertyCleanupElementIdsForDrag(drag: DragState): string[] {
       return [drag.elementId];
     case "handle":
       return [drag.sourceId];
+    case "ortho-corner":
+      return [];
     case "tool-create":
     case "pan":
     case "marquee":

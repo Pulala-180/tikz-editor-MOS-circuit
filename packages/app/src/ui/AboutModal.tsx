@@ -23,7 +23,7 @@ export function AboutModal({ onClose }: AboutModalProps) {
           <button
             type="button"
             className={css.closeButton}
-            aria-label="Close about dialog"
+            aria-label="关闭关于对话框"
             onClick={onClose}
           >
             <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
@@ -41,19 +41,19 @@ export function AboutModal({ onClose }: AboutModalProps) {
             <span className={css.titleQualifier}>Web</span>
           </h2>
 
-          <p className={css.version}>Version {APP_VERSION}</p>
+          <p className={css.version}>版本 {APP_VERSION}</p>
 
           <dl className={css.meta}>
             <div className={css.metaRow}>
-              <dt>Author:</dt>
+              <dt>作者：</dt>
               <dd>{APP_AUTHOR}</dd>
             </div>
             <div className={css.metaRow}>
-              <dt>License:</dt>
+              <dt>开源协议：</dt>
               <dd>{APP_LICENSE}</dd>
             </div>
             <div className={css.metaRow}>
-              <dt>Website:</dt>
+              <dt>官方网站：</dt>
               <dd>
                 <a href={APP_WEBSITE} target="_blank" rel="noreferrer">
                   {APP_WEBSITE}

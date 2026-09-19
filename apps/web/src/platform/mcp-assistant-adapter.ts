@@ -1,126 +1,243 @@
-import type { AssistantApi, AssistantEvent, AssistantAccountSnapshot, AssistantTurnStatus } from "@tikz-editor/app/platform/types";
-import { McpWebSocketClient } from "./mcp-websocket-client";
+import type {
+  AssistantApi,
+  AssistantEvent,
+  AssistantAccountSnapshot,
+  AssistantTurnStatus,
+  AssistantThreadSummary,
+} from "@tikz-editor/app/platform/types";
+import {
+  McpWebSocketClient,
+  DEFAULT_ANTIGRAVITY_MODELS,
+} from "./mcp-websocket-client";
 
-export function createMcpAssistantAdapter(): AssistantApi {
-  const client = new McpWebSocketClient("ws://localhost:3100");
+export const READY_ACCOUNT_DATA = {
+  requiresOpenaiAuth: false,
+  account: {
+    name: "Antigravity Local User",
+    email: "local@antigravity",
+    type: "local",
+  },
+};
+
+export const READY_ACCOUNT_SNAPSHOT: AssistantAccountSnapshot = {
+  account: READY_ACCOUNT_DATA,
+  rateLimits: null,
+};
+
+export interface McpAssistantApi extends AssistantApi {
+  getAccountSnapshot: () => Promise<AssistantAccountSnapshot | null>;
+  getClient: () => McpWebSocketClient;
+}
+
+export function createMcpAssistantAdapter(wsUrl = "ws://localhost:3100"): McpAssistantApi {
+  const client = new McpWebSocketClient(wsUrl);
   client.connect();
 
-  let globalEventHandler: ((event: AssistantEvent) => void) | null = null;
-  
-  // Track state to satisfy UI requirements
+  const subscribers = new Set<(event: AssistantEvent) => void>();
+
+  function dispatchEvent(event: AssistantEvent) {
+    for (const handler of Array.from(subscribers)) {
+      try {
+        handler(event);
+      } catch (err) {
+        console.error("[MCP Assistant Adapter] Error in event handler:", err);
+      }
+    }
+  }
+
+  // Track active document, turn and stream content to satisfy UI requirements
+  let currentDocumentId = "web-document-1";
+  let currentTurnId: string | null = null;
   let currentTurnStatus: AssistantTurnStatus = "idle";
+  let currentTurnText = "";
   let lastError: string | null = null;
 
   client.subscribe((event) => {
-    if (!globalEventHandler) return;
-
-    // Use a fixed document ID for simplicity in Web
-    const documentId = "web-document-1";
+    const docId = currentDocumentId || "web-document-1";
+    const turnId = currentTurnId || "current-turn";
 
     switch (event.type) {
       case "delta":
-        globalEventHandler({
+        currentTurnText += event.content;
+        dispatchEvent({
           type: "item-delta",
-          documentId,
-          itemId: "current-turn",
-          deltaType: event.deltaType,
+          documentId: docId,
+          itemId: turnId,
+          deltaType: event.deltaType || "item/agentMessage/delta",
           delta: event.content,
         });
         break;
+
       case "source-updated":
-        globalEventHandler({
+        dispatchEvent({
           type: "source-updated",
-          documentId,
+          documentId: docId,
           source: event.source,
-          revisionToken: crypto.randomUUID(),
+          revisionToken:
+            typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+              ? crypto.randomUUID()
+              : `rev-${Date.now()}-${Math.random().toString(36).slice(2)}`,
         });
         break;
+
       case "turn-status":
         currentTurnStatus = event.status;
         lastError = event.error || null;
-        globalEventHandler({
+
+        // Emulate item-completed when turn finishes, retaining accumulated markdown text
+        if (
+          event.status === "completed" ||
+          event.status === "failed" ||
+          event.status === "interrupted"
+        ) {
+          dispatchEvent({
+            type: "item-completed",
+            documentId: docId,
+            item: {
+              type: "agentMessage",
+              id: turnId,
+              text: currentTurnText || (event.status === "failed" ? (lastError || "执行失败") : ""),
+            },
+          });
+        }
+
+        dispatchEvent({
           type: "turn-status",
-          documentId,
-          turnId: "current-turn",
+          documentId: docId,
+          turnId,
           status: event.status,
           error: lastError,
         });
-        
-        // Emulate item-completed when done
-        if (event.status === "completed" || event.status === "failed" || event.status === "interrupted") {
-          globalEventHandler({
-            type: "item-completed",
-            documentId,
-            item: {
-              type: "agentMessage",
-              id: "current-turn",
-              text: "", // UI will use the accumulated delta
-            }
-          });
-        }
         break;
+
       case "error":
-        globalEventHandler({
+        dispatchEvent({
           type: "error",
-          documentId,
+          documentId: docId,
           message: event.message,
         });
+        break;
+
+      case "connection-status":
+      case "models":
         break;
     }
   });
 
   return {
     startTurn: async (params) => {
-      // The AssistantPanel UI needs to see this turn starting
-      const turnId = "current-turn";
-      
-      // Start the item
-      if (globalEventHandler) {
-        globalEventHandler({
-          type: "item-started",
-          documentId: params.documentId,
-          item: {
-            type: "agentMessage",
-            id: turnId,
-            text: ""
-          }
-        });
+      const docId = params.documentId;
+      const turnId = `turn-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+      currentDocumentId = docId;
+      currentTurnId = turnId;
+      currentTurnText = "";
+
+      if (!client.isConnected()) {
+        client.connect();
       }
 
-      client.sendChatMessage({
+      // 1. Notify UI that turn is inProgress and starting agentMessage item
+      dispatchEvent({
+        type: "turn-status",
+        documentId: docId,
+        turnId,
+        status: "inProgress",
+        error: null,
+      });
+      dispatchEvent({
+        type: "item-started",
+        documentId: docId,
+        item: {
+          type: "agentMessage",
+          id: turnId,
+          text: "",
+        },
+      });
+
+      // 2. Extract and format attached images (pastedImages)
+      const images = params.pastedImages?.map((img) => ({
+        base64: img.base64,
+        mimeType: img.mimeType,
+        fileName: img.fileName,
+      }));
+
+      // 3. Package and send via WebSocket
+      await client.sendChatMessage({
         threadId: params.threadId || "default",
+        documentId: docId,
         prompt: params.prompt,
+        model: params.model || undefined,
         context: {
           source: params.source,
           pngBase64: params.pngBase64 || undefined,
           figureContext: params.figureContext || undefined,
           diagnosticsText: params.diagnosticsText || undefined,
+          images,
+          pastedImages: params.pastedImages,
         },
-        model: params.model || undefined,
       });
 
       return { turnId };
     },
 
-    interruptTurn: async () => {
+    interruptTurn: async (params) => {
       client.sendInterrupt();
+      const docId = params?.documentId || currentDocumentId || "web-document-1";
+      const turnId = currentTurnId || "current-turn";
+
+      dispatchEvent({
+        type: "turn-status",
+        documentId: docId,
+        turnId,
+        status: "interrupted",
+        error: null,
+      });
+      dispatchEvent({
+        type: "item-completed",
+        documentId: docId,
+        item: {
+          type: "agentMessage",
+          id: turnId,
+          text: "",
+        },
+      });
     },
 
     bindEvents: (handler) => {
-      globalEventHandler = handler;
-      
-      // Tell UI we are "logged in" since MCP handles auth
-      handler({
-        type: "account-updated",
-        authMode: "mcp-local",
-      });
+      subscribers.add(handler);
+
+      // Tell UI we are "logged in" and ready to use
+      try {
+        handler({
+          type: "account-updated",
+          authMode: "antigravity-local",
+        });
+      } catch (err) {
+        console.error("[MCP Assistant Adapter] Error calling initial account-updated:", err);
+      }
 
       return () => {
-        globalEventHandler = null;
+        subscribers.delete(handler);
       };
     },
 
-    // MCP bridge supports these directly
+    listModels: async () => {
+      try {
+        const models = await client.requestModels();
+        if (models && models.length > 0) {
+          return models;
+        }
+      } catch (err) {
+        console.warn("[MCP Assistant Adapter] Error requesting models:", err);
+      }
+      return DEFAULT_ANTIGRAVITY_MODELS;
+    },
+
+    getAccountSnapshot: async () => READY_ACCOUNT_SNAPSHOT,
+    readAccountSnapshot: async () => READY_ACCOUNT_SNAPSHOT,
+    readAccount: async () => READY_ACCOUNT_DATA,
+    readRateLimits: async () => null,
+
     checkCodexStatus: async () => ({
       installed: true,
       hasNpm: false,
@@ -128,31 +245,24 @@ export function createMcpAssistantAdapter(): AssistantApi {
       hasWsl: false,
     }),
 
-    listModels: async () => [
-      { id: "gpt-4o", label: "GPT-4o (MCP)" },
-      { id: "claude-3-5-sonnet-20240620", label: "Claude 3.5 Sonnet (MCP)" },
-      { id: "gemini-1.5-pro", label: "Gemini 1.5 Pro (MCP)" },
-    ],
+    ensureDocumentThread: async (params) => {
+      currentDocumentId = params.documentId;
+      return {
+        threadId: params.threadId || `thread-${params.documentId}`,
+        workspacePath: params.workspacePath || "",
+        figurePath: params.figurePath || "",
+        previewPath: params.previewPath || "",
+      };
+    },
 
-    // Mock auth methods to keep UI happy
-    readAccount: async () => ({
-      name: "MCP Local User",
-      email: "local@mcp",
-    }),
-    
-    readAccountSnapshot: async () => ({
-      account: { name: "MCP Local User" },
-      rateLimits: null,
-    }),
+    warmUp: async () => {
+      if (!client.isConnected()) {
+        client.connect();
+      }
+    },
 
-    // No-op for things we don't support in simple MCP
-    ensureDocumentThread: async (params) => ({
-      threadId: "default",
-      workspacePath: "",
-      figurePath: "",
-      previewPath: "",
-    }),
-    
-    warmUp: async () => {},
+    syncSource: async () => {},
+    loadThreadState: async () => null,
+    getClient: () => client,
   };
 }

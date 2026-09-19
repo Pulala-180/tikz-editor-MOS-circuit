@@ -150,3 +150,99 @@ describe("applyEditAction – wire follow (橡皮筋导线)", () => {
     expect(result.newSource).toContain("\\draw (2,-0.4) -- (4,0);");
   });
 });
+
+// --- 多拐点导线的内点跟随 ---------------------------------------------------------------
+//
+// 端点跟随只是橡皮筋的一半：多拐点导线 `A -- c1 -- c2 -- B` 里，端点动而 c 不动，两者之间
+// 那一腿立刻从轴对齐滑成任意斜线 —— 这正是"移动元件后连接线变歪"的现场。锚点端点
+// （`(node_M2.g)`）尤其危险：它的文本必须保持引用（不能改写成坐标），所以早期实现直接
+// `continue`，连同相邻内点的校正一起跳过，那一腿必然变斜。
+
+function mosAt(name: string, x: number, y: number): string {
+  return `\\begin{scope}[shift={(${x},${y})}]
+    \\coordinate (node_${name}.g) at (0.3,0.5);
+    \\coordinate (node_${name}.d) at (1.03,1);
+  \\end{scope}`;
+}
+
+/** M1@(0,0) 端口 g=(0.3,0.5) d=(1.03,1)；M2@(5,0) 端口 g=(5.3,0.5) d=(6.03,1) */
+function twoMosfets(wire: string): string {
+  return `${mosAt("M1", 0, 0)}
+    ${mosAt("M2", 5, 0)}
+    ${wire}`;
+}
+
+/** 第二个 scope（M2）的语句 id —— 逐语句编号，不能硬编码。 */
+function secondScopeId(source: string): string {
+  const wrapped = `\\begin{tikzpicture}\n${source}\n\\end{tikzpicture}\n`;
+  const parsed = parseTikz(wrapped, { recover: true });
+  const scopes = parsed.figure.body.filter((statement) => statement.kind === "Scope");
+  return scopes[scopes.length - 1].id;
+}
+
+/**
+ * 顶层导线每一条腿的形态（读**求值后**的 world 坐标，所以命名锚点也会解析成真实位置）。
+ * "SKEW" = 被拖成了任意斜线。
+ *
+ * 容差取 0.5pt：scope 的 shift 在自由拖动时按整数 pt 量化（见 wire-follow.ts 顶部说明），
+ * 所以锚点解析出来的 world 与写死的坐标之间会残留 ~0.02pt 的取整误差。
+ */
+function wireLegKinds(documentSource: string): string[] {
+  const AXIS_EPSILON_PT = 0.5;
+  const parsed = parseTikz(documentSource, { recover: true });
+  const semantic = evaluateTikzFigure(parsed.figure, documentSource);
+  const wire = parsed.figure.body.find(
+    (statement) => statement.kind === "Path" && statement.command === "draw"
+  );
+  if (!wire) throw new Error("no top-level draw statement");
+  const points = semantic.editHandles
+    .filter((handle) => handle.kind === "path-point" && handle.sourceRef.sourceId === wire.id)
+    .sort((left, right) => left.sourceRef.sourceSpan.from - right.sourceRef.sourceSpan.from)
+    .map((handle) => handle.world);
+  const legs: string[] = [];
+  for (let index = 0; index + 1 < points.length; index += 1) {
+    const dx = Math.abs(points[index + 1].x - points[index].x);
+    const dy = Math.abs(points[index + 1].y - points[index].y);
+    legs.push(dx < AXIS_EPSILON_PT ? "V" : dy < AXIS_EPSILON_PT ? "H" : "SKEW");
+  }
+  return legs;
+}
+
+describe("applyEditAction – 多拐点导线跟随（拖动元件后连接线不得变斜）", () => {
+  it("keeps a literal-coordinate multi-corner wire orthogonal", () => {
+    const source = twoMosfets("\\draw (1.03,1) -- (1.03,3) -- (5.3,3) -- (5.3,0.5);");
+    const { result, wrapped } = move(source, [secondScopeId(source)], 1, 0);
+
+    expect(result.kind).toBe("success");
+    if (result.kind !== "success") return;
+    // 端点和相邻内点一起右移 1cm，最后一腿保持竖直
+    expect(result.newSource).toContain("\\draw (1.03,1) -- (1.03,3) -- (6.3,3) -- (6.3,0.5);");
+    expect(wireLegKinds(result.newSource)).toEqual(["V", "H", "V"]);
+    expectPatchesReconstructSource(wrapped, result);
+  });
+
+  it("re-orthogonalises the corner next to a named-anchor endpoint", () => {
+    const source = twoMosfets("\\draw (node_M1.d) -- (1.03,3) -- (5.3,3) -- (node_M2.g);");
+    const { result, wrapped } = move(source, [secondScopeId(source)], 1, 0);
+
+    expect(result.kind).toBe("success");
+    if (result.kind !== "success") return;
+    // 锚点文本保持引用不动；内点必须跟到 M2 新位置的正上方，否则最后一腿变斜
+    expect(result.newSource).toContain("(node_M1.d) -- (1.03,3) -- (6.3,3) -- (node_M2.g)");
+    expect(wireLegKinds(result.newSource)).toEqual(["V", "H", "V"]);
+    expectPatchesReconstructSource(wrapped, result);
+  });
+
+  it("walks inward past consecutive collinear legs (overshoot stubs)", () => {
+    // 回折导线：(5.3,-2) → (5.3,4) → (5.3,0.5) 三点共线于 x=5.3。只修紧邻端点那个角点会把
+    // 上一条腿拖斜，所以校正必须继续向内传播。M2 右移 1cm 后整段竖直回折一起右移。
+    const source = twoMosfets("\\draw (1.03,0) -- (1.03,-2) -- (5.3,-2) -- (5.3,4) -- (5.3,0.5);");
+    const { result, wrapped } = move(source, [secondScopeId(source)], 1, 0);
+
+    expect(result.kind).toBe("success");
+    if (result.kind !== "success") return;
+    expect(result.newSource).toContain("\\draw (1.03,0) -- (1.03,-2) -- (6.3,-2) -- (6.3,4) -- (6.3,0.5);");
+    expect(wireLegKinds(result.newSource)).toEqual(["V", "H", "V", "V"]);
+    expectPatchesReconstructSource(wrapped, result);
+  });
+});

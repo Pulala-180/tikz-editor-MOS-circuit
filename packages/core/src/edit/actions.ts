@@ -7,7 +7,9 @@ import type { NodeItem, PathItem, PathStatement, Statement, Span } from "../ast/
 import type { SourcePatch } from "./types.js";
 import { applyEditIntent } from "./apply.js";
 import { replaceSpan } from "./patch.js";
-import { PT_PER_CM, type DragFormatPrecision } from "./format.js";
+import { PT_PER_CM, formatNumber, type DragFormatPrecision } from "./format.js";
+import { ptToCm } from "../coords/source.js";
+import { worldPoint } from "../coords/points.js";
 import {
   generateElementSource,
   insertElementIntoSource,
@@ -112,6 +114,7 @@ export type EditAction =
   | { kind: "alignElements"; elementIds: string[]; mode: AlignMode }
   | { kind: "distributeElements"; elementIds: string[]; axis: DistributeAxis }
   | { kind: "moveHandle"; handleId: string; newWorld: WorldPoint; baselineSource?: string }
+  | { kind: "rewriteImplicitOrthoCorner"; elementId: string; corner: WorldPoint; baselineSource?: string }
   | { kind: "connectHandle"; handleId: string; nodeName: string; nodeSourceId?: string; anchor: string; baselineSource?: string }
   | { kind: "splitPath"; elementId: string; handleId: string }
   | { kind: "joinPaths"; elementIds: [string, string] }
@@ -251,6 +254,8 @@ export function applyEditAction(
     switch (action.kind) {
       case "moveHandle":
         return applyMoveHandle(source, editHandles, action.handleId, action.newWorld, parseOptions, action.baselineSource);
+      case "rewriteImplicitOrthoCorner":
+        return applyRewriteImplicitOrthoCornerAction(source, action, parseOptions);
       case "connectHandle":
         return applyConnectHandle(source, editHandles, action.handleId, action.nodeName, action.nodeSourceId, action.anchor, parseOptions, action.baselineSource);
       case "splitPath":
@@ -483,6 +488,66 @@ function applyMoveHandle(
     return { kind: "unsupported", reason: result.reason };
   }
   return { kind: "error", message: result.message };
+}
+
+/**
+ * Grabbing the IMPLICIT corner of an `|-` / `-|` operator wire and dragging it.
+ *
+ * The operator's corner is derived by TikZ from the two endpoints and has no source text, so it has
+ * no edit handle and cannot be moved like a normal path point -- a pointer-down there fell through
+ * to the element drag and translated the WHOLE wire ("整条线飞起来"). This action materialises the
+ * route as an explicit `A -- (corner) -- B` polyline, keeping both endpoints (anchors included)
+ * byte-for-byte and only inserting the corner coordinate where the operator used to be. After the
+ * first move the corner is a real path point, so the ordinary path-point pipeline takes over.
+ */
+function applyRewriteImplicitOrthoCornerAction(
+  source: string,
+  action: Extract<EditAction, { kind: "rewriteImplicitOrthoCorner" }>,
+  parseOptions: EditParseOptions
+): EditActionResult {
+  const baseSource = action.baselineSource ?? source;
+  const parsed = parseTikzForEdit(baseSource, parseOptions);
+  const statement = findPathStatementBySourceId(parsed.figure.body, action.elementId);
+  if (!statement || statement.command !== "draw") {
+    return { kind: "unsupported", reason: "Ortho corner rewrite requires a draw statement." };
+  }
+  const operator = statement.items.find(
+    (item) => item.kind === "PathKeyword" && (item.keyword === "|-" || item.keyword === "-|")
+  );
+  const coordinateCount = statement.items.filter((item) => item.kind === "Coordinate").length;
+  if (!operator || coordinateCount !== 2) {
+    return { kind: "unsupported", reason: "Not an implicit orthogonal operator wire (|- / -|)." };
+  }
+  const cmX = formatNumber(ptToCm(action.corner.x));
+  const cmY = formatNumber(ptToCm(action.corner.y));
+  const replacement = `-- (${cmX},${cmY}) --`;
+  const updated = replaceSpan(baseSource, operator.span, replacement);
+  if (updated.source === source) {
+    return { kind: "success", newSource: source, patches: [], changedSourceIds: [action.elementId] };
+  }
+  const patches =
+    baseSource !== source
+      ? [computeReplacementPatch(source, updated.source)]
+      : [{ oldSpan: operator.span, newSpan: updated.changedSpan, replacement }];
+  return { kind: "success", newSource: updated.source, patches, changedSourceIds: [action.elementId] };
+}
+
+function findPathStatementBySourceId(
+  statements: readonly Statement[],
+  sourceId: string
+): PathStatement | null {
+  for (const statement of statements) {
+    if (statement.kind === "Path" && statement.id === sourceId) {
+      return statement;
+    }
+    if (statement.kind === "Scope") {
+      const nested = findPathStatementBySourceId(statement.body, sourceId);
+      if (nested) {
+        return nested;
+      }
+    }
+  }
+  return null;
 }
 
 function applyConnectHandle(

@@ -1,0 +1,28 @@
+{
+  "//": "Path-alias carrier for tooling that loads files OUTSIDE apps/web (e.g. Playwright specs importing packages/app source). apps/web/tsconfig.json declares the same aliases but its `include` is [\"src\"], so a file under packages/ walking up from itself would otherwise find no mapping for the bare `tikz-editor/*` alias (packages/core is published as @tikz-editor/core; `tikz-editor` is a path alias only). Compiles nothing on its own: files: [].",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@tikz-editor/app": ["./packages/app/src/index.ts"],
+      "@tikz-editor/app/app-menu": ["./packages/app/src/app-menu/index.ts"],
+      "@tikz-editor/app/linked-file-sync": ["./packages/app/src/linked-file-sync.ts"],
+      "@tikz-editor/app/platform/current": ["./packages/app/src/platform/current.ts"],
+      "@tikz-editor/app/platform/types": ["./packages/app/src/platform/types.ts"],
+      "@tikz-editor/app/store/types": ["./packages/app/src/store/types.ts"],
+      "@tikz-editor/app/workspace": ["./packages/app/src/ui/workspace-apply.ts"],
+      "@tikz-editor/lang-tikz": ["./packages/lang-tikz/src/index.ts"],
+      "@tikz-editor/lezer-tikz": ["./packages/lezer-tikz/src/index.ts"],
+      "@tikz-editor/lezer-tikz/grammar/tikz-parser": ["./packages/lezer-tikz/src/grammar/tikz-parser.ts"],
+      "@tikz-editor/lezer-tikz/grammar/tikz-parser.terms": ["./packages/lezer-tikz/src/grammar/tikz-parser.terms.ts"],
+      "tikz-editor/*": ["./packages/core/src/*"]
+    }
+  },
+  "files": []
+}

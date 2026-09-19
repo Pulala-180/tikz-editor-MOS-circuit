@@ -6,7 +6,7 @@ import {
 } from "tikz-editor/edit/property-write-builders";
 import { buildSnapContext, type SnapGuideInput, type SnapLine, type SnapSettingsPatch } from "tikz-editor/edit/snapping";
 import type { ResizeRole } from "tikz-editor/edit/actions";
-import type { EditHandle, SceneElement, ScenePath } from "tikz-editor/semantic/types";
+import type { EditHandle, NodeAnchorTarget, SceneElement, ScenePath } from "tikz-editor/semantic/types";
 import type { WorldBounds, WorldPoint } from "../coords/types";
 import type { NodeItem } from "tikz-editor/ast/types";
 import { resolvePropertyTarget } from "tikz-editor/edit/property-target";

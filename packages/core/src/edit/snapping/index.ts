@@ -12,6 +12,7 @@ import {
 } from "./geometry.js";
 import { collectGridSnaps, pickGridStepPt, snapToNextMultiple } from "./grid-snaps.js";
 import { resolveMoveAxisConstraintFromEditHandles, type MoveAxis } from "./move-axis.js";
+import { findNearestWireSegmentSnap } from "./wire-segment-snap.js";
 import {
   collectGuideSnaps,
   collectPointSnaps,
@@ -57,6 +58,14 @@ export {
   mergeSnapPointLists,
   selectionSnapPointsFromBounds
 } from "./geometry.js";
+
+export {
+  findNearestWireSegmentSnap,
+  findWireSegmentAtPoint,
+  collectWireSegmentsFromScene,
+  type WireSegment,
+  type WireSegmentSnapResult
+} from "./wire-segment-snap.js";
 
 export type * from "./types.js";
 
@@ -170,6 +179,22 @@ export function snapToolPointer(input: SnapToolPointerInput): SnapResult {
   });
 }
 
+/**
+ * L-shaped guide from the pointer to its projection on a wire trunk. Degenerate legs are
+ * dropped so an already-aligned axis does not render a zero-length line.
+ */
+function createWireSegmentSnapLines(from: WorldPoint, to: WorldPoint): SnapLine[] {
+  const lines: SnapLine[] = [];
+  const corner = worldPoint(pt(to.x), pt(from.y));
+  if (Math.abs(to.x - from.x) > 1e-6) {
+    lines.push({ type: "pointer", axis: "x", from, to: corner });
+  }
+  if (Math.abs(to.y - from.y) > 1e-6) {
+    lines.push({ type: "pointer", axis: "y", from: corner, to });
+  }
+  return lines;
+}
+
 function snapPointerWithPointsAndGrid({
   context,
   settings,
@@ -189,6 +214,27 @@ function snapPointerWithPointsAndGrid({
     enabledAxis: null,
     thresholdWorld: settings.thresholdPx / context.zoom
   });
+
+  // Point and guide snaps are more specific than a wire trunk, so the segment projection is
+  // only consulted when neither axis found one. A bare grid line does NOT count as such a
+  // target -- otherwise turning grid snapping on would mask trunk snapping entirely, and
+  // landing on an existing wire is a more meaningful result than landing on an arbitrary
+  // grid step. The projection is inherently two-dimensional (both axes move at once), which
+  // the per-axis candidate buckets above cannot express.
+  const hasIntentionalSnap =
+    firstPass.nearest.x.some((snap) => snap.kind !== "grid") ||
+    firstPass.nearest.y.some((snap) => snap.kind !== "grid");
+  if (!hasIntentionalSnap) {
+    const wireSnap = findNearestWireSegmentSnap(pointer, context.wireSegments, context.zoom, settings.thresholdPx);
+    if (wireSnap) {
+      const target = wireSnap.projectedPoint;
+      return {
+        offset: worldPoint(pt(target.x - pointer.x), pt(target.y - pointer.y)),
+        snappedPoint: target,
+        lines: createWireSegmentSnapLines(pointer, target)
+      };
+    }
+  }
 
   const offset = pointSnapOffset(firstPass.nearest);
   const snappedPoint = worldPoint(pt(pointer.x + offset.x), pt(pointer.y + offset.y));

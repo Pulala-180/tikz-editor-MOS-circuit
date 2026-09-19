@@ -1,6 +1,43 @@
 import type { ToolMode } from "../../store/types";
 
 /**
+ * Port objects (`vdd-port` / generic `port`) are declared inside the `addIoNode` family so
+ * they reuse the existing canvas click-insertion branch, which matches
+ * `toolMode.startsWith("addIoNode")`. Every rotation/flip/switch table below therefore has
+ * to claim them *before* the `addIoNode` blocks, otherwise the Vin/Vout state machine
+ * would hijack them.
+ */
+const PORT_MODE_PREFIXES = ["addIoNode_VddPort", "addIoNode_Port"] as const;
+
+function portModePrefix(mode: ToolMode): string | null {
+  for (const prefix of PORT_MODE_PREFIXES) {
+    if ((mode as string) === prefix || mode.startsWith(`${prefix}_`)) {
+      return prefix;
+    }
+  }
+  return null;
+}
+
+const PORT_ORIENTATION_SUFFIXES = ["Left", "Top", "Right", "Bottom"] as const;
+type PortOrientationSuffix = (typeof PORT_ORIENTATION_SUFFIXES)[number];
+
+function portModeOrientation(mode: ToolMode): PortOrientationSuffix {
+  if (mode.endsWith("_Top")) return "Top";
+  if (mode.endsWith("_Right")) return "Right";
+  if (mode.endsWith("_Bottom")) return "Bottom";
+  return "Left";
+}
+
+/** Clockwise rotation order for a port object: left -> top -> right -> bottom -> left. */
+function rotatePortMode(mode: ToolMode): ToolMode | null {
+  const prefix = portModePrefix(mode);
+  if (!prefix) return null;
+  const order: PortOrientationSuffix[] = ["Left", "Top", "Right", "Bottom"];
+  const index = order.indexOf(portModeOrientation(mode));
+  return `${prefix}_${order[(index + 1) % order.length]}` as ToolMode;
+}
+
+/**
  * 顺时针旋转 90 度规则表
  * 针对可旋转元件依次切换方向；不可旋转元件（VDD、实心节点）返回 null。
  */
@@ -89,7 +126,22 @@ export function rotateCircuitToolMode(mode: ToolMode): ToolMode | null {
     return "addGND_V_Bottom";
   }
 
-  // 8. IO 端口 (Terminal) - 8态轮回交替: Vin (Left -> Top -> Right -> Bottom) -> Vout (Left -> Top -> Right -> Bottom) -> Vin ...
+  // 8. 端口对象 (vdd-port / port) - 四朝向轮回: Left -> Top -> Right -> Bottom -> Left
+  // (必须排在 addIoNode 之前，否则会被 Vin/Vout 状态机接管)
+  {
+    const rotatedPort = rotatePortMode(mode);
+    if (rotatedPort) return rotatedPort;
+  }
+
+  // 8.5 电源轨 (Power Rail) - 顺时针 90 度: H_Left -> V_Top -> H_Right -> V_Bottom -> H_Left
+  if (mode.startsWith("addPowerRail")) {
+    if (mode === "addPowerRail_V_Top") return "addPowerRail_H_Right";
+    if (mode === "addPowerRail_H_Right") return "addPowerRail_V_Bottom";
+    if (mode === "addPowerRail_V_Bottom") return "addPowerRail_H_Left";
+    return "addPowerRail_V_Top";
+  }
+
+  // 9. IO 端口 (Terminal) - 8态轮回交替: Vin (Left -> Top -> Right -> Bottom) -> Vout (Left -> Top -> Right -> Bottom) -> Vin ...
   if (mode.startsWith("addIoNode")) {
     if (mode === "addIoNode" || mode === "addIoNode_Vin_Left") return "addIoNode_Vin_Top";
     if (mode === "addIoNode_Vin_Top") return "addIoNode_Vin_Right";
@@ -202,6 +254,21 @@ export function flipCircuitToolModeHorizontal(mode: ToolMode): ToolMode | null {
     if (mode === "addGND_H_Right") return "addGND_H_Left";
     return "addGND_H_Left";
   }
+  // 8.5 端口对象 (vdd-port / port): 关于 Y 轴对称, Left <-> Right；竖直形态转水平
+  // (排在 addIoNode 之前，避免被 Vin/Vout 互换逻辑接管)
+  {
+    const prefix = portModePrefix(mode);
+    if (prefix) {
+      if (mode.endsWith("_Left")) return `${prefix}_Right` as ToolMode;
+      if (mode.endsWith("_Right")) return `${prefix}_Left` as ToolMode;
+      return `${prefix}_Left` as ToolMode;
+    }
+  }
+  // 8.6 电源轨 (Power Rail): 水平镜像
+  if (mode.startsWith("addPowerRail")) {
+    if (mode === "addPowerRail_H_Right") return "addPowerRail_H_Left";
+    return "addPowerRail_H_Right";
+  }
   // 9. IO 端口
   if (mode.startsWith("addIoNode")) {
     const isVout = mode.includes("Vout");
@@ -291,6 +358,20 @@ export function flipCircuitToolModeVertical(mode: ToolMode): ToolMode | null {
     if (mode === "addGND_V_Bottom") return "addGND_V_Top";
     return "addGND_V_Bottom";
   }
+  // 8.5 端口对象 (vdd-port / port): 关于 X 轴对称, Top <-> Bottom；水平形态转竖直
+  {
+    const prefix = portModePrefix(mode);
+    if (prefix) {
+      if (mode.endsWith("_Top")) return `${prefix}_Bottom` as ToolMode;
+      if (mode.endsWith("_Bottom")) return `${prefix}_Top` as ToolMode;
+      return `${prefix}_Top` as ToolMode;
+    }
+  }
+  // 8.6 电源轨 (Power Rail): 垂直镜像
+  if (mode.startsWith("addPowerRail")) {
+    if (mode === "addPowerRail_V_Bottom") return "addPowerRail_V_Top";
+    return "addPowerRail_V_Bottom";
+  }
   // 9. IO 端口
   if (mode.startsWith("addIoNode")) {
     const isVout = mode.includes("Vout");
@@ -310,6 +391,26 @@ export function flipCircuitToolModeVertical(mode: ToolMode): ToolMode | null {
     return "addWireLead_V_Top";
   }
   return null;
+}
+
+/**
+ * 放置态带修饰键的手势：Shift+R / Ctrl+R（Mac 上 Cmd+R）= 镜像。
+ *
+ * 这是"复用既有镜像机制"而非新增一套：直接转发到 `flipCircuitToolModeHorizontal`——也就是
+ * H / Y 键用的那条水平镜像表，所以手感与 H/Y 完全一致，元件朝向表只有一份。单独按 R 仍然是
+ * `rotateCircuitToolMode` 的顺时针 90°，W/A/S/D 方向键也原样保留。
+ *
+ * 单独抽出来是因为两个键盘入口（window 与 viewport）都要用，且必须在"无修饰键"守卫之前判定，
+ * 否则 Ctrl+R 会被守卫挡掉（甚至触发浏览器刷新）。
+ */
+export function mirrorCircuitToolModeWithKey(
+  mode: ToolMode,
+  key: string,
+  modifiers: { shiftKey: boolean; ctrlKey: boolean; metaKey: boolean }
+): ToolMode | null {
+  if (key.toLowerCase() !== "r") return null;
+  if (!modifiers.shiftKey && !modifiers.ctrlKey && !modifiers.metaKey) return null;
+  return flipCircuitToolModeHorizontal(mode);
 }
 
 /**
@@ -448,6 +549,33 @@ export function switchCircuitToolModeWithKey(currentMode: ToolMode, key: string)
     if (k === "d") return "addGND_H_Right";
   }
 
+  // 9.5 端口对象 (vdd-port / port): w/a/s/d 切换朝向，保持当前对象类别
+  {
+    const prefix = portModePrefix(currentMode);
+    if (prefix) {
+      if (k === "w") return `${prefix}_Top` as ToolMode;
+      if (k === "a") return `${prefix}_Left` as ToolMode;
+      if (k === "s") return `${prefix}_Bottom` as ToolMode;
+      if (k === "d") return `${prefix}_Right` as ToolMode;
+      // Pressing the port's own summon key (o = vdd-port, j = generic port) re-arms it at the
+      // default Left orientation. Needed now that placement is sticky: without it a re-arm would
+      // keep the previous orientation (and `o` alone would otherwise be swallowed).
+      if (k === "o") return "addIoNode_VddPort_Left";
+      if (k === "j") return "addIoNode_Port_Left";
+      // Swallow every other key: without this the `addIoNode` block below would hijack the
+      // port with its Vin/Vout state machine (e.g. `o` would turn a vdd-port into Vout).
+      return currentMode;
+    }
+  }
+
+  // 9.6 电源轨 (Power Rail): w/a/s/d 切换朝向
+  if (currentMode.startsWith("addPowerRail")) {
+    if (k === "w") return "addPowerRail_V_Top";
+    if (k === "a") return "addPowerRail_H_Left";
+    if (k === "s") return "addPowerRail_V_Bottom";
+    if (k === "d") return "addPowerRail_H_Right";
+  }
+
   // 10. IO 端口 (i: 切Vin, o: 切Vout, w: 朝上, a: 朝左, s: 朝下, d: 朝右)
   if (currentMode.startsWith("addIoNode")) {
     const isVout = currentMode.includes("Vout");
@@ -503,6 +631,14 @@ export function resolveSelectModeInitialTool(key: string, vKeyDown: boolean): To
 
   // 10. IO 端口 (T - Terminal)
   if (k === "t") return "addIoNode_Vin_Left";
+
+  // 10.1 端口对象: O = vdd-port ($V_{DD}$, 自动命名 VDD1/VDD2...), J = 通用 port
+  // (O/J 在 TOOL_BUTTONS 与本文的按键表里都未被占用；P 已被 Path 工具占用)
+  if (k === "o") return "addIoNode_VddPort_Left";
+  if (k === "j") return "addIoNode_Port_Left";
+
+  // 10.2 电源轨 (K - 空余黄金键): 单点落一条默认长度的粗导轨
+  if (k === "k") return "addPowerRail_H_Left";
 
   // 11. D 键: 若按住 V 则为 VDD，否则为实心节点 (●)
   if (k === "d") {

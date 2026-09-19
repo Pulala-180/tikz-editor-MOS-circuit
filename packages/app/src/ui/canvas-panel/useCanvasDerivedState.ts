@@ -15,6 +15,7 @@ import {
   pathToolShouldClose
 } from "./path-tool";
 import { resolveFreehandPreviewSegments } from "./freehand-tool";
+import { computeWireWaypoints } from "./wire-routing-helper";
 import { buildAnchoredGridPreviewLines } from "./panel-helpers";
 import type { CanvasSnapshot, DragState, FreehandToolDraft, OrthoWireToolDraft, PathToolDraft, PendingBezier, RoundedLineToolDraft } from "./types";
 import type { ToolPreview } from "./overlays";
@@ -108,14 +109,25 @@ export function useCanvasDerivedState(args: UseCanvasDerivedStateArgs) {
 
     if (toolMode === "addOrthoWire") {
       if (args.orthoWireDraft && toolCursorWorld) {
-        const from = worldToSvgPoint(args.orthoWireDraft.currentWorld, svgResult.viewBox);
-        const to = worldToSvgPoint(toolCursorWorld, svgResult.viewBox);
-        const dx = Math.abs(to.x - from.x);
-        const dy = Math.abs(to.y - from.y);
-        const nextSvg = dx >= dy
-          ? { x: to.x, y: from.y }
-          : { x: from.x, y: to.y };
-        return { kind: "line", x1: from.x, y1: from.y, x2: nextSvg.x, y2: nextSvg.y, arrow: false };
+        // Preview the WHOLE route to the cursor, not just its first leg. The next click commits
+        // either the auto-routed path into a pin or the full corner route to a free point, so a
+        // one-leg preview hid where the wire was actually going (and never showed the turn).
+        const mode = args.orthoWireDraft.routingMode ?? "orthogonal";
+        const from = args.orthoWireDraft.currentWorld;
+        const to = toolCursorWorld;
+        // Mirror the commit path's default: with no explicit orientation, the corner follows the
+        // dominant axis.
+        const orientation =
+          args.orthoWireDraft.orientation ??
+          (Math.abs(to.x - from.x) >= Math.abs(to.y - from.y) ? "HV" : "VH");
+        const waypoints = computeWireWaypoints(from, to, mode, orientation);
+        return {
+          kind: "polyline",
+          points: waypoints.map((point) => {
+            const mapped = worldToSvgPoint(point, svgResult.viewBox);
+            return { x: mapped.x, y: mapped.y };
+          })
+        };
       }
       if (toolCursorWorld) {
         const point = worldToSvgPoint(toolCursorWorld, svgResult.viewBox);

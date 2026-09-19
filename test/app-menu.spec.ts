@@ -174,7 +174,7 @@ describe("app menu definition", () => {
     if (!commandItem || commandItem.kind !== "command") {
       throw new Error("Expected file.open-example command item in File menu.");
     }
-    expect(commandItem.label).toBe("Open Example...");
+    expect(commandItem.label).toBe("打开示例...");
   });
 
   it("places Open Example below the file opening commands in the File menu", () => {
@@ -201,7 +201,7 @@ describe("app menu definition", () => {
     expect(fileSection).toBeDefined();
     const items = fileSection?.items ?? [];
     const importMenu = items.find(
-      (item) => item.kind === "submenu" && item.label === "Import"
+      (item) => item.kind === "submenu" && item.label === "导入"
     );
     expect(importMenu).toBeDefined();
     if (!importMenu || importMenu.kind !== "submenu") {
@@ -230,17 +230,17 @@ describe("app menu definition", () => {
     ) {
       throw new Error("Expected file.import-ipe, file.import-powerpoint, and file.import-svg commands in File > Import.");
     }
-    expect(ipeItem.label).toBe("Ipe (.ipe)...");
-    expect(powerpointItem.label).toBe("PowerPoint (.pptx)...");
-    expect(svgItem.label).toBe("SVG...");
+    expect(ipeItem.label).toBe("导入 Ipe (.ipe)...");
+    expect(powerpointItem.label).toBe("导入 PowerPoint (.pptx)...");
+    expect(svgItem.label).toBe("导入 SVG...");
   });
 
   it("groups Import submenu directly above Export in the File menu", () => {
     const fileSection = APP_MENU_DEFINITION.find((section) => section.id === "file");
     expect(fileSection).toBeDefined();
     const items = fileSection?.items ?? [];
-    const importIndex = items.findIndex((item) => item.kind === "submenu" && item.label === "Import");
-    const exportIndex = items.findIndex((item) => item.kind === "submenu" && item.label === "Export");
+    const importIndex = items.findIndex((item) => item.kind === "submenu" && item.label === "导入");
+    const exportIndex = items.findIndex((item) => item.kind === "submenu" && item.label === "导出");
 
     expect(importIndex).toBeGreaterThanOrEqual(0);
     expect(exportIndex).toBe(importIndex + 1);
@@ -251,7 +251,7 @@ describe("app menu definition", () => {
     expect(fileSection).toBeDefined();
     const items = fileSection?.items ?? [];
     const exportMenu = items.find(
-      (item) => item.kind === "submenu" && item.label === "Export"
+      (item) => item.kind === "submenu" && item.label === "导出"
     );
     expect(exportMenu).toBeDefined();
     if (!exportMenu || exportMenu.kind !== "submenu") {
@@ -287,10 +287,10 @@ describe("app menu definition", () => {
     ) {
       throw new Error("Expected SVG, Standalone LaTeX, PDF, and PNG export commands in File > Export.");
     }
-    expect(svgItem.label).toBe("SVG...");
-    expect(standaloneLatexItem.label).toBe("Standalone LaTeX");
-    expect(pdfItem.label).toBe("PDF...");
-    expect(pngItem.label).toBe("PNG...");
+    expect(svgItem.label).toBe("导出 SVG...");
+    expect(standaloneLatexItem.label).toBe("导出 Standalone LaTeX");
+    expect(pdfItem.label).toBe("导出 PDF...");
+    expect(pngItem.label).toBe("导出 PNG...");
   });
 
   it("exposes Copy SVG in the File menu", () => {
@@ -304,7 +304,7 @@ describe("app menu definition", () => {
     if (!commandItem || commandItem.kind !== "command") {
       throw new Error("Expected file.export-svg-copy command item in File menu.");
     }
-    expect(commandItem.label).toBe("Copy as SVG");
+    expect(commandItem.label).toBe("复制为 SVG");
   });
 
   it("exposes a Snapping submenu in the View menu", () => {
@@ -312,7 +312,7 @@ describe("app menu definition", () => {
     expect(viewSection).toBeDefined();
     const items = viewSection?.items ?? [];
     const snappingMenu = items.find(
-      (item) => item.kind === "submenu" && item.label === "Snapping"
+      (item) => item.kind === "submenu" && item.label === "网格吸附"
     );
     expect(snappingMenu).toBeDefined();
     if (!snappingMenu || snappingMenu.kind !== "submenu") {
@@ -364,7 +364,7 @@ describe("app menu definition", () => {
     if (!commandItem || commandItem.kind !== "command") {
       throw new Error("Expected insert.bezier command item in Insert menu.");
     }
-    expect(commandItem.label).toBe("Bezier");
+    expect(commandItem.label).toBe("贝塞尔曲线");
   });
 
   it("exposes Path in the Insert menu", () => {
@@ -378,7 +378,7 @@ describe("app menu definition", () => {
     if (!commandItem || commandItem.kind !== "command") {
       throw new Error("Expected insert.path command item in Insert menu.");
     }
-    expect(commandItem.label).toBe("Path");
+    expect(commandItem.label).toBe("路径");
     expect((commandItem as any).accelerator).toBe("P");
   });
 
@@ -393,7 +393,7 @@ describe("app menu definition", () => {
     if (!commandItem || commandItem.kind !== "command") {
       throw new Error("Expected insert.equation command item in Insert menu.");
     }
-    expect(commandItem.label).toBe("Equation");
+    expect(commandItem.label).toBe("公式");
     expect((commandItem as any).accelerator).toBe("CmdOrCtrl+Shift+E");
   });
 
@@ -408,7 +408,7 @@ describe("app menu definition", () => {
     if (!commandItem || commandItem.kind !== "command") {
       throw new Error("Expected insert.freehand command item in Insert menu.");
     }
-    expect(commandItem.label).toBe("Freehand");
+    expect(commandItem.label).toBe("自由手绘");
     expect((commandItem as any).accelerator).toBe("F");
   });
 
@@ -423,7 +423,7 @@ describe("app menu definition", () => {
     if (!commandItem || commandItem.kind !== "command") {
       throw new Error("Expected insert.grid command item in Insert menu.");
     }
-    expect(commandItem.label).toBe("Grid");
+    expect(commandItem.label).toBe("网格");
     expect((commandItem as any).accelerator).toBeUndefined();
   });
 
@@ -438,7 +438,7 @@ describe("app menu definition", () => {
     if (!commandItem || commandItem.kind !== "command") {
       throw new Error("Expected insert.matrix command item in Insert menu.");
     }
-    expect(commandItem.label).toBe("Matrix");
+    expect(commandItem.label).toBe("矩阵");
     expect((commandItem as any).accelerator).toBeUndefined();
   });
 
@@ -453,7 +453,7 @@ describe("app menu definition", () => {
     if (!commandItem || commandItem.kind !== "command") {
       throw new Error("Expected edit.format-tikz command item in Edit menu.");
     }
-    expect(commandItem.label).toBe("Format TikZ Code");
+    expect(commandItem.label).toBe("格式化 TikZ 代码");
   });
 
   it("places Group/Ungroup and Repeat below Duplicate with singleton dividers", () => {
@@ -506,7 +506,7 @@ describe("app menu definition", () => {
     const items = editSection?.items ?? [];
     const submenuLabels = items.flatMap((item) => (item.kind === "submenu" ? [item.label] : []));
 
-    expect(submenuLabels).toEqual(["Align", "Transform", "Distribute", "Reorder"]);
+    expect(submenuLabels).toEqual(["对齐", "变换", "分布", "层级"]);
     expect(items[items.length - 5]).toEqual({ kind: "separator" });
     expect(items.slice(-4).every((item) => item.kind === "submenu")).toBe(true);
   });
@@ -589,17 +589,17 @@ describe("app menu definition", () => {
       expect.objectContaining({
         kind: "command",
         commandId: APP_MENU_COMMAND_IDS.OPEN_PGF_TIKZ_MANUAL,
-        label: "Open PGF/TikZ Manual"
+        label: "打开 PGF/TikZ 手册"
       }),
       expect.objectContaining({
         kind: "command",
         commandId: APP_MENU_COMMAND_IDS.OPEN_GITHUB_REPOSITORY,
-        label: "GitHub Repository"
+        label: "GitHub 仓库"
       }),
       expect.objectContaining({
         kind: "command",
         commandId: APP_MENU_COMMAND_IDS.OPEN_GITHUB_ISSUES,
-        label: "Report an Issue..."
+        label: "提交反馈与问题..."
       })
     ]));
   });

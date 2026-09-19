@@ -13,7 +13,7 @@ import { Modal } from "./Modal";
 import css from "./SvgExportModal.module.css";
 
 const DEFAULT_FILE_NAME = "tikz-export.svg";
-const SVG_CODE_EDITOR_ARIA_LABEL = "SVG code";
+const SVG_CODE_EDITOR_ARIA_LABEL = "SVG 代码";
 
 const SvgCodeEditor = lazy(async () => {
   const mod = await import("./SvgCodeEditor");
@@ -134,7 +134,7 @@ export function SvgExportModal({ svgResult, onClose }: SvgExportModalProps) {
     setCopyFeedback(null);
     try {
       const copied = await copySvgText(markup);
-      setCopyFeedback(copied ? "Copied SVG markup." : "Clipboard export failed.");
+      setCopyFeedback(copied ? "已复制 SVG 代码至剪贴板。" : "复制到剪贴板失败。");
     } finally {
       setCopyPending(false);
     }
@@ -169,11 +169,11 @@ export function SvgExportModal({ svgResult, onClose }: SvgExportModalProps) {
       className={css.dialog}
     >
       <Modal.Header
-        title="Export SVG"
+        title="导出 SVG"
         titleId="svg-export-title"
         showCloseButton
         onClose={onClose}
-        closeAriaLabel="Close SVG export"
+        closeAriaLabel="关闭 SVG 导出"
       />
 
       <Modal.Body padding="none" scroll={false}>
@@ -181,30 +181,30 @@ export function SvgExportModal({ svgResult, onClose }: SvgExportModalProps) {
           <div className={css.previewColumn}>
             <div className={css.previewFrame}>
               {loadingMarkup ? (
-                <div className={css.previewStatus} data-select="text">Preparing SVG export…</div>
+                <div className={css.previewStatus} data-select="text">正在准备 SVG 导出…</div>
               ) : loadError ? (
                 <div className={css.previewStatus} data-select="text">{loadError}</div>
               ) : !validation.valid ? (
                 <div className={css.previewStatus} data-select="text">{validation.message}</div>
               ) : previewUrl ? (
-                <img className={css.previewImage} src={previewUrl} alt="SVG export preview" />
+                <img className={css.previewImage} src={previewUrl} alt="SVG 导出预览" />
               ) : (
-                <div className={css.previewStatus} data-select="text">SVG preview is unavailable in this browser.</div>
+                <div className={css.previewStatus} data-select="text">此浏览器不支持 SVG 预览。</div>
               )}
             </div>
 
             <div className={css.metaRow} data-select="text">
               <span>{svgResult.viewBox.width.toFixed(1)} × {svgResult.viewBox.height.toFixed(1)}pt</span>
-              <span>{markup.length.toLocaleString()} chars</span>
-              <span>{lineCount.toLocaleString()} lines</span>
-              <span>{hasEdits ? "Edited" : "Generated from render"}</span>
+              <span>{markup.length.toLocaleString()} 字符</span>
+              <span>{lineCount.toLocaleString()} 行</span>
+              <span>{hasEdits ? "已编辑" : "渲染生成"}</span>
             </div>
           </div>
 
           <div className={css.controlColumn}>
             <div className={css.controls}>
               <label className={css.field}>
-                <span className={css.label}>File name</span>
+                <span className={css.label}>文件名</span>
                 <input
                   type="text"
                   className={css.input}
@@ -214,7 +214,7 @@ export function SvgExportModal({ svgResult, onClose }: SvgExportModalProps) {
               </label>
 
               <div className={css.field}>
-                <span className={css.label}>SVGO tools</span>
+                <span className={css.label}>SVGO 优化工具</span>
                 <div className={css.transformRow}>
                   <Modal.SecondaryButton
                     disabled={loadingMarkup || loadError != null || optimizerState.status !== "ready" || activeTransform != null}
@@ -222,7 +222,7 @@ export function SvgExportModal({ svgResult, onClose }: SvgExportModalProps) {
                       void handleTransform("beautify");
                     }}
                   >
-                    {activeTransform === "beautify" ? "Beautifying…" : "Beautify"}
+                    {activeTransform === "beautify" ? "美化中…" : "美化排版"}
                   </Modal.SecondaryButton>
                   <Modal.SecondaryButton
                     disabled={loadingMarkup || loadError != null || optimizerState.status !== "ready" || activeTransform != null}
@@ -230,7 +230,7 @@ export function SvgExportModal({ svgResult, onClose }: SvgExportModalProps) {
                       void handleTransform("compress");
                     }}
                   >
-                    {activeTransform === "compress" ? "Compressing…" : "Compress"}
+                    {activeTransform === "compress" ? "压缩中…" : "压缩代码"}
                   </Modal.SecondaryButton>
                   <Modal.GhostButton
                     disabled={loadingMarkup || !hasEdits}
@@ -239,18 +239,18 @@ export function SvgExportModal({ svgResult, onClose }: SvgExportModalProps) {
                       setCopyFeedback(null);
                     }}
                   >
-                    Reset
+                    重置
                   </Modal.GhostButton>
                 </div>
                 {optimizerState.status === "error" ? (
-                  <span className={css.help} data-select="text">SVGO unavailable: {optimizerState.message}</span>
+                  <span className={css.help} data-select="text">SVGO 不可用: {optimizerState.message}</span>
                 ) : null}
                 {copyFeedback ? <span className={css.help} data-select="text">{copyFeedback}</span> : null}
               </div>
             </div>
 
             <label className={css.editorLabel}>
-              <span className={css.label}>SVG code</span>
+              <span className={css.label}>SVG 代码</span>
               <Suspense
                 fallback={(
                   <textarea
@@ -277,7 +277,7 @@ export function SvgExportModal({ svgResult, onClose }: SvgExportModalProps) {
 
       <Modal.Footer>
         <Modal.SecondaryButton data-testid="svg-export-cancel" onClick={onClose}>
-          Cancel
+          取消
         </Modal.SecondaryButton>
         <Modal.SecondaryButton
           data-testid="svg-export-copy"
@@ -286,7 +286,7 @@ export function SvgExportModal({ svgResult, onClose }: SvgExportModalProps) {
             void handleCopy();
           }}
         >
-          {copyPending ? "Copying…" : "Copy SVG"}
+          {copyPending ? "复制中…" : "复制到剪贴板"}
         </Modal.SecondaryButton>
         <Modal.PrimaryButton
           data-testid="svg-export-download"
@@ -295,7 +295,7 @@ export function SvgExportModal({ svgResult, onClose }: SvgExportModalProps) {
             void handleDownload();
           }}
         >
-          {downloadPending ? "Exporting…" : "Download SVG"}
+          {downloadPending ? "导出中…" : "下载 SVG"}
         </Modal.PrimaryButton>
       </Modal.Footer>
     </Modal>

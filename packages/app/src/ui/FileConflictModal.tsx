@@ -18,24 +18,24 @@ export function FileConflictModal({
       labelledBy="file-conflict-title"
       dataTestId="file-conflict-modal"
     >
-      <Modal.Header title="File Changed on Disk" titleId="file-conflict-title" />
+      <Modal.Header title="外部文件已被修改" titleId="file-conflict-title" />
       <Modal.Body>
         <p className={css.message} data-select="text">
-          The file for &quot;{documentTitle}&quot; changed outside TikZ Editor.
+          文件 &quot;{documentTitle}&quot; 已在 TikZ Editor 外部被修改。
         </p>
       </Modal.Body>
       <Modal.Footer>
         <Modal.SecondaryButton onClick={() => { onChoose("cancel"); }} data-testid="file-conflict-cancel">
-          Cancel
+          取消
         </Modal.SecondaryButton>
         <Modal.SecondaryButton onClick={() => { onChoose("reload"); }} data-testid="file-conflict-reload">
-          Reload from Disk
+          重新加载
         </Modal.SecondaryButton>
         <Modal.SecondaryButton onClick={() => { onChoose("save-as"); }} data-testid="file-conflict-save-as">
-          Save As
+          另存为…
         </Modal.SecondaryButton>
         <Modal.DangerButton onClick={() => { onChoose("save-anyway"); }} data-testid="file-conflict-save-anyway">
-          Save Anyway
+          覆盖保存
         </Modal.DangerButton>
       </Modal.Footer>
     </Modal>

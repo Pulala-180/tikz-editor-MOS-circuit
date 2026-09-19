@@ -509,6 +509,102 @@ test("typing at the end of node text keeps the textarea caret after the inserted
   await expect.poll(async () => await readStoreSource(page)).toContain("{Hello!}");
 });
 
+test("typing inside a math run ignores a stale end-of-text selection echo", async ({ page }) => {
+  await gotoApp(page);
+  await setSource(page, String.raw`\begin{tikzpicture}
+\node at (0,0) {$v_{out}$};
+\end{tikzpicture}`);
+  await waitForHitRegions(page, 1);
+  await clickTextHitRegionByTargetId(page, "path:0");
+
+  const textarea = page.getByTestId("canvas-text-edit-textarea");
+  await setTextareaSelection(page, 5, 5);
+
+  // Controlled textarea updates can briefly move the native selection to the
+  // old value's end before React restores the session caret. That stale echo
+  // must not overwrite the reducer's post-insert position.
+  await textarea.evaluate((element) => {
+    const textareaElement = element as HTMLTextAreaElement;
+    textareaElement.dispatchEvent(
+      new InputEvent("beforeinput", {
+        bubbles: true,
+        cancelable: true,
+        inputType: "insertText",
+        data: "a"
+      })
+    );
+    textareaElement.setSelectionRange(textareaElement.value.length, textareaElement.value.length);
+    document.dispatchEvent(new Event("selectionchange"));
+    textareaElement.setSelectionRange(6, 6);
+    document.dispatchEvent(new Event("selectionchange"));
+    textareaElement.setSelectionRange(9, 9);
+    document.dispatchEvent(new Event("selectionchange"));
+  });
+
+  await expect(textarea).toHaveValue("$v_{oaut}$");
+  await expect.poll(async () => await readTextareaSelection(page)).toEqual({ start: 6, end: 6 });
+
+  // The input guard must also release cleanly for the next real caret move.
+  await textarea.press("ArrowLeft");
+  await expect.poll(async () => await readTextareaSelection(page)).toEqual({ start: 5, end: 5 });
+});
+
+test("typing two characters inside a subscript keeps display and insertion at the same offset", async ({ page }) => {
+  await gotoApp(page);
+  await setSource(page, String.raw`\begin{tikzpicture}
+\node at (0,0) {$M_{s1}$};
+\end{tikzpicture}`);
+  await waitForHitRegions(page, 1);
+  await clickTextHitRegionByTargetId(page, "path:0");
+  await setTextareaSelection(page, 5, 5);
+
+  const textarea = page.getByTestId("canvas-text-edit-textarea");
+  await page.keyboard.press("s");
+  await page.waitForTimeout(150);
+  await expect.poll(async () => await readTextareaSelection(page)).toEqual({ start: 6, end: 6 });
+  await page.keyboard.press("s");
+  await page.waitForTimeout(150);
+  await expect(textarea).toHaveValue("$M_{sss1}$");
+  await expect.poll(async () => await readTextareaSelection(page)).toEqual({ start: 7, end: 7 });
+
+  await page.keyboard.type("x");
+  await expect(textarea).toHaveValue("$M_{sssx1}$");
+  await expect.poll(async () => await readTextareaSelection(page)).toEqual({ start: 8, end: 8 });
+});
+
+test("caret overlay measures against session text instead of a lagging DOM textarea value", async ({ page }) => {
+  await gotoApp(page);
+  await setSource(page, String.raw`\begin{tikzpicture}
+\node at (0,0) {$M_{sss1}$};
+\end{tikzpicture}`);
+  await waitForHitRegions(page, 1);
+  await clickTextHitRegionByTargetId(page, "path:0");
+  await setTextareaSelection(page, 7, 7);
+
+  const caret = page.getByTestId("canvas-text-edit-caret-overlay");
+  await expect(caret).toBeVisible();
+  const baselineX = (await caret.boundingBox())?.x ?? Number.NaN;
+  expect(Number.isFinite(baselineX)).toBe(true);
+
+  await page.getByTestId("canvas-text-edit-textarea").evaluate((element) => {
+    const textarea = element as HTMLTextAreaElement;
+    const descriptor = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value");
+    if (!descriptor?.get || !descriptor.set) {
+      throw new Error("Missing textarea value accessor.");
+    }
+    Object.defineProperty(textarea, "value", {
+      configurable: true,
+      get: () => "$M_{ss1}$",
+      set: (value: string) => {
+        descriptor.set!.call(textarea, value);
+      }
+    });
+    textarea.setSelectionRange(7, 7);
+    textarea.dispatchEvent(new Event("select", { bubbles: true }));
+  });
+  await expect.poll(async () => (await caret.boundingBox())?.x ?? Number.NaN).toBeCloseTo(baselineX, 0);
+});
+
 test("deleting all node text keeps the popup open so new text can be entered", async ({ page }) => {
   await gotoApp(page);
   await setSource(page, String.raw`\begin{tikzpicture}
@@ -1648,4 +1744,97 @@ test("triple-click drag extends selection by lines in multiline canvas text", as
   expect(dragLength).toBeGreaterThan(singleLineLength);
   expect(dragLength).toBeLessThanOrEqual(text.length);
   await expect.poll(async () => page.getByTestId("canvas-text-selection-rect").count()).toBeGreaterThan(1);
+});
+
+test("painted-width caret for subscripted math keeps the overlay on the formula instead of past it", async ({ page }) => {
+  // The layout model measures sub/superscripts at full size while MathJax paints
+  // them at ~0.707, so anything anchored to raw model offsets overshoots the
+  // label — the canvas caret used to float ~20px past the right edge, exactly
+  // where the user was *not* typing. Guard both the caret overlay and the
+  // textarea caret against that regression.
+  await gotoApp(page);
+  await setSource(page, String.raw`\begin{tikzpicture}
+\node at (0,0) {{\normalsize $I_{SS}$}};
+\end{tikzpicture}`);
+  await waitForHitRegions(page, 1);
+
+  const textRegion = page
+    .locator("[data-hit-region-target-id='path:0'][data-hit-region-interaction-mode='text']")
+    .first();
+  await expect(textRegion).toBeVisible();
+  const regionBox = await textRegion.boundingBox();
+  if (!regionBox) {
+    throw new Error("Missing text hit-region bounds.");
+  }
+
+  await page.mouse.click(regionBox.x + regionBox.width - 1, regionBox.y + regionBox.height / 2);
+  const textarea = page.getByTestId("canvas-text-edit-textarea");
+  await expect(textarea).toBeFocused();
+  await expect(textarea).toHaveValue(String.raw`{\normalsize $I_{SS}$}`);
+
+  const caret = page.getByTestId("canvas-text-selection-caret").first();
+  await expect(caret).toBeVisible();
+  const caretBox = await caret.boundingBox();
+  const nodeBox = await page.locator("[data-source-id='path:0']").first().boundingBox();
+  if (!caretBox || !nodeBox) {
+    throw new Error("Missing caret or node bounds.");
+  }
+  const rightEdge = nodeBox.x + nodeBox.width;
+  expect(caretBox.x).toBeGreaterThan(rightEdge - 6);
+  expect(caretBox.x).toBeLessThanOrEqual(rightEdge + 2);
+
+  await page.keyboard.type("s");
+  await expect(textarea).toHaveValue(String.raw`{\normalsize $I_{SSs}$}`);
+});
+
+test("arrow navigation through a braced subscript follows the painted o/u boundaries", async ({ page }) => {
+  await gotoApp(page);
+  await setSource(page, String.raw`\begin{tikzpicture}
+\node at (0,0) {$v_{out}$};
+\end{tikzpicture}`);
+  await waitForHitRegions(page, 1);
+  await clickTextHitRegionByTargetId(page, "path:0");
+
+  const textarea = page.getByTestId("canvas-text-edit-textarea");
+  await expect(textarea).toHaveValue("$v_{out}$");
+
+  // The Arial text renderer emits the base and the reduced-size subscript as
+  // separate spans, so its glyph positions are the authoritative painted
+  // boundaries for this regression.
+  const subscriptStarts = await page
+    .locator("svg[data-text-renderer='mathjax'] tspan")
+    .nth(1)
+    .evaluate((element) => {
+      const subscript = element as SVGTextContentElement;
+      const matrix = element.getScreenCTM();
+      if (!matrix) {
+        throw new Error("Missing subscript screen transform.");
+      }
+      return Array.from({ length: subscript.getNumberOfChars() }, (_, index) => {
+        const point = subscript.getStartPositionOfChar(index);
+        const screenPoint = new DOMPoint(point.x, point.y).matrixTransform(matrix);
+        return screenPoint.x;
+      });
+    });
+
+  const readCaretX = async (): Promise<number> => {
+    const caret = page.getByTestId("canvas-text-selection-caret").first();
+    await expect(caret).toBeVisible();
+    const box = await caret.boundingBox();
+    if (!box) {
+      throw new Error("Missing canvas text caret bounds.");
+    }
+    return box.x;
+  };
+
+  await textarea.press("Home");
+  for (let index = 0; index < 5; index += 1) {
+    await textarea.press("ArrowRight");
+  }
+  await expect.poll(async () => await readTextareaSelection(page)).toEqual({ start: 5, end: 5 });
+  expect(Math.abs((await readCaretX()) - subscriptStarts[1]!)).toBeLessThan(6);
+
+  await textarea.press("ArrowLeft");
+  await expect.poll(async () => await readTextareaSelection(page)).toEqual({ start: 4, end: 4 });
+  expect(Math.abs((await readCaretX()) - subscriptStarts[0]!)).toBeLessThan(6);
 });

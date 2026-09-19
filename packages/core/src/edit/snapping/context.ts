@@ -9,6 +9,7 @@ import {
   collectSourceSnapPoints,
   expandBounds
 } from "./geometry.js";
+import { collectWireSegmentsFromScene } from "./wire-segment-snap.js";
 import {
   DEFAULT_SNAP_SETTINGS,
   type BuildSnapContextInput,
@@ -116,6 +117,10 @@ export function buildSnapContext(input: BuildSnapContextInput): SnapContext {
     y: normalizeGuideValues(input.guides?.y)
   };
 
+  const wireSegments = (input.wireSegments ?? collectWireSegmentsFromScene(input.sceneElements)).filter(
+    (segment) => !selectedSet.has(segment.sourceId) && !excludedSet?.has(segment.sourceId)
+  );
+
   return {
     zoom,
     viewportWorld,
@@ -123,6 +128,7 @@ export function buildSnapContext(input: BuildSnapContextInput): SnapContext {
     guides,
     referencePoints,
     referenceBounds,
+    wireSegments,
     visibleGaps,
     settings
   };

@@ -16,6 +16,9 @@ import type { ToolCreateMode } from "../tool-config";
 import type { ClientPoint, SvgBounds, SvgPoint, ViewportBounds, ViewportPoint, WorldBounds, WorldPoint, WorldVector } from "../coords/types";
 import type { HitRegion } from "./hit-regions";
 import type { ResizeFrame } from "./resize-frames";
+import type { WireRoutingMode, OrthoOrientation } from "./wire-routing-helper";
+
+export type { WireRoutingMode, OrthoOrientation };
 
 export type GuideOrientation = "vertical" | "horizontal";
 
@@ -121,15 +124,31 @@ export type DragState =
       startWorld: WorldPoint;
       adornmentDragFromText?: boolean;
       lastAppliedTotalDelta: WorldVector;
-      lastMoveFormatPrecision?: "default" | "fine" | "coarse";
+      // Matches core's DragFormatPrecision. "coarse" was listed here but never assigned anywhere
+      // (it looks copied from the unrelated GridSize union).
+      lastMoveFormatPrecision?: "default" | "fine";
       transientDomElements?: Element[];
       initialTransforms?: Map<Element, string | null>;
       transientAttachedWires?: Array<{
         element: SVGPathElement;
         initialD: string;
+        /** Parsed M/L points of `initialD`; null when the path has curves/arcs, which keeps the 2-point fallback. */
+        initialPoints: Array<{ x: number; y: number }> | null;
         staticSvg: { x: number; y: number };
         movingSvg: { x: number; y: number };
         movingEndpointIndex: 0 | 1;
+        /**
+         * The wire's route is an implicit `|-` / `-|` corner (TikZ computes the bend from the two
+         * endpoints). The transient rewrite must recompute the interior point so the wire stays
+         * orthogonal while the attached end moves; freezing it skews the wire into a diagonal.
+         */
+        implicitCorner: boolean;
+        /**
+         * The wire is an attached, genuinely-skewed route: the repair pass re-routes its interior
+         * orthogonally on commit. Mirrored in the transient rewrite so the wire visibly snaps
+         * straight during the drag.
+         */
+        skewedRepair: boolean;
       }>;
       movementAxis?: "x" | "y" | "orthogonal" | "locked" | null;
       adornmentDrag?: {
@@ -226,6 +245,23 @@ export type DragState =
       startTransform: CanvasTransform;
     }
   | {
+      /**
+       * Dragging the IMPLICIT corner of a `|-` / `-|` operator wire. The corner has no edit handle,
+       * so this gesture materialises the route as an explicit `A -- (corner) -- B` polyline (both
+       * endpoints, anchors included, are kept byte-for-byte) and then re-materialises it at the new
+       * corner on every move. `baselineSource` is the operator form captured at pointer-down so the
+       * rewrite is always rebuilt from a stable base.
+       */
+      kind: "ortho-corner";
+      pointerId: number;
+      elementId: string;
+      cursor: string;
+      startWorld: WorldPoint;
+      lastKnownWorld: WorldPoint;
+      historyMergeKey: string;
+      baselineSource: string;
+    }
+  | {
       kind: "marquee";
       pointerId: number;
       startWorld: WorldPoint;
@@ -301,7 +337,15 @@ export type RoundedLineToolDraft = {
 
 export type OrthoWireToolDraft = {
   currentWorld: WorldPoint;
+  /**
+   * The anchor the wire started from. Set once on the first click and preserved for the life of
+   * the wire — it is the origin pin, not "whatever anchor the pointer last happened to hit".
+   */
   startAnchor?: NodeAnchorTarget | null;
+  routingMode?: WireRoutingMode;
+  orientation?: OrthoOrientation;
+  /** Legs already written. The origin anchor only applies to the first leg. */
+  emittedLegs?: number;
 };
 
 export type FreehandToolDraft = {

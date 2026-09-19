@@ -478,17 +478,344 @@ export type PathMorphingDecorationDropdownValue =
   | typeof PATH_MORPHING_DECORATION_MIXED_OPTION_VALUE;
 export type ShadowPresetDropdownValue = ShadowPresetId | typeof SHADOW_PRESET_MIXED_OPTION_VALUE;
 
+export const LINE_WIDTH_LABEL_MAP: Record<string, string> = {
+  "ultra thin": "极细 (ultra thin)",
+  "very thin": "很细 (very thin)",
+  "thin": "细 (thin)",
+  "semithick": "稍粗 (semithick)",
+  "thick": "粗 (thick)",
+  "very thick": "很粗 (very thick)",
+  "ultra thick": "极粗 (ultra thick)"
+};
+
+export const DASH_STYLE_LABEL_MAP: Record<string, string> = {
+  "solid": "实线 (solid)",
+  "dashed": "虚线 (dashed)",
+  "densely dashed": "稠密虚线 (densely dashed)",
+  "loosely dashed": "稀疏虚线 (loosely dashed)",
+  "dotted": "点线 (dotted)",
+  "densely dotted": "稠密点线 (densely dotted)",
+  "loosely dotted": "稀疏点线 (loosely dotted)"
+};
+
+export const LINE_CAP_LABEL_MAP: Record<string, string> = {
+  "butt": "平头 (butt)",
+  "round": "圆头 (round)",
+  "square": "方头 (square)"
+};
+
+export const LINE_JOIN_LABEL_MAP: Record<string, string> = {
+  "miter": "尖角 (miter)",
+  "round": "圆角 (round)",
+  "bevel": "斜角 (bevel)"
+};
+
+export const ARROW_TIP_LABEL_MAP: Record<string, string> = {
+  "none": "无 (None)",
+  "arrow": "普通箭头 (Arrow)",
+  "stealth": "隐形箭头 (Stealth)",
+  "latex": "LaTeX 箭头",
+  "triangle": "三角形 (Triangle)",
+  "circle": "圆点 (Circle)",
+  "square": "方块 (Square)",
+  "kite": "菱形 (Diamond)",
+  "bar": "垂直线 (Bar)",
+  "hooks": "弯钩 (Hooks)"
+};
+
+export const FILL_MODE_LABEL_MAP: Record<string, string> = {
+  "solid": "纯色 (Solid)",
+  "gradient": "渐变 (Gradient)",
+  "pattern": "图案 (Pattern)"
+};
+
+export const FILL_SHADING_LABEL_MAP: Record<string, string> = {
+  "axis": "轴向/线性 (Axis)",
+  "radial": "径向 (Radial)",
+  "ball": "球形 (Ball)"
+};
+
+export const FILL_PATTERN_LABEL_MAP: Record<string, string> = {
+  "horizontal lines": "水平线条 (horizontal lines)",
+  "vertical lines": "垂直线条 (vertical lines)",
+  "north east lines": "东北斜线 (north east lines)",
+  "north west lines": "西北斜线 (north west lines)",
+  "grid": "网格 (grid)",
+  "crosshatch": "交叉网格 (crosshatch)",
+  "dots": "点阵 (dots)",
+  "crosshatch dots": "交叉点阵 (crosshatch dots)",
+  "fivepointed stars": "五角星 (fivepointed stars)",
+  "sixpointed stars": "六角星 (sixpointed stars)",
+  "bricks": "砖块 (bricks)",
+  "checkerboard": "棋盘格 (checkerboard)",
+  "checkerboard light gray": "浅灰棋盘格",
+  "horizontal lines light gray": "浅灰水平线",
+  "horizontal lines gray": "灰色水平线",
+  "horizontal lines dark gray": "深灰水平线",
+  "horizontal lines light blue": "浅蓝水平线",
+  "horizontal lines dark blue": "深蓝水平线",
+  "crosshatch dots gray": "灰色交叉点阵",
+  "crosshatch dots light steel blue": "浅钢蓝交叉点阵",
+  "Lines": "自定义线条 (Lines)",
+  "Hatch": "自定义网格 (Hatch)",
+  "Dots": "自定义点阵 (Dots)",
+  "Stars": "自定义星形 (Stars)"
+};
+
+export const NODE_SHAPE_LABEL_MAP: Record<string, string> = {
+  "rectangle": "矩形 (Rectangle)",
+  "circle": "圆形 (Circle)",
+  "ellipse": "椭圆 (Ellipse)",
+  "diamond": "菱形 (Diamond)",
+  "trapezium": "梯形 (Trapezium)",
+  "semicircle": "半圆 (Semicircle)",
+  "regular polygon": "正多边形 (Regular polygon)",
+  "star": "星形 (Star)",
+  "isosceles triangle": "等腰三角形 (Isosceles triangle)",
+  "kite": "风筝形 (Kite)",
+  "dart": "飞镖形 (Dart)",
+  "circular sector": "扇形 (Circular sector)",
+  "cylinder": "圆柱体 (Cylinder)",
+  "cloud": "云朵 (Cloud)",
+  "starburst": "爆炸星 (Starburst)",
+  "signal": "信号 (Signal)",
+  "tape": "纸带 (Tape)",
+  "rectangle callout": "矩形标注 (Rectangle callout)",
+  "ellipse callout": "椭圆标注 (Ellipse callout)",
+  "cloud callout": "云朵标注 (Cloud callout)",
+  "single arrow": "单向箭头 (Single arrow)",
+  "double arrow": "双向箭头 (Double arrow)",
+  "coordinate": "坐标点 (Coordinate)"
+};
+
+export const SHADOW_PRESET_LABEL_MAP: Record<string, string> = {
+  "none": "无 (None)",
+  "drop-shadow": "投影 (Drop shadow)",
+  "copy-shadow": "复制阴影 (Copy shadow)",
+  "circular-drop-shadow": "环形投影 (Circular drop shadow)",
+  "circular-glow": "环形发光 (Circular glow)"
+};
+
+export const PATH_MORPHING_DECORATION_LABEL_MAP: Record<string, string> = {
+  "none": "无 (None)",
+  "zigzag": "锯齿 (Zigzag)",
+  "straight zigzag": "直线锯齿 (Straight zigzag)",
+  "random steps": "随机阶梯 (Random steps)",
+  "saw": "锯齿波 (Saw)",
+  "bent": "折弯 (Bent)",
+  "bumps": "凸起 (Bumps)",
+  "coil": "线圈 (Coil)",
+  "snake": "蛇形 (Snake)"
+};
+
+export const ENUM_OPTION_LABEL_MAP: Record<string, string> = {
+  "left": "左侧 (Left)",
+  "right": "右侧 (Right)",
+  "above": "上方 (Above)",
+  "below": "下方 (Below)",
+  "above left": "左上方 (Above left)",
+  "above right": "右上方 (Above right)",
+  "below left": "左下方 (Below left)",
+  "below right": "右下方 (Below right)",
+  "base left": "基线左侧 (Base left)",
+  "base right": "基线右侧 (Base right)",
+  "mid left": "中线左侧 (Mid left)",
+  "mid right": "中线右侧 (Mid right)",
+  "none": "无 (None)"
+};
+
+export function localizeEnumOptionLabel(labelOrValue: string, label?: string): string {
+  if (label !== undefined) {
+    return ENUM_OPTION_LABEL_MAP[labelOrValue] ?? ENUM_OPTION_LABEL_MAP[label.toLowerCase()] ?? label;
+  }
+  return ENUM_OPTION_LABEL_MAP[labelOrValue] ?? ENUM_OPTION_LABEL_MAP[labelOrValue.toLowerCase()] ?? labelOrValue;
+}
+
+export const SECTION_TITLE_ZH_MAP: Record<string, string> = {
+  "Transform": "位置与几何变换",
+  "Position": "位置与几何变换",
+  "Stroke": "线条描边",
+  "Border": "边框描边",
+  "Fill": "填充颜色与图案",
+  "Arrows": "箭头样式",
+  "Text": "文字与标签",
+  "Text & Label": "文字与标签",
+  "Node": "节点属性",
+  "Attachment": "附加标签",
+  "Pin Edge": "引脚连接线",
+  "Path": "路径属性",
+  "Grid": "网格属性",
+  "Shadow": "阴影效果",
+  "Matrix": "矩阵布局",
+  "Tree Layout": "树状图布局",
+  "Figure Bounds": "图形边界 (Bounds)",
+  "Defaults": "默认属性",
+  "Freehand": "手绘设置"
+};
+
+export function localizeSectionTitle(title: string): string {
+  if (SECTION_TITLE_ZH_MAP[title]) {
+    return SECTION_TITLE_ZH_MAP[title];
+  }
+  return title;
+}
+
+export const ELEMENT_KIND_ZH_MAP: Record<string, string> = {
+  "node": "节点 (Node)",
+  "path": "路径 (Path)",
+  "scope": "作用域 (Scope)",
+  "tikzpicture": "tikzpicture 画布",
+  "matrix": "矩阵 (Matrix)",
+  "matrix-cell": "矩阵单元格",
+  "tree": "树状图 (Tree)",
+  "tree-child": "树子节点",
+  "grid": "网格 (Grid)",
+  "text": "文本 (Text)",
+  "node-adornment": "节点标注 (Adornment)",
+  "adornment": "节点标注"
+};
+
+export function localizeElementKind(kind: string): string {
+  return ELEMENT_KIND_ZH_MAP[kind.toLowerCase()] ?? kind;
+}
+
+export const PROPERTY_LABEL_ZH_MAP: Record<string, string> = {
+  // Transform / Position
+  "X shift": "X 坐标/偏移",
+  "Y shift": "Y 坐标/偏移",
+  "X scale": "X 轴缩放",
+  "Y scale": "Y 轴缩放",
+  "Scale": "缩放比例",
+  "Rotate": "旋转角度",
+  "Angle": "旋转角度",
+  "X": "X 坐标",
+  "Y": "Y 坐标",
+  "Width": "宽度",
+  "Height": "高度",
+  "Minimum width": "最小宽度",
+  "Minimum height": "最小高度",
+  "Inner sep": "内部边距 (Inner sep)",
+
+  // Stroke / Border
+  "Line width": "线宽",
+  "Line width preset": "线宽预设",
+  "Dash style": "虚线样式",
+  "Dash pattern": "虚线样式",
+  "Line cap": "线条端点",
+  "Line join": "连接拐角",
+  "Draw": "描边",
+  "Stroke": "线条描边",
+  "Rounded corners": "圆角半径",
+  "Path morphing": "路径变形",
+  "Segment length": "分段长度",
+  "Amplitude": "振幅",
+  "Aspect": "长宽比",
+
+  // Arrows
+  "Begin arrow type": "起点箭头",
+  "End arrow type": "终点箭头",
+
+  // Fill
+  "Fill": "填充",
+  "Fill color": "填充颜色",
+  "Mode": "填充模式",
+  "Shading": "渐变着色",
+  "Pattern": "填充图案",
+  "Pattern color": "图案颜色",
+  "Start color": "起始颜色",
+  "End color": "结束颜色",
+  "Inner color": "内侧颜色",
+  "Outer color": "外侧颜色",
+  "Ball color": "球体高光颜色",
+  "Distance": "间距",
+  "Radius": "半径",
+  "Points": "角点数",
+
+  // Opacity / Transparency
+  "Opacity": "不透明度",
+  "Fill opacity": "填充不透明度",
+  "Draw opacity": "描边不透明度",
+  "Stroke opacity": "描边不透明度",
+  "Text opacity": "文字不透明度",
+
+  // Text & Label
+  "Text": "文字内容",
+  "Label": "标签内容",
+  "Text color": "文字颜色",
+  "Text align": "对齐方式",
+  "Text width": "文本宽度",
+  "Font": "字体与字号",
+  "Font size": "字号",
+  "Position": "相对位置",
+  "Sloped": "沿路径倾斜 (Sloped)",
+  "Pin distance": "引脚距离",
+  "Label distance": "标签距离",
+  "Side": "附着方向",
+  "Anchor": "锚点 (Anchor)",
+
+  // Node Shape
+  "Shape": "节点形状",
+
+  // Shadow
+  "Shadow": "阴影样式",
+  "X offset": "X 偏移",
+  "Y offset": "Y 偏移",
+
+  // Grid
+  "Step": "网格步长",
+  "X step": "X 轴步长",
+  "Y step": "Y 轴步长",
+
+  // Color / Common
+  "Color": "颜色",
+  "Smoothing": "平滑度"
+};
+
+export function localizePropertyLabel(label: string, id?: string): string {
+  if (id === "stroke-opacity" || id === "draw-opacity") {
+    return "描边不透明度";
+  }
+  if (id === "fill-opacity") {
+    return "填充不透明度";
+  }
+  if (id === "text-opacity") {
+    return "文字不透明度";
+  }
+  if (id === "shadow-opacity") {
+    return "阴影不透明度";
+  }
+  if (id === "xshift") {
+    return "X 坐标/偏移";
+  }
+  if (id === "yshift") {
+    return "Y 坐标/偏移";
+  }
+  if (id === "rotate") {
+    if (label.startsWith("Rotate around ")) {
+      return `绕 ${label.slice("Rotate around ".length)} 旋转`;
+    }
+    return "旋转角度";
+  }
+  if (label.startsWith("Rotate around ")) {
+    return `绕 ${label.slice("Rotate around ".length)} 旋转`;
+  }
+  if (PROPERTY_LABEL_ZH_MAP[label]) {
+    return PROPERTY_LABEL_ZH_MAP[label];
+  }
+  return label;
+}
+
 export const LINE_WIDTH_PRESET_BY_LABEL = new Map<string, number>(
   LINE_WIDTH_PRESETS.map((preset) => [preset.label, preset.value] as const)
 );
 export const LINE_WIDTH_DROPDOWN_OPTIONS: Array<CustomDropdownOption<LineWidthDropdownValue>> = [
   ...LINE_WIDTH_PRESETS.map((preset) => ({
     value: preset.label,
-    label: preset.label
+    label: LINE_WIDTH_LABEL_MAP[preset.label] ?? preset.label
   })),
   {
     value: LINE_WIDTH_CUSTOM_OPTION_VALUE,
-    label: "Custom line width"
+    label: "自定义线宽"
   }
 ];
 export function isStrokeMoreOptionsPropertyId(propertyId: string): boolean {
@@ -647,7 +974,7 @@ export function buildInspectorPropertyProvenanceMap(model: StylesCascadeModel): 
       if (section.kind === "default") {
         map[declaration.propertyId] = {
           kind: "default",
-          tooltip: "TikZ default"
+          tooltip: "TikZ 默认值"
         };
         continue;
       }
@@ -656,7 +983,7 @@ export function buildInspectorPropertyProvenanceMap(model: StylesCascadeModel): 
       map[declaration.propertyId] = {
         kind: "inherited",
         sourceLabel,
-        tooltip: `set by ${sourceLabel}`
+        tooltip: `由 ${localizeSectionTitle(sourceLabel)} 设置`
       };
     }
   }
@@ -1268,7 +1595,7 @@ export function deriveReadOnlyReason(
     return firstReason;
   }
 
-  return "This property is read-only for the current selection.";
+  return "当前选中的元素此属性为只读。";
 }
 
 export function numbersAreEqual(values: readonly number[]): boolean {
@@ -1315,12 +1642,12 @@ export function lineWidthPresetLabelFromValue(value: number): string | null {
 
 export function lineWidthValueLabel(value: LineWidthDropdownValue): string {
   if (value === LINE_WIDTH_MIXED_OPTION_VALUE) {
-    return "Mixed";
+    return "混合值";
   }
   if (value === LINE_WIDTH_CUSTOM_OPTION_VALUE) {
-    return "Custom line width";
+    return "自定义线宽";
   }
-  return LINE_WIDTH_PRESET_BY_LABEL.has(value) ? value : "Custom line width";
+  return LINE_WIDTH_LABEL_MAP[value] ?? (LINE_WIDTH_PRESET_BY_LABEL.has(value) ? value : "自定义线宽");
 }
 
 export function lineWidthPreviewLineWidth(value: LineWidthDropdownValue, fallbackLineWidth: number): number {
@@ -1358,7 +1685,7 @@ export function toNodeShapeDropdownOptions(
 ): Array<CustomDropdownOption<NodeShapeDropdownValue>> {
   return options.map((option) => ({
     value: option.value,
-    label: option.label
+    label: NODE_SHAPE_LABEL_MAP[option.value] ?? option.label
   }));
 }
 
@@ -1367,12 +1694,12 @@ export function nodeShapeValueLabel(
   options: ReadonlyArray<{ value: Exclude<NodeShapePresetId, "custom">; label: string }>
 ): string {
   if (value === NODE_SHAPE_MIXED_OPTION_VALUE) {
-    return "Mixed";
+    return "混合值";
   }
   if (value === "custom") {
-    return "Custom";
+    return "自定义";
   }
-  return options.find((option) => option.value === value)?.label ?? "Custom";
+  return NODE_SHAPE_LABEL_MAP[value] ?? options.find((option) => option.value === value)?.label ?? "自定义";
 }
 
 export function isSelectableNodeShapeValue(
@@ -1396,14 +1723,14 @@ export function nodeFontSizeValueLabel(
   customSizePt: number | null
 ): string {
   if (value === NODE_FONT_SIZE_MIXED_OPTION_VALUE) {
-    return "Mixed";
+    return "混合值";
   }
   if (value === "custom") {
     return Number.isFinite(customSizePt) && (customSizePt ?? 0) > 0
-      ? `Custom (${formatNumber(customSizePt as number)}pt)`
-      : "Custom";
+      ? `自定义 (${formatNumber(customSizePt as number)}pt)`
+      : "自定义";
   }
-  return options.find((option) => option.value === value)?.label ?? "Custom";
+  return options.find((option) => option.value === value)?.label ?? "自定义";
 }
 
 export function nodeFontSizePresetPtLabel(value: Exclude<NodeFontSizePresetId, "custom">): string {
@@ -1432,7 +1759,7 @@ export function toFillModeDropdownOptions(
 ): Array<CustomDropdownOption<FillModeDropdownValue>> {
   return options.map((option) => ({
     value: option.value,
-    label: option.label
+    label: FILL_MODE_LABEL_MAP[option.value] ?? option.label
   }));
 }
 
@@ -1441,12 +1768,12 @@ export function fillModeValueLabel(
   options: ReadonlyArray<{ value: Exclude<FillModePresetId, "custom">; label: string }>
 ): string {
   if (value === FILL_MODE_MIXED_OPTION_VALUE) {
-    return "Mixed";
+    return "混合值";
   }
   if (value === "custom") {
-    return "Custom";
+    return "自定义";
   }
-  return options.find((option) => option.value === value)?.label ?? "Custom";
+  return FILL_MODE_LABEL_MAP[value] ?? options.find((option) => option.value === value)?.label ?? "自定义";
 }
 
 export function isSelectableFillModeValue(
@@ -1460,7 +1787,7 @@ export function toFillShadingDropdownOptions(
 ): Array<CustomDropdownOption<FillShadingDropdownValue>> {
   return options.map((option) => ({
     value: option.value,
-    label: option.label
+    label: FILL_SHADING_LABEL_MAP[option.value] ?? option.label
   }));
 }
 
@@ -1469,12 +1796,12 @@ export function fillShadingValueLabel(
   options: ReadonlyArray<{ value: Exclude<FillShadingPresetId, "custom">; label: string }>
 ): string {
   if (value === FILL_SHADING_MIXED_OPTION_VALUE) {
-    return "Mixed";
+    return "混合值";
   }
   if (value === "custom") {
-    return "Custom";
+    return "自定义";
   }
-  return options.find((option) => option.value === value)?.label ?? "Custom";
+  return FILL_SHADING_LABEL_MAP[value] ?? options.find((option) => option.value === value)?.label ?? "自定义";
 }
 
 export function isSelectableFillShadingValue(
@@ -1491,7 +1818,7 @@ export function toFillPatternDropdownOptions(
   const dropdownOptions: Array<CustomDropdownItem<FillPatternDropdownValue>> = [
     ...metaOptions.map((option) => ({
       value: option.value,
-      label: option.label
+      label: FILL_PATTERN_LABEL_MAP[option.value] ?? option.label
     }))
   ];
   if (metaOptions.length > 0 && legacyOptions.length > 0) {
@@ -1500,7 +1827,7 @@ export function toFillPatternDropdownOptions(
   dropdownOptions.push(
     ...legacyOptions.map((option) => ({
       value: option.value,
-      label: option.label
+      label: FILL_PATTERN_LABEL_MAP[option.value] ?? option.label
     }))
   );
   return dropdownOptions;
@@ -1511,12 +1838,12 @@ export function fillPatternValueLabel(
   options: ReadonlyArray<{ value: Exclude<FillPatternPresetId, "custom">; label: string }>
 ): string {
   if (value === FILL_PATTERN_MIXED_OPTION_VALUE) {
-    return "Mixed";
+    return "混合值";
   }
   if (value === "custom") {
-    return "Custom";
+    return "自定义";
   }
-  return options.find((option) => option.value === value)?.label ?? "Custom";
+  return FILL_PATTERN_LABEL_MAP[value] ?? options.find((option) => option.value === value)?.label ?? "自定义";
 }
 
 export function isSelectableFillPatternValue(
@@ -1543,7 +1870,7 @@ export function toDashStyleDropdownOptions(
 ): Array<CustomDropdownOption<DashStyleDropdownValue>> {
   return options.map((option) => ({
     value: option.value,
-    label: option.label
+    label: DASH_STYLE_LABEL_MAP[option.value] ?? option.label
   }));
 }
 
@@ -1552,12 +1879,12 @@ export function dashStyleValueLabel(
   options: ReadonlyArray<{ value: Exclude<DashStylePresetId, "custom">; label: string }>
 ): string {
   if (value === DASH_STYLE_MIXED_OPTION_VALUE) {
-    return "Mixed";
+    return "混合值";
   }
   if (value === "custom") {
-    return "Custom";
+    return "自定义";
   }
-  return options.find((option) => option.value === value)?.label ?? "Custom";
+  return DASH_STYLE_LABEL_MAP[value] ?? options.find((option) => option.value === value)?.label ?? "自定义";
 }
 
 export function isSelectableDashStyleValue(
@@ -1578,7 +1905,7 @@ export function toLineCapDropdownOptions(
 ): Array<CustomDropdownOption<LineCapDropdownValue>> {
   return options.map((option) => ({
     value: option.value,
-    label: option.label
+    label: LINE_CAP_LABEL_MAP[option.value] ?? option.label
   }));
 }
 
@@ -1587,12 +1914,12 @@ export function lineCapValueLabel(
   options: ReadonlyArray<{ value: Exclude<LineCapPresetId, "custom">; label: string }>
 ): string {
   if (value === LINE_CAP_MIXED_OPTION_VALUE) {
-    return "Mixed";
+    return "混合值";
   }
   if (value === "custom") {
-    return "Custom";
+    return "自定义";
   }
-  return options.find((option) => option.value === value)?.label ?? "Custom";
+  return LINE_CAP_LABEL_MAP[value] ?? options.find((option) => option.value === value)?.label ?? "自定义";
 }
 
 export function isSelectableLineCapValue(
@@ -1613,7 +1940,7 @@ export function toLineJoinDropdownOptions(
 ): Array<CustomDropdownOption<LineJoinDropdownValue>> {
   return options.map((option) => ({
     value: option.value,
-    label: option.label
+    label: LINE_JOIN_LABEL_MAP[option.value] ?? option.label
   }));
 }
 
@@ -1622,12 +1949,12 @@ export function lineJoinValueLabel(
   options: ReadonlyArray<{ value: Exclude<LineJoinPresetId, "custom">; label: string }>
 ): string {
   if (value === LINE_JOIN_MIXED_OPTION_VALUE) {
-    return "Mixed";
+    return "混合值";
   }
   if (value === "custom") {
-    return "Custom";
+    return "自定义";
   }
-  return options.find((option) => option.value === value)?.label ?? "Custom";
+  return LINE_JOIN_LABEL_MAP[value] ?? options.find((option) => option.value === value)?.label ?? "自定义";
 }
 
 export function isSelectableLineJoinValue(
@@ -1648,7 +1975,7 @@ export function toPathMorphingDecorationDropdownOptions(
 ): Array<CustomDropdownOption<PathMorphingDecorationDropdownValue>> {
   return options.map((option) => ({
     value: option.value,
-    label: option.label
+    label: PATH_MORPHING_DECORATION_LABEL_MAP[option.value] ?? option.label
   }));
 }
 
@@ -1657,12 +1984,12 @@ export function pathMorphingDecorationValueLabel(
   options: ReadonlyArray<{ value: Exclude<PathMorphingDecorationPresetId, "custom">; label: string }>
 ): string {
   if (value === PATH_MORPHING_DECORATION_MIXED_OPTION_VALUE) {
-    return "Mixed";
+    return "混合值";
   }
   if (value === "custom") {
-    return "Custom";
+    return "自定义";
   }
-  return options.find((option) => option.value === value)?.label ?? "Custom";
+  return PATH_MORPHING_DECORATION_LABEL_MAP[value] ?? options.find((option) => option.value === value)?.label ?? "自定义";
 }
 
 export function isSelectablePathMorphingDecorationValue(
@@ -1685,7 +2012,7 @@ export function toArrowTipDropdownOptions(
 ): Array<CustomDropdownOption<ArrowTipDropdownValue>> {
   return options.map((option) => ({
     value: option.value,
-    label: option.label
+    label: ARROW_TIP_LABEL_MAP[option.value] ?? option.label
   }));
 }
 
@@ -1694,12 +2021,12 @@ export function arrowTipValueLabel(
   options: ReadonlyArray<{ value: Exclude<ArrowTipPresetId, "custom">; label: string }>
 ): string {
   if (value === ARROW_TIP_MIXED_OPTION_VALUE) {
-    return "Mixed";
+    return "混合值";
   }
   if (value === "custom") {
-    return "Custom";
+    return "自定义";
   }
-  return options.find((option) => option.value === value)?.label ?? "Custom";
+  return ARROW_TIP_LABEL_MAP[value] ?? options.find((option) => option.value === value)?.label ?? "自定义";
 }
 
 export function isSelectableArrowTipValue(
@@ -1712,8 +2039,11 @@ export function toShadowPresetDropdownOptions(
   options: ShadowPresetOption[]
 ): Array<CustomDropdownOption<ShadowPresetDropdownValue>> {
   return [
-    { value: "none", label: "None" },
-    ...options.map((option) => ({ value: option.value, label: option.label }))
+    { value: "none", label: "无 (None)" },
+    ...options.map((option) => ({
+      value: option.value,
+      label: SHADOW_PRESET_LABEL_MAP[option.value] ?? option.label
+    }))
   ];
 }
 
@@ -1721,9 +2051,9 @@ export function shadowPresetValueLabel(
   value: ShadowPresetDropdownValue,
   options: ShadowPresetOption[]
 ): string {
-  if (value === SHADOW_PRESET_MIXED_OPTION_VALUE) return "Mixed";
-  if (value === "none") return "None";
-  return options.find((o) => o.value === value)?.label ?? value;
+  if (value === SHADOW_PRESET_MIXED_OPTION_VALUE) return "混合值";
+  if (value === "none") return "无 (None)";
+  return SHADOW_PRESET_LABEL_MAP[value] ?? options.find((o) => o.value === value)?.label ?? value;
 }
 
 export function isSelectableShadowPresetValue(

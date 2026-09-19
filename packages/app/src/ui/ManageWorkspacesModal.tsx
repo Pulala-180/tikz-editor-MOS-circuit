@@ -33,14 +33,14 @@ export function ManageWorkspacesModal({ onClose }: ManageWorkspacesModalProps) {
       return;
     }
     if (isReservedWorkspaceName(trimmed)) {
-      setRenameError("Name is reserved for a built-in workspace.");
+      setRenameError("该名称为内置工作区保留名称。");
       return;
     }
     const collision = userWorkspaces.find(
       (ws) => ws.id !== editingId && ws.name.toLowerCase() === trimmed.toLowerCase()
     );
     if (collision) {
-      setRenameError("Another workspace already has this name.");
+      setRenameError("已存在同名工作区。");
       return;
     }
     renameWorkspace(editingId, trimmed);
@@ -56,7 +56,7 @@ export function ManageWorkspacesModal({ onClose }: ManageWorkspacesModalProps) {
   function onDelete(id: string, name: string): void {
     const confirmFn = (globalThis as { confirm?: (message?: string) => boolean }).confirm;
     const ok = typeof confirmFn === "function"
-      ? confirmFn(`Delete workspace “${name}”?`)
+      ? confirmFn(`确定要删除工作区“${name}”吗？`)
       : true;
     if (!ok) return;
     deleteWorkspace(id);
@@ -91,16 +91,16 @@ export function ManageWorkspacesModal({ onClose }: ManageWorkspacesModalProps) {
       dataTestId="manage-workspaces-modal"
     >
       <Modal.Header
-        title="Manage Workspaces"
+        title="管理工作区"
         titleId="manage-workspaces-modal-title"
         showCloseButton
         onClose={onClose}
-        closeAriaLabel="Close manage workspaces dialog"
+        closeAriaLabel="关闭工作区管理对话框"
       />
       <Modal.Body>
         {userWorkspaces.length === 0 ? (
           <p className={css.empty}>
-            No custom workspaces yet. Use <em>View → Save Workspace As…</em> to save the current layout.
+            暂无自定义工作区。可通过 <em>视图 → 工作区另存为…</em> 保存当前布局。
           </p>
         ) : (
           <ul className={css.list}>
@@ -149,7 +149,7 @@ export function ManageWorkspacesModal({ onClose }: ManageWorkspacesModalProps) {
                         onClick={() => { startRename(ws.id, ws.name); }}
                         data-testid={`manage-workspaces-rename-${ws.id}`}
                       >
-                        Rename
+                        重命名
                       </button>
                     )}
                     <button
@@ -158,7 +158,7 @@ export function ManageWorkspacesModal({ onClose }: ManageWorkspacesModalProps) {
                       onClick={() => { onDelete(ws.id, ws.name); }}
                       data-testid={`manage-workspaces-delete-${ws.id}`}
                     >
-                      Delete
+                      删除
                     </button>
                   </div>
                 </li>

@@ -12,7 +12,8 @@ import {
   switchCircuitToolModeWithKey,
   resolveSelectModeInitialTool,
   flipCircuitToolModeHorizontal,
-  flipCircuitToolModeVertical
+  flipCircuitToolModeVertical,
+  mirrorCircuitToolModeWithKey
 } from "./circuit-hotkeys";
 import { pt, worldPoint } from "tikz-editor/coords/index";
 import { snapKeyboardNudge, type SnapLine } from "tikz-editor/edit/snapping";
@@ -35,6 +36,10 @@ import {
   pasteSnippetsWithOffset,
   selectedSnippets
 } from "../editor-commands";
+// Missing until now: the custom desktop TikZ payload path called parseClipboardPayloadJson without
+// importing it, so the call threw ReferenceError, the catch swallowed it, and the feature silently
+// fell back to plain-text paste — the custom payload was never used.
+import { parseClipboardPayloadJson } from "../editor-clipboard";
 import {
   createPastePlacementDraft,
   flipPastePlacementDraft,
@@ -81,6 +86,8 @@ export type UseCanvasKeyboardClipboardArgs = {
   setToolDraft: StateSetter<Extract<DragState, { kind: "tool-create" }> | null>;
   setRoundedLineDraft: StateSetter<RoundedLineToolDraft | null>;
   setOrthoWireDraft: StateSetter<OrthoWireToolDraft | null>;
+  /** Current wire draft, so the routing-mode keys can mutate its mode/orientation in place. */
+  orthoWireDraft: OrthoWireToolDraft | null;
   setBezierBendDraft: StateSetter<Extract<DragState, { kind: "tool-bezier-bend" }> | null>;
   setPendingBezier: StateSetter<PendingBezier | null>;
   textEditingSession: TextEditingSession | null;
@@ -165,6 +172,8 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
     setSnapLines,
     setToolDraft,
     setRoundedLineDraft,
+    setOrthoWireDraft,
+    orthoWireDraft,
     setBezierBendDraft,
     setPendingBezier,
     textEditingSession,
@@ -198,15 +207,15 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
   toolModeRef.current = toolMode;
   const pastePlacementDraftRef = useRef(pastePlacementDraft);
   pastePlacementDraftRef.current = pastePlacementDraft;
+  // Read through a ref so the key handler can never act on a stale draft (see the re-arm fix).
+  const orthoWireDraftRef = useRef(orthoWireDraft);
+  orthoWireDraftRef.current = orthoWireDraft;
 
   const vKeyDownRef = useRef(false);
   const lastVKeyDownTimestampRef = useRef(0);
 
   useEffect(() => {
     const handleWindowKeyDown = (event: KeyboardEvent) => {
-      if (event.defaultPrevented) {
-        return;
-      }
       const target = event.target as HTMLElement | null;
       if (
         target?.isContentEditable ||
@@ -216,6 +225,56 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
       ) {
         return;
       }
+
+      // Deliberately BEFORE the defaultPrevented guard below: the app-level tool-shortcut
+      // handler also listens on window and preventDefaults this same key, so a check placed
+      // after that guard would never run.
+      //
+      // 按连线工具自己的键 = 重新起线。否则草稿会活下来：SET_TOOL_MODE 在模式未变时直接早退
+      // （reducer.ts:1105），清草稿的 effect 不触发，下一次点击就变成"从上次终点继续加一段"。
+      // 放在这里而不是放置模式分支内，是因为放置模式分支在文件里重复了两份。
+      //
+      // 注意：这里依赖 setOrthoWireDraft 被解构出来。它此前只出现在 args 类型与调用方，函数体里
+      // 从未解构 —— 于是旧有的 Esc 分支（下方 setOrthoWireDraft(null)）一直抛 ReferenceError，
+      // 草稿从来没被清掉过。当前修复就是把解构补上。
+      if (toolModeRef.current === "addOrthoWire" && event.key.toLowerCase() === "m") {
+        setOrthoWireDraft(null);
+        setToolCursorWorld(null);
+        setSnapLines([]);
+        setWarning(null);
+        event.preventDefault();
+        return;
+      }
+
+      // 布线三模与拐角朝向。只在导线草稿存在时生效，免得抢占其它模式的按键。
+      // Shift+F3 循环 正交 → 45°斜角 → 任意角；Space 循环 自动 → 先横(HV) → 先竖(VH) → 自动。
+      const wireDraft = orthoWireDraftRef.current;
+      if (wireDraft) {
+        if (event.shiftKey && event.key === "F3") {
+          // routingMode starts undefined (implicitly orthogonal), so normalise before cycling --
+          // otherwise the first press would land in the else branch and be a no-op.
+          const currentMode = wireDraft.routingMode ?? "orthogonal";
+          const nextMode =
+            currentMode === "orthogonal" ? "octagonal45" : currentMode === "octagonal45" ? "anyAngle" : "orthogonal";
+          setOrthoWireDraft({ ...wireDraft, routingMode: nextMode });
+          setWarning(null);
+          event.preventDefault();
+          return;
+        }
+        if (!event.shiftKey && !event.ctrlKey && !event.metaKey && !event.altKey && event.key === " ") {
+          const current = wireDraft.orientation;
+          const nextOrientation = current === "HV" ? "VH" : current === "VH" ? undefined : "HV";
+          setOrthoWireDraft({ ...wireDraft, orientation: nextOrientation });
+          setWarning(null);
+          event.preventDefault();
+          return;
+        }
+      }
+
+      if (event.defaultPrevented) {
+        return;
+      }
+
       const rawKey = event.key.toLowerCase();
       const currentToolMode = toolModeRef.current;
       const currentSelectedIds = selectedElementIdsRef.current;
@@ -259,11 +318,22 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
               const fallback = draft.candidateAnchors[draft.activeAnchorIndex]?.world;
               setToolCursorWorld(lastPointerWorldRef?.current ?? fallback ?? null);
               // Clear selection so original elements don't show bounding boxes and aren't transformed
-              dispatch({ type: "SELECT_ELEMENTS", ids: [] });
+              dispatch({ type: "SELECT_RANGE", ids: [] });
             }
           }
         }
       }
+      // 放置态镜像手势（Shift+R / Ctrl+R）：必须在无修饰键守卫之前判定，否则 Ctrl+R 进不来。
+      if (currentToolMode !== "select") {
+        const mirroredMode = mirrorCircuitToolModeWithKey(currentToolMode, rawKey, event);
+        if (mirroredMode) {
+          dispatch({ type: "SET_TOOL_MODE", mode: mirroredMode });
+          event.preventDefault();
+          event.stopPropagation();
+          return;
+        }
+      }
+
       if (!event.ctrlKey && !event.metaKey && !event.altKey) {
         const key = rawKey;
 
@@ -510,6 +580,17 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
         setSnapLines([]);
         event.preventDefault();
         return;
+      }
+
+      // 放置态镜像手势（Shift+R / Ctrl+R）：无修饰键守卫之前判定，Ctrl+R 才不会被挡掉。
+      if (currentToolMode !== "select") {
+        const mirroredMode = mirrorCircuitToolModeWithKey(currentToolMode, rawKey, event);
+        if (mirroredMode) {
+          dispatch({ type: "SET_TOOL_MODE", mode: mirroredMode });
+          event.preventDefault();
+          event.stopPropagation();
+          return;
+        }
       }
 
       if (!event.ctrlKey && !event.metaKey && !event.altKey) {
@@ -1060,7 +1141,7 @@ export function useCanvasKeyboardClipboard(args: UseCanvasKeyboardClipboardArgs)
             setPastePlacementDraft(draft);
             const fallback = draft.candidateAnchors[draft.activeAnchorIndex]?.world;
             setToolCursorWorld(lastPointerWorldRef?.current ?? fallback ?? null);
-            dispatch({ type: "SELECT_ELEMENTS", ids: [] });
+            dispatch({ type: "SELECT_RANGE", ids: [] });
           }
         }
       }

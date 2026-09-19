@@ -125,6 +125,15 @@ export type CanvasTextEditAction =
       selectionEnd: number;
     }
   | {
+      // Used by the rich-label toolbar: replace the label text and place the
+      // caret/selection in one step, going through the same source-patch +
+      // undo-checkpoint path as typed input so undo/redo keeps working.
+      type: "replace_text";
+      text: string;
+      selectionStart: number;
+      selectionEnd: number;
+    }
+  | {
       type: "source_reconciled";
       source: string;
       sourceRevision: number;
@@ -949,6 +958,36 @@ export function reduceCanvasTextEdit(
           compositionRange: preservedCompositionRange
         },
         effects: []
+      };
+    }
+
+    case "replace_text": {
+      const session = state.session;
+      if (!session) {
+        return { state, effects: [] };
+      }
+      const selection = normalizeSelection(action.text.length, action.selectionStart, action.selectionEnd);
+      if (
+        session.text === action.text &&
+        session.selectionStart === selection.start &&
+        session.selectionEnd === selection.end
+      ) {
+        return { state, effects: [] };
+      }
+      const checkpointState =
+        session.text === action.text ? state : withUndoCheckpoint(state, session);
+      const reduced = applySessionTextUpdate(
+        checkpointState,
+        action.text,
+        selection.start,
+        selection.end
+      );
+      return {
+        state: {
+          ...reduced.state,
+          compositionRange: null
+        },
+        effects: reduced.effects
       };
     }
 

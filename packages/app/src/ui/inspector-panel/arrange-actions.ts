@@ -33,7 +33,7 @@ export const MULTI_ARRANGE_ACTIONS: readonly MultiArrangeAction[] = [
   {
     id: "align-left",
     group: "align",
-    label: "Align left",
+    label: "左对齐",
     icon: RiAlignItemLeftLine,
     run: (context) => {
       alignSelection(context, "left");
@@ -42,7 +42,7 @@ export const MULTI_ARRANGE_ACTIONS: readonly MultiArrangeAction[] = [
   {
     id: "align-center",
     group: "align",
-    label: "Align center",
+    label: "水平居中",
     icon: RiAlignItemHorizontalCenterLine,
     run: (context) => {
       alignSelection(context, "center");
@@ -51,7 +51,7 @@ export const MULTI_ARRANGE_ACTIONS: readonly MultiArrangeAction[] = [
   {
     id: "align-right",
     group: "align",
-    label: "Align right",
+    label: "右对齐",
     icon: RiAlignItemRightLine,
     run: (context) => {
       alignSelection(context, "right");
@@ -60,7 +60,7 @@ export const MULTI_ARRANGE_ACTIONS: readonly MultiArrangeAction[] = [
   {
     id: "align-top",
     group: "align",
-    label: "Align top",
+    label: "顶对齐",
     icon: RiAlignItemTopLine,
     run: (context) => {
       alignSelection(context, "top");
@@ -69,7 +69,7 @@ export const MULTI_ARRANGE_ACTIONS: readonly MultiArrangeAction[] = [
   {
     id: "align-middle",
     group: "align",
-    label: "Align middle",
+    label: "垂直居中",
     icon: RiAlignItemVerticalCenterLine,
     run: (context) => {
       alignSelection(context, "middle");
@@ -78,7 +78,7 @@ export const MULTI_ARRANGE_ACTIONS: readonly MultiArrangeAction[] = [
   {
     id: "align-bottom",
     group: "align",
-    label: "Align bottom",
+    label: "底对齐",
     icon: RiAlignItemBottomLine,
     run: (context) => {
       alignSelection(context, "bottom");
@@ -87,7 +87,7 @@ export const MULTI_ARRANGE_ACTIONS: readonly MultiArrangeAction[] = [
   {
     id: "distribute-horizontal",
     group: "distribute",
-    label: "Distribute horizontally",
+    label: "水平等距分布",
     icon: RiSplitCellsHorizontal,
     run: (context) => {
       distributeSelection(context, "horizontal");
@@ -96,7 +96,7 @@ export const MULTI_ARRANGE_ACTIONS: readonly MultiArrangeAction[] = [
   {
     id: "distribute-vertical",
     group: "distribute",
-    label: "Distribute vertically",
+    label: "垂直等距分布",
     icon: RiSplitCellsVertical,
     run: (context) => {
       distributeSelection(context, "vertical");

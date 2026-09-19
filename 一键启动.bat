@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 cd /d "%~dp0"
 title TikZ Editor MOS Circuit - Quick Start
 
@@ -36,7 +37,7 @@ if defined LOCALAPPDATA (
         ) > "%LOCALAPPDATA%\Microsoft\WindowsApps\tikz-circuit.bat" 2>nul
     )
 )
-echo [SHORTCUT] Win+R shortcut registered: type 'tikz' or 'tikz circuit' to launch anytime.
+echo [SHORTCUT] Win+R shortcut registered: type 'tikz' or 'tikz-circuit' to launch anytime.
 echo.
 
 REM 3. Check dependencies
@@ -55,8 +56,21 @@ if not exist "node_modules\" (
     echo.
 )
 
-REM 4. Start dev server
-echo [STARTING] Launching TikZ MOS Editor at http://localhost:8888/
+REM 4. Start Antigravity Bridge Server (Optional Python Service)
+where python >nul 2>nul
+if %errorlevel% equ 0 (
+    REM Kill any lingering stale process on port 3100
+    for /f "tokens=5" %%a in ('netstat -aon 2^>nul ^| findstr ":3100" ^| findstr "LISTENING"') do (
+        taskkill /f /pid %%a >nul 2>nul
+    )
+    echo [STARTING] Starting Antigravity AI Bridge on ws://localhost:3100...
+    start "" /b python "%~dp0scripts\mcp-bridge-server\server.py"
+) else (
+    echo [WARN] Python is not found. Antigravity AI Bridge will be skipped (editor remains fully functional).
+)
+
+REM 5. Start dev server
+echo [STARTING] Launching TikZ MOS Editor (default: http://localhost:8888/)...
 echo [INFO] Your browser will open automatically. Keep this window open.
 echo =======================================================
 echo.

@@ -46,11 +46,29 @@ Thumbs.db
 .env.local
 .env.*.local
 
-# Courseware & Private drafts
+# Courseware & Private drafts (Strictly never commit 模C I or private materials)
 Sketch/模*
 **/模*
 *模*
+Sketch/模C I/
+**/模C I/**
 Sketch/[0-9]*
 Sketch/2.*
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Temp backups, logs & diff dumps
+*.bak
+*.tmp
+_agent-sync-backup*/
+diff*.txt
+playwright.*local*.config.ts
+scripts/reproduce_*.mjs
+apps/web/e2e/__pin-connect-probe.probe.ts
+
 
 

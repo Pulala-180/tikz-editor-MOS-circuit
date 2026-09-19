@@ -63,6 +63,12 @@ isCanvasTextInputIntentType,
 reduceCanvasTextEdit,
 type CanvasTextEditAction
 } from "./canvas-text-edit-machine";
+import {
+applyLatexToolbarCommand,
+insertLatexSymbol,
+type LatexToolbarCommand
+} from "./latex-label-toolbar";
+import { resolveLatexLabelPreview } from "./latex-label-preview";
 import { CanvasPanelView } from "./CanvasPanelView";
 import { useCanvasContextMenuController,useCanvasContextMenuState } from "./useCanvasContextMenus";
 import {
@@ -212,6 +218,7 @@ const LEFT_RULER_DRAG_SOURCE_WIDTH_PX = 12;
 const RESIZE_NOOP_REASON = "Resize would not change node constraints.";
 const CANVAS_DRAG_CURSOR_LOCK_CLASS = "is-dragging-canvas-cursor-lock";
 const IMPORTED_SVG_TARGET_RATIO = 0.3;
+const TEXT_EDIT_POPUP_FIXED_SCALE = 1.15;
 const IMPORTED_SVG_MIN_SCALE = 0.2;
 const IMPORTED_SVG_MAX_SCALE = 3;
 
@@ -388,7 +395,11 @@ function resolveTextareaLineHeightPx(textarea: HTMLTextAreaElement): number {
   return 16;
 }
 
-function resolveTextareaCaretClientRect(textarea: HTMLTextAreaElement, offset: number): DOMRect | null {
+function resolveTextareaCaretClientRect(
+  textarea: HTMLTextAreaElement,
+  text: string,
+  offset: number
+): DOMRect | null {
   const documentRef = textarea.ownerDocument;
   const windowRef = documentRef.defaultView;
   if (!windowRef) {
@@ -396,19 +407,13 @@ function resolveTextareaCaretClientRect(textarea: HTMLTextAreaElement, offset: n
   }
   const computed = windowRef.getComputedStyle(textarea);
   const textareaRect = textarea.getBoundingClientRect();
-  const mirror = documentRef.createElement("div");
-  const marker = documentRef.createElement("span");
-  const boundedOffset = clamp(offset, 0, textarea.value.length);
-  const beforeCaret = textarea.value.slice(0, boundedOffset);
-  const afterCaret = textarea.value.slice(boundedOffset);
+  const boundedOffset = clamp(offset, 0, text.length);
 
+  const mirror = documentRef.createElement("div");
   mirror.style.position = "fixed";
   mirror.style.visibility = "hidden";
   mirror.style.pointerEvents = "none";
   mirror.style.whiteSpace = "pre-wrap";
-  mirror.style.wordWrap = "break-word";
-  mirror.style.wordBreak = "break-word";
-  mirror.style.overflowWrap = "break-word";
   mirror.style.overflow = "hidden";
   mirror.style.left = `${textareaRect.left}px`;
   mirror.style.top = `${textareaRect.top}px`;
@@ -416,17 +421,53 @@ function resolveTextareaCaretClientRect(textarea: HTMLTextAreaElement, offset: n
     mirror.style.setProperty(property, computed.getPropertyValue(property));
   }
 
-  marker.style.display = "inline-block";
-  marker.style.width = "0";
-  marker.style.height = `${resolveTextareaLineHeightPx(textarea)}px`;
-  marker.style.padding = "0";
-  marker.style.border = "0";
-  marker.style.margin = "0";
-  marker.style.verticalAlign = "text-bottom";
+  // If text is empty or ends with a newline, append a zero-width space so that
+  // the trailing newline / empty document creates a valid line layout box in the DOM.
+  const isEmpty = text.length === 0;
+  const normalizedText = isEmpty
+    ? "\u200B"
+    : text.endsWith("\n")
+      ? `${text}\u200B`
+      : text;
+
+  mirror.textContent = normalizedText;
+  documentRef.body.append(mirror);
 
   try {
+    const textNode = mirror.firstChild;
+    if (textNode) {
+      const range = documentRef.createRange();
+      const safeOffset = isEmpty ? 0 : boundedOffset;
+      range.setStart(textNode, safeOffset);
+      range.setEnd(textNode, safeOffset);
+      const rects = range.getClientRects();
+      const rangeRect = rects.length > 0 ? rects[0] : range.getBoundingClientRect();
+      if (Number.isFinite(rangeRect.left) && Number.isFinite(rangeRect.top) && rangeRect.height > 0) {
+        const height = Math.max(1, rangeRect.height || resolveTextareaLineHeightPx(textarea));
+        return new windowRef.DOMRect(
+          rangeRect.left - textarea.scrollLeft,
+          rangeRect.top - textarea.scrollTop,
+          1,
+          height
+        );
+      }
+    }
+
+    // Fallback: marker span for edge cases where Range returns empty rects (e.g. empty line between double newlines)
+    mirror.textContent = "";
+    const marker = documentRef.createElement("span");
+    marker.style.display = "inline-block";
+    marker.style.width = "0";
+    marker.style.height = `${resolveTextareaLineHeightPx(textarea)}px`;
+    marker.style.padding = "0";
+    marker.style.border = "0";
+    marker.style.margin = "0";
+    marker.style.verticalAlign = "text-bottom";
+
+    const beforeCaret = text.slice(0, boundedOffset);
+    const afterCaret = text.slice(boundedOffset);
     mirror.append(beforeCaret, marker, afterCaret);
-    documentRef.body.append(mirror);
+
     const markerRect = marker.getBoundingClientRect();
     if (!Number.isFinite(markerRect.left) || !Number.isFinite(markerRect.top)) {
       return null;
@@ -591,7 +632,7 @@ function estimateTextOffsetFromClient(
       }
       return ctx.measureText(text).width;
     },
-    { syntax: target.usesMathJax ? "mathjax" : "plain" }
+    { syntax: target.usesMathJax ? "mathjax" : "plain", renderedWidth: contentBox.width }
   );
   const ranges = layout.sourceLineRanges;
 
@@ -1143,6 +1184,20 @@ export const CanvasPanel = memo(function CanvasPanel({
   const appliedPathAttachedNodePreviewRef = useRef<Array<{ element: SVGElement; transform: string | null }>>([]);
   const textEditTextareaRef = useRef<HTMLTextAreaElement | null>(null);
   const textEditPopupRef = useRef<HTMLDivElement | null>(null);
+  // Last selection the textarea actually reported. The rich-label toolbar reads
+  // the live DOM selection first, but when the textarea is not focused (e.g. the
+  // user clicked a button or the preview) browsers are free to drop or reshape
+  // `selectionStart/End`; this ref keeps the caret/selection the user last saw so
+  // an insert can never fall back to a stale (often `0`) offset.
+  const textEditRememberedSelectionRef = useRef<{ start: number; end: number } | null>(null);
+  // Set when a DOM selection event (which is always fresher than the session
+  // snapshot this render is holding) has been observed and not yet consumed by the
+  // selection-sync effect. Guards against the effect yanking the caret backwards.
+  const textEditPendingDomSelectionRef = useRef(false);
+  // Controlled textarea value updates can temporarily move the native selection
+  // to the end before React commits the session selection. Ignore those DOM
+  // selection echoes until the matching session render has restored the caret.
+  const textEditDomSelectionGuardRef = useRef(0);
   const [textEditPopupHeight, setTextEditPopupHeight] = useState<number | null>(null);
   const [textEditCaretOverlay, setTextEditCaretOverlay] = useState<TextEditCaretOverlay | null>(null);
   const supportsFieldSizing = typeof CSS !== "undefined" && typeof CSS.supports === "function" && CSS.supports("field-sizing", "content");
@@ -1167,10 +1222,40 @@ export const CanvasPanel = memo(function CanvasPanel({
   const pendingTextEditPasteRef = useRef<string | null>(null);
   const pendingTextEditInsertTextRef = useRef<string | null>(null);
 
+  /** Remember the textarea's current selection synchronously, before any dispatch. */
+  const rememberTextareaSelection = useCallback((textarea: HTMLTextAreaElement | null): boolean => {
+    if (!textarea) {
+      return false;
+    }
+    const start = typeof textarea.selectionStart === "number" ? textarea.selectionStart : null;
+    const end = typeof textarea.selectionEnd === "number" ? textarea.selectionEnd : null;
+    if (start == null || end == null) {
+      return false;
+    }
+    if (textEditDomSelectionGuardRef.current !== 0) {
+      const session = canvasTextEditStateRef.current.session;
+      if (
+        session &&
+        (start !== session.selectionStart || end !== session.selectionEnd)
+      ) {
+        textarea.setSelectionRange(session.selectionStart, session.selectionEnd);
+      }
+      return false;
+    }
+    textEditRememberedSelectionRef.current = { start, end };
+    textEditPendingDomSelectionRef.current = true;
+    return true;
+  }, []);
+
+  const beginTextareaSelectionGuard = useCallback(() => {
+    textEditDomSelectionGuardRef.current += 1;
+  }, []);
+
   useEffect(() => {
     if (!textEditingSession) {
       pendingTextEditPasteRef.current = null;
       pendingTextEditInsertTextRef.current = null;
+      textEditRememberedSelectionRef.current = null;
     }
   }, [textEditingSession]);
 
@@ -2464,6 +2549,7 @@ export const CanvasPanel = memo(function CanvasPanel({
       const isSupported = isCanvasTextInputIntentType(inputType);
       if (isSupported) {
         nativeEvent.preventDefault();
+        beginTextareaSelectionGuard();
       }
       nativeEvent.stopPropagation();
       let data = nativeEvent.data;
@@ -2488,17 +2574,20 @@ export const CanvasPanel = memo(function CanvasPanel({
         selectionEnd: textarea.selectionEnd ?? 0
       });
     },
-    [dispatchCanvasTextEditAction]
+    [beginTextareaSelectionGuard, dispatchCanvasTextEditAction]
   );
 
   const handleTextEditTextareaSelect = useCallback((event: ReactSyntheticEvent<HTMLTextAreaElement>) => {
     const textarea = event.currentTarget;
+    if (!rememberTextareaSelection(textarea)) {
+      return;
+    }
     dispatchCanvasTextEditAction({
       type: "textarea_selection",
       selectionStart: textarea.selectionStart ?? 0,
       selectionEnd: textarea.selectionEnd ?? 0
     });
-  }, [dispatchCanvasTextEditAction]);
+  }, [dispatchCanvasTextEditAction, rememberTextareaSelection]);
 
   const stopTextEditTextareaClipboardPropagation = useCallback((event: ReactClipboardEvent<HTMLTextAreaElement>) => {
     event.stopPropagation();
@@ -2512,6 +2601,7 @@ export const CanvasPanel = memo(function CanvasPanel({
   const handleTextEditTextareaDrop = useCallback((event: ReactDragEvent<HTMLTextAreaElement>) => {
     event.preventDefault();
     event.stopPropagation();
+    beginTextareaSelectionGuard();
     const textarea = event.currentTarget;
     dispatchCanvasTextEditAction({
       type: "textarea_input_intent",
@@ -2520,9 +2610,23 @@ export const CanvasPanel = memo(function CanvasPanel({
       selectionStart: textarea.selectionStart ?? 0,
       selectionEnd: textarea.selectionEnd ?? 0
     });
-  }, [dispatchCanvasTextEditAction]);
+  }, [beginTextareaSelectionGuard, dispatchCanvasTextEditAction]);
 
   const handleTextEditTextareaKeyDown = useCallback((event: ReactKeyboardEvent<HTMLTextAreaElement>) => {
+    if (
+      event.key === "ArrowLeft" ||
+      event.key === "ArrowRight" ||
+      event.key === "ArrowUp" ||
+      event.key === "ArrowDown" ||
+      event.key === "Home" ||
+      event.key === "End" ||
+      event.key === "PageUp" ||
+      event.key === "PageDown" ||
+      ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "a")
+    ) {
+      textEditDomSelectionGuardRef.current = 0;
+    }
+
     if (event.key === "Escape") {
       event.preventDefault();
       event.stopPropagation();
@@ -2543,6 +2647,7 @@ export const CanvasPanel = memo(function CanvasPanel({
         pendingTextEditInsertTextRef.current = null;
         event.preventDefault();
         event.stopPropagation();
+        beginTextareaSelectionGuard();
         const textarea = event.currentTarget;
         dispatchCanvasTextEditAction({
           type: "textarea_input_intent",
@@ -2561,11 +2666,111 @@ export const CanvasPanel = memo(function CanvasPanel({
       return;
     }
     pendingTextEditInsertTextRef.current = event.key.length === 1 ? event.key : null;
-  }, [dispatchCanvasTextEditAction]);
+  }, [beginTextareaSelectionGuard, dispatchCanvasTextEditAction]);
 
   const handleTextEditPopupPointerDown = useCallback((event: ReactPointerEvent<HTMLDivElement>) => {
     event.stopPropagation();
   }, []);
+
+  const resolveTextEditToolbarBase = useCallback(() => {
+    const session = textEditingSession;
+    if (!session) {
+      return null;
+    }
+    const textLength = session.text.length;
+    const textarea = textEditTextareaRef.current;
+    const textareaIsFocused = textarea != null && document.activeElement === textarea;
+    const readTextareaOffset = (key: "selectionStart" | "selectionEnd"): number | null => {
+      if (!textarea) {
+        return null;
+      }
+      const value = textarea[key];
+      return typeof value === "number" ? value : null;
+    };
+    // The DOM selection is authoritative while the textarea holds focus 鈥?that is
+    // exactly where the user just placed the caret. Once it loses focus the value
+    // can be reshaped by the browser, so fall back to the last selection the
+    // user actually saw, then to the session.
+    const liveStart = textareaIsFocused ? readTextareaOffset("selectionStart") : null;
+    const liveEnd = textareaIsFocused ? readTextareaOffset("selectionEnd") : null;
+    const remembered = textEditRememberedSelectionRef.current;
+    const selectionStart = clamp(
+      liveStart ?? remembered?.start ?? session.selectionStart,
+      0,
+      textLength
+    );
+    const selectionEnd = clamp(
+      liveEnd ?? remembered?.end ?? session.selectionEnd,
+      0,
+      textLength
+    );
+    return { text: session.text, selectionStart, selectionEnd };
+  }, [textEditingSession]);
+
+  const dispatchTextEditToolbarResult = useCallback(
+    (result: { text: string; selectionStart: number; selectionEnd: number }) => {
+      // A toolbar edit is programmatic: the caret it computes must win over any
+      // still-pending DOM selection observation.
+      textEditPendingDomSelectionRef.current = false;
+      beginTextareaSelectionGuard();
+      dispatchCanvasTextEditAction({
+        type: "replace_text",
+        text: result.text,
+        selectionStart: result.selectionStart,
+        selectionEnd: result.selectionEnd
+      });
+    },
+    [beginTextareaSelectionGuard, dispatchCanvasTextEditAction]
+  );
+
+  const handleTextEditToolbarCommand = useCallback(
+    (command: LatexToolbarCommand) => {
+      const base = resolveTextEditToolbarBase();
+      if (!base) {
+        return;
+      }
+      dispatchTextEditToolbarResult(
+        applyLatexToolbarCommand(base.text, base.selectionStart, base.selectionEnd, command)
+      );
+    },
+    [dispatchTextEditToolbarResult, resolveTextEditToolbarBase]
+  );
+
+  const handleTextEditToolbarSymbol = useCallback(
+    (tex: string) => {
+      const base = resolveTextEditToolbarBase();
+      if (!base) {
+        return;
+      }
+      dispatchTextEditToolbarResult(
+        insertLatexSymbol(base.text, base.selectionStart, base.selectionEnd, tex)
+      );
+    },
+    [dispatchTextEditToolbarResult, resolveTextEditToolbarBase]
+  );
+
+  const handleTextEditToolbarApply = useCallback(() => {
+    dispatchCanvasTextEditAction({ type: "session_close" });
+  }, [dispatchCanvasTextEditAction]);
+
+  const handleTextEditToolbarDelete = useCallback(() => {
+    const base = resolveTextEditToolbarBase();
+    if (!base) {
+      return;
+    }
+    dispatchTextEditToolbarResult({ text: "", selectionStart: 0, selectionEnd: 0 });
+  }, [dispatchTextEditToolbarResult, resolveTextEditToolbarBase]);
+
+  const textEditLatexPreview = useMemo(
+    () =>
+      resolveLatexLabelPreview(
+        svgModel,
+        textEditingSession?.sourceId ?? null,
+        textEditingSession?.sceneTextId ?? null,
+        textEditingSession?.text ?? null
+      ),
+    [svgModel, textEditingSession]
+  );
 
   useLayoutEffect(() => {
     const textarea = textEditTextareaRef.current;
@@ -2593,9 +2798,31 @@ export const CanvasPanel = memo(function CanvasPanel({
     }
     const start = clamp(textEditingSession.selectionStart, 0, textEditingSession.text.length);
     const end = clamp(textEditingSession.selectionEnd, 0, textEditingSession.text.length);
+    const textareaIsFocused = document.activeElement === textarea;
+    if (textEditDomSelectionGuardRef.current !== 0) {
+      textEditPendingDomSelectionRef.current = false;
+      if (textarea.selectionStart !== start || textarea.selectionEnd !== end) {
+        textarea.setSelectionRange(start, end);
+      }
+      textEditRememberedSelectionRef.current = { start, end };
+      textEditDomSelectionGuardRef.current = 0;
+      return;
+    }
+    const pendingDomSelection = textEditPendingDomSelectionRef.current;
+    textEditPendingDomSelectionRef.current = false;
+    // When the user just moved the caret in a focused textarea, the DOM selection is
+    // ahead of this render's session snapshot. Re-applying the (stale) session
+    // selection here is what would yank the caret back to an old offset, so let the
+    // DOM win for this pass 鈥?the pending `textarea_selection` dispatch catches up.
+    if (pendingDomSelection && textareaIsFocused) {
+      return;
+    }
     if (textarea.selectionStart !== start || textarea.selectionEnd !== end) {
       textarea.setSelectionRange(start, end);
     }
+    // Keep the remembered selection aligned with whatever we just made authoritative,
+    // so the toolbar's blurred fallback can never lag behind a programmatic edit.
+    textEditRememberedSelectionRef.current = { start, end };
   }, [textEditingSession]);
 
   useEffect(() => {
@@ -2614,6 +2841,9 @@ export const CanvasPanel = memo(function CanvasPanel({
       return;
     }
     const syncSelectionFromTextarea = () => {
+      if (!rememberTextareaSelection(textarea)) {
+        return;
+      }
       dispatchCanvasTextEditAction({
         type: "textarea_selection",
         selectionStart: textarea.selectionStart ?? 0,
@@ -2625,15 +2855,20 @@ export const CanvasPanel = memo(function CanvasPanel({
         syncSelectionFromTextarea();
       }
     };
+    const clearDomSelectionGuard = () => {
+      textEditDomSelectionGuardRef.current = 0;
+    };
+    textarea.addEventListener("pointerdown", clearDomSelectionGuard);
     textarea.addEventListener("select", syncSelectionFromTextarea);
     textarea.addEventListener("mouseup", syncSelectionFromTextarea);
     document.addEventListener("selectionchange", handleDocumentSelectionChange);
     return () => {
       textarea.removeEventListener("select", syncSelectionFromTextarea);
+      textarea.removeEventListener("pointerdown", clearDomSelectionGuard);
       textarea.removeEventListener("mouseup", syncSelectionFromTextarea);
       document.removeEventListener("selectionchange", handleDocumentSelectionChange);
     };
-  }, [dispatchCanvasTextEditAction, textEditingSession]);
+  }, [dispatchCanvasTextEditAction, rememberTextareaSelection, textEditingSession]);
 
   useLayoutEffect(() => {
     const textarea = textEditTextareaRef.current;
@@ -2656,7 +2891,11 @@ export const CanvasPanel = memo(function CanvasPanel({
         0,
         textEditingSession.text.length
       );
-      const measuredRect = resolveTextareaCaretClientRect(currentTextarea, caretOffset);
+      const measuredRect = resolveTextareaCaretClientRect(
+        currentTextarea,
+        textEditingSession.text,
+        caretOffset
+      );
       if (!measuredRect) {
         setTextEditCaretOverlay(null);
         return;
@@ -3084,7 +3323,8 @@ export const CanvasPanel = memo(function CanvasPanel({
     onInteractionLostPointerCapture,
     onInteractionPointerMove,
     onInteractionPointerLeave,
-    onInteractionPointerEnter
+    onInteractionPointerEnter,
+    onInteractionContextMenuCapture
   } = useCanvasToolInteractions({
     viewportRef,
     toolMode,
@@ -3179,6 +3419,7 @@ export const CanvasPanel = memo(function CanvasPanel({
     setToolDraft,
     setRoundedLineDraft,
     setOrthoWireDraft,
+    orthoWireDraft,
     setBezierBendDraft,
     setPendingBezier,
     textEditingSession,
@@ -3610,6 +3851,7 @@ export const CanvasPanel = memo(function CanvasPanel({
     const popupGap = 10;
     const popupChromeWidth = 14;
     const popupHeight = textEditPopupHeight ?? 0;
+    const panelScale = TEXT_EDIT_POPUP_FIXED_SCALE;
     const contentBox = resolveRectHitRegionContentBox(textEditingSession.region);
     const popupAnchorBox = textEditingSession.popupAnchorBox;
     const sourceBounds = popupAnchorBox ? undefined : sourceBoundsSvg.get(textEditingSession.sourceId);
@@ -3628,21 +3870,29 @@ export const CanvasPanel = memo(function CanvasPanel({
     const centerX = (leftEdge + rightEdge) / 2;
     const nodeWidthPx = rightEdge - leftEdge;
     const contentWidthPx = Math.max(contentBox.width * canvasTransform.scale, 1);
-    const maxWidth = clamp(Math.round(nodeWidthPx + 80), 160, viewportSize.width - minPadding * 2);
+    const availableWidth = Math.max(1, viewportSize.width - minPadding * 2);
+    const availableHeight = Math.max(1, viewportSize.height - minPadding * 2);
+    const maxWidth = Math.min(
+      clamp(Math.round(nodeWidthPx + 80), Math.min(160, availableWidth), availableWidth),
+      Math.max(1, availableWidth / panelScale)
+    );
     const textareaWidth = clamp(
       Math.round(contentWidthPx),
       48,
       Math.max(48, maxWidth - popupChromeWidth)
     );
+    const scaledPopupHeight = popupHeight * panelScale;
+    const scaledMaxWidth = maxWidth * panelScale;
     let top = bottomEdge + popupGap;
-    if (top + popupHeight > viewportSize.height - minPadding) {
-      top = topEdge - popupHeight - popupGap;
+    if (top + scaledPopupHeight > viewportSize.height - minPadding) {
+      top = topEdge - scaledPopupHeight - popupGap;
     }
     return {
-      centerX: clamp(centerX, minPadding + maxWidth / 2, viewportSize.width - minPadding - maxWidth / 2),
-      top: clamp(top, minPadding, Math.max(minPadding, viewportSize.height - popupHeight - minPadding)),
+      centerX: clamp(centerX, minPadding + scaledMaxWidth / 2, viewportSize.width - minPadding - scaledMaxWidth / 2),
+      top: clamp(top, minPadding, Math.max(minPadding, viewportSize.height - scaledPopupHeight - minPadding)),
       maxWidth,
-      textareaWidth
+      textareaWidth,
+      scale: panelScale
     };
   }, [
     canvasTransform.scale,
@@ -3681,7 +3931,7 @@ export const CanvasPanel = memo(function CanvasPanel({
       return;
     }
 
-    const nextHeight = Math.ceil(popup.getBoundingClientRect().height);
+    const nextHeight = Math.ceil(popup.offsetHeight);
     setTextEditPopupHeight((currentHeight) => (currentHeight === nextHeight ? currentHeight : nextHeight));
   }, [textEditingSession, textEditPopup]);
 
@@ -3729,6 +3979,7 @@ export const CanvasPanel = memo(function CanvasPanel({
         onTopRulerPointerDown={onTopRulerPointerDown}
         onLeftRulerPointerDown={onLeftRulerPointerDown}
         onCanvasContextMenu={onCanvasContextMenu}
+        onInteractionContextMenuCapture={onInteractionContextMenuCapture}
         rulers={rulers}
         LEFT_RULER_DRAG_SOURCE_WIDTH_PX={LEFT_RULER_DRAG_SOURCE_WIDTH_PX}
         toolMode={toolMode}
@@ -3842,6 +4093,11 @@ export const CanvasPanel = memo(function CanvasPanel({
         onTextEditTextareaPaste={handleTextEditTextareaPaste}
         onTextEditTextareaDrop={handleTextEditTextareaDrop}
         onTextEditTextareaKeyDown={handleTextEditTextareaKeyDown}
+        onTextEditToolbarCommand={handleTextEditToolbarCommand}
+        onTextEditToolbarSymbol={handleTextEditToolbarSymbol}
+        onTextEditToolbarApply={handleTextEditToolbarApply}
+        onTextEditToolbarDelete={handleTextEditToolbarDelete}
+        textEditLatexPreview={textEditLatexPreview}
         selectionHint={canvasSelectionHint}
         showDevPanel={false}
         snapDebugRect={snapDebugRect}

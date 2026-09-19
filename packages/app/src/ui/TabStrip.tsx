@@ -31,7 +31,7 @@ export function TabStrip({
       : tabOrder;
 
   return (
-    <div className={css.strip} role="tablist" aria-label="Documents" data-testid="tab-strip" data-select="chrome">
+    <div className={css.strip} role="tablist" aria-label="文档标签页" data-testid="tab-strip" data-select="chrome">
       {previewOrder.map((id) => {
         const doc = documents[id];
         if (!doc) {
@@ -69,17 +69,19 @@ export function TabStrip({
               className={css.tabButton}
               onClick={() => { dispatch({ type: "SWITCH_DOCUMENT", documentId: id }); }}
               data-testid={`tab-switch-${id}`}
+              title={`切换到 ${doc.title}`}
+              aria-label={`切换到 ${doc.title}`}
             >
               <span className={css.title}>{doc.title}</span>
               {doc.dirty ? (
-                <svg className={css.dirty} width="6" height="6" viewBox="0 0 6 6" aria-label="Unsaved changes">
-                  <title>Unsaved changes</title>
+                <svg className={css.dirty} width="6" height="6" viewBox="0 0 6 6" aria-label="未保存更改">
+                  <title>未保存更改</title>
                   <circle cx="3" cy="3" r="3" />
                 </svg>
               ) : null}
               {doc.externalChangeStatus !== "none" ? (
-                <svg className={css.externalChange} width="7" height="7" viewBox="0 0 7 7" aria-label="File changed on disk">
-                  <title>File changed on disk</title>
+                <svg className={css.externalChange} width="7" height="7" viewBox="0 0 7 7" aria-label="磁盘文件已更改">
+                  <title>磁盘文件已更改</title>
                   <path d="M3.5 0 7 7H0Z" />
                 </svg>
               ) : null}
@@ -87,7 +89,8 @@ export function TabStrip({
             <button
               type="button"
               className={css.close}
-              aria-label={`Close ${doc.title}`}
+              aria-label={`关闭 ${doc.title}`}
+              title={`关闭 ${doc.title}`}
               onClick={() => {
                 if (onRequestCloseDocument) {
                   onRequestCloseDocument(id);
@@ -109,7 +112,8 @@ export function TabStrip({
         type="button"
         className={css.add}
         onClick={() => { dispatch({ type: "NEW_DOCUMENT" }); }}
-        aria-label="New document"
+        aria-label="新建文档 / 添加图形"
+        title="新建文档 / 添加图形"
         data-testid="tab-new"
       >
         <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">

@@ -68,7 +68,24 @@ export type ToolMode =
   | "addIoNode_Vout_Top"
   | "addIoNode_Vout_Right"
   | "addIoNode_Vout_Bottom"
+  // Port objects (vdd-port / port). They deliberately live in the `addIoNode` family so
+  // they reuse the existing canvas click-insertion path in useCanvasToolInteractions.ts
+  // (which matches `startsWith("addIoNode")` and cannot be extended here).
+  | "addIoNode_VddPort_Left"
+  | "addIoNode_VddPort_Top"
+  | "addIoNode_VddPort_Right"
+  | "addIoNode_VddPort_Bottom"
+  | "addIoNode_Port_Left"
+  | "addIoNode_Port_Top"
+  | "addIoNode_Port_Right"
+  | "addIoNode_Port_Bottom"
   | "addVDD"
+  // Power rail (VDD rail): a thick bar with a row of taps. Two-point shape.
+  | "addPowerRail"
+  | "addPowerRail_H_Left"
+  | "addPowerRail_H_Right"
+  | "addPowerRail_V_Top"
+  | "addPowerRail_V_Bottom"
   | "addCapacitor"
   | "addCapacitor_H_Left"
   | "addCapacitor_H_Right"
@@ -148,6 +165,21 @@ export type SnapModes = {
 };
 
 export type ZoomRequestDirection = "in" | "out";
+
+/**
+ * The four kinds of location a wire draft can start from.
+ * - `terminal` — a component pin (`terminal:M8:D`).
+ * - `route`    — the mid-span of an existing wire, i.e. pulling a branch off a trunk (`route route-ul-40`).
+ * - `junction` — an existing junction dot.
+ * - `grid`     — an empty grid point.
+ */
+export type WireSourceKind = "terminal" | "route" | "junction" | "grid";
+
+export type WireSourceDescriptor = {
+  kind: WireSourceKind;
+  /** Kind-specific identity: `nodeName:anchor`, a source id, or `x,y` in cm. */
+  id: string;
+};
 
 export type DeveloperLogEntry = {
   id: string;
@@ -416,6 +448,19 @@ export type EditorState = {
   showDevPanel: boolean;
   developerLogs: DeveloperLogEntry[];
   snapDebug: DeveloperSnapDebugState | null;
+  /**
+   * Origin of the in-progress wire draft, mirrored out of CanvasPanel's local draft state so the
+   * status bar can render `Wire source: …`. `null` when no wire is being drawn. Optional because it
+   * is carried on the reducer's projection tail rather than through `projectState`.
+   */
+  wireSource?: WireSourceDescriptor | null;
+  /**
+   * Snippet count of the active clipboard-placement (paste-preview) draft, mirrored for the status
+   * bar's `Copied N components · click to place another` readout. `null` when no draft is armed.
+   * Carried on the reducer's projection tail like `wireSource`, so the persisted workspace shape is
+   * untouched.
+   */
+  clipboardPlacementCount?: number | null;
 };
 
 export type EditorAction =
@@ -525,6 +570,10 @@ export type EditorAction =
   | { type: "REQUEST_ZOOM"; direction: ZoomRequestDirection }
   | { type: "REQUEST_ZOOM_SCALE"; scale: number }
   | { type: "SET_CANVAS_STATUS_HINT"; hint: string | null }
+  /** Records the origin of the in-progress wire draft for the status bar (null clears it). */
+  | { type: "SET_WIRE_SOURCE"; source: WireSourceDescriptor | null }
+  /** Mirrors the clipboard-placement draft size for the status bar (null clears it). */
+  | { type: "SET_CLIPBOARD_PLACEMENT"; count: number | null }
   // Layout
   | { type: "TOGGLE_PANEL"; panel: "source" | "inspector" }
   | { type: "SYNC_LAYOUT_STATE"; sourceVisible: boolean; inspectorVisible: boolean; objectsVisible: boolean; stylesVisible: boolean; figuresVisible: boolean; assistantVisible: boolean; activeRightTab: "inspector" | "objects" | "styles" | "assistant" }

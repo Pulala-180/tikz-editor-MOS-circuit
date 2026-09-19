@@ -1,93 +1,109 @@
 import type { ToolMode } from "../../store/types";
+import { POWER_RAIL_DEFAULT_LENGTH_CM, buildPowerRailSnippet, buildPowerRailSnippetBetween } from "./power-rail";
+
+/**
+ * Two-point power-rail template: the click-sequence interaction collects the two rail ends and
+ * funnels them here, so the taps are laid out by the shared builder regardless of which end the
+ * user clicked first. Kept beside `getCircuitComponentSnippet` so both rail entry points live
+ * in the template layer.
+ */
+export function getPowerRailSnippetBetween(
+  fromXCm: number,
+  fromYCm: number,
+  toXCm: number,
+  toYCm: number
+): string {
+  return buildPowerRailSnippetBetween({ xCm: fromXCm, yCm: fromYCm }, { xCm: toXCm, yCm: toYCm });
+}
 
 export function getCircuitComponentSnippet(toolMode: ToolMode, xCm: string, yCm: string): string | null {
   if (toolMode === "addResistor" || toolMode === "addResistor_H_Left") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Rx.l) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0.15,0) -- (0.19,0.15) -- (0.27,-0.15) -- (0.35,0.15) -- (0.43,-0.15) -- (0.51,0.15) -- (0.59,-0.15) -- (0.63,0) -- (0.78,0);\n    \\node at (0.39,0.35) {$R_D$};\n    \\coordinate (node_Rx.r) at (0.78,0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Rx.l) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0.15,0) -- (0.19,0.15) -- (0.27,-0.15) -- (0.35,0.15) -- (0.43,-0.15) -- (0.51,0.15) -- (0.59,-0.15) -- (0.63,0) -- (0.78,0);\n    \\node at (0.39,0.35) {$R_{D}$};\n    \\coordinate (node_Rx.r) at (0.78,0);\n  \\end{scope}`;
   }
   if (toolMode === "addResistor_H_Right") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Rx.l) at (-0.78,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.78,0) -- (-0.63,0) -- (-0.59,0.15) -- (-0.51,-0.15) -- (-0.43,0.15) -- (-0.35,-0.15) -- (-0.27,0.15) -- (-0.19,-0.15) -- (-0.15,0) -- (0,0);\n    \\node at (-0.39,0.35) {$R_D$};\n    \\coordinate (node_Rx.r) at (0,0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Rx.l) at (-0.78,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.78,0) -- (-0.63,0) -- (-0.59,0.15) -- (-0.51,-0.15) -- (-0.43,0.15) -- (-0.35,-0.15) -- (-0.27,0.15) -- (-0.19,-0.15) -- (-0.15,0) -- (0,0);\n    \\node at (-0.39,0.35) {$R_{D}$};\n    \\coordinate (node_Rx.r) at (0,0);\n  \\end{scope}`;
   }
   if (toolMode === "addResistor_V_Top") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Rx.t) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.15) -- (0.15,-0.19) -- (-0.15,-0.27) -- (0.15,-0.35) -- (-0.15,-0.43) -- (0.15,-0.51) -- (-0.15,-0.59) -- (0,-0.63) -- (0,-0.78);\n    \\node[right] at (0.25,-0.39) {$R_D$};\n    \\coordinate (node_Rx.b) at (0,-0.78);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Rx.t) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.15) -- (0.15,-0.19) -- (-0.15,-0.27) -- (0.15,-0.35) -- (-0.15,-0.43) -- (0.15,-0.51) -- (-0.15,-0.59) -- (0,-0.63) -- (0,-0.78);\n    \\node[right] at (0.25,-0.39) {$R_{D}$};\n    \\coordinate (node_Rx.b) at (0,-0.78);\n  \\end{scope}`;
   }
   if (toolMode === "addResistor_V_Bottom") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Rx.b) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,0.15) -- (0.15,0.19) -- (-0.15,0.27) -- (0.15,0.35) -- (-0.15,0.43) -- (0.15,0.51) -- (-0.15,0.59) -- (0,0.63) -- (0,0.78);\n    \\node[right] at (0.25,0.39) {$R_D$};\n    \\coordinate (node_Rx.t) at (0,0.78);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Rx.b) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,0.15) -- (0.15,0.19) -- (-0.15,0.27) -- (0.15,0.35) -- (-0.15,0.43) -- (0.15,0.51) -- (-0.15,0.59) -- (0,0.63) -- (0,0.78);\n    \\node[right] at (0.25,0.39) {$R_{D}$};\n    \\coordinate (node_Rx.t) at (0,0.78);\n  \\end{scope}`;
   }
 
   // NMOS
   if (toolMode === "addNMOS" || toolMode === "addNMOS_Left_G") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0.26,0);\n    \\draw[line width=0.7mm] (0.25,-0.25) -- (0.25,0.25);\n    \\draw[line width=0.7mm] (0.41,-0.3) -- (0.41,0.3);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.40,0.2) -- (0.73,0.2) -- (0.73,0.5);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.40,-0.2) -- (0.70,-0.2);\n    \\draw[line width=0.32mm, line cap=round] (0.73,-0.21) -- (0.73,-0.5);\n    \\node[node font=\\sffamily\\bfseries] at (1.04,0) {$M_1$};\n    \\coordinate (node_Mx.d) at (0.73,0.5);\n    \\coordinate (node_Mx.s) at (0.73,-0.5);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0.26,0);\n    \\draw[line width=0.7mm] (0.25,-0.25) -- (0.25,0.25);\n    \\draw[line width=0.7mm] (0.41,-0.3) -- (0.41,0.3);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.40,0.2) -- (0.73,0.2) -- (0.73,0.5);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.40,-0.2) -- (0.70,-0.2);\n    \\draw[line width=0.32mm, line cap=round] (0.73,-0.21) -- (0.73,-0.5);\n    \\node[node font=\\sffamily\\bfseries] at (1.04,0) {$M_{1}$};\n    \\coordinate (node_Mx.d) at (0.73,0.5);\n    \\coordinate (node_Mx.s) at (0.73,-0.5);\n  \\end{scope}`;
   }
   if (toolMode === "addNMOS_Left_D") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.73,-0.5) -- (-0.47,-0.5);\n    \\draw[line width=0.7mm] (-0.48,-0.75) -- (-0.48,-0.25);\n    \\draw[line width=0.7mm] (-0.32,-0.8) -- (-0.32,-0.2);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.33,-0.3) -- (0,-0.3) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.33,-0.7) -- (-0.03,-0.7);\n    \\draw[line width=0.32mm, line cap=round] (0,-0.71) -- (0,-1.0);\n    \\node[node font=\\sffamily\\bfseries] at (0.31,-0.5) {$M_1$};\n    \\coordinate (node_Mx.g) at (-0.73,-0.5);\n    \\coordinate (node_Mx.s) at (0,-1.0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.73,-0.5) -- (-0.47,-0.5);\n    \\draw[line width=0.7mm] (-0.48,-0.75) -- (-0.48,-0.25);\n    \\draw[line width=0.7mm] (-0.32,-0.8) -- (-0.32,-0.2);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.33,-0.3) -- (0,-0.3) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.33,-0.7) -- (-0.03,-0.7);\n    \\draw[line width=0.32mm, line cap=round] (0,-0.71) -- (0,-1.0);\n    \\node[node font=\\sffamily\\bfseries] at (0.31,-0.5) {$M_{1}$};\n    \\coordinate (node_Mx.g) at (-0.73,-0.5);\n    \\coordinate (node_Mx.s) at (0,-1.0);\n  \\end{scope}`;
   }
   if (toolMode === "addNMOS_Left_S") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.73,0.5) -- (-0.47,0.5);\n    \\draw[line width=0.7mm] (-0.48,0.25) -- (-0.48,0.75);\n    \\draw[line width=0.7mm] (-0.32,0.2) -- (-0.32,0.8);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.33,0.7) -- (0,0.7) -- (0,1.0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.33,0.3) -- (-0.03,0.3);\n    \\draw[line width=0.32mm, line cap=round] (0,0.29) -- (0,0);\n    \\node[node font=\\sffamily\\bfseries] at (0.31,0.5) {$M_1$};\n    \\coordinate (node_Mx.d) at (0,1.0);\n    \\coordinate (node_Mx.g) at (-0.73,0.5);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.73,0.5) -- (-0.47,0.5);\n    \\draw[line width=0.7mm] (-0.48,0.25) -- (-0.48,0.75);\n    \\draw[line width=0.7mm] (-0.32,0.2) -- (-0.32,0.8);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.33,0.7) -- (0,0.7) -- (0,1.0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.33,0.3) -- (-0.03,0.3);\n    \\draw[line width=0.32mm, line cap=round] (0,0.29) -- (0,0);\n    \\node[node font=\\sffamily\\bfseries] at (0.31,0.5) {$M_{1}$};\n    \\coordinate (node_Mx.d) at (0,1.0);\n    \\coordinate (node_Mx.g) at (-0.73,0.5);\n  \\end{scope}`;
   }
   if (toolMode === "addNMOS_Top_G") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.26);\n    \\draw[line width=0.7mm] (-0.25,-0.25) -- (0.25,-0.25);\n    \\draw[line width=0.7mm] (-0.3,-0.41) -- (0.3,-0.41);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.2,-0.40) -- (0.2,-0.73) -- (0.5,-0.73);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.2,-0.40) -- (-0.2,-0.70);\n    \\draw[line width=0.32mm, line cap=round] (-0.21,-0.73) -- (-0.5,-0.73);\n    \\node[node font=\\sffamily\\bfseries] at (0,-1.04) {$M_1$};\n    \\coordinate (node_Mx.d) at (0.5,-0.73);\n    \\coordinate (node_Mx.s) at (-0.5,-0.73);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.26);\n    \\draw[line width=0.7mm] (-0.25,-0.25) -- (0.25,-0.25);\n    \\draw[line width=0.7mm] (-0.3,-0.41) -- (0.3,-0.41);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.2,-0.40) -- (0.2,-0.73) -- (0.5,-0.73);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.2,-0.40) -- (-0.2,-0.70);\n    \\draw[line width=0.32mm, line cap=round] (-0.21,-0.73) -- (-0.5,-0.73);\n    \\node[node font=\\sffamily\\bfseries] at (0,-1.04) {$M_{1}$};\n    \\coordinate (node_Mx.d) at (0.5,-0.73);\n    \\coordinate (node_Mx.s) at (-0.5,-0.73);\n  \\end{scope}`;
   }
   if (toolMode === "addNMOS_Top_D") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.5,0.73) -- (-0.5,0.47);\n    \\draw[line width=0.7mm] (-0.75,0.48) -- (-0.25,0.48);\n    \\draw[line width=0.7mm] (-0.8,0.32) -- (-0.2,0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.3,0.33) -- (-0.3,0) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.7,0.33) -- (-0.7,0.03);\n    \\draw[line width=0.32mm, line cap=round] (-0.71,0) -- (-1.0,0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.5,-0.31) {$M_1$};\n    \\coordinate (node_Mx.g) at (-0.5,0.73);\n    \\coordinate (node_Mx.s) at (-1.0,0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.5,0.73) -- (-0.5,0.47);\n    \\draw[line width=0.7mm] (-0.75,0.48) -- (-0.25,0.48);\n    \\draw[line width=0.7mm] (-0.8,0.32) -- (-0.2,0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.3,0.33) -- (-0.3,0) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.7,0.33) -- (-0.7,0.03);\n    \\draw[line width=0.32mm, line cap=round] (-0.71,0) -- (-1.0,0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.5,-0.31) {$M_{1}$};\n    \\coordinate (node_Mx.g) at (-0.5,0.73);\n    \\coordinate (node_Mx.s) at (-1.0,0);\n  \\end{scope}`;
   }
   if (toolMode === "addNMOS_Top_S") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.5,0.73) -- (0.5,0.47);\n    \\draw[line width=0.7mm] (0.25,0.48) -- (0.75,0.48);\n    \\draw[line width=0.7mm] (0.2,0.32) -- (0.8,0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.7,0.33) -- (0.7,0) -- (1.0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.3,0.33) -- (0.3,0.03);\n    \\draw[line width=0.32mm, line cap=round] (0.29,0) -- (0,0);\n    \\node[node font=\\sffamily\\bfseries] at (0.5,-0.31) {$M_1$};\n    \\coordinate (node_Mx.g) at (0.5,0.73);\n    \\coordinate (node_Mx.d) at (1.0,0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.5,0.73) -- (0.5,0.47);\n    \\draw[line width=0.7mm] (0.25,0.48) -- (0.75,0.48);\n    \\draw[line width=0.7mm] (0.2,0.32) -- (0.8,0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.7,0.33) -- (0.7,0) -- (1.0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.3,0.33) -- (0.3,0.03);\n    \\draw[line width=0.32mm, line cap=round] (0.29,0) -- (0,0);\n    \\node[node font=\\sffamily\\bfseries] at (0.5,-0.31) {$M_{1}$};\n    \\coordinate (node_Mx.g) at (0.5,0.73);\n    \\coordinate (node_Mx.d) at (1.0,0);\n  \\end{scope}`;
   }
   if (toolMode === "addNMOS_Right_G") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (-0.26,0);\n    \\draw[line width=0.7mm] (-0.25,-0.25) -- (-0.25,0.25);\n    \\draw[line width=0.7mm] (-0.41,-0.3) -- (-0.41,0.3);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.40,0.2) -- (-0.73,0.2) -- (-0.73,0.5);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.40,-0.2) -- (-0.70,-0.2);\n    \\draw[line width=0.32mm, line cap=round] (-0.73,-0.21) -- (-0.73,-0.5);\n    \\node[node font=\\sffamily\\bfseries] at (-1.04,0) {$M_1$};\n    \\coordinate (node_Mx.d) at (-0.73,0.5);\n    \\coordinate (node_Mx.s) at (-0.73,-0.5);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (-0.26,0);\n    \\draw[line width=0.7mm] (-0.25,-0.25) -- (-0.25,0.25);\n    \\draw[line width=0.7mm] (-0.41,-0.3) -- (-0.41,0.3);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.40,0.2) -- (-0.73,0.2) -- (-0.73,0.5);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.40,-0.2) -- (-0.70,-0.2);\n    \\draw[line width=0.32mm, line cap=round] (-0.73,-0.21) -- (-0.73,-0.5);\n    \\node[node font=\\sffamily\\bfseries] at (-1.04,0) {$M_{1}$};\n    \\coordinate (node_Mx.d) at (-0.73,0.5);\n    \\coordinate (node_Mx.s) at (-0.73,-0.5);\n  \\end{scope}`;
   }
   if (toolMode === "addNMOS_Right_D") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.73,-0.5) -- (0.47,-0.5);\n    \\draw[line width=0.7mm] (0.48,-0.75) -- (0.48,-0.25);\n    \\draw[line width=0.7mm] (0.32,-0.8) -- (0.32,-0.2);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.33,-0.3) -- (0,-0.3) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.33,-0.7) -- (0.03,-0.7);\n    \\draw[line width=0.32mm, line cap=round] (0,-0.71) -- (0,-1.0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.31,-0.5) {$M_1$};\n    \\coordinate (node_Mx.g) at (0.73,-0.5);\n    \\coordinate (node_Mx.s) at (0,-1.0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.73,-0.5) -- (0.47,-0.5);\n    \\draw[line width=0.7mm] (0.48,-0.75) -- (0.48,-0.25);\n    \\draw[line width=0.7mm] (0.32,-0.8) -- (0.32,-0.2);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.33,-0.3) -- (0,-0.3) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.33,-0.7) -- (0.03,-0.7);\n    \\draw[line width=0.32mm, line cap=round] (0,-0.71) -- (0,-1.0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.31,-0.5) {$M_{1}$};\n    \\coordinate (node_Mx.g) at (0.73,-0.5);\n    \\coordinate (node_Mx.s) at (0,-1.0);\n  \\end{scope}`;
   }
   if (toolMode === "addNMOS_Right_S") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.73,0.5) -- (0.47,0.5);\n    \\draw[line width=0.7mm] (0.48,0.25) -- (0.48,0.75);\n    \\draw[line width=0.7mm] (0.32,0.2) -- (0.32,0.8);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.33,0.7) -- (0,0.7) -- (0,1.0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.33,0.3) -- (0.03,0.3);\n    \\draw[line width=0.32mm, line cap=round] (0,0.29) -- (0,0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.31,0.5) {$M_1$};\n    \\coordinate (node_Mx.d) at (0,1.0);\n    \\coordinate (node_Mx.g) at (0.73,0.5);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.73,0.5) -- (0.47,0.5);\n    \\draw[line width=0.7mm] (0.48,0.25) -- (0.48,0.75);\n    \\draw[line width=0.7mm] (0.32,0.2) -- (0.32,0.8);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.33,0.7) -- (0,0.7) -- (0,1.0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.33,0.3) -- (0.03,0.3);\n    \\draw[line width=0.32mm, line cap=round] (0,0.29) -- (0,0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.31,0.5) {$M_{1}$};\n    \\coordinate (node_Mx.d) at (0,1.0);\n    \\coordinate (node_Mx.g) at (0.73,0.5);\n  \\end{scope}`;
   }
   if (toolMode === "addNMOS_Bottom_G") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,0.26);\n    \\draw[line width=0.7mm] (-0.25,0.25) -- (0.25,0.25);\n    \\draw[line width=0.7mm] (-0.3,0.41) -- (0.3,0.41);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.2,0.40) -- (-0.2,0.73) -- (-0.5,0.73);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.2,0.40) -- (0.2,0.70);\n    \\draw[line width=0.32mm, line cap=round] (0.21,0.73) -- (0.5,0.73);\n    \\node[node font=\\sffamily\\bfseries] at (0,1.04) {$M_1$};\n    \\coordinate (node_Mx.d) at (-0.5,0.73);\n    \\coordinate (node_Mx.s) at (0.5,0.73);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,0.26);\n    \\draw[line width=0.7mm] (-0.25,0.25) -- (0.25,0.25);\n    \\draw[line width=0.7mm] (-0.3,0.41) -- (0.3,0.41);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.2,0.40) -- (-0.2,0.73) -- (-0.5,0.73);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.2,0.40) -- (0.2,0.70);\n    \\draw[line width=0.32mm, line cap=round] (0.21,0.73) -- (0.5,0.73);\n    \\node[node font=\\sffamily\\bfseries] at (0,1.04) {$M_{1}$};\n    \\coordinate (node_Mx.d) at (-0.5,0.73);\n    \\coordinate (node_Mx.s) at (0.5,0.73);\n  \\end{scope}`;
   }
   if (toolMode === "addNMOS_Bottom_D") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.5,-0.73) -- (0.5,-0.47);\n    \\draw[line width=0.7mm] (0.25,-0.48) -- (0.75,-0.48);\n    \\draw[line width=0.7mm] (0.2,-0.32) -- (0.8,-0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.3,-0.33) -- (0.3,0) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.7,-0.33) -- (0.7,-0.03);\n    \\draw[line width=0.32mm, line cap=round] (0.71,0) -- (1.0,0);\n    \\node[node font=\\sffamily\\bfseries] at (0.5,0.31) {$M_1$};\n    \\coordinate (node_Mx.g) at (0.5,-0.73);\n    \\coordinate (node_Mx.s) at (1.0,0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.5,-0.73) -- (0.5,-0.47);\n    \\draw[line width=0.7mm] (0.25,-0.48) -- (0.75,-0.48);\n    \\draw[line width=0.7mm] (0.2,-0.32) -- (0.8,-0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.3,-0.33) -- (0.3,0) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.7,-0.33) -- (0.7,-0.03);\n    \\draw[line width=0.32mm, line cap=round] (0.71,0) -- (1.0,0);\n    \\node[node font=\\sffamily\\bfseries] at (0.5,0.31) {$M_{1}$};\n    \\coordinate (node_Mx.g) at (0.5,-0.73);\n    \\coordinate (node_Mx.s) at (1.0,0);\n  \\end{scope}`;
   }
   if (toolMode === "addNMOS_Bottom_S") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.5,-0.73) -- (-0.5,-0.47);\n    \\draw[line width=0.7mm] (-0.75,-0.48) -- (-0.25,-0.48);\n    \\draw[line width=0.7mm] (-0.8,-0.32) -- (-0.2,-0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.7,-0.33) -- (-0.7,0) -- (-1.0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.3,-0.33) -- (-0.3,-0.03);\n    \\draw[line width=0.32mm, line cap=round] (-0.29,0) -- (0,0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.5,0.31) {$M_1$};\n    \\coordinate (node_Mx.g) at (-0.5,-0.73);\n    \\coordinate (node_Mx.d) at (-1.0,0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.5,-0.73) -- (-0.5,-0.47);\n    \\draw[line width=0.7mm] (-0.75,-0.48) -- (-0.25,-0.48);\n    \\draw[line width=0.7mm] (-0.8,-0.32) -- (-0.2,-0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.7,-0.33) -- (-0.7,0) -- (-1.0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.3,-0.33) -- (-0.3,-0.03);\n    \\draw[line width=0.32mm, line cap=round] (-0.29,0) -- (0,0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.5,0.31) {$M_{1}$};\n    \\coordinate (node_Mx.g) at (-0.5,-0.73);\n    \\coordinate (node_Mx.d) at (-1.0,0);\n  \\end{scope}`;
   }
 
   // PMOS
   if (toolMode === "addPMOS" || toolMode === "addPMOS_Left_G") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0.26,0);\n    \\draw[line width=0.7mm] (0.25,-0.25) -- (0.25,0.25);\n    \\draw[line width=0.7mm] (0.41,-0.3) -- (0.41,0.3);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.40,-0.2) -- (0.73,-0.2) -- (0.73,-0.5);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.73,0.2) -- (0.44,0.2);\n    \\draw[line width=0.32mm, line cap=round] (0.73,0.5) -- (0.73,0.2);\n    \\node[node font=\\sffamily\\bfseries] at (1.04,0) {$M_1$};\n    \\coordinate (node_Mx.d) at (0.73,-0.5);\n    \\coordinate (node_Mx.s) at (0.73,0.5);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0.26,0);\n    \\draw[line width=0.7mm] (0.25,-0.25) -- (0.25,0.25);\n    \\draw[line width=0.7mm] (0.41,-0.3) -- (0.41,0.3);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.40,-0.2) -- (0.73,-0.2) -- (0.73,-0.5);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.73,0.2) -- (0.44,0.2);\n    \\draw[line width=0.32mm, line cap=round] (0.73,0.5) -- (0.73,0.2);\n    \\node[node font=\\sffamily\\bfseries] at (1.04,0) {$M_{1}$};\n    \\coordinate (node_Mx.d) at (0.73,-0.5);\n    \\coordinate (node_Mx.s) at (0.73,0.5);\n  \\end{scope}`;
   }
   if (toolMode === "addPMOS_Left_D") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.73,0.5) -- (-0.47,0.5);\n    \\draw[line width=0.7mm] (-0.48,0.25) -- (-0.48,0.75);\n    \\draw[line width=0.7mm] (-0.32,0.2) -- (-0.32,0.8);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.33,0.3) -- (0,0.3) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0,0.7) -- (-0.29,0.7);\n    \\draw[line width=0.32mm, line cap=round] (0,1.0) -- (0,0.7);\n    \\node[node font=\\sffamily\\bfseries] at (0.31,0.5) {$M_1$};\n    \\coordinate (node_Mx.g) at (-0.73,0.5);\n    \\coordinate (node_Mx.s) at (0,1.0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.73,0.5) -- (-0.47,0.5);\n    \\draw[line width=0.7mm] (-0.48,0.25) -- (-0.48,0.75);\n    \\draw[line width=0.7mm] (-0.32,0.2) -- (-0.32,0.8);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.33,0.3) -- (0,0.3) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0,0.7) -- (-0.29,0.7);\n    \\draw[line width=0.32mm, line cap=round] (0,1.0) -- (0,0.7);\n    \\node[node font=\\sffamily\\bfseries] at (0.31,0.5) {$M_{1}$};\n    \\coordinate (node_Mx.g) at (-0.73,0.5);\n    \\coordinate (node_Mx.s) at (0,1.0);\n  \\end{scope}`;
   }
   if (toolMode === "addPMOS_Left_S") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.73,-0.5) -- (-0.47,-0.5);\n    \\draw[line width=0.7mm] (-0.48,-0.75) -- (-0.48,-0.25);\n    \\draw[line width=0.7mm] (-0.32,-0.8) -- (-0.32,-0.2);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.33,-0.7) -- (0,-0.7) -- (0,-1.0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0,-0.3) -- (-0.29,-0.3);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.3);\n    \\node[node font=\\sffamily\\bfseries] at (0.31,-0.5) {$M_1$};\n    \\coordinate (node_Mx.g) at (-0.73,-0.5);\n    \\coordinate (node_Mx.d) at (0,-1.0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.73,-0.5) -- (-0.47,-0.5);\n    \\draw[line width=0.7mm] (-0.48,-0.75) -- (-0.48,-0.25);\n    \\draw[line width=0.7mm] (-0.32,-0.8) -- (-0.32,-0.2);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.33,-0.7) -- (0,-0.7) -- (0,-1.0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0,-0.3) -- (-0.29,-0.3);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.3);\n    \\node[node font=\\sffamily\\bfseries] at (0.31,-0.5) {$M_{1}$};\n    \\coordinate (node_Mx.g) at (-0.73,-0.5);\n    \\coordinate (node_Mx.d) at (0,-1.0);\n  \\end{scope}`;
   }
   if (toolMode === "addPMOS_Top_G") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.26);\n    \\draw[line width=0.7mm] (-0.25,-0.25) -- (0.25,-0.25);\n    \\draw[line width=0.7mm] (-0.3,-0.41) -- (0.3,-0.41);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.2,-0.40) -- (-0.2,-0.73) -- (-0.5,-0.73);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.2,-0.73) -- (0.2,-0.44);\n    \\draw[line width=0.32mm, line cap=round] (0.5,-0.73) -- (0.2,-0.73);\n    \\node[node font=\\sffamily\\bfseries] at (0,-1.04) {$M_1$};\n    \\coordinate (node_Mx.d) at (-0.5,-0.73);\n    \\coordinate (node_Mx.s) at (0.5,-0.73);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.26);\n    \\draw[line width=0.7mm] (-0.25,-0.25) -- (0.25,-0.25);\n    \\draw[line width=0.7mm] (-0.3,-0.41) -- (0.3,-0.41);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.2,-0.40) -- (-0.2,-0.73) -- (-0.5,-0.73);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.2,-0.73) -- (0.2,-0.44);\n    \\draw[line width=0.32mm, line cap=round] (0.5,-0.73) -- (0.2,-0.73);\n    \\node[node font=\\sffamily\\bfseries] at (0,-1.04) {$M_{1}$};\n    \\coordinate (node_Mx.d) at (-0.5,-0.73);\n    \\coordinate (node_Mx.s) at (0.5,-0.73);\n  \\end{scope}`;
   }
   if (toolMode === "addPMOS_Top_D") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.5,0.73) -- (0.5,0.47);\n    \\draw[line width=0.7mm] (0.25,0.48) -- (0.75,0.48);\n    \\draw[line width=0.7mm] (0.2,0.32) -- (0.8,0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.3,0.33) -- (0.3,0) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.7,0) -- (0.7,0.29);\n    \\draw[line width=0.32mm, line cap=round] (1.0,0) -- (0.7,0);\n    \\node[node font=\\sffamily\\bfseries] at (0.5,-0.31) {$M_1$};\n    \\coordinate (node_Mx.g) at (0.5,0.73);\n    \\coordinate (node_Mx.s) at (1.0,0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.5,0.73) -- (0.5,0.47);\n    \\draw[line width=0.7mm] (0.25,0.48) -- (0.75,0.48);\n    \\draw[line width=0.7mm] (0.2,0.32) -- (0.8,0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.3,0.33) -- (0.3,0) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.7,0) -- (0.7,0.29);\n    \\draw[line width=0.32mm, line cap=round] (1.0,0) -- (0.7,0);\n    \\node[node font=\\sffamily\\bfseries] at (0.5,-0.31) {$M_{1}$};\n    \\coordinate (node_Mx.g) at (0.5,0.73);\n    \\coordinate (node_Mx.s) at (1.0,0);\n  \\end{scope}`;
   }
   if (toolMode === "addPMOS_Top_S") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.5,0.73) -- (-0.5,0.47);\n    \\draw[line width=0.7mm] (-0.75,0.48) -- (-0.25,0.48);\n    \\draw[line width=0.7mm] (-0.8,0.32) -- (-0.2,0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.7,0.33) -- (-0.7,0) -- (-1.0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.3,0) -- (-0.3,0.29);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (-0.3,0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.5,-0.31) {$M_1$};\n    \\coordinate (node_Mx.g) at (-0.5,0.73);\n    \\coordinate (node_Mx.d) at (-1.0,0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.5,0.73) -- (-0.5,0.47);\n    \\draw[line width=0.7mm] (-0.75,0.48) -- (-0.25,0.48);\n    \\draw[line width=0.7mm] (-0.8,0.32) -- (-0.2,0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.7,0.33) -- (-0.7,0) -- (-1.0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.3,0) -- (-0.3,0.29);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (-0.3,0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.5,-0.31) {$M_{1}$};\n    \\coordinate (node_Mx.g) at (-0.5,0.73);\n    \\coordinate (node_Mx.d) at (-1.0,0);\n  \\end{scope}`;
   }
   if (toolMode === "addPMOS_Right_G") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (-0.26,0);\n    \\draw[line width=0.7mm] (-0.25,-0.25) -- (-0.25,0.25);\n    \\draw[line width=0.7mm] (-0.41,-0.3) -- (-0.41,0.3);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.40,-0.2) -- (-0.73,-0.2) -- (-0.73,-0.5);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.73,0.2) -- (-0.44,0.2);\n    \\draw[line width=0.32mm, line cap=round] (-0.73,0.5) -- (-0.73,0.2);\n    \\node[node font=\\sffamily\\bfseries] at (-1.04,0) {$M_1$};\n    \\coordinate (node_Mx.d) at (-0.73,-0.5);\n    \\coordinate (node_Mx.s) at (-0.73,0.5);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (-0.26,0);\n    \\draw[line width=0.7mm] (-0.25,-0.25) -- (-0.25,0.25);\n    \\draw[line width=0.7mm] (-0.41,-0.3) -- (-0.41,0.3);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.40,-0.2) -- (-0.73,-0.2) -- (-0.73,-0.5);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.73,0.2) -- (-0.44,0.2);\n    \\draw[line width=0.32mm, line cap=round] (-0.73,0.5) -- (-0.73,0.2);\n    \\node[node font=\\sffamily\\bfseries] at (-1.04,0) {$M_{1}$};\n    \\coordinate (node_Mx.d) at (-0.73,-0.5);\n    \\coordinate (node_Mx.s) at (-0.73,0.5);\n  \\end{scope}`;
   }
   if (toolMode === "addPMOS_Right_D") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.73,0.5) -- (0.47,0.5);\n    \\draw[line width=0.7mm] (0.48,0.25) -- (0.48,0.75);\n    \\draw[line width=0.7mm] (0.32,0.2) -- (0.32,0.8);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.33,0.3) -- (0,0.3) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0,0.7) -- (0.29,0.7);\n    \\draw[line width=0.32mm, line cap=round] (0,1.0) -- (0,0.7);\n    \\node[node font=\\sffamily\\bfseries] at (-0.31,0.5) {$M_1$};\n    \\coordinate (node_Mx.g) at (0.73,0.5);\n    \\coordinate (node_Mx.s) at (0,1.0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.73,0.5) -- (0.47,0.5);\n    \\draw[line width=0.7mm] (0.48,0.25) -- (0.48,0.75);\n    \\draw[line width=0.7mm] (0.32,0.2) -- (0.32,0.8);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.33,0.3) -- (0,0.3) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0,0.7) -- (0.29,0.7);\n    \\draw[line width=0.32mm, line cap=round] (0,1.0) -- (0,0.7);\n    \\node[node font=\\sffamily\\bfseries] at (-0.31,0.5) {$M_{1}$};\n    \\coordinate (node_Mx.g) at (0.73,0.5);\n    \\coordinate (node_Mx.s) at (0,1.0);\n  \\end{scope}`;
   }
   if (toolMode === "addPMOS_Right_S") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.73,-0.5) -- (0.47,-0.5);\n    \\draw[line width=0.7mm] (0.48,-0.75) -- (0.48,-0.25);\n    \\draw[line width=0.7mm] (0.32,-0.8) -- (0.32,-0.2);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.33,-0.7) -- (0,-0.7) -- (0,-1.0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0,-0.3) -- (0.29,-0.3);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.3);\n    \\node[node font=\\sffamily\\bfseries] at (-0.31,-0.5) {$M_1$};\n    \\coordinate (node_Mx.g) at (0.73,-0.5);\n    \\coordinate (node_Mx.d) at (0,-1.0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.73,-0.5) -- (0.47,-0.5);\n    \\draw[line width=0.7mm] (0.48,-0.75) -- (0.48,-0.25);\n    \\draw[line width=0.7mm] (0.32,-0.8) -- (0.32,-0.2);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.33,-0.7) -- (0,-0.7) -- (0,-1.0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0,-0.3) -- (0.29,-0.3);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.3);\n    \\node[node font=\\sffamily\\bfseries] at (-0.31,-0.5) {$M_{1}$};\n    \\coordinate (node_Mx.g) at (0.73,-0.5);\n    \\coordinate (node_Mx.d) at (0,-1.0);\n  \\end{scope}`;
   }
   if (toolMode === "addPMOS_Bottom_G") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,0.26);\n    \\draw[line width=0.7mm] (-0.25,0.25) -- (0.25,0.25);\n    \\draw[line width=0.7mm] (-0.3,0.41) -- (0.3,0.41);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.2,0.40) -- (0.2,0.73) -- (0.5,0.73);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.2,0.73) -- (-0.2,0.44);\n    \\draw[line width=0.32mm, line cap=round] (-0.5,0.73) -- (-0.2,0.73);\n    \\node[node font=\\sffamily\\bfseries] at (0,1.04) {$M_1$};\n    \\coordinate (node_Mx.d) at (0.5,0.73);\n    \\coordinate (node_Mx.s) at (-0.5,0.73);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.g) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,0.26);\n    \\draw[line width=0.7mm] (-0.25,0.25) -- (0.25,0.25);\n    \\draw[line width=0.7mm] (-0.3,0.41) -- (0.3,0.41);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.2,0.40) -- (0.2,0.73) -- (0.5,0.73);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.2,0.73) -- (-0.2,0.44);\n    \\draw[line width=0.32mm, line cap=round] (-0.5,0.73) -- (-0.2,0.73);\n    \\node[node font=\\sffamily\\bfseries] at (0,1.04) {$M_{1}$};\n    \\coordinate (node_Mx.d) at (0.5,0.73);\n    \\coordinate (node_Mx.s) at (-0.5,0.73);\n  \\end{scope}`;
   }
   if (toolMode === "addPMOS_Bottom_D") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.5,-0.73) -- (-0.5,-0.47);\n    \\draw[line width=0.7mm] (-0.75,-0.48) -- (-0.25,-0.48);\n    \\draw[line width=0.7mm] (-0.8,-0.32) -- (-0.2,-0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.3,-0.33) -- (-0.3,0) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.7,0) -- (-0.7,-0.29);\n    \\draw[line width=0.32mm, line cap=round] (-1.0,0) -- (-0.7,0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.5,0.31) {$M_1$};\n    \\coordinate (node_Mx.g) at (-0.5,-0.73);\n    \\coordinate (node_Mx.s) at (-1.0,0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.d) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (-0.5,-0.73) -- (-0.5,-0.47);\n    \\draw[line width=0.7mm] (-0.75,-0.48) -- (-0.25,-0.48);\n    \\draw[line width=0.7mm] (-0.8,-0.32) -- (-0.2,-0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (-0.3,-0.33) -- (-0.3,0) -- (0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.7,0) -- (-0.7,-0.29);\n    \\draw[line width=0.32mm, line cap=round] (-1.0,0) -- (-0.7,0);\n    \\node[node font=\\sffamily\\bfseries] at (-0.5,0.31) {$M_{1}$};\n    \\coordinate (node_Mx.g) at (-0.5,-0.73);\n    \\coordinate (node_Mx.s) at (-1.0,0);\n  \\end{scope}`;
   }
   if (toolMode === "addPMOS_Bottom_S") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.5,-0.73) -- (0.5,-0.47);\n    \\draw[line width=0.7mm] (0.25,-0.48) -- (0.75,-0.48);\n    \\draw[line width=0.7mm] (0.2,-0.32) -- (0.8,-0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.7,-0.33) -- (0.7,0) -- (1.0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.3,0) -- (0.3,-0.29);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0.3,0);\n    \\node[node font=\\sffamily\\bfseries] at (0.5,0.31) {$M_1$};\n    \\coordinate (node_Mx.g) at (0.5,-0.73);\n    \\coordinate (node_Mx.d) at (1.0,0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.5,-0.73) -- (0.5,-0.47);\n    \\draw[line width=0.7mm] (0.25,-0.48) -- (0.75,-0.48);\n    \\draw[line width=0.7mm] (0.2,-0.32) -- (0.8,-0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.7,-0.33) -- (0.7,0) -- (1.0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.3,0) -- (0.3,-0.29);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0.3,0);\n    \\node[node font=\\sffamily\\bfseries] at (0.5,0.31) {$M_{1}$};\n    \\coordinate (node_Mx.g) at (0.5,-0.73);\n    \\coordinate (node_Mx.d) at (1.0,0);\n  \\end{scope}`;
   }
 
   // Dot Node
@@ -128,6 +144,54 @@ export function getCircuitComponentSnippet(toolMode: ToolMode, xCm: string, yCm:
   // VDD
   if (toolMode === "addVDD") {
     return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_VDD.bottom) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,0.22);\n    \\draw[ultra thick] (-0.95,0.22) -- (0.9,0.22);\n    \\node[draw=none] at (1.2,0.22) {$V_{DD}$};\n  \\end{scope}`;
+  }
+
+  // Port objects (vdd-port / port). Same lead + hollow-circle silhouette as the IO
+  // terminal, but the pin is `node_<family>x.port` so the placement auto-numbers to
+  // VDD1 / VDD2 / Port1 / Port2 and the label stays `$V_{DD}$` (or the net name the user
+  // types for a generic port — `$V_{in}$` by default).
+  const portFamily = toolMode.startsWith("addIoNode_VddPort")
+    ? "VDD"
+    : toolMode.startsWith("addIoNode_Port")
+      ? "Port"
+      : null;
+  if (portFamily) {
+    const portLabel = portFamily === "VDD" ? "$V_{DD}$" : "$V_{in}$";
+    const isLeft = toolMode.endsWith("_Left");
+    const isTop = toolMode.endsWith("_Top");
+    const isRight = toolMode.endsWith("_Right");
+    if (isLeft) {
+      const scopeX = (parseFloat(xCm) - 0.6).toFixed(2);
+      return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (-0.01,-0.30) {${portLabel}};\n    \\draw[line width=0.32mm, line cap=round] (0.15,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.6,0);\n    \\coordinate (node_${portFamily}x.port) at (0.6,0);\n  \\end{scope}`;
+    }
+    if (isTop) {
+      return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,0.45) {${portLabel}};\n    \\draw[line width=0.32mm, line cap=round] (0,0.45) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0,0);\n    \\coordinate (node_${portFamily}x.port) at (0,0);\n  \\end{scope}`;
+    }
+    if (isRight) {
+      const scopeX = (parseFloat(xCm) - 0.15).toFixed(2);
+      return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (0.85,-0.30) {${portLabel}};\n    \\draw[line width=0.32mm, line cap=round] (0.6,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.15,0);\n    \\coordinate (node_${portFamily}x.port) at (0.15,0);\n  \\end{scope}`;
+    }
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,-0.45) {${portLabel}};\n    \\draw[line width=0.32mm, line cap=round] (0,-0.45) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0,0);\n    \\coordinate (node_${portFamily}x.port) at (0,0);\n  \\end{scope}`;
+  }
+
+  // Power rails (VDD rail). The single-click tool modes stamp the default-length rail
+  // anchored at the clicked end; the two-point builder lives in ./power-rail and is what
+  // the "click the second end" interaction calls.
+  if (toolMode === "addPowerRail" || toolMode === "addPowerRail_H_Left" || toolMode === "addPowerRail_H_Right") {
+    const anchorX = parseFloat(xCm);
+    const anchoredLeft = toolMode !== "addPowerRail_H_Right";
+    const originX = anchoredLeft ? anchorX : anchorX - POWER_RAIL_DEFAULT_LENGTH_CM;
+    return buildPowerRailSnippet(originX, parseFloat(yCm), POWER_RAIL_DEFAULT_LENGTH_CM, {
+      orientation: "horizontal"
+    });
+  }
+  if (toolMode === "addPowerRail_V_Top" || toolMode === "addPowerRail_V_Bottom") {
+    const anchorY = parseFloat(yCm);
+    const anchoredTop = toolMode === "addPowerRail_V_Top";
+    const originY = anchoredTop ? anchorY : anchorY + POWER_RAIL_DEFAULT_LENGTH_CM;
+    return buildPowerRailSnippet(parseFloat(xCm), originY, POWER_RAIL_DEFAULT_LENGTH_CM, {
+      orientation: "vertical"
+    });
   }
 
   // Capacitors
@@ -281,4 +345,49 @@ export function getCircuitComponentSnippet(toolMode: ToolMode, xCm: string, yCm:
   }
 
   return null;
+}
+
+/** Matches the placeholder instance id every component template ships with (`node_Rx`, `node_Mx`, ...). */
+const PLACEHOLDER_NODE_ID = /\bnode_([A-Za-z]+)x\b/;
+
+/**
+ * Next free instance index for a component family, derived from the ids already in the
+ * document: `node_R1`, `node_R2` -> 3. Returns 1 when the family is unused.
+ */
+export function nextCircuitInstanceIndex(source: string, family: string): number {
+  const used = new Set<number>();
+  const pattern = new RegExp(`\\bnode_${family}(\\d+)\\b`, "g");
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(source)) !== null) {
+    used.add(Number(match[1]));
+  }
+  let index = 1;
+  while (used.has(index)) {
+    index += 1;
+  }
+  return index;
+}
+
+/**
+ * Rewrites a component snippet's placeholder ids (`node_Rx`, `node_Mx`, ...) to the next
+ * free index for that family, so placing a second component of the same kind no longer
+ * emits colliding `\coordinate` names. Labels following the same family+index convention
+ * are renumbered with it, and the rewrite always emits a *braced* subscript so multi-digit
+ * indices stay inside the subscript (`$M_{1}$` -> `$M_{10}$`, never `$M_10$`, which TeX
+ * would typeset as a subscripted "1" followed by a full-size "0"). Both the braced form the
+ * templates ship (`$M_{1}$`) and any legacy unbraced form already in a snippet (`$M_1$`) are
+ * matched and normalised to the braced form. Unrelated labels (`$R_{D}$`, `$i$`, `$V_{out}$`)
+ * are left untouched. Snippets without a placeholder id (GND, VDD) are returned unchanged.
+ */
+export function assignUniqueCircuitInstanceIndex(snippet: string, source: string): string {
+  const familyMatch = PLACEHOLDER_NODE_ID.exec(snippet);
+  if (!familyMatch) {
+    return snippet;
+  }
+  const family = familyMatch[1];
+  const index = nextCircuitInstanceIndex(source, family);
+  return snippet
+    .replace(new RegExp(`\\bnode_${family}x\\b`, "g"), `node_${family}${index}`)
+    // Braced or bare subscript, family`_`<digits>: re-emit braced so the braces grow with the index.
+    .replace(new RegExp(`\\$${family}_(?:\\{\\d+\\}|\\d+)\\$`, "g"), `$${family}_{${index}}$`);
 }

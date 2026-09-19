@@ -13,6 +13,8 @@ clampNumber,
 isPathMorphingSuboptionPropertyId,
 lineWidthPreviewLineWidth,
 lineWidthValueLabel,
+localizeEnumOptionLabel,
+localizePropertyLabel,
 type LineWidthDropdownValue
 } from "../panel-helpers";
 import {
@@ -68,6 +70,7 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
     applyShadowPropertyValue,
     applyShadowPresetValue
   } = api;
+    const localizedLabel = localizePropertyLabel(property.label, property.id);
     const provenance = renderedSinglePropertyProvenance[property.id] ?? implicitDefaultProvenance(property);
     const valueClassName = withValueProvenanceClass(undefined, provenance);
     const propertyClassName = isPathMorphingSuboptionPropertyId(property.id)
@@ -108,18 +111,22 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
 
     if (property.kind === "enum") {
       const writable = property.write.writable && capability.status !== "unsupported";
+      const localizedOptions = property.options.map((option) => ({
+        ...option,
+        label: localizeEnumOptionLabel(option.value, option.label)
+      }));
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             <CustomDropdown
-              ariaLabel={property.label}
+              ariaLabel={localizedLabel}
               value={property.value}
-              options={property.options}
+              options={localizedOptions}
               disabled={!writable}
               onChange={(nextValue) => { applySetProperty(property.write, nextValue); }}
-              renderValue={() => <span className={valueClassName}>{property.options.find((option) => option.value === property.value)?.label ?? property.value}</span>}
+              renderValue={() => <span className={valueClassName}>{localizedOptions.find((option) => option.value === property.value)?.label ?? property.value}</span>}
             />,
             true
           )}
@@ -147,7 +154,7 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
                 );
               }}
             />
-            <span className={withValueProvenanceClass(css.checkboxLabel, provenance)}>{property.label}</span>
+            <span className={withValueProvenanceClass(css.checkboxLabel, provenance)}>{localizedLabel}</span>
           </label>
           {renderReadOnlyReasonNote(readOnlyReason)}
         </div>
@@ -169,7 +176,7 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
       return (
         <div key={property.id} className={propertyClassName}>
           <div className={css.sliderHeaderRow}>
-            <div className={css.propertyLabel}>{property.label}</div>
+            <div className={css.propertyLabel}>{localizedLabel}</div>
             <div className={`${css.sliderReadout} ${valueClassName}`}>{readoutText}</div>
           </div>
           {maybeWrapWithProvenanceTooltip(
@@ -228,7 +235,7 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
       const writable = property.write.writable && capability.status !== "unsupported";
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderNodeTextAlignToolbar(
@@ -252,12 +259,12 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
       const previewOwnerKey = `node-shape:${property.write.elementId}:${property.id}`;
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderNodeShapeDropdown(
               {
-                label: property.label,
+                label: localizedLabel,
                 value: property.value,
                 options: property.options
               },
@@ -288,7 +295,7 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
       const previewOwnerKey = `node-font-size:${property.write.elementId}:${property.id}`;
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderNodeFontToolbar(
@@ -303,7 +310,7 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
                 sizePresetMixed: false,
                 customSizePt: property.customSizePt,
                 sizeOptions: property.sizeOptions,
-                label: property.label
+                label: localizedLabel
               },
               writable,
               (nextFamily: NodeFontFamilyId) =>
@@ -371,11 +378,11 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
       const writable = property.write.writable && capability.status !== "unsupported";
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             <ColorPickerField
-              ariaLabel={property.label}
+              ariaLabel={localizedLabel}
               value={property.value ?? "none"}
               syntaxValue={property.syntaxValue}
               options={property.options}
@@ -404,12 +411,12 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
       const writable = property.write.writable && capability.status !== "unsupported";
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderFillModeDropdown(
               {
-                label: property.label,
+                label: localizedLabel,
                 value: property.value,
                 options: property.options
               },
@@ -432,12 +439,12 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
       const writable = property.write.writable && capability.status !== "unsupported";
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderFillShadingDropdown(
               {
-                label: property.label,
+                label: localizedLabel,
                 value: property.value,
                 options: property.options
               },
@@ -458,12 +465,12 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
       const writable = property.write.writable && capability.status !== "unsupported";
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderFillPatternDropdown(
               {
-                label: property.label,
+                label: localizedLabel,
                 value: property.value,
                 options: property.options
               },
@@ -484,7 +491,7 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
       const writable = property.write.writable && capability.status !== "unsupported";
       return (
         <div key={property.id} className={propertyClassName}>
-          {renderScrubbableNumberLabel(property.label, {
+          {renderScrubbableNumberLabel(localizedLabel, {
             writable,
             value: property.value,
             step: property.step,
@@ -529,11 +536,11 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
       const dropdownPreviewLineWidth = lineWidthPreviewLineWidth(dropdownValue, property.value);
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             <CustomDropdown
-              ariaLabel={`${property.label} preset`}
+              ariaLabel={`${localizedLabel} 预设`}
               value={dropdownValue}
               options={LINE_WIDTH_DROPDOWN_OPTIONS}
               disabled={!writable}
@@ -630,12 +637,12 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
       const previewOwnerKey = `dash-style:${property.write.elementId}:${property.id}`;
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderDashStyleDropdown(
               {
-                label: property.label,
+                label: localizedLabel,
                 value: property.value,
                 previewLineWidth: property.previewLineWidth,
                 options: property.options
@@ -666,12 +673,12 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
       const previewOwnerKey = `line-cap:${property.write.elementId}:${property.id}`;
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderLineCapDropdown(
               {
-                label: property.label,
+                label: localizedLabel,
                 value: property.value,
                 previewLineWidth: property.previewLineWidth,
                 options: property.options
@@ -702,12 +709,12 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
       const previewOwnerKey = `line-join:${property.write.elementId}:${property.id}`;
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderLineJoinDropdown(
               {
-                label: property.label,
+                label: localizedLabel,
                 value: property.value,
                 previewLineWidth: property.previewLineWidth,
                 options: property.options
@@ -738,12 +745,12 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
       const previewOwnerKey = `path-morphing:${property.write.elementId}:${property.id}`;
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderPathMorphingDecorationDropdown(
               {
-                label: property.label,
+                label: localizedLabel,
                 value: property.value,
                 previewLineWidth: property.previewLineWidth,
                 options: property.options
@@ -792,7 +799,7 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
                   property.disableRequiresSharpCorners
                 ); }}
             />
-            <span className={withValueProvenanceClass(css.checkboxLabel, provenance)}>{property.label}</span>
+            <span className={withValueProvenanceClass(css.checkboxLabel, provenance)}>{localizedLabel}</span>
           </label>
           {property.enabled ? (
             <div className={css.roundedCornersControl}>
@@ -824,12 +831,12 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
       const writable = property.write.writable && capability.status !== "unsupported";
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderShadowPresetDropdown(
               {
-                label: property.label,
+                label: localizedLabel,
                 value: property.value,
                 options: property.options
               },
@@ -849,13 +856,13 @@ export function renderSingleInspectorProperty(property: InspectorProperty, api: 
     const previewOwnerKey = `arrow-tip:${property.write.elementId}:${property.id}`;
     return (
       <div key={property.id} className={propertyClassName}>
-        <div className={css.propertyLabel}>{property.label}</div>
+        <div className={css.propertyLabel}>{localizedLabel}</div>
         {maybeWrapWithProvenanceTooltip(
           provenance,
           renderArrowTipDropdown(
             {
               id: property.id,
-              label: property.label,
+              label: localizedLabel,
               side: property.side,
               value: property.value,
               options: property.options,

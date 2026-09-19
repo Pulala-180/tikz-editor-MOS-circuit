@@ -55,10 +55,13 @@ export {
   collectSelectionGeometryFromBounds,
   collectSourceWorldBounds,
   boundsFromPoints,
-  selectionSnapPointsFromBounds
+  selectionSnapPointsFromBounds,
+  findNearestWireSegmentSnap,
+  findWireSegmentAtPoint,
+  collectWireSegmentsFromScene
 } from "./edit/snapping/index.js";
 
-export type { MoveAxis } from "./edit/snapping/index.js";
+export type { MoveAxis, WireSegment, WireSegmentSnapResult } from "./edit/snapping/index.js";
 
 export type { ParseTikzOptions, ParseTikzResult } from "./parser/index.js";
 export type * from "./parser/incremental.js";

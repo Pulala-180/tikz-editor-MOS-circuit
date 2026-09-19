@@ -306,6 +306,21 @@
   fill: var(--color-snap);
 }
 
+/* ⊕ — "you can connect here", drawn over a snap target. Decorative only: it sits inside the
+   pointer-events:none snap layer and never intercepts a click. The stroke is a screen-pixel
+   constant (vector-effect below); the radius is a caller-supplied user-unit length that is
+   itself a fixed number of screen pixels, so the glyph does not scale with zoom. No crispEdges:
+   that aliases this ring, and only helps the upright cross, which keeps the snapLine class. */
+.connectTargetMarker {
+  pointer-events: none;
+}
+
+.connectTargetRing {
+  fill: none;
+  stroke: var(--color-snap);
+  vector-effect: non-scaling-stroke;
+}
+
 .gridMinor {
   stroke: rgba(85, 82, 76, 0.16);
   vector-effect: non-scaling-stroke;
@@ -461,6 +476,127 @@
   font-size: 9px;
   line-height: 1;
   letter-spacing: 0;
+  user-select: none;
+}
+
+.textEditToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  margin: 0 0 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+  user-select: none;
+}
+
+.textEditToolbarButtonWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.textEditToolbarButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 5px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.textEditToolbarButton:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.textEditToolbarButton:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.textEditToolbarButtonPrimary {
+  color: var(--accent-dark);
+  font-weight: 600;
+}
+
+.textEditToolbarSpacer {
+  flex: 1 1 auto;
+}
+
+.textEditSymbolPalette {
+  flex: 1 0 100%;
+  display: grid;
+  grid-template-columns: repeat(10, 22px);
+  gap: 2px;
+  margin-top: 3px;
+  padding-top: 3px;
+  border-top: 1px dashed color-mix(in srgb, var(--border) 50%, transparent);
+}
+
+.textEditSymbolButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.textEditSymbolButton:hover {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.textEditPreview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Tall enough that the mirrored MathJax SVG can actually be scaled UP. This used to be 36px with
+     the SVG capped by `max-height`, which only ever shrank it — so a label drawn small on the
+     canvas stayed barely legible in the panel. */
+  height: 56px;
+  max-width: 100%;
+  margin: 0 0 4px;
+  padding: 0 6px;
+  overflow: hidden;
+  color: var(--muted);
+}
+
+.textEditPreviewMath {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.textEditPreviewMath svg {
+  /* Fill the preview box; the SVG's own preserveAspectRatio keeps the aspect ratio. This is what
+     scales the label up rather than rendering it at its (possibly tiny) canvas size. */
+  width: 100%;
+  height: 100%;
+}
+
+.textEditPreviewPlaceholder {
+  font-size: 10px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  opacity: 0.7;
   user-select: none;
 }
 
@@ -639,6 +775,30 @@
 .nodeAnchorPointSnapped {
   fill: rgba(53, 194, 79, 0.9);
   stroke: rgba(16, 102, 34, 1);
+}
+
+/* Virtuoso-style pin halo: marks where a wire can be started. Decorative only -- never
+   interactive, so a ring wider than the dot cannot steal clicks from it. */
+.nodeAnchorHalo {
+  fill: none;
+  stroke: rgba(60, 172, 83, 0.38);
+  vector-effect: non-scaling-stroke;
+  pointer-events: none;
+}
+
+.nodeAnchorHaloSnapped {
+  stroke: rgba(53, 194, 79, 0.9);
+  animation: nodeAnchorHaloPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes nodeAnchorHaloPulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .nodeAnchorPointInteractive {

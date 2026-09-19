@@ -19,7 +19,7 @@ export const DEFAULT_SOURCE = String.raw`\begin{tikzpicture}
     \draw[thick, line cap=round, line join=round] (0.40,0.2) -- (0.73,0.2) -- (0.73,0.5);
     \draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, thick, line cap=round] (0.40,-0.2) -- (0.70,-0.2);
     \draw[thick, line cap=round] (0.73,-0.21) -- (0.73,-0.5);
-    \node[node font=\sffamily\bfseries] at (1.04,0) {$M_1$};
+    \node[node font=\sffamily\bfseries] at (1.04,0) {$M_{1}$};
     \coordinate (node_Mx.d) at (0.73,0.5);
     \coordinate (node_Mx.s) at (0.73,-0.5);
   \end{scope}

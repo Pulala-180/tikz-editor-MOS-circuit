@@ -10,6 +10,7 @@ import {
   isFillAdvancedPropertyId,
   isFillMoreOptionsPropertyId,
   isStrokeMoreOptionsPropertyId,
+  localizeSectionTitle,
   type InspectorPropertyProvenance,
   type InspectorPropertyProvenanceMap
 } from "./panel-helpers";
@@ -102,7 +103,7 @@ export function InspectorSingleSection(props: {
   return (
     <SidePanel.Section key={section.id}>
       <SidePanel.SectionHeader>
-        <span>{section.title}</span>
+        <span>{localizeSectionTitle(section.title)}</span>
       </SidePanel.SectionHeader>
       <SidePanel.SectionBody>
         {visibleProperties.map((property, index) => {
@@ -150,7 +151,7 @@ export function InspectorSingleSection(props: {
             className={css.moreOptionsToggle}
             onClick={() => { setStrokeMoreOptionsOpen((current) => !current); }}
           >
-            {showStrokeMoreOptions ? "fewer options.." : "more options.."}
+            {showStrokeMoreOptions ? "收起选项..." : "更多选项..."}
           </button>
         ) : null}
         {section.id === "fill" &&
@@ -161,7 +162,7 @@ export function InspectorSingleSection(props: {
             className={css.moreOptionsToggle}
             onClick={() => { setFillMoreOptionsOpen((current) => !current); }}
           >
-            {showFillMoreOptions ? "fewer options.." : "more options.."}
+            {showFillMoreOptions ? "收起选项..." : "更多选项..."}
           </button>
         ) : null}
         {section.id === "fill" &&
@@ -181,7 +182,7 @@ export function InspectorSingleSection(props: {
                 onEnableGradientFillSingle();
               }}
             >
-              + gradient
+              + 渐变
             </button>
             <button
               type="button"
@@ -195,7 +196,7 @@ export function InspectorSingleSection(props: {
                 onEnablePatternFillSingle();
               }}
             >
-              + pattern
+              + 图案
             </button>
           </div>
         ) : null}
@@ -290,7 +291,7 @@ export function InspectorMultiSection(props: {
   return (
     <SidePanel.Section key={section.id}>
       <SidePanel.SectionHeader>
-        <span>{section.title}</span>
+        <span>{localizeSectionTitle(section.title)}</span>
       </SidePanel.SectionHeader>
       <SidePanel.SectionBody>
         {visibleProperties.map((property, index) => {
@@ -338,7 +339,7 @@ export function InspectorMultiSection(props: {
             className={css.moreOptionsToggle}
             onClick={() => { setStrokeMoreOptionsOpen((current) => !current); }}
           >
-            {showStrokeMoreOptions ? "fewer options.." : "more options.."}
+            {showStrokeMoreOptions ? "收起选项..." : "更多选项..."}
           </button>
         ) : null}
         {section.id === "fill" &&
@@ -349,7 +350,7 @@ export function InspectorMultiSection(props: {
             className={css.moreOptionsToggle}
             onClick={() => { setFillMoreOptionsOpen((current) => !current); }}
           >
-            {showFillMoreOptions ? "fewer options.." : "more options.."}
+            {showFillMoreOptions ? "收起选项..." : "更多选项..."}
           </button>
         ) : null}
         {section.id === "fill" &&
@@ -369,7 +370,7 @@ export function InspectorMultiSection(props: {
                 onEnableGradientFillMulti();
               }}
             >
-              + gradient
+              + 渐变
             </button>
             <button
               type="button"
@@ -383,7 +384,7 @@ export function InspectorMultiSection(props: {
                 onEnablePatternFillMulti();
               }}
             >
-              + pattern
+              + 图案
             </button>
           </div>
         ) : null}

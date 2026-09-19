@@ -1093,7 +1093,7 @@ export function selectedSnippets(context: SelectionCommandContext): string[] {
     const rawRefs = resolveStatementRefs(snapshot, statementIds);
     const refIds = new Set(rawRefs.map((r) => r.id));
     const topLevelRefs = rawRefs.filter((ref) => {
-      let curr = ref.parentKey;
+      let curr: string | null = ref.parentKey;
       while (curr && curr !== "root") {
         if (refIds.has(curr)) {
           return false;

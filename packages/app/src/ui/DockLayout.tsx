@@ -97,7 +97,7 @@ function buildDefaultLayout(): IJsonModel {
     { type: "tab", id: PANEL_IDS.styles, name: "Styles", component: "styles" },
   ];
   if (isAssistantAvailable()) {
-    rightTabs.push({ type: "tab", id: PANEL_IDS.assistant, name: "Assistant", component: "assistant" });
+    rightTabs.push({ type: "tab", id: PANEL_IDS.assistant, name: "Antigravity", component: "assistant" });
   }
 
   return {
@@ -163,6 +163,9 @@ function sanitizeLayout(json: IJsonModel): IJsonModel {
       return null;
     }
     let next = node;
+    if (node.type === "tab" && (node.id === PANEL_IDS.assistant || node.component === "assistant")) {
+      next = { ...next, name: "Antigravity" };
+    }
     if (node.type === "tabset" && typeof node.id === "string" && (HOME_TABSET_IDS as readonly string[]).includes(node.id)) {
       next = { ...next, enableDeleteWhenEmpty: false };
     }
@@ -192,7 +195,7 @@ function buildSourceOnTopLayout(): IJsonModel {
     { type: "tab", id: PANEL_IDS.styles, name: "Styles", component: "styles" },
   ];
   if (isAssistantAvailable()) {
-    rightTabs.push({ type: "tab", id: PANEL_IDS.assistant, name: "Assistant", component: "assistant" });
+    rightTabs.push({ type: "tab", id: PANEL_IDS.assistant, name: "Antigravity", component: "assistant" });
   }
 
   return {
@@ -264,7 +267,7 @@ function buildWideInspectorLayout(): IJsonModel {
     { type: "tab", id: PANEL_IDS.styles, name: "Styles", component: "styles" },
   ];
   if (isAssistantAvailable()) {
-    rightTabs.push({ type: "tab", id: PANEL_IDS.assistant, name: "Assistant", component: "assistant" });
+    rightTabs.push({ type: "tab", id: PANEL_IDS.assistant, name: "Antigravity", component: "assistant" });
   }
 
   return {
@@ -485,7 +488,7 @@ export function DockLayout({ repeatPreviewModel, onSubmitPrompt, onInterruptTurn
           inspector: "Inspector",
           objects: "Objects",
           styles: "Styles",
-          assistant: "Assistant",
+          assistant: "Antigravity",
         };
         const tabJson = { type: "tab", id: panelId, name: nameMap[panelId] ?? panelId, component: panelId };
 

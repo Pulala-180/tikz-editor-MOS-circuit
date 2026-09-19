@@ -23,6 +23,8 @@ export const CIRCUIT_PORT_DEFINITIONS: Record<string, CircuitPortDescriptor> = {
   // Sources & Power
   "vdd": { portKey: "vdd", nameZh: "电源 (VDD)", nameEn: "VDD", priority: 1 },
   "gnd": { portKey: "gnd", nameZh: "接地 (GND)", nameEn: "GND", priority: 1 },
+  // Port objects (vdd-port / port) expose a single `.port` pin.
+  "port": { portKey: "port", nameZh: "端口 (port)", nameEn: "Port", priority: 1 },
   "origin": { portKey: "origin", nameZh: "原点 (origin)", nameEn: "Origin", priority: 5 },
   "pin": { portKey: "pin", nameZh: "引脚 (pin)", nameEn: "Pin", priority: 1 },
   "center": { portKey: "center", nameZh: "中心 (center)", nameEn: "Center", priority: 6 }
@@ -36,6 +38,13 @@ export function resolveComponentPort(nodeName: string, anchorName?: string | nul
   if (cleanAnchor && CIRCUIT_PORT_DEFINITIONS[cleanAnchor]) {
     const desc = CIRCUIT_PORT_DEFINITIONS[cleanAnchor];
     return { label: desc.nameZh, priority: desc.priority };
+  }
+
+  // 1.5 Power-rail taps: `node_RAIL1.tap2` (anchor `tap2`). Checked before the substring
+  // heuristics below, which would otherwise read `.tap2` as the `.t` top terminal.
+  const tapMatch = cleanAnchor.match(/^tap(\d+)$/) ?? cleanNode.match(/\.tap(\d+)$/);
+  if (tapMatch) {
+    return { label: `抽头 (tap${tapMatch[1]})`, priority: 2 };
   }
 
   // 2. Node Name Match (e.g. node_Mx.d, node_Rx.t, node_VDD, node_GND)

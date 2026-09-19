@@ -165,6 +165,24 @@ TEMPLATES: dict[str, ComponentTemplate] = {
     ),
 }
 
+# 引脚锚点后缀：端口名 → `\coordinate (node_<id>.<后缀>)` 的后缀。
+# 命名沿用编辑器自带模板（circuit-snippets.ts）：电阻 .l/.r、MOS .g/.d/.s、竖直端子 .t/.b。
+# 点号式是唯一写出格式（计划 §S2.1）；实测对 validate_drawing 零违规。
+PIN_SUFFIXES: dict[str, dict[str, str]] = {
+    "resistor": {"P1": "l", "P2": "r"},
+    "nmos": {"G": "g", "D": "d", "S": "s"},
+    "pmos": {"G": "g", "D": "d", "S": "s"},
+    "current_source": {"top": "t", "bottom": "b"},
+    "voltage_source": {"top": "t", "bottom": "b"},
+    "current_arrow": {"bottom": "b"},
+}
+
+
+def pin_suffix(ctype: str, port_name: str) -> str | None:
+    """该端口的锚点后缀；未配后缀的端口返回 None（不写引脚）。"""
+    return PIN_SUFFIXES.get(ctype, {}).get(port_name)
+
+
 DEFAULT_LABELS = {
     "resistor": r"$R$",
     "nmos": r"$M$",

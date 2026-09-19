@@ -21,6 +21,7 @@ from .components import (
     VALID_TYPES,
     fmt_cm,
     fmt_pt,
+    pin_suffix,
 )
 
 COMPONENT_TYPES = VALID_TYPES
@@ -278,6 +279,15 @@ def build_circuit(
         for ln in body.splitlines():
             lines.append(f"    {ln}")
         lines.append(f"    {label_node}")
+        # Named pins, in the component's LOCAL coordinates — the scope shift is applied by the
+        # editor's evaluator. Without these a generated component has no addressable anchors,
+        # so it cannot be wired up and its wires will not follow it when it is moved.
+        for port in tpl.ports:
+            suffix = pin_suffix(spec.type, port.name)
+            if suffix:
+                lines.append(
+                    f"    \\coordinate (node_{spec.id}.{suffix}) at ({fmt_cm(port.x)},{fmt_cm(port.y)});"
+                )
         lines.append(r"  \end{scope}")
     for ws, a, b in resolved:
         lines.append(

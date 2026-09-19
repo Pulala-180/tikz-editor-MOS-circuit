@@ -130,7 +130,8 @@ export function FigureNavigator() {
         className={css.navButton}
         disabled={!canGoPrev}
         onClick={() => { selectAt(activeIndex - 1); }}
-        aria-label="Previous figure"
+        title="上一个图形"
+        aria-label="上一个图形"
       >
         {"<"}
       </button>
@@ -144,8 +145,8 @@ export function FigureNavigator() {
               key={figure.id}
               className={[css.thumb, isActive ? css.thumbActive : ""].filter(Boolean).join(" ")}
               onClick={() => { dispatch({ type: "SET_ACTIVE_FIGURE", figureId: figure.id }); }}
-              title={`Figure ${index + 1}`}
-              aria-label={`Figure ${index + 1}`}
+              title={`图形 ${index + 1}`}
+              aria-label={`Figure ${index + 1} (图形 ${index + 1})`}
               ref={(node) => {
                 if (!node) {
                   thumbRefByFigureId.current.delete(figure.id);
@@ -155,9 +156,9 @@ export function FigureNavigator() {
               }}
             >
               <div className={css.thumbPreview}>
-                {thumbnail ? <img src={thumbnail} alt={`Figure ${index + 1} preview`} /> : "Rendering…"}
+                {thumbnail ? <img src={thumbnail} alt={`图形 ${index + 1} 预览`} /> : "正在渲染…"}
               </div>
-              <div className={css.thumbLabel}>{`Figure ${index + 1} (L${figure.startLine})`}</div>
+              <div className={css.thumbLabel}>{`图形 ${index + 1} (第 ${figure.startLine} 行)`}</div>
             </button>
           );
         })}
@@ -167,7 +168,8 @@ export function FigureNavigator() {
         className={css.navButton}
         disabled={!canGoNext}
         onClick={() => { selectAt(activeIndex + 1); }}
-        aria-label="Next figure"
+        title="下一个图形"
+        aria-label="下一个图形"
       >
         {">"}
       </button>

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, type MouseEvent as ReactMouseEvent, type MutableRefObject, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
-import { clientPoint, px, pt, worldBounds, worldVector } from "tikz-editor/coords/index";
+import { clientPoint, px, pt, worldPoint, worldBounds, worldVector } from "tikz-editor/coords/index";
 import {
   buildSnapContext,
   collectOpenPathEndpointSourceIds,
@@ -14,6 +14,7 @@ import {
   type SnapSettingsPatch
 } from "tikz-editor/edit/snapping";
 import type { EditHandle, SceneElement } from "tikz-editor/semantic/types";
+import type { PathStatement, Statement } from "tikz-editor/ast/types";
 import type { ClientPoint, WorldBounds, WorldPoint } from "../coords/types";
 import { resolveEligibleExplicitPath, type ExplicitPathAnalysis } from "tikz-editor/edit/path-editing";
 import { closestPointOnLine, closestPointOnCubic } from "tikz-editor/edit/curve-math";
@@ -79,6 +80,77 @@ export type UseCanvasElementInteractionsArgs = {
 
 function clientPointFromEvent(event: Pick<PointerEvent | ReactPointerEvent<SVGElement> | ReactMouseEvent<SVGElement>, "clientX" | "clientY">): ClientPoint {
   return clientPoint(px(event.clientX), px(event.clientY));
+}
+
+/** Screen-pixel radius for grabbing an operator wire's implicit corner (matches the 20px handle hit test above). */
+const ORTHO_CORNER_HIT_THRESHOLD_PX = 20;
+
+function findPathStatementBySourceId(
+  statements: readonly Statement[],
+  sourceId: string
+): PathStatement | null {
+  for (const statement of statements) {
+    if (statement.kind === "Path" && statement.id === sourceId) {
+      return statement;
+    }
+    if (statement.kind === "Scope") {
+      const nested = findPathStatementBySourceId(statement.body, sourceId);
+      if (nested) {
+        return nested;
+      }
+    }
+  }
+  return null;
+}
+
+/**
+ * Resolves the world position of the IMPLICIT corner of an `|-` / `-|` operator wire when the
+ * pointer is within `thresholdWorld` of it. Returns null for any other path (explicit polylines,
+ * wires without a named-anchor operator, or a pointer away from the corner).
+ */
+function resolveImplicitOrthoCornerTarget(
+  parseResult: CanvasSnapshot["parseResult"],
+  editHandles: readonly EditHandle[],
+  targetId: string,
+  world: WorldPoint,
+  thresholdWorld: number
+): { cornerWorld: WorldPoint } | null {
+  const figure = parseResult?.figure;
+  if (!figure) {
+    return null;
+  }
+  const statement = findPathStatementBySourceId(figure.body, targetId);
+  if (!statement || statement.command !== "draw") {
+    return null;
+  }
+  const operator = statement.items.find(
+    (item) => item.kind === "PathKeyword" && (item.keyword === "|-" || item.keyword === "-|")
+  );
+  if (!operator) {
+    return null;
+  }
+  const coordinateCount = statement.items.filter((item) => item.kind === "Coordinate").length;
+  if (coordinateCount !== 2) {
+    return null;
+  }
+  const handles = editHandles
+    .filter((handle) => handle.kind === "path-point" && handle.sourceRef.sourceId === targetId)
+    .sort((left, right) => left.sourceRef.sourceSpan.from - right.sourceRef.sourceSpan.from);
+  if (handles.length < 2) {
+    return null;
+  }
+  const first = handles[0].world;
+  const last = handles[handles.length - 1].world;
+  // `|-` bends at (first.x, last.y); `-|` bends at (last.x, first.y). See
+  // packages/core/src/semantic/path/segments.ts.
+  const cornerWorld =
+    operator.kind === "PathKeyword" && operator.keyword === "|-"
+      ? worldPoint(pt(first.x), pt(last.y))
+      : worldPoint(pt(last.x), pt(first.y));
+  if (Math.hypot(cornerWorld.x - world.x, cornerWorld.y - world.y) > thresholdWorld) {
+    return null;
+  }
+  return { cornerWorld };
 }
 
 export function useCanvasElementInteractions(args: UseCanvasElementInteractionsArgs) {
@@ -177,7 +249,21 @@ export function useCanvasElementInteractions(args: UseCanvasElementInteractionsA
         ? collectOpenPathEndpointSourceIds(snapshot.scene.elements, snapshot.editHandles)
         : new Set<string>();
 
-      const snapContext = snapshot.scene
+      // A TEXT element (SceneText) is a free-floating label: magnetic alignment to nearby points /
+      // anchors / grid fights the user's placement instead of helping it (and a `\node` label would
+      // otherwise advertise its own compass pin points as snap candidates). So a text-only drag gets
+      // NO snap context at all -- no grid/point/guide snapping and no published candidates. Dragging
+      // a component or a wire (or any mixed selection) snaps exactly as before.
+      const textSourceIds = new Set(
+        (snapshot.scene?.elements ?? [])
+          .filter((element) => element.kind === "Text")
+          .map((element) => element.sourceRef.sourceId)
+      );
+      const dragIsTextOnly =
+        draggedIds.length > 0 &&
+        draggedIds.every((id) => textSourceIds.has(id) || id.startsWith("node-adornment:"));
+
+      const snapContext = snapshot.scene && !dragIsTextOnly
         ? buildSnapContext({
             sceneElements: snapshot.scene.elements,
             selectedSourceIds: snapExcludedSourceIds,
@@ -616,6 +702,42 @@ export function useCanvasElementInteractions(args: UseCanvasElementInteractionsA
         }
         onHandlePointerDown(event, endpointHandle);
         return;
+      }
+
+      // Grabbing the IMPLICIT corner of an `|-` / `-|` operator wire. That corner is derived by
+      // TikZ and has no edit handle, so the endpoint-handle test above misses it and the gesture
+      // used to fall through to the element drag -- translating the WHOLE wire ("整条线飞起来").
+      // Start a dedicated corner drag that materialises `A -- (corner) -- B` in place of the
+      // operator, keeping both endpoints (anchors included) untouched.
+      if (!additiveSelection) {
+        const orthoCorner = resolveImplicitOrthoCornerTarget(
+          snapshot.parseResult,
+          snapshot.editHandles,
+          resolvedTargetId,
+          world,
+          ORTHO_CORNER_HIT_THRESHOLD_PX / Math.max(canvasTransform.scale || 1, 1e-3)
+        );
+        if (orthoCorner) {
+          if (!alreadySelected) {
+            dispatch({ type: "SELECT", id: resolvedTargetId, additive: false });
+            dispatch({
+              type: "SET_FOCUSED_SCOPE",
+              scopeId: resolveFocusedScopeIdForSelection(resolvedTargetId, scopeOverlay)
+            });
+          }
+          setSnapLines([]);
+          setDragState({
+            kind: "ortho-corner",
+            pointerId: event.pointerId,
+            elementId: resolvedTargetId,
+            cursor: "grabbing",
+            startWorld: orthoCorner.cornerWorld,
+            lastKnownWorld: orthoCorner.cornerWorld,
+            historyMergeKey: makeMergeKey("drag-ortho-corner", resolvedTargetId, event.pointerId),
+            baselineSource: source
+          });
+          return;
+        }
       }
 
       const draggedIds = alreadySelected && selectedElementIds.size > 0 ? [...selectedElementIds] : [resolvedTargetId];

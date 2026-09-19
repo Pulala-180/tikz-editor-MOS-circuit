@@ -219,22 +219,22 @@ export const TOOL_COLOR_OPTIONS = BASIC_PICKER_COLORS;
 
 // Tool buttons in display order (bucket moved to end)
 export const TOOL_BUTTONS: readonly ToolButtonDef[] = [
-  { mode: "select",     label: "Select",   title: "Select (V)",   shortcut: "v", icon: SelectIcon },
-  { mode: "magnify",    label: "Magnify",  title: "Magnify",                     icon: MagnifyIcon },
-  { mode: "addNode",    label: "Node",     title: "Node (N)",     shortcut: "n", icon: NodeIcon,     separatorBefore: true },
-  { mode: "addShape",   label: "Shape",    title: "Shape (S)",    shortcut: "s", icon: ShapeIcon,    popupKind: "shape-picker" },
-  { mode: "addMatrix",  label: "Matrix",   title: "Matrix",                      icon: MatrixIcon,   popupKind: "matrix-picker" },
-  { mode: "addLine",    label: "Line",     title: "Line (L)",     shortcut: "l", icon: LineIcon,     separatorBefore: true },
-  { mode: "addOrthoWire", label: "Ortho Wire", title: "Orthogonal Wire (M)", shortcut: "m", icon: OrthoWireIcon },
-  { mode: "addArrow",   label: "Arrow",    title: "Arrow (A)",    shortcut: "a", icon: ArrowIcon },
-  { mode: "addBezier",  label: "Bezier",   title: "Bezier (B)",   shortcut: "b", icon: BezierIcon },
-  { mode: "addPath",    label: "Path",     title: "Path (P)",     shortcut: "p", icon: PathIcon },
-  { mode: "addFreehand", label: "Freehand", title: "Freehand (F)", shortcut: "f", icon: FreehandIcon },
-  { mode: "addGrid",    label: "Grid",     title: "Grid",                        icon: GridIcon,     separatorBefore: true },
-  { mode: "addRect",    label: "Rect",     title: "Rectangle (R)", shortcut: "r", icon: RectIcon },
-  { mode: "addEllipse", label: "Ellipse",  title: "Ellipse (E)",  shortcut: "e", icon: EllipseIcon },
-  { mode: "addCircle",  label: "Circle",   title: "Circle (C)",   shortcut: "c", icon: CircleIcon },
-  { mode: "addBucket",  label: "Bucket",   title: "Bucket",                      icon: BucketIcon,   popupKind: "bucket-color", separatorBefore: true },
+  { mode: "select",     label: "选择",     title: "选择 (V)",             shortcut: "v", icon: SelectIcon },
+  { mode: "magnify",    label: "缩放",     title: "放大镜 / 缩放视图",                   icon: MagnifyIcon },
+  { mode: "addNode",    label: "文本节点", title: "节点 (N)",             shortcut: "n", icon: NodeIcon,     separatorBefore: true },
+  { mode: "addShape",   label: "预设形状", title: "形状 (S)",             shortcut: "s", icon: ShapeIcon,    popupKind: "shape-picker" },
+  { mode: "addMatrix",  label: "矩阵",     title: "矩阵 (Matrix)",                       icon: MatrixIcon,   popupKind: "matrix-picker" },
+  { mode: "addLine",    label: "直线",     title: "直线 (L)",             shortcut: "l", icon: LineIcon,     separatorBefore: true },
+  { mode: "addOrthoWire", label: "正交导线", title: "正交多段导线 (M)",   shortcut: "m", icon: OrthoWireIcon },
+  { mode: "addArrow",   label: "箭头",     title: "箭头 (A)",             shortcut: "a", icon: ArrowIcon },
+  { mode: "addBezier",  label: "贝塞尔",   title: "贝塞尔曲线 (B)",       shortcut: "b", icon: BezierIcon },
+  { mode: "addPath",    label: "折线路径", title: "多段折线 (P)",         shortcut: "p", icon: PathIcon },
+  { mode: "addFreehand", label: "自由手绘", title: "自由绘制 (F)",         shortcut: "f", icon: FreehandIcon },
+  { mode: "addGrid",    label: "网格",     title: "网格 (Grid)",                         icon: GridIcon,     separatorBefore: true },
+  { mode: "addRect",    label: "矩形",     title: "矩形 (R)",             shortcut: "r", icon: RectIcon },
+  { mode: "addEllipse", label: "椭圆",     title: "椭圆 (E)",             shortcut: "e", icon: EllipseIcon },
+  { mode: "addCircle",  label: "圆形",     title: "圆形 (C)",             shortcut: "c", icon: CircleIcon },
+  { mode: "addBucket",  label: "填充桶",   title: "油漆桶填充 (Bucket)",                 icon: BucketIcon,   popupKind: "bucket-color", separatorBefore: true },
 ];
 
 export const TOOL_CREATE_MODES = [
@@ -306,20 +306,20 @@ export function shouldConstrainToolCreateToSquare(mode: ToolCreateMode): boolean
 }
 
 export const TOOL_HINTS: Partial<Record<ToolMode, string>> = {
-  magnify: "Hold and drag to magnify the canvas",
-  addRect: "Hold Shift to constrain to a square",
-  addEllipse: "Hold Shift to constrain to a circle",
-  addGrid: "Hold Shift to constrain to a square",
-  addCircle: "Drag from center to edge",
-  addPath: "Click to add points, drag to bend. Click start to close, or double-click/press Enter/Esc to finish.",
-  addFreehand: "Press and drag to draw",
-  addBezier: "Two drags: endpoints then curve",
-  addLine: "Drag to set length and angle",
-  addRoundedLine: "Click start, then click end to draw",
-  addArrow: "Drag to set length and angle",
-  addShape: "Drag to set size",
-  addMatrix: "Pick rows/columns, then click to place",
-  addNode: "Click to place text",
+  magnify: "按住并拖动以缩放画布",
+  addRect: "按住 Shift 约束为正方形",
+  addEllipse: "按住 Shift 约束为圆形",
+  addGrid: "按住 Shift 约束为正方形",
+  addCircle: "从中心拖动到边缘",
+  addPath: "点击添加顶点，拖动调整弯曲。点击起点闭合，或双击/按 Enter/Esc 完成绘制。",
+  addFreehand: "按住并拖动以自由绘制",
+  addBezier: "两次拖动：先确定端点再调整曲率",
+  addLine: "拖动以设定长度和角度",
+  addRoundedLine: "点击起点，再点击终点绘制",
+  addArrow: "拖动以设定长度和角度",
+  addShape: "拖动以设定尺寸",
+  addMatrix: "选择行/列数，然后点击放置",
+  addNode: "点击以放置文本",
 };
 
 export function isCreationToolMode(mode: ToolMode): boolean {

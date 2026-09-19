@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { RiAddLine, RiSendPlane2Line, RiStopMiniLine } from "@remixicon/react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -14,8 +14,7 @@ import type {
   AssistantAccountSnapshot,
   AssistantItem,
   AssistantModelOption,
-  AssistantPendingApproval,
-  CodexStatus
+  AssistantPendingApproval
 } from "../platform/types";
 import css from "./AssistantPanel.module.css";
 
@@ -30,6 +29,12 @@ type AssistantPanelProps = {
 };
 
 const AUTO_MODEL_VALUE = "__auto__";
+
+const DEFAULT_ANTIGRAVITY_MODELS: AssistantModelOption[] = [
+  { id: "gemini-3.8-flash", label: "Gemini 3.8 Flash" },
+  { id: "gemini-3.8-pro", label: "Gemini 3.8 Pro" },
+  { id: "claude-3-7-sonnet", label: "Claude 3.7 Sonnet" }
+];
 
 function logAssistantDebug(message: string, error?: unknown): void {
   if (typeof console === "undefined" || typeof console.info !== "function") {
@@ -57,15 +62,6 @@ export function AssistantPanel({ onSubmitPrompt, onInterruptTurn, onNewChat }: A
   const [metaLoading, setMetaLoading] = useState(false);
   const [pendingImageAttachments, setPendingImageAttachments] = useState<AssistantComposerImageAttachment[]>([]);
   const [expandedAttachmentId, setExpandedAttachmentId] = useState<string | null>(null);
-  const [codexStatus, setCodexStatus] = useState<CodexStatus | null>(null);
-  const [codexStatusChecked, setCodexStatusChecked] = useState(false);
-  const [installingMethod, setInstallingMethod] = useState<"npm" | "brew" | "wsl" | null>(null);
-  const [installError, setInstallError] = useState<string | null>(null);
-  const [installOutput, setInstallOutput] = useState<string | null>(null);
-  const [codexStatusError, setCodexStatusError] = useState<string | null>(null);
-  const [pendingLoginId, setPendingLoginId] = useState<string | null>(null);
-  const [loginError, setLoginError] = useState<string | null>(null);
-  const [loggingOut, setLoggingOut] = useState(false);
   const nextAttachmentIdRef = useRef(0);
   const pendingImageAttachmentsRef = useRef<AssistantComposerImageAttachment[]>([]);
   const timelineRef = useRef<HTMLDivElement | null>(null);
@@ -77,31 +73,30 @@ export function AssistantPanel({ onSubmitPrompt, onInterruptTurn, onNewChat }: A
       item
     }));
   }, [doc?.assistantItems]);
-  const dropdownOptions = useMemo<Array<CustomDropdownOption<string>>>(() => (
-    [
-      { value: AUTO_MODEL_VALUE, label: "Auto model" },
-      ...modelOptions.map((option) => ({ value: option.id, label: option.label }))
-    ]
-  ), [modelOptions]);
+
+  const dropdownOptions = useMemo<Array<CustomDropdownOption<string>>>(() => {
+    const list: Array<CustomDropdownOption<string>> = [
+      { value: AUTO_MODEL_VALUE, label: "Auto / 自动优选" }
+    ];
+    const seen = new Set<string>([AUTO_MODEL_VALUE]);
+    for (const m of DEFAULT_ANTIGRAVITY_MODELS) {
+      list.push({ value: m.id, label: m.label });
+      seen.add(m.id);
+    }
+    for (const m of modelOptions) {
+      if (!seen.has(m.id)) {
+        list.push({ value: m.id, label: m.label });
+        seen.add(m.id);
+      }
+    }
+    return list;
+  }, [modelOptions]);
+
   const accountMeta = useMemo(() => summarizeAccountMeta(accountSnapshot), [accountSnapshot]);
   const rateMeta = useMemo(() => summarizeRateMeta(accountSnapshot), [accountSnapshot]);
-  const authState = useMemo(() => {
-    const accountResult = asRecord(accountSnapshot?.account);
-    const account = asRecord(accountResult?.account);
-    const requiresAuth = accountResult?.requiresOpenaiAuth;
-    const hasAccount =
-      (typeof account?.email === "string" && account.email.trim().length > 0) ||
-      (typeof account?.name === "string" && account.name.trim().length > 0) ||
-      (typeof account?.type === "string" && account.type.trim().length > 0);
-    return {
-      requiresAuth: requiresAuth === true,
-      isLoggedIn: Boolean(hasAccount),
-      accountType: typeof account?.type === "string" ? account.type : null
-    };
-  }, [accountSnapshot]);
   const dropdownMetaLines = useMemo(() => {
-    return [accountMeta, rateMeta, metaError, loginError].filter((line): line is string => line !== null && line.trim().length > 0);
-  }, [accountMeta, metaError, rateMeta, loginError]);
+    return [accountMeta, rateMeta, metaError].filter((line): line is string => line !== null && line.trim().length > 0);
+  }, [accountMeta, metaError, rateMeta]);
 
   useEffect(() => {
     if (!metaRequested) {
@@ -111,7 +106,6 @@ export function AssistantPanel({ onSubmitPrompt, onInterruptTurn, onNewChat }: A
     async function loadAssistantMeta(): Promise<void> {
       setMetaLoading(true);
       try {
-        // First, fetch models and account info (fast)
         const [models, account] = await Promise.all([
           assistantApi?.listModels?.() ?? Promise.resolve([]),
           assistantApi?.readAccount?.() ?? Promise.resolve(null)
@@ -124,7 +118,6 @@ export function AssistantPanel({ onSubmitPrompt, onInterruptTurn, onNewChat }: A
         setMetaError(null);
         setMetaLoading(false);
 
-        // Then, fetch rate limits in the background (slow)
         const rateLimits = await (assistantApi?.readRateLimits?.() ?? Promise.resolve(null));
         if (disposed) {
           return;
@@ -167,30 +160,9 @@ export function AssistantPanel({ onSubmitPrompt, onInterruptTurn, onNewChat }: A
     timeline.scrollTop = timeline.scrollHeight;
   }, [groupedItems.length, doc?.assistantPendingApprovals.length]);
 
+  // Pre-warm the assistant process and fetch account info in the background
   useEffect(() => {
-    if (!assistantAvailable || !assistantApi?.checkCodexStatus) {
-      setCodexStatusChecked(true);
-      return;
-    }
-    let disposed = false;
-    void assistantApi.checkCodexStatus().then((status) => {
-      if (!disposed) {
-        setCodexStatus(status);
-        setCodexStatusError(null);
-        setCodexStatusChecked(true);
-      }
-    }).catch((error) => {
-      if (!disposed) {
-        setCodexStatusError(error instanceof Error ? error.message : String(error));
-        setCodexStatusChecked(true);
-      }
-    });
-    return () => { disposed = true; };
-  }, [assistantAvailable, assistantApi]);
-
-  // Pre-warm the codex process and fetch account info once we know it's installed
-  useEffect(() => {
-    if (!codexStatusChecked || !codexStatus?.installed || !assistantApi?.warmUp) {
+    if (!assistantAvailable || !assistantApi?.warmUp) {
       return;
     }
     let disposed = false;
@@ -200,14 +172,15 @@ export function AssistantPanel({ onSubmitPrompt, onInterruptTurn, onNewChat }: A
         if (disposed) return;
         const account = await assistantApi.readAccount?.();
         if (disposed) return;
-        setAccountSnapshot((prev) => ({ ...prev, account, rateLimits: prev?.rateLimits ?? null }));
+        if (account) {
+          setAccountSnapshot((prev) => ({ ...prev, account, rateLimits: prev?.rateLimits ?? null }));
+        }
       } catch (error) {
-        // Ignore warmup/account errors - will be handled when user interacts
-        logAssistantDebug("Assistant warmup/account preload failed.", error);
+        logAssistantDebug("Assistant warmup preload ignored.", error);
       }
     })();
     return () => { disposed = true; };
-  }, [codexStatusChecked, codexStatus?.installed, assistantApi]);
+  }, [assistantAvailable, assistantApi]);
 
   // Listen for account and rate limit updates
   useEffect(() => {
@@ -216,15 +189,9 @@ export function AssistantPanel({ onSubmitPrompt, onInterruptTurn, onNewChat }: A
     }
     return assistantApi.bindEvents((event) => {
       if (event.type === "account-updated") {
-        // Re-fetch account info when auth state changes
         void assistantApi.readAccount?.().then((account) => {
           setAccountSnapshot((prev) => ({ ...prev, account, rateLimits: prev?.rateLimits ?? null }));
         });
-      } else if (event.type === "login-completed") {
-        setPendingLoginId(null);
-        if (!event.success && event.error) {
-          setLoginError(event.error);
-        }
       } else if (event.type === "rate-limits-updated") {
         setAccountSnapshot((prev) => ({
           ...prev,
@@ -235,157 +202,34 @@ export function AssistantPanel({ onSubmitPrompt, onInterruptTurn, onNewChat }: A
     });
   }, [assistantApi]);
 
+  const isTurnRunning = doc ? (doc.assistantTurnStatus === "starting" || doc.assistantTurnStatus === "inProgress") : false;
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+  useEffect(() => {
+    if (!isTurnRunning) {
+      setElapsedSeconds(0);
+      return;
+    }
+    const timer = setInterval(() => {
+      setElapsedSeconds((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [isTurnRunning]);
+
   if (!assistantAvailable) {
-    return <div className={css.empty} data-select="text">Assistant is not available on this platform.</div>;
-  }
-
-  if (!codexStatusChecked) {
-    return (
-      <div className={css.empty} data-select="text">
-        <div className={css.checkingStatus}>
-          <div className={css.spinner} />
-          <span>Connecting to Assistant Backend...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (!codexStatus?.installed) {
-    const detected = codexStatus ?? { installed: false, hasNpm: false, hasBrew: false, hasWsl: false };
-    const methods: Array<{ method: "npm" | "brew" | "wsl"; label: string; command: string }> = [];
-    if (detected.hasNpm) methods.push({ method: "npm", label: "npm", command: "npm install -g @openai/codex" });
-    if (detected.hasBrew) methods.push({ method: "brew", label: "Homebrew", command: "brew install codex" });
-    if (detected.hasWsl) methods.push({ method: "wsl", label: "WSL", command: "wsl npm install -g @openai/codex" });
-
-    const handleInstall = async (method: "npm" | "brew" | "wsl") => {
-      setInstallingMethod(method);
-      setInstallError(null);
-      setInstallOutput(null);
-      try {
-        const output = await assistantApi?.installCodex?.(method);
-        const status = await assistantApi?.checkCodexStatus?.();
-        if (status?.installed) {
-          setCodexStatus(status);
-          setInstallOutput("Codex CLI installed successfully.");
-        } else {
-          const trimmedOutput = output?.trim();
-          setInstallOutput(
-            trimmedOutput === undefined || trimmedOutput.length === 0
-              ? "Install finished, but Codex was not detected. You may need to restart your terminal."
-              : trimmedOutput
-          );
-        }
-      } catch (error) {
-        setInstallError(error instanceof Error ? error.message : String(error));
-      } finally {
-        setInstallingMethod(null);
-      }
-    };
-
-    return (
-      <div className={css.empty}>
-        <p data-select="text">Codex CLI is not installed.</p>
-        {methods.length > 0 ? (
-          <div className={css.installButtons}>
-            {methods.length === 1 ? (
-              <button
-                type="button"
-                className={css.installButton}
-                disabled={installingMethod !== null}
-                onClick={() => void handleInstall(methods[0].method)}
-              >
-                {installingMethod === methods[0].method ? (
-                  <><div className={css.spinnerInline} /> Installing...</>
-                ) : (
-                  `Install via ${methods[0].label}`
-                )}
-              </button>
-            ) : (
-              methods.map(({ method, label }) => (
-                <button
-                  key={method}
-                  type="button"
-                  className={css.installButton}
-                  disabled={installingMethod !== null}
-                  onClick={() => void handleInstall(method)}
-                >
-                  {installingMethod === method ? (
-                    <><div className={css.spinnerInline} /> Installing...</>
-                  ) : (
-                    label
-                  )}
-                </button>
-              ))
-            )}
-          </div>
-        ) : (
-          <p data-select="text">Install manually: <code>npm install -g @openai/codex</code></p>
-        )}
-        {methods.length > 1 ? (
-          <details className={css.installDetails}>
-            <summary>Show install commands</summary>
-            <ul className={css.installCommandList} data-select="text">
-              {methods.map(({ method, label, command }) => (
-                <li key={method}><strong>{label}:</strong> <code>{command}</code></li>
-              ))}
-            </ul>
-          </details>
-        ) : null}
-        {detected.hasWsl && methods.length > 1 ? (
-          <p className={css.installHint} data-select="text">WSL uses your default distro.</p>
-        ) : null}
-        {codexStatusError && <p className={css.installError} data-select="text">Could not detect Codex: {codexStatusError}</p>}
-        {installError && <p className={css.installError} data-select="text">{installError}</p>}
-        {installOutput && <p className={css.installSuccess} data-select="text">{installOutput}</p>}
-      </div>
-    );
+    return <div className={css.empty} data-select="text">当前平台不支持 AI 助手。</div>;
   }
 
   if (!doc) {
-    return <div className={css.empty} data-select="text">No active document.</div>;
+    return <div className={css.empty} data-select="text">没有活动文档。</div>;
   }
 
-  const running = doc.assistantTurnStatus === "starting" || doc.assistantTurnStatus === "inProgress";
+  const running = isTurnRunning;
   const hasPromptText = prompt.trim().length > 0;
   const composerAction = running && !hasPromptText ? "stop" : "send";
-  const workingIndicatorLabel = doc.assistantTurnStatus === "starting"
-    ? "Setting up conversation..."
-    : "Assistant is working...";
-
-  async function handleLogin(): Promise<void> {
-    if (pendingLoginId) {
-      return;
-    }
-    setLoginError(null);
-    try {
-      const result = await assistantApi?.loginStart?.({ loginType: "chatgpt" });
-      const resultRecord = asRecord(result);
-      if (resultRecord?.type === "chatgpt" && typeof resultRecord.authUrl === "string") {
-        setPendingLoginId(typeof resultRecord.loginId === "string" ? resultRecord.loginId : "pending");
-        // Open the auth URL in system browser
-        const openExternalUrl = getActiveEditorPlatform().window?.openExternalUrl;
-        if (typeof openExternalUrl === "function") {
-          void openExternalUrl(resultRecord.authUrl);
-        }
-      }
-    } catch (error) {
-      setLoginError(error instanceof Error ? error.message : String(error));
-    }
-  }
-
-  async function handleLogout(): Promise<void> {
-    if (loggingOut) {
-      return;
-    }
-    setLoggingOut(true);
-    try {
-      await assistantApi?.logout?.();
-    } catch (error) {
-      setLoginError(error instanceof Error ? error.message : String(error));
-    } finally {
-      setLoggingOut(false);
-    }
-  }
+  const workingIndicatorLabel = elapsedSeconds > 0
+    ? `Antigravity 正在思考与绘制… (${elapsedSeconds}s)`
+    : "Antigravity 正在思考与绘制…";
 
   async function submitPrompt(): Promise<void> {
     const nextPrompt = prompt.trim();
@@ -427,39 +271,11 @@ export function AssistantPanel({ onSubmitPrompt, onInterruptTurn, onNewChat }: A
     });
   }
 
-  // Show login prompt if auth is required but user is not logged in
-  if (authState.requiresAuth && !authState.isLoggedIn) {
-    return (
-      <SidePanel className={css.panel} data-testid="assistant-panel">
-        <SidePanel.Header className={css.header}>
-          <div className={css.title}>Assistant</div>
-        </SidePanel.Header>
-        <SidePanel.Content className={css.authRequired}>
-          <div className={css.authRequiredContent}>
-            <p data-select="text">Sign in to use the assistant.</p>
-            <button
-              type="button"
-              className={css.authButtonLarge}
-              onClick={() => void handleLogin()}
-              disabled={pendingLoginId !== null}
-            >
-              {pendingLoginId ? "Waiting for browser..." : "Sign in with ChatGPT"}
-            </button>
-            {pendingLoginId ? (
-              <p className={css.authHint} data-select="text">Complete sign-in in your browser, then return here.</p>
-            ) : null}
-            {loginError ? <p className={css.installError} data-select="text">{loginError}</p> : null}
-          </div>
-        </SidePanel.Content>
-      </SidePanel>
-    );
-  }
-
   return (
     <SidePanel className={css.panel} data-testid="assistant-panel">
       <SidePanel.Header className={css.header}>
         <div>
-          <div className={css.title}>Assistant</div>
+          <div className={css.title}>Antigravity 智能助手</div>
         </div>
         <button
           type="button"
@@ -469,7 +285,7 @@ export function AssistantPanel({ onSubmitPrompt, onInterruptTurn, onNewChat }: A
           data-testid="assistant-new-chat"
         >
           <RiAddLine size={14} aria-hidden="true" />
-          <span>New chat</span>
+          <span>新对话</span>
         </button>
       </SidePanel.Header>
 
@@ -485,7 +301,7 @@ export function AssistantPanel({ onSubmitPrompt, onInterruptTurn, onNewChat }: A
           shouldStickToBottomRef.current = distanceFromBottom <= 48;
         }}
       >
-        {groupedItems.length === 0 ? <div className={css.empty} data-select="text">Ask for help editing the current figure.</div> : null}
+        {groupedItems.length === 0 ? <div className={css.empty} data-select="text">向 Antigravity 描述您想绘制或修改的电路与图形。</div> : null}
         {groupedItems.map(({ key, item }) => (
           <AssistantTimelineItem key={key} item={item} />
         ))}
@@ -579,7 +395,7 @@ export function AssistantPanel({ onSubmitPrompt, onInterruptTurn, onNewChat }: A
                 }
               })();
             }}
-            placeholder="Ask Codex to edit the current figure..."
+            placeholder="向 Antigravity 提出绘图或代码修改需求... (Enter 发送, Shift+Enter 换行)"
             disabled={submitting}
             rows={4}
             data-testid="assistant-prompt"
@@ -605,34 +421,15 @@ export function AssistantPanel({ onSubmitPrompt, onInterruptTurn, onNewChat }: A
                 menuHeader={metaLoading ? (
                   <div className={css.dropdownLoading}>
                     <div className={css.spinner} />
-                    <span>Loading models...</span>
+                    <span>加载可用模型...</span>
                   </div>
-                ) : (
+                ) : dropdownMetaLines.length > 0 ? (
                   <div className={css.dropdownMeta} data-select="text">
                     {dropdownMetaLines.map((line, index) => (
                       <div key={`${index}:${line}`}>{line}</div>
                     ))}
-                    {authState.requiresAuth && !authState.isLoggedIn ? (
-                      <button
-                        type="button"
-                        className={css.authButton}
-                        onClick={(e) => { e.stopPropagation(); void handleLogin(); }}
-                        disabled={pendingLoginId !== null}
-                      >
-                        {pendingLoginId ? "Waiting for browser..." : "Sign in with ChatGPT"}
-                      </button>
-                    ) : authState.isLoggedIn ? (
-                      <button
-                        type="button"
-                        className={css.authButton}
-                        onClick={(e) => { e.stopPropagation(); void handleLogout(); }}
-                        disabled={loggingOut}
-                      >
-                        {loggingOut ? "Signing out..." : "Sign out"}
-                      </button>
-                    ) : null}
                   </div>
-                )}
+                ) : null}
                 triggerClassName={css.modelTrigger}
                 menuClassName={css.modelMenu}
                 optionClassName={css.modelOption}
@@ -680,6 +477,159 @@ function extractImageFilesFromClipboard(clipboardData: DataTransfer | null): Fil
   return files;
 }
 
+type TokenType = "comment" | "command" | "math" | "coordinate" | "string" | "number" | "keyword" | "punctuation" | "text";
+
+function isTikzCode(code: string): boolean {
+  return /\\(draw|node|path|fill|clip|coordinate|begin\{tikzpicture\}|tikzset|foreach|matrix|graph)\b/.test(code);
+}
+
+function tokenizeTikz(code: string): Array<{ type: TokenType; text: string }> {
+  const tokens: Array<{ type: TokenType; text: string }> = [];
+  const regex = /(%[^\n]*)|(\\[a-zA-Z@]+)|(\$[^$\n]*\$)|(\([^)\n]*\))|(\b\d+(?:\.\d+)?(?:cm|pt|mm|in|em|ex|deg)?\b)|([{}[\],;])/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = regex.exec(code)) !== null) {
+    if (match.index > lastIndex) {
+      tokens.push({ type: "text", text: code.slice(lastIndex, match.index) });
+    }
+    if (match[1]) {
+      tokens.push({ type: "comment", text: match[1] });
+    } else if (match[2]) {
+      tokens.push({ type: "command", text: match[2] });
+    } else if (match[3]) {
+      tokens.push({ type: "math", text: match[3] });
+    } else if (match[4]) {
+      tokens.push({ type: "coordinate", text: match[4] });
+    } else if (match[5]) {
+      tokens.push({ type: "number", text: match[5] });
+    } else if (match[6]) {
+      tokens.push({ type: "punctuation", text: match[6] });
+    }
+    lastIndex = regex.lastIndex;
+  }
+
+  if (lastIndex < code.length) {
+    tokens.push({ type: "text", text: code.slice(lastIndex) });
+  }
+  return tokens;
+}
+
+function tokenizeGeneric(code: string): Array<{ type: TokenType; text: string }> {
+  const tokens: Array<{ type: TokenType; text: string }> = [];
+  const regex = /(\/\/[^\n]*|#[^\n]*)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\b(?:const|let|var|function|return|if|else|for|while|import|export|from|class|type|interface|true|false|null|undefined|def|async|await)\b)|(\b\d+(?:\.\d+)?\b)|([{}()[\].,;:])/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = regex.exec(code)) !== null) {
+    if (match.index > lastIndex) {
+      tokens.push({ type: "text", text: code.slice(lastIndex, match.index) });
+    }
+    if (match[1]) {
+      tokens.push({ type: "comment", text: match[1] });
+    } else if (match[2]) {
+      tokens.push({ type: "string", text: match[2] });
+    } else if (match[3]) {
+      tokens.push({ type: "keyword", text: match[3] });
+    } else if (match[4]) {
+      tokens.push({ type: "number", text: match[4] });
+    } else if (match[5]) {
+      tokens.push({ type: "punctuation", text: match[5] });
+    }
+    lastIndex = regex.lastIndex;
+  }
+
+  if (lastIndex < code.length) {
+    tokens.push({ type: "text", text: code.slice(lastIndex) });
+  }
+  return tokens;
+}
+
+function tokenClass(type: TokenType): string {
+  switch (type) {
+    case "comment": return css.tokenComment;
+    case "command": return css.tokenCommand;
+    case "math": return css.tokenMath;
+    case "coordinate": return css.tokenCoordinate;
+    case "number": return css.tokenNumber;
+    case "string": return css.tokenString;
+    case "keyword": return css.tokenKeyword;
+    case "punctuation": return css.tokenPunctuation;
+    default: return css.tokenText;
+  }
+}
+
+function AssistantCodeBlock({ code, language }: { code: string; language: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = useCallback(async () => {
+    try {
+      if (typeof navigator !== "undefined" && navigator.clipboard) {
+        await navigator.clipboard.writeText(code);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
+    } catch {
+      // Ignore clipboard write error
+    }
+  }, [code]);
+
+  const langDisplay = (language || (isTikzCode(code) ? "tikz" : "code")).toUpperCase();
+  const tokens = useMemo(() => {
+    const isTikz = language === "tikz" || language === "latex" || language === "tex" || isTikzCode(code);
+    return isTikz ? tokenizeTikz(code) : tokenizeGeneric(code);
+  }, [code, language]);
+
+  return (
+    <div className={css.codeBlockCard}>
+      <div className={css.codeBlockHeader}>
+        <span className={css.codeBlockLang}>{langDisplay}</span>
+        <button
+          type="button"
+          className={css.codeCopyButton}
+          onClick={() => void handleCopy()}
+          title="复制代码到剪贴板"
+        >
+          {copied ? "已复制" : "复制"}
+        </button>
+      </div>
+      <pre className={css.codePre}>
+        <code className={css.codeContent}>
+          {tokens.map((token, index) => (
+            <span key={index} className={tokenClass(token.type)}>
+              {token.text}
+            </span>
+          ))}
+        </code>
+      </pre>
+    </div>
+  );
+}
+
+const markdownComponents = {
+  code({ className, children, ...props }: { className?: string; children?: ReactNode }) {
+    const match = /language-(\w+)/.exec(className || "");
+    const codeString = Array.isArray(children)
+      ? children.map(String).join("")
+      : String(children ?? "").replace(/\n$/, "");
+    const isBlock = Boolean(match) || codeString.includes("\n");
+
+    if (isBlock) {
+      const language = match ? match[1] : "";
+      return <AssistantCodeBlock code={codeString} language={language} />;
+    }
+
+    return (
+      <code className={css.inlineCode} {...props}>
+        {children}
+      </code>
+    );
+  },
+  pre({ children }: { children?: ReactNode }) {
+    return <>{children}</>;
+  }
+};
+
 function AssistantTimelineItem({ item }: { item: AssistantItem }) {
   const [imageExpanded, setImageExpanded] = useState(false);
   if (item.type === "userMessage") {
@@ -688,7 +638,11 @@ function AssistantTimelineItem({ item }: { item: AssistantItem }) {
     return (
       <div className={`${css.card} ${css.userCard} ${css.userMessageBubble}`}>
         <div className={css.messageBody} data-select="text">
-          <div>{renderTextWithBreaks(normalized.visibleText)}</div>
+          <div className={css.markdownContent}>
+            <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+              {normalized.visibleText}
+            </Markdown>
+          </div>
           {normalized.attachmentUrls.length > 0 ? (
             <div className={css.historyAttachments}>
               {normalized.attachmentUrls.map((url, index) => (
@@ -709,9 +663,26 @@ function AssistantTimelineItem({ item }: { item: AssistantItem }) {
   }
 
   if (item.type === "agentMessage") {
+    const text = asString(item.text);
+    if (!text) {
+      return (
+        <div className={css.agentMessageBare} data-select="text">
+          <div className={css.agentThinkingPlaceholder}>
+            <span className={css.thinkingDot} />
+            <span className={css.thinkingDot} />
+            <span className={css.thinkingDot} />
+            <span style={{ marginLeft: 4 }}>Antigravity 正在思考与组织 TikZ 方案…</span>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className={css.agentMessageBare} data-select="text">
-        <Markdown remarkPlugins={[remarkGfm]}>{asString(item.text)}</Markdown>
+        <div className={css.markdownContent}>
+          <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+            {text}
+          </Markdown>
+        </div>
       </div>
     );
   }
@@ -719,9 +690,13 @@ function AssistantTimelineItem({ item }: { item: AssistantItem }) {
   if (item.type === "plan") {
     return (
       <div className={css.card}>
-        <div className={css.cardTitle}>Plan</div>
+        <div className={css.cardTitle}>计划</div>
         <div className={css.messageBody} data-select="text">
-          <Markdown remarkPlugins={[remarkGfm]}>{asString(item.text)}</Markdown>
+          <div className={css.markdownContent}>
+            <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+              {asString(item.text)}
+            </Markdown>
+          </div>
         </div>
       </div>
     );
@@ -731,8 +706,20 @@ function AssistantTimelineItem({ item }: { item: AssistantItem }) {
     return (
       <div className={css.reasoningInline}>
         <div className={css.reasoningBody} data-select="text">
-          {item.summary ? <Markdown remarkPlugins={[remarkGfm]}>{asString(item.summary)}</Markdown> : null}
-          {item.content ? <Markdown remarkPlugins={[remarkGfm]}>{asString(item.content)}</Markdown> : null}
+          {item.summary ? (
+            <div className={css.markdownContent}>
+              <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                {asString(item.summary)}
+              </Markdown>
+            </div>
+          ) : null}
+          {item.content ? (
+            <div className={css.markdownContent}>
+              <Markdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                {asString(item.content)}
+              </Markdown>
+            </div>
+          ) : null}
         </div>
       </div>
     );
@@ -902,30 +889,26 @@ function renderTextWithBreaks(text: string): ReactNode {
 
 function summarizeAccountMeta(snapshot: AssistantAccountSnapshot | null): string | null {
   const accountResult = asRecord(snapshot?.account);
-  const account = asRecord(accountResult?.account);
+  const account = asRecord(accountResult?.account) ?? accountResult;
   const name = typeof account?.name === "string" && account.name.trim() ? account.name : null;
   const email = typeof account?.email === "string" && account.email.trim() ? account.email : null;
   if (name && email) {
-    return `Account: ${name} (${email})`;
+    return `用户: ${name} (${email})`;
   }
   if (email) {
-    return `Account: ${email}`;
+    return `用户: ${email}`;
   }
   if (name) {
-    return `Account: ${name}`;
+    return `用户: ${name}`;
   }
-  const requiresAuth = accountResult?.requiresOpenaiAuth;
-  if (typeof requiresAuth === "boolean") {
-    return requiresAuth ? "Account: Sign-in required" : "Account: Ready";
-  }
-  return null;
+  return "Antigravity: 已就绪";
 }
 
 function summarizeRateMeta(snapshot: AssistantAccountSnapshot | null): string | null {
   const rateResult = asRecord(snapshot?.rateLimits);
   const primary = extractRateWindow(asRecord(rateResult?.rateLimits));
   if (primary) {
-    return `Quota: ${primary}`;
+    return `配额: ${primary}`;
   }
 
   const limitsById = asRecord(rateResult?.rateLimitsByLimitId);
@@ -935,7 +918,7 @@ function summarizeRateMeta(snapshot: AssistantAccountSnapshot | null): string | 
       .find((value) => value != null);
     const fallback = extractRateWindow(firstSnapshot);
     if (fallback) {
-      return `Quota: ${fallback}`;
+      return `配额: ${fallback}`;
     }
   }
   return null;

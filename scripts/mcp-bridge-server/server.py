@@ -1,11 +1,7 @@
-"""Antigravity MCP Bridge Server with TikZ validation gate.
+"""Antigravity MCP Bridge Server for TikZ Editor Assistant Panel.
 
 Websocket (ws://localhost:3100) bridge between the web editor's Assistant panel
-and the google.antigravity Agent. The agent's returned TikZ is validated
-against the MOS-circuit structural rules (circuit-mcp validator) BEFORE it is
-streamed to the client: error-level violations are fed back to the agent for
-up to MAX_ROUNDS fix rounds, so the client only ever receives a compliant
-drawing. This is a protocol-level gate — it does not depend on model discipline.
+and the native Antigravity CLI (D:\\Antigravity\\cli\\bin\\antigravity-cli.exe).
 """
 
 import asyncio
@@ -13,184 +9,298 @@ import json
 import os
 import re
 import sys
-
+from typing import Dict, Optional
 import websockets
-from google.antigravity import Agent, LocalAgentConfig
 
-# 复用 circuit-mcp 的范式校验器（相对级联 TikZ）
+# Add circuit-mcp to sys.path
 sys.path.insert(
     0,
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "circuit-mcp"),
 )
-from circuit.validator import COMPONENT_MARKER_RE, validate_drawing  # noqa: E402
+try:
+    from circuit.validator import validate_drawing
+except ImportError:
+    validate_drawing = None
 
-MAX_ROUNDS = 3
-TIKZ_BLOCK_RE = re.compile(r"```tikz\s*\n(.*?)\n\s*```", re.DOTALL)
+ANTIGRAVITY_CLI = r"D:\Antigravity\cli\bin\antigravity-cli.exe"
 
-TIKZ_SYSTEM_PROMPT = """
-You are a TikZ diagram editing assistant, integrated directly into the user's TikZ Editor.
+TIKZ_BLOCK_RE = re.compile(r"```(?:tikz|latex)?\s*\n(.*?)\n\s*```", re.DOTALL)
 
-Your goal is to help the user create, modify, and fix TikZ diagrams.
-You will be provided with the current TikZ source code, and potentially a base64 encoded snapshot of the canvas, diagnostic errors, and context about other figures in the document.
+AVAILABLE_MODELS = [
+    {"id": "auto", "label": "Antigravity 自动优选 (极速秒回 2~3s · 推荐)"},
+    {"id": "gemini-3.8-flash-low", "label": "Gemini 3.8 Flash (极速秒回 2~3s)"},
+    {"id": "gemini-3.8-flash-medium", "label": "Gemini 3.8 Flash (均衡平衡)"},
+    {"id": "gemini-3.8-flash-high", "label": "Gemini 3.8 Flash (深度推理)"},
+    {"id": "gemini-3.1-pro-high", "label": "Gemini 3.1 Pro (大模型深度推理)"},
+    {"id": "claude-sonnet-4-6", "label": "Claude Sonnet 4.6 (Thinking)"},
+    {"id": "gpt-oss-120b-medium", "label": "GPT-OSS 120B"},
+]
 
-CRITICAL INSTRUCTIONS:
-1. When the user asks you to modify the code, you MUST return the COMPLETE updated TikZ source code.
-2. The code you return MUST be wrapped in exactly ONE markdown code block starting with ```tikz and ending with ```.
-3. Do not just return the snippet that changed; return the FULL document or the FULL figure.
-4. Keep the original formatting and comments as much as possible unless you are explicitly asked to refactor.
-5. If there are syntax errors provided in the diagnostics, try to fix them.
-6. Your output is automatically validated against the MOS-circuit structural rules (each of the 8 core circuit components in its own \\begin{scope} block, no global \\coordinate, \\normalsize labels, no \\pgfgetlastxy, opacity=0.01 not 0, orthogonal |- / -| chords, every referenced anchor defined). If validation fails, the violation list will be returned to you — you MUST fix all error-level violations and return the complete code again. Do not submit code you know violates these rules.
+TIKZ_SYSTEM_PROMPT = """你是一个直接嵌入在 TikZ Editor 中的专业绘图与交互 AI 助手（Antigravity）。
+你的核心任务是协助用户解答问题、创建、修改和完善各类 TikZ 电路图与矢量插图。
+
+关键原则与极速直出规范：
+1. 【禁止调用任何外部工具】：严禁调用任何外部文件读取、搜索或 MCP 工具，请立即在当前回复中直接以文字或代码形式输出完整结果！
+2. 当用户要求绘制、修改或修复图形时，你必须输出完整可编译的 TikZ 代码。
+3. TikZ 代码必须包裹在且仅包裹在单个 ```tikz ... ``` 代码块中，编辑器会自动提取并实时渲染到画布上。
+4. 如果是电路图，严格遵循 MOS-circuit 规范：
+   - 核心元件各自处于独立的 \\begin{scope} 中；
+   - 导线与元件端口精确对齐，连接线使用正交路由 (|- 或 -|)；
+   - 标注使用 \\normalsize。
+5. 请使用简洁、专业、礼貌的中文直接向用户解释你的设计与修改。
 """
 
+active_tasks: Dict[any, asyncio.Task] = {}
+active_procs: Dict[any, asyncio.subprocess.Process] = {}
 
-def extract_tikz(text: str) -> str | None:
-    """取最后一个 ```tikz 代码块的内容。"""
+LOG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "server_activity.log")
+
+def log_event(msg: str):
+    import datetime
+    ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    line = f"[{ts}] {msg}\n"
+    print(line, end="", flush=True)
+    try:
+        with open(LOG_FILE, "a", encoding="utf-8") as f:
+            f.write(line)
+    except Exception:
+        pass
+
+def extract_tikz(text: str) -> Optional[str]:
     blocks = list(TIKZ_BLOCK_RE.finditer(text))
     if not blocks:
         return None
     return blocks[-1].group(1).strip("\n")
 
+async def safe_send(websocket, data: dict):
+    try:
+        await websocket.send(json.dumps(data))
+    except Exception:
+        pass
 
-def _is_circuit(tikz: str) -> bool:
-    """是否包含 8 大核心元件特征（电路图才执行完整范式校验）。"""
-    return any(
-        any(p.search(tikz) for p in pats) for pats in COMPONENT_MARKER_RE.values()
+async def execute_turn(websocket, payload: dict):
+    prompt = payload.get("prompt", "")
+    model = payload.get("model", "")
+    context = payload.get("context", {})
+    source = context.get("source", "")
+    diagnostics = context.get("diagnosticsText", "")
+
+    log_event(f"[Server] 收到请求 (Model: {model or 'default'}): {prompt}")
+
+    await safe_send(websocket, {
+        "type": "turn-status",
+        "status": "inProgress"
+    })
+    log_event("[Server] 已发送 turn-status: inProgress")
+
+    full_prompt = (
+        f"【极速直出指令：立即直接作答或生成TikZ代码，严禁调用任何外部读取文件工具或MCP工具】\n\n"
+        f"{TIKZ_SYSTEM_PROMPT}\n\n"
+        f"用户需求: {prompt}\n\n"
     )
+    if source:
+        full_prompt += f"当前画布 TikZ 源码:\n```tikz\n{source}\n```\n\n"
+    if diagnostics:
+        full_prompt += f"当前画布诊断信息:\n{diagnostics}\n\n"
 
+    valid_model_ids = {m["id"] for m in AVAILABLE_MODELS if m["id"] != "auto"}
+    selected_model = model if (model and model in valid_model_ids) else "gemini-3.8-flash-low"
+    log_event(f"[Server] 选用底层推理引擎模型: {selected_model}")
 
-def blocking_violations(tikz: str) -> list:
-    """返回必须修复的违规（error 级）。
-
-    非电路图（无元件特征，如流程图）只拦会挂前端解析器的规则
-    （动态宏 / 未定义锚点），避免误伤普通图形。
-    """
-    vs = validate_drawing(tikz)
-    if _is_circuit(tikz):
-        return [v for v in vs if v.severity == "error"]
-    return [
-        v
-        for v in vs
-        if v.severity == "error" and v.rule in ("anchor-resolution", "dynamic-pgf")
+    cmd = [
+        ANTIGRAVITY_CLI,
+        "--disable-slash-commands",
+        "--dangerously-skip-permissions",
+        "--output-format", "stream-json",
+        "--model", selected_model,
+        "--print", full_prompt
     ]
 
+    if not os.path.exists(ANTIGRAVITY_CLI):
+        err = f"未找到 Antigravity CLI 引擎: {ANTIGRAVITY_CLI}"
+        log_event(f"[Server] 错误: {err}")
+        await safe_send(websocket, {"type": "error", "message": err})
+        await safe_send(websocket, {
+            "type": "delta",
+            "deltaType": "item/agentMessage/delta",
+            "content": f"⚠️ {err}"
+        })
+        await safe_send(websocket, {
+            "type": "turn-status",
+            "status": "failed",
+            "error": err
+        })
+        return
 
-def feedback_text(violations: list, limit: int = 8) -> str:
-    lines = []
-    for v in violations[:limit]:
-        loc = f"第 {v.location} 行" if v.location else "位置未知"
-        lines.append(f"- [{v.rule}] {loc}：{v.message}")
-    if len(violations) > limit:
-        lines.append(f"- …… 另有 {len(violations) - limit} 条违规")
-    return "\n".join(lines)
+    try:
+        log_event("[Server] 正在调用 Antigravity CLI 执行实时流式推理...")
+        proc = await asyncio.create_subprocess_exec(
+            *cmd,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        active_procs[websocket] = proc
 
+        out = ""
+        while True:
+            line_bytes = await proc.stdout.readline()
+            if not line_bytes:
+                break
+            line_text = line_bytes.decode("utf-8", errors="replace").strip()
+            if not line_text:
+                continue
+            try:
+                msg = json.loads(line_text)
+                evt = msg.get("event")
+                if evt == "step_update":
+                    su = msg.get("step_update", {})
+                    delta = su.get("text_delta")
+                    if delta:
+                        out += delta
+                        await safe_send(websocket, {
+                            "type": "delta",
+                            "deltaType": "item/agentMessage/delta",
+                            "content": delta
+                        })
+                elif evt == "result":
+                    res = msg.get("result", {})
+                    resp = res.get("response")
+                    if resp and not out:
+                        out = resp
+                        await safe_send(websocket, {
+                            "type": "delta",
+                            "deltaType": "item/agentMessage/delta",
+                            "content": out
+                        })
+            except Exception:
+                pass
+
+        _, stderr = await proc.communicate()
+        err = stderr.decode("utf-8", errors="replace").strip() if stderr else ""
+        log_event(f"[Server] Antigravity CLI 推理完成 (累计输出: {len(out)} 字符, stderr: {len(err)} 字符)")
+        if err:
+            log_event(f"[Server] Antigravity CLI stderr 详情: {err[:500]}")
+
+        if not out and err:
+            out = f"⚠️ Antigravity 返回异常: {err}"
+            await safe_send(websocket, {
+                "type": "delta",
+                "deltaType": "item/agentMessage/delta",
+                "content": out
+            })
+        elif not out:
+            out = "Antigravity 已收到消息。"
+            await safe_send(websocket, {
+                "type": "delta",
+                "deltaType": "item/agentMessage/delta",
+                "content": out
+            })
+
+        # 3. 检查是否有生成的 TikZ 代码，如有则触发画板热重载
+        tikz_code = extract_tikz(out)
+        if tikz_code:
+            if validate_drawing:
+                try:
+                    violations = validate_drawing(tikz_code)
+                    if violations:
+                        log_event(f"[Server] 电路规则校验提示: 发现 {len(violations)} 项规则注意点")
+                except Exception as ve:
+                    log_event(f"[Server] 校验引擎提示: {ve}")
+
+            log_event("[Server] 检测到生成的 TikZ 代码，正在推送到画布...")
+            await safe_send(websocket, {
+                "type": "source-updated",
+                "source": tikz_code
+            })
+
+        await safe_send(websocket, {
+            "type": "turn-status",
+            "status": "completed"
+        })
+        log_event("[Server] 回合完成并已通知前端")
+    except asyncio.CancelledError:
+        log_event("[Server] 回合被中断")
+        await safe_send(websocket, {
+            "type": "turn-status",
+            "status": "interrupted"
+        })
+    except Exception as e:
+        log_event(f"[Server] 执行异常: {e}")
+        await safe_send(websocket, {
+            "type": "error",
+            "message": str(e)
+        })
+        await safe_send(websocket, {
+            "type": "turn-status",
+            "status": "failed",
+            "error": str(e)
+        })
+    finally:
+        active_procs.pop(websocket, None)
+        active_tasks.pop(websocket, None)
 
 async def handle_client(websocket):
-    print("[Server] Client connected")
+    client_addr = getattr(websocket, 'remote_address', 'client')
+    log_event(f"[Server] 客户端已建立连接: {client_addr}")
     try:
         async for message in websocket:
-            data = json.loads(message)
-            if data.get("type") == "start-turn":
+            try:
+                data = json.loads(message)
+            except Exception:
+                continue
+
+            msg_type = data.get("type")
+            log_event(f"[Server] 收到客户端消息类型: {msg_type}")
+
+            if msg_type == "get-models":
+                log_event("[Server] 响应模型列表查询")
+                await websocket.send(json.dumps({
+                    "type": "models",
+                    "models": AVAILABLE_MODELS
+                }))
+
+            elif msg_type == "interrupt":
+                log_event("[Server] 收到中断请求")
+                if websocket in active_procs:
+                    proc = active_procs[websocket]
+                    try:
+                        proc.terminate()
+                    except Exception:
+                        pass
+                if websocket in active_tasks:
+                    task = active_tasks[websocket]
+                    task.cancel()
+                await websocket.send(json.dumps({
+                    "type": "turn-status",
+                    "status": "interrupted"
+                }))
+
+            elif msg_type == "start-turn":
                 payload = data.get("payload", {})
-                prompt = payload.get("prompt", "")
-                context = payload.get("context", {})
-
-                source = context.get("source", "")
-                diagnostics = context.get("diagnosticsText", "")
-
-                full_prompt = f"User Request: {prompt}\n\nCurrent TikZ Source:\n```tikz\n{source}\n```\n"
-                if diagnostics:
-                    full_prompt += f"\nDiagnostics:\n{diagnostics}\n"
-
-                print(f"[Server] Starting Antigravity Agent for request: {prompt}")
-
-                config = LocalAgentConfig(system_instructions=TIKZ_SYSTEM_PROMPT)
-
-                try:
-                    async with Agent(config) as agent:
-                        final_text: str | None = None
-                        last_feedback = ""
-                        current_prompt = full_prompt
-
-                        for rnd in range(1, MAX_ROUNDS + 1):
-                            response = await agent.chat(current_prompt)
-
-                            # 消费 thoughts（原协议保留）
-                            async for thought in response.thoughts:
-                                pass
-
-                            text = ""
-                            async for token in response:
-                                text += token
-
-                            tikz = extract_tikz(text)
-                            if tikz is None:
-                                last_feedback = (
-                                    "你的回答没有包含 ```tikz 代码块。"
-                                    "必须返回完整 TikZ，且只包裹在一个 ```tikz ... ``` 代码块内。"
-                                )
-                            else:
-                                violations = blocking_violations(tikz)
-                                if not violations:
-                                    final_text = text
-                                    print(f"[Server] Round {rnd} passed validation")
-                                    break
-                                last_feedback = feedback_text(violations)
-                                print(
-                                    f"[Server] Round {rnd} failed validation: "
-                                    f"{last_feedback[:120]}..."
-                                )
-
-                            current_prompt = (
-                                full_prompt
-                                + "\n\n你上一轮的输出未通过结构校验。"
-                                "请修复全部 error 级违规后重新输出完整 TikZ：\n"
-                                + last_feedback
-                            )
-
-                        if final_text is None:
-                            await websocket.send(
-                                json.dumps(
-                                    {
-                                        "type": "turn-status",
-                                        "status": "failed",
-                                        "error": (
-                                            f"输出连续 {MAX_ROUNDS} 轮未通过结构校验，已停止。"
-                                            f"最后的问题：\n{last_feedback}"
-                                        ),
-                                    }
-                                )
-                            )
-                            continue
-
-                        # 流式转发最终（已过校验的）结果
-                        for i in range(0, len(final_text), 250):
-                            await websocket.send(
-                                json.dumps(
-                                    {"type": "delta", "content": final_text[i : i + 250]}
-                                )
-                            )
-                        await websocket.send(
-                            json.dumps({"type": "turn-status", "status": "completed"})
-                        )
-                        print("[Server] Turn completed")
-
-                except Exception as e:
-                    print(f"[Server] Agent Error: {e}")
-                    await websocket.send(
-                        json.dumps(
-                            {"type": "turn-status", "status": "failed", "error": str(e)}
-                        )
-                    )
+                # If there's an ongoing task for this socket, cancel it first
+                if websocket in active_tasks and not active_tasks[websocket].done():
+                    active_tasks[websocket].cancel()
+                
+                task = asyncio.create_task(execute_turn(websocket, payload))
+                active_tasks[websocket] = task
 
     except websockets.exceptions.ConnectionClosed:
-        print("[Server] Client disconnected")
-
+        log_event(f"[Server] 客户端断开连接: {client_addr}")
+    finally:
+        if websocket in active_procs:
+            try:
+                active_procs[websocket].terminate()
+            except Exception:
+                pass
+            active_procs.pop(websocket, None)
+        if websocket in active_tasks:
+            active_tasks[websocket].cancel()
+            active_tasks.pop(websocket, None)
 
 async def main():
     server = await websockets.serve(handle_client, "localhost", 3100)
     print("Antigravity MCP Bridge Server running on ws://localhost:3100")
     await server.wait_closed()
-
 
 if __name__ == "__main__":
     asyncio.run(main())

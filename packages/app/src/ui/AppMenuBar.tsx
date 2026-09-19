@@ -4,27 +4,15 @@ import type { CommandBindings } from "./editor-command-runtime";
 import { useWorkspaceListStore } from "../store/workspace-list-store";
 import { BUILT_IN_WORKSPACES } from "./DockLayout";
 import { applyWorkspace, findActiveWorkspaceId } from "./workspace-apply";
+import { formatAccelerator } from "./key-labels";
 import css from "./AppMenuBar.module.css";
 
-const IS_MAC_PLATFORM =
-  typeof navigator !== "undefined" &&
-  /(mac|iphone|ipad)/i.test(navigator.platform);
-
-function formatAccelerator(accelerator: string | undefined): string {
-  if (!accelerator) {
-    return "";
-  }
-
-  return accelerator
-    .split("+")
-    .map((part) => {
-      if (part === "CmdOrCtrl") {
-        return IS_MAC_PLATFORM ? "Cmd" : "Ctrl";
-      }
-      return part;
-    })
-    .join(IS_MAC_PLATFORM ? " " : "+");
-}
+const BUILT_IN_WORKSPACE_LABELS: Record<string, string> = {
+  default: "默认布局",
+  sourceOnTop: "源码置顶",
+  canvasOnly: "仅画布",
+  wideInspector: "宽属性面板",
+};
 
 function MenuPopup({
   items,
@@ -81,6 +69,9 @@ function MenuPopup({
                   );
                 }
                 const checked = entry.id === activeWorkspaceId;
+                const displayName = entry.builtIn
+                  ? (BUILT_IN_WORKSPACE_LABELS[entry.id] ?? entry.name)
+                  : entry.name;
                 return (
                   <button
                     key={`${itemKey}-ws-${entry.id}`}
@@ -95,7 +86,7 @@ function MenuPopup({
                     }}
                   >
                     <span className={css.check}>{checked ? "\u2713" : ""}</span>
-                    <span className={css.label}>{entry.name}</span>
+                    <span className={css.label}>{displayName}</span>
                   </button>
                 );
               })}

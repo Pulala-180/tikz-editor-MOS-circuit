@@ -23,6 +23,42 @@ import { ColorPickerField } from "./ColorPicker";
 import { CustomDropdown, type CustomDropdownItem } from "./CustomDropdown";
 import { SidePanel } from "./SidePanel";
 import css from "./StylesPanel.module.css";
+import {
+  DASH_STYLE_LABEL_MAP,
+  FILL_MODE_LABEL_MAP,
+  FILL_PATTERN_LABEL_MAP,
+  FILL_SHADING_LABEL_MAP,
+  LINE_CAP_LABEL_MAP,
+  LINE_JOIN_LABEL_MAP,
+  NODE_SHAPE_LABEL_MAP,
+  localizeElementKind,
+  localizePropertyLabel
+} from "./inspector-panel/panel-helpers";
+
+function localizeStylesSectionTitle(title: string): string {
+  if (title === "TikZ defaults") return "TikZ 默认样式";
+  if (title === "Built-in style") return "内置样式";
+  if (title === "Command") return "绘图命令";
+  if (title === "scope") return "作用域 (scope)";
+  if (title === "every node") return "所有节点样式 (every node)";
+  if (title === "global") return "全局样式";
+  const everyShapeMatch = title.match(/^every (.+) node$/);
+  if (everyShapeMatch) {
+    const rawShape = everyShapeMatch[1];
+    const localizedShape = NODE_SHAPE_LABEL_MAP[rawShape as keyof typeof NODE_SHAPE_LABEL_MAP] ?? rawShape;
+    return `所有 ${localizedShape} 节点 (every ${rawShape} node)`;
+  }
+  return title;
+}
+
+function localizeSourceLocation(loc: string | null | undefined): string | null {
+  if (!loc) return null;
+  const match = loc.match(/^line (\d+)$/);
+  if (match) {
+    return `第 ${match[1]} 行`;
+  }
+  return loc;
+}
 
 // ── Key name autocomplete suggestions ────────────────────────────────────────
 
@@ -298,7 +334,9 @@ export function StylesPanel() {
         : Object.values(section.addPropertyTemplates).find(
             (t) => {
               if ("write" in t && t.write?.key === keyName) return true;
-              return t.label.toLowerCase() === keyName.toLowerCase();
+              if (t.label.toLowerCase() === keyName.toLowerCase()) return true;
+              if (localizePropertyLabel(t.label, t.id).toLowerCase() === keyName.toLowerCase()) return true;
+              return false;
             }
           ) ?? null;
       if (template) {
@@ -384,7 +422,7 @@ export function StylesPanel() {
     return (
       <SidePanel className={css.panel}>
         <SidePanel.Content>
-          <p className={css.hint}>Select an element to inspect its style cascade.</p>
+          <p className={css.hint}>请选择一个元素以查看其样式层叠关系。</p>
         </SidePanel.Content>
       </SidePanel>
     );
@@ -394,7 +432,7 @@ export function StylesPanel() {
     return (
       <SidePanel className={css.panel}>
         <SidePanel.Content>
-          <p className={css.hint}>Styles are available for a single element, or for multiple selected elements with identical cascades.</p>
+          <p className={css.hint}>样式面板支持单个元素，或具有相同样式层叠关系的多个选中元素。</p>
         </SidePanel.Content>
       </SidePanel>
     );
@@ -404,7 +442,7 @@ export function StylesPanel() {
     return (
       <SidePanel className={css.panel}>
         <SidePanel.Content>
-          <p className={css.hint}>Styles data is unavailable for the current selection.</p>
+          <p className={css.hint}>当前选中元素暂无样式数据。</p>
         </SidePanel.Content>
       </SidePanel>
     );
@@ -413,17 +451,21 @@ export function StylesPanel() {
   return (
     <SidePanel className={css.panel}>
       <SidePanel.Header>
-        {model.elementIds.length > 1 ? `${model.elementIds.length} selected (matching styles)` : model.elementKind}
+        {model.elementIds.length > 1 ? `已选中 ${model.elementIds.length} 个对象 (样式一致)` : localizeElementKind(model.elementKind)}
       </SidePanel.Header>
       <SidePanel.Content className={css.content}>
         {model.sections.map((section) => (
           <SidePanel.Section key={section.id}>
             <SidePanel.SectionHeader>
               <div className={css.sectionTitleWrap}>
-                <div className={css.sectionTitle}>{section.title}</div>
-                {section.subtitle ? <div className={css.sectionMeta}>{section.subtitle}</div> : null}
+                <div className={css.sectionTitle}>{localizeStylesSectionTitle(section.title)}</div>
+                {section.subtitle ? (
+                  <div className={css.sectionMeta}>
+                    {NODE_SHAPE_LABEL_MAP[section.subtitle as keyof typeof NODE_SHAPE_LABEL_MAP] ?? section.subtitle}
+                  </div>
+                ) : null}
               </div>
-              {section.sourceLocation ? <div className={css.sectionLocation}>{section.sourceLocation}</div> : null}
+              {section.sourceLocation ? <div className={css.sectionLocation}>{localizeSourceLocation(section.sourceLocation)}</div> : null}
             </SidePanel.SectionHeader>
             <SidePanel.SectionBody className={css.ruleBody}>
               {section.declarations.map((declaration) => (
@@ -449,6 +491,8 @@ export function StylesPanel() {
                   <button
                     type="button"
                     className={css.addButton}
+                    aria-label="添加属性"
+                    title="添加属性"
                     onClick={() => { setAddingInSection(section.id); }}
                   >
                     +
@@ -503,7 +547,7 @@ function DeclarationRow({
           type="checkbox"
           checked={enabled}
           disabled={!toggleWritable}
-          aria-label={`Toggle ${keySlug}`}
+          aria-label={`切换 ${keySlug}`}
           onChange={(event) => { onToggle(declaration, event.currentTarget.checked); }}
         />
       </div>
@@ -511,7 +555,7 @@ function DeclarationRow({
         {writable ? (
           <CustomDropdown
             editable
-            ariaLabel="Property name"
+            ariaLabel="属性名称"
             value={keySlug}
             options={ALL_KEY_SUGGESTIONS}
             onChange={(newKey) => { onRenameKey(declaration, newKey); }}
@@ -529,7 +573,7 @@ function DeclarationRow({
         <button
           type="button"
           className={css.deleteButton}
-          aria-label={`Delete ${keySlug}`}
+          aria-label={`删除 ${keySlug}`}
           onClick={() => { onDelete(declaration); }}
         >
           ×
@@ -566,7 +610,7 @@ function renderValueEditor(
     case "color":
       return (
         <ColorPickerField
-          ariaLabel={property.label}
+          ariaLabel={localizePropertyLabel(property.label, property.id)}
           value={property.value}
           syntaxValue={property.syntaxValue}
           options={property.options}
@@ -600,11 +644,29 @@ function renderValueEditor(
     case "fillShading":
     case "fillPattern":
     case "nodeShape": {
-      const options: CustomDropdownItem<string>[] = property.options.map((option) => ({ value: option.value, label: option.label }));
+      const options: CustomDropdownItem<string>[] = property.options.map((option) => {
+        let label = option.label;
+        if (property.kind === "dashStyle") {
+          label = DASH_STYLE_LABEL_MAP[option.value] ?? option.label;
+        } else if (property.kind === "lineCap") {
+          label = LINE_CAP_LABEL_MAP[option.value] ?? option.label;
+        } else if (property.kind === "lineJoin") {
+          label = LINE_JOIN_LABEL_MAP[option.value] ?? option.label;
+        } else if (property.kind === "fillMode") {
+          label = FILL_MODE_LABEL_MAP[option.value] ?? option.label;
+        } else if (property.kind === "fillShading") {
+          label = FILL_SHADING_LABEL_MAP[option.value] ?? option.label;
+        } else if (property.kind === "fillPattern") {
+          label = FILL_PATTERN_LABEL_MAP[option.value] ?? option.label;
+        } else if (property.kind === "nodeShape") {
+          label = NODE_SHAPE_LABEL_MAP[option.value] ?? option.label;
+        }
+        return { value: option.value, label };
+      });
       return (
         <CustomDropdown
           editable
-          ariaLabel={property.label}
+          ariaLabel={localizePropertyLabel(property.label, property.id)}
           value={String(property.value)}
           disabled={!writable}
           options={options}
@@ -623,7 +685,7 @@ function renderValueEditor(
             disabled={!writable}
             onChange={(event) => { onPropertyChange(declaration, property, event.target.checked); }}
           />
-          <span>{property.enabled ? `${property.radius.toFixed(1)}pt` : "off"}</span>
+          <span>{property.enabled ? `${property.radius.toFixed(1)}pt` : "关闭"}</span>
         </label>
       );
     case "arrowTip":
@@ -706,7 +768,7 @@ function RawValueInput({
         setEditing(true);
       }}
     >
-      {value || <span className={css.rawValueEmpty}>(empty)</span>}
+      {value || <span className={css.rawValueEmpty}>(空)</span>}
     </button>
   );
 }
@@ -723,7 +785,10 @@ function AddPropertyRow({
   onCancel: () => void;
 }) {
   const addableOptions: CustomDropdownItem<string>[] = [
-    ...section.addableProperties.map((p) => ({ value: `template:${p.propertyId}`, label: p.label })),
+    ...section.addableProperties.map((p) => ({
+      value: `template:${p.propertyId}`,
+      label: `${localizePropertyLabel(p.label, p.propertyId)} (${p.label})`
+    })),
     ...ALL_KEY_SUGGESTIONS
   ];
   // Deduplicate by label
@@ -749,10 +814,10 @@ function AddPropertyRow({
       <CustomDropdown
         editable
         autoFocus
-        ariaLabel="New property name"
+        ariaLabel="新建属性名称"
         value=""
         options={deduped}
-        placeholder="Property name..."
+        placeholder="属性名称..."
         onCommit={(keyName) => {
           if (keyName.trim().length > 0) {
             onAdd(section, keyName.trim());

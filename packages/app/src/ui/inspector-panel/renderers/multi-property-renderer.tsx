@@ -24,6 +24,8 @@ isPathMorphingSuboptionPropertyId,
 lineWidthPresetLabelFromValue,
 lineWidthPreviewLineWidth,
 lineWidthValueLabel,
+localizeEnumOptionLabel,
+localizePropertyLabel,
 type ArrowTipDropdownValue,
 type DashStyleDropdownValue,
 type FillModeDropdownValue,
@@ -87,6 +89,7 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
     applyArrowTipValueMany,
     applyShadowPresetValue
   } = api;
+    const localizedLabel = localizePropertyLabel(property.label, property.id);
     const provenance = renderedMultiPropertyProvenance[property.id] ?? implicitDefaultProvenance(property);
     const valueClassName = withValueProvenanceClass(undefined, provenance);
     const propertyClassName = isPathMorphingSuboptionPropertyId(property.id)
@@ -96,16 +99,20 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
       const writable = property.writes.some((write) => write.writable && write.elementId.length > 0);
       const mixedValue = "__mixed-enum__";
       const dropdownValue = property.mixed ? mixedValue : property.value;
+      const localizedOptions = property.options.map((option) => ({
+        ...option,
+        label: localizeEnumOptionLabel(option.value, option.label)
+      }));
       const dropdownOptions = property.mixed
-        ? [{ value: mixedValue, label: "Mixed" }, ...property.options]
-        : property.options;
+        ? [{ value: mixedValue, label: "混合值" }, ...localizedOptions]
+        : localizedOptions;
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             <CustomDropdown
-              ariaLabel={property.label}
+              ariaLabel={localizedLabel}
               value={dropdownValue}
               options={dropdownOptions}
               disabled={!writable}
@@ -151,7 +158,7 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
                 );
               }}
             />
-            <span className={withValueProvenanceClass(css.checkboxLabel, provenance)}>{property.label}</span>
+            <span className={withValueProvenanceClass(css.checkboxLabel, provenance)}>{localizedLabel}</span>
           </label>
           {renderReadOnlyReasonNote(property.readOnlyReason)}
         </div>
@@ -186,7 +193,7 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
       const writable = property.writes.some((write) => write.writable && write.elementId.length > 0);
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderNodeTextAlignToolbar(
@@ -215,12 +222,12 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
       const previewOwnerKey = `multi-node-shape:${property.id}`;
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderNodeShapeDropdown(
               {
-                label: property.label,
+                label: localizedLabel,
                 value: property.value,
                 options: property.options
               },
@@ -253,7 +260,7 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
       const previewOwnerKey = `multi-node-font-size:${property.id}`;
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderNodeFontToolbar(
@@ -268,7 +275,7 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
               sizePresetMixed: property.sizePresetMixed,
               customSizePt: property.customSizePt,
               sizeOptions: property.sizeOptions,
-              label: property.label
+              label: localizedLabel
             },
             writable,
             (nextFamily: NodeFontFamilyId) =>
@@ -320,11 +327,11 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
       const writable = property.writes.some((write) => write.writable && write.elementId.length > 0);
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             <ColorPickerField
-              ariaLabel={property.label}
+              ariaLabel={localizedLabel}
               value={property.mixed ? null : (property.value ?? "none")}
               syntaxValue={property.mixed ? null : property.syntaxValue}
               mixed={property.mixed}
@@ -357,12 +364,12 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
         : property.value;
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderFillModeDropdown(
               {
-                label: property.label,
+                label: localizedLabel,
                 value: property.value,
                 options: property.options
               },
@@ -388,12 +395,12 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
         : property.value;
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderFillShadingDropdown(
               {
-                label: property.label,
+                label: localizedLabel,
                 value: property.value,
                 options: property.options
               },
@@ -417,12 +424,12 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
         : property.value;
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderFillPatternDropdown(
               {
-                label: property.label,
+                label: localizedLabel,
                 value: property.value,
                 options: property.options
               },
@@ -443,7 +450,7 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
       const writable = property.writes.some((write) => write.writable && write.elementId.length > 0);
       return (
         <div key={property.id} className={propertyClassName}>
-          {renderScrubbableNumberLabel(property.label, {
+          {renderScrubbableNumberLabel(localizedLabel, {
             writable,
             value: property.value,
             step: property.step,
@@ -497,11 +504,11 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
       const dropdownPreviewLineWidth = lineWidthPreviewLineWidth(dropdownValue, sliderValue);
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             <CustomDropdown
-              ariaLabel={`${property.label} preset`}
+              ariaLabel={`${localizedLabel} 预设`}
               value={dropdownValue}
               options={LINE_WIDTH_DROPDOWN_OPTIONS}
               disabled={!writable}
@@ -604,12 +611,12 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
       const previewOwnerKey = `multi-dash-style:${property.id}`;
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderDashStyleDropdown(
               {
-                label: property.label,
+                label: localizedLabel,
                 value: property.value,
                 previewLineWidth: property.previewLineWidth,
                 options: property.options
@@ -641,12 +648,12 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
       const previewOwnerKey = `multi-line-cap:${property.id}`;
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderLineCapDropdown(
             {
-              label: property.label,
+              label: localizedLabel,
               value: property.value,
               previewLineWidth: property.previewLineWidth,
               options: property.options
@@ -678,12 +685,12 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
       const previewOwnerKey = `multi-line-join:${property.id}`;
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderLineJoinDropdown(
             {
-              label: property.label,
+              label: localizedLabel,
               value: property.value,
               previewLineWidth: property.previewLineWidth,
               options: property.options
@@ -717,12 +724,12 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
       const previewOwnerKey = `multi-path-morphing:${property.id}`;
       return (
         <div key={property.id} className={propertyClassName}>
-          <div className={css.propertyLabel}>{property.label}</div>
+          <div className={css.propertyLabel}>{localizedLabel}</div>
           {maybeWrapWithProvenanceTooltip(
             provenance,
             renderPathMorphingDecorationDropdown(
             {
-              label: property.label,
+              label: localizedLabel,
               value: property.value,
               previewLineWidth: property.previewLineWidth,
               options: property.options
@@ -776,7 +783,7 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
                   property.disableRequiresSharpCorners
                 ); }}
             />
-            <span className={withValueProvenanceClass(css.checkboxLabel, provenance)}>{property.label}</span>
+            <span className={withValueProvenanceClass(css.checkboxLabel, provenance)}>{localizedLabel}</span>
           </label>
           {property.enabled || property.anyEnabled ? (
             <div className={css.roundedCornersControl}>
@@ -813,13 +820,13 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
 
     return (
       <div key={property.id} className={propertyClassName}>
-        <div className={css.propertyLabel}>{property.label}</div>
+        <div className={css.propertyLabel}>{localizedLabel}</div>
         {maybeWrapWithProvenanceTooltip(
           provenance,
           renderArrowTipDropdown(
           {
             id: property.id,
-            label: property.label,
+            label: localizedLabel,
             side: property.side,
             value: property.value,
             options: property.options,
@@ -851,12 +858,12 @@ export function renderMultiInspectorProperty(property: MultiInspectorProperty, a
     const dropdownValue = property.mixed ? SHADOW_PRESET_MIXED_OPTION_VALUE : property.value;
     return (
       <div key={property.id} className={propertyClassName}>
-        <div className={css.propertyLabel}>{property.label}</div>
+        <div className={css.propertyLabel}>{localizedLabel}</div>
         {maybeWrapWithProvenanceTooltip(
           provenance,
           renderShadowPresetDropdown(
             {
-              label: property.label,
+              label: localizedLabel,
               value: property.value,
               options: property.options
             },

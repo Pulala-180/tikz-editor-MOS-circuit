@@ -2,6 +2,7 @@ import { px } from "../../coords/scalars.js";
 import type { Px } from "../../coords/scalars.js";
 import type { WorldBounds, WorldPoint } from "../../coords/points.js";
 import type { EditHandle, NodeAnchorTarget, SceneElement } from "../../semantic/types.js";
+import type { WireSegment } from "./wire-segment-snap.js";
 
 export type Axis = "x" | "y";
 
@@ -89,6 +90,8 @@ export type SnapContext = {
   guides: SnapGuides;
   referencePoints: SnapPoint[];
   referenceBounds: SnapBounds[];
+  /** Straight wire segments the pointer can be projected onto (see findNearestWireSegmentSnap). */
+  wireSegments: WireSegment[];
   visibleGaps: {
     horizontal: Gap[];
     vertical: Gap[];
@@ -121,6 +124,8 @@ export type SelectionGeometry = {
 export type BuildSnapContextInput = {
   sceneElements: SceneElement[];
   selectedSourceIds: readonly string[];
+  /** Overrides the segments derived from sceneElements; mostly for tests. */
+  wireSegments?: readonly WireSegment[];
   editHandles?: readonly EditHandle[];
   nodeAnchorTargets?: readonly NodeAnchorTarget[];
   zoom: number;

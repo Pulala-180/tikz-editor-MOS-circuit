@@ -185,11 +185,11 @@ export function PngExportModal({ svgResult, onClose }: PngExportModalProps) {
       className={css.dialog}
     >
       <Modal.Header
-        title="Export PNG"
+        title="导出 PNG"
         titleId="png-export-title"
         showCloseButton
         onClose={onClose}
-        closeAriaLabel="Close PNG export"
+        closeAriaLabel="关闭 PNG 导出"
       />
 
       <Modal.Body padding="none" scroll={false}>
@@ -209,19 +209,19 @@ export function PngExportModal({ svgResult, onClose }: PngExportModalProps) {
                       previewDisplay.isRefreshing ? css.previewImageRefreshing : ""
                     ].filter(Boolean).join(" ")}
                     src={previewDisplay.url}
-                    alt="PNG export preview"
+                    alt="PNG 导出预览"
                   />
                   {previewDisplay.isRefreshing && showRefreshOverlay ? (
-                    <div className={css.previewOverlay} data-select="text">Rendering preview…</div>
+                    <div className={css.previewOverlay} data-select="text">正在渲染预览…</div>
                   ) : null}
                 </div>
               ) : (
                 <div className={css.previewStatus} data-select="text">
                   {preview.status === "loading"
-                    ? "Rendering preview…"
+                    ? "正在渲染预览…"
                     : preview.status === "error"
                       ? preview.message
-                      : "Preview unavailable."}
+                      : "预览不可用。"}
                 </div>
               )}
             </div>
@@ -230,10 +230,10 @@ export function PngExportModal({ svgResult, onClose }: PngExportModalProps) {
                 <>
                   <span>{previewDisplay.pixelWidth} × {previewDisplay.pixelHeight}px</span>
                   <span>{previewDisplay.dpi} DPI</span>
-                  <span>{transparentBackground ? "Transparent background" : "White background"}</span>
+                  <span>{transparentBackground ? "透明背景" : "白色背景"}</span>
                 </>
               ) : (
-                <span>PNG preview updates as you change the export settings.</span>
+                <span>修改导出设置时将实时更新 PNG 预览。</span>
               )}
             </div>
           </div>
@@ -248,7 +248,7 @@ export function PngExportModal({ svgResult, onClose }: PngExportModalProps) {
             }}
           >
             <label className={css.field}>
-              <span className={css.label}>DPI</span>
+              <span className={css.label}>分辨率 (DPI)</span>
               <input
                 type="number"
                 min={36}
@@ -259,7 +259,7 @@ export function PngExportModal({ svgResult, onClose }: PngExportModalProps) {
                 value={dpiInput}
                 onChange={(event) => { setDpiInput(event.target.value); }}
               />
-              <span className={css.help}>Canvas export uses the selected DPI to choose the PNG pixel size.</span>
+              <span className={css.help}>画板导出将使用所选 DPI 计算 PNG 像素尺寸（例如 72 DPI 为 1x 标准，144 DPI 为 2x 高清，288 DPI 为 4x 超清）。</span>
             </label>
 
             <label className={css.checkboxRow}>
@@ -269,28 +269,28 @@ export function PngExportModal({ svgResult, onClose }: PngExportModalProps) {
                 onChange={(event) => { setTransparentBackground(event.target.checked); }}
               />
               <span className={css.checkboxText}>
-                <span className={css.label}>Transparent background</span>
-                <span className={css.helpBlock}>Turn this off to flatten the image onto solid white.</span>
+                <span className={css.label}>透明背景</span>
+                <span className={css.helpBlock}>关闭此选项以包含白色背景（纯白不透明）。</span>
               </span>
             </label>
 
             <div className={css.summary}>
               <div className={css.summaryRow}>
-                <span>Canvas size</span>
+                <span>画布尺寸</span>
                 <span>
                   {(previewDisplay?.pixelWidth ?? Math.max(1, Math.ceil(svgResult.viewBox.width * (effectiveDpi / 72))))} ×{" "}
                   {(previewDisplay?.pixelHeight ?? Math.max(1, Math.ceil(svgResult.viewBox.height * (effectiveDpi / 72))))}px
                 </span>
               </div>
               <div className={css.summaryRow}>
-                <span>Source bounds</span>
+                <span>源图形边界</span>
                 <span>
                   {svgResult.viewBox.width.toFixed(1)} × {svgResult.viewBox.height.toFixed(1)}pt
                 </span>
               </div>
               <div className={css.summaryRow}>
-                <span>Background</span>
-                <span>{transparentBackground ? "Alpha preserved" : "Opaque white"}</span>
+                <span>背景</span>
+                <span>{transparentBackground ? "保留透明 (Alpha)" : "不透明纯白"}</span>
               </div>
             </div>
           </form>
@@ -299,7 +299,7 @@ export function PngExportModal({ svgResult, onClose }: PngExportModalProps) {
 
       <Modal.Footer>
         <Modal.SecondaryButton data-testid="png-export-cancel" onClick={onClose}>
-          Cancel
+          取消
         </Modal.SecondaryButton>
         <Modal.PrimaryButton
           data-testid="png-export-download"
@@ -308,7 +308,7 @@ export function PngExportModal({ svgResult, onClose }: PngExportModalProps) {
             void handleExport();
           }}
         >
-          {downloadPending ? "Exporting…" : "Export PNG"}
+          {downloadPending ? "导出中…" : "下载 PNG"}
         </Modal.PrimaryButton>
       </Modal.Footer>
     </Modal>

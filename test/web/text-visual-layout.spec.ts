@@ -112,4 +112,56 @@ describe("text visual layout", () => {
     expect(layout.getCaretPosition(2).ratio).toBeGreaterThan(layout.getCaretPosition(1).ratio);
     expect(layout.getCaretPosition(4).lineIndex).toBe(1);
   });
+
+  it("leaves pointer mapping untouched when the painted width matches the model", () => {
+    const layout = createVisualTextLayout("iw", "iw", (text) => (text === "i" ? 1 : 4), {
+      renderedWidth: 5
+    });
+
+    expect(layout.getLineWidth(0)).toBe(5);
+    expect(layout.getCaretPosition(2).x).toBe(5);
+    expect(layout.resolveSourceOffsetFromLineX(0, 4)).toBe(2);
+  });
+
+  it("advances scripts at MathJax's reduced script size", () => {
+    const layout = createVisualTextLayout("$x_{ab}$", "$x_{ab}$", measureTextWidth);
+
+    // 'x' at full size, then the `{ab}` script at 0.707 each.
+    expect(layout.getLineWidth(0)).toBeCloseTo(1 + 2 * 0.707, 3);
+  });
+
+  it("keeps braced subscript boundaries on the reduced o/u advances", () => {
+    const layout = createVisualTextLayout("$v_{out}$", "$v_{out}$", measureTextWidth);
+
+    expect(layout.getCaretPosition(4).x).toBeCloseTo(1, 3);
+    expect(layout.getCaretPosition(5).x).toBeCloseTo(1 + 0.707, 3);
+    expect(layout.getCaretPosition(6).x).toBeCloseTo(1 + 2 * 0.707, 3);
+  });
+
+  it("ends a single-token script after exactly one advance", () => {
+    const bare = createVisualTextLayout("$x$", "$x$", measureTextWidth);
+    const scripted = createVisualTextLayout(String.raw`$x_\alpha$`, String.raw`$x_\alpha$`, measureTextWidth);
+
+    expect(scripted.getLineWidth(0) - bare.getLineWidth(0)).toBeCloseTo(0.707, 3);
+  });
+
+  it("re-anchors pointer mapping to the painted width when scripts shrink the line", () => {
+    // `\normalsize` is stripped before measuring, so the model sees `$I_{SS}$`.
+    // MathJax paints both subscript `S` at ~0.707; modelling that keeps a click
+    // on the painted right edge at the subscript end instead of inside the run.
+    const sourceText = String.raw`\normalsize $I_{SS}$`;
+    const renderText = "$I_{SS}$";
+    const paintedWidth = 1 + 2 * 0.707;
+
+    const layout = createVisualTextLayout(sourceText, renderText, measureTextWidth);
+    expect(layout.getLineWidth(0)).toBeCloseTo(paintedWidth, 3);
+    expect(layout.resolveSourceOffsetFromLineX(0, paintedWidth)).toBe(18);
+
+    // An explicit painted width still re-anchors any residual model drift.
+    const anchored = createVisualTextLayout(sourceText, renderText, measureTextWidth, {
+      renderedWidth: paintedWidth
+    });
+    expect(anchored.resolveSourceOffsetFromLineX(0, paintedWidth)).toBe(18);
+    expect(anchored.getCaretPosition(sourceText.length).x).toBeCloseTo(paintedWidth, 3);
+  });
 });

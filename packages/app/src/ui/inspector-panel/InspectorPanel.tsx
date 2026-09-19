@@ -39,12 +39,15 @@ import { ColorPickerField } from "../ColorPicker";
 import { MULTI_ARRANGE_ACTIONS,type MultiArrangeAction } from "./arrange-actions";
 import { InspectorMultiSection,InspectorSingleSection } from "./InspectorSections";
 import {
-clampNumber,
-NODE_FONT_SIZE_MIXED_OPTION_VALUE,
-nodeFontButtonClass,
-type InspectorPropertyProvenance,
-type MultiInspectorProperty,
-type NodeFontSizeDropdownValue
+  clampNumber,
+  localizeElementKind,
+  localizePropertyLabel,
+  localizeSectionTitle,
+  NODE_FONT_SIZE_MIXED_OPTION_VALUE,
+  nodeFontButtonClass,
+  type InspectorPropertyProvenance,
+  type MultiInspectorProperty,
+  type NodeFontSizeDropdownValue
 } from "./panel-helpers";
 import {
 renderNodeFontSizeDropdown,
@@ -257,7 +260,7 @@ export function InspectorPanel() {
     );
     return (
       <div>
-        <div className={css.propertyLabel}>{property.label}</div>
+        <div className={css.propertyLabel}>{localizePropertyLabel(property.label, property.id)}</div>
         <div className={css.controlRow}>
           {maybeWrapWithProvenanceTooltip(provenance, textInput, true)}
         </div>
@@ -887,7 +890,7 @@ export function InspectorPanel() {
         min={property.min}
         max={property.max}
         value={draftValue ?? formatNumber(property.value)}
-        placeholder={property.defaultValue != null ? "Default" : undefined}
+        placeholder={property.defaultValue != null ? "默认值" : undefined}
         disabled={!writable}
         onFocus={(event) => { handleScalarInputFocus(event, draftKey, property, provenance); }}
         onChange={(event) => {
@@ -923,7 +926,7 @@ export function InspectorPanel() {
     );
     return (
       <div className={compact ? css.compactNumberField : undefined}>
-        {renderScrubbableNumberLabel(property.label, {
+        {renderScrubbableNumberLabel(localizePropertyLabel(property.label, property.id), {
           writable,
           value: property.value,
           step: property.step,
@@ -959,7 +962,7 @@ export function InspectorPanel() {
         min={property.min}
         max={property.max}
         value={draftValue ?? (property.mixed ? "" : formatNumber(property.value))}
-        placeholder={property.mixed ? "Mixed" : property.defaultValue != null ? "Default" : undefined}
+        placeholder={property.mixed ? "混合值" : property.defaultValue != null ? "默认值" : undefined}
         disabled={!writable}
         onFocus={(event) => { handleScalarInputFocus(event, draftKey, property, provenance); }}
         onChange={(event) => {
@@ -995,7 +998,7 @@ export function InspectorPanel() {
     );
     return (
       <div className={compact ? css.compactNumberField : undefined}>
-        {renderScrubbableNumberLabel(property.label, {
+        {renderScrubbableNumberLabel(localizePropertyLabel(property.label, property.id), {
           writable,
           value: property.value,
           step: property.step,
@@ -1033,7 +1036,7 @@ export function InspectorPanel() {
         type="number"
         step={property.step}
         value={draftValue ?? formatNumber(property.value)}
-        placeholder={property.defaultValue != null ? "Default" : undefined}
+        placeholder={property.defaultValue != null ? "默认值" : undefined}
         disabled={!writable}
         onFocus={(event) => { handleScalarInputFocus(event, draftKey, property, provenance); }}
         onChange={(event) => {
@@ -1073,7 +1076,7 @@ export function InspectorPanel() {
     );
     return (
       <div className={compact ? css.compactNumberField : undefined}>
-        {renderScrubbableNumberLabel(property.label, {
+        {renderScrubbableNumberLabel(localizePropertyLabel(property.label, property.id), {
           writable,
           value: property.value,
           step: property.step,
@@ -1106,7 +1109,7 @@ export function InspectorPanel() {
         type="number"
         step={property.step}
         value={draftValue ?? (property.mixed ? "" : formatNumber(property.value))}
-        placeholder={property.mixed ? "Mixed" : property.defaultValue != null ? "Default" : undefined}
+        placeholder={property.mixed ? "混合值" : property.defaultValue != null ? "默认值" : undefined}
         disabled={!writable}
         onFocus={(event) => { handleScalarInputFocus(event, draftKey, property, provenance); }}
         onChange={(event) => {
@@ -1146,7 +1149,7 @@ export function InspectorPanel() {
     );
     return (
       <div className={compact ? css.compactNumberField : undefined}>
-        {renderScrubbableNumberLabel(property.label, {
+        {renderScrubbableNumberLabel(localizePropertyLabel(property.label, property.id), {
           writable,
           value: property.value,
           step: property.step,
@@ -1182,7 +1185,7 @@ export function InspectorPanel() {
         type="number"
         step={property.step}
         value={inputValue}
-        placeholder="Unset"
+        placeholder="未设置"
         disabled={!writable}
         onChange={(event) => {
           const raw = event.currentTarget.value;
@@ -1222,7 +1225,7 @@ export function InspectorPanel() {
     );
     return (
       <div className={compact ? css.compactNumberField : undefined}>
-        <div className={css.propertyLabel}>{property.label}</div>
+        <div className={css.propertyLabel}>{localizePropertyLabel(property.label, property.id)}</div>
         <div className={css.controlRow}>
           {maybeWrapWithProvenanceTooltip(provenance, input, true)}
           <span className={css.unitLabel}>{property.unit}</span>
@@ -1248,7 +1251,7 @@ export function InspectorPanel() {
         type="number"
         step={property.step}
         value={inputValue}
-        placeholder={property.mixed ? "Mixed" : "Unset"}
+        placeholder={property.mixed ? "混合值" : "未设置"}
         disabled={!writable}
         onChange={(event) => {
           const raw = event.currentTarget.value;
@@ -1288,7 +1291,7 @@ export function InspectorPanel() {
     );
     return (
       <div className={compact ? css.compactNumberField : undefined}>
-        <div className={css.propertyLabel}>{property.label}</div>
+        <div className={css.propertyLabel}>{localizePropertyLabel(property.label, property.id)}</div>
         <div className={css.controlRow}>
           {maybeWrapWithProvenanceTooltip(provenance, input, true)}
           <span className={css.unitLabel}>{property.unit}</span>
@@ -1312,15 +1315,15 @@ export function InspectorPanel() {
       label: string;
       icon: JSX.Element;
     }> = [
-      { value: "left", label: "Align left", icon: <RiAlignLeft size={13} /> },
-      { value: "center", label: "Align center", icon: <RiAlignCenter size={13} /> },
-      { value: "right", label: "Align right", icon: <RiAlignRight size={13} /> },
-      { value: "justify", label: "Justify", icon: <RiAlignJustify size={13} /> }
+      { value: "left", label: "左对齐", icon: <RiAlignLeft size={13} /> },
+      { value: "center", label: "居中对齐", icon: <RiAlignCenter size={13} /> },
+      { value: "right", label: "右对齐", icon: <RiAlignRight size={13} /> },
+      { value: "justify", label: "两端对齐", icon: <RiAlignJustify size={13} /> }
     ];
 
     return (
       <div className={css.controlRow}>
-        <div className={css.nodeFontButtonGroup} role="group" aria-label="Text alignment">
+        <div className={css.nodeFontButtonGroup} role="group" aria-label="文字对齐方式">
           {buttons.map((button) => {
             const active = !property.mixed && property.value === button.value;
             return (
@@ -1452,12 +1455,12 @@ export function InspectorPanel() {
     return (
       <div className={css.nodeFontControls}>
         <div className={css.nodeFontToolbar}>
-          <div className={css.nodeFontButtonGroup} role="group" aria-label="Font family">
+          <div className={css.nodeFontButtonGroup} role="group" aria-label="字体族">
             <button
               type="button"
               className={nodeFontButtonClass(property.family === "serif" && !property.familyMixed, property.familyMixed)}
               disabled={!writable}
-              aria-label="Serif family"
+              aria-label="衬线体 (Serif)"
               aria-pressed={!property.familyMixed && property.family === "serif"}
               onClick={() => { onFamilyChange("serif"); }}
             >
@@ -1467,7 +1470,7 @@ export function InspectorPanel() {
               type="button"
               className={nodeFontButtonClass(property.family === "sans" && !property.familyMixed, property.familyMixed)}
               disabled={!writable}
-              aria-label="Sans family"
+              aria-label="无衬线体 (Sans)"
               aria-pressed={!property.familyMixed && property.family === "sans"}
               onClick={() => { onFamilyChange("sans"); }}
             >
@@ -1477,19 +1480,19 @@ export function InspectorPanel() {
               type="button"
               className={nodeFontButtonClass(property.family === "monospace" && !property.familyMixed, property.familyMixed)}
               disabled={!writable}
-              aria-label="Monospace family"
+              aria-label="等宽体 (Monospace)"
               aria-pressed={!property.familyMixed && property.family === "monospace"}
               onClick={() => { onFamilyChange("monospace"); }}
             >
               <RiFontMono size={13} />
             </button>
           </div>
-          <div className={css.nodeFontButtonGroup} role="group" aria-label="Font style">
+          <div className={css.nodeFontButtonGroup} role="group" aria-label="字体样式">
             <button
               type="button"
               className={nodeFontButtonClass(boldActive, property.weightMixed)}
               disabled={!writable}
-              aria-label="Bold"
+              aria-label="粗体 (Bold)"
               aria-pressed={boldActive}
               onClick={onWeightToggle}
             >
@@ -1499,7 +1502,7 @@ export function InspectorPanel() {
               type="button"
               className={nodeFontButtonClass(italicActive, property.styleMixed)}
               disabled={!writable}
-              aria-label="Italic"
+              aria-label="斜体 (Italic)"
               aria-pressed={italicActive}
               onClick={onStyleToggle}
             >
@@ -1509,7 +1512,7 @@ export function InspectorPanel() {
           <div className={css.nodeFontSizeRow}>
             {renderNodeFontSizeDropdown(
               {
-                label: `${property.label} size`,
+                label: `${property.label} 字号`,
                 value: property.sizePreset,
                 options: property.sizeOptions,
                 customSizePt: property.customSizePt
@@ -1755,7 +1758,7 @@ export function InspectorPanel() {
     return (
       <>
         <div className={css.property}>
-          <div className={css.propertyLabel}>Mode</div>
+          <div className={css.propertyLabel}>边界模式</div>
           <div className={css.controlRow}>
             <select
               className={css.numberInput}
@@ -1771,20 +1774,20 @@ export function InspectorPanel() {
                 applyFigureBoundsValue(values);
               }}
             >
-              <option value="auto">Auto from content</option>
-              <option value="fixed">Fixed size</option>
+              <option value="auto">根据内容自适应</option>
+              <option value="fixed">固定尺寸</option>
             </select>
           </div>
         </div>
         {fixed ? (
           <>
             <div className={css.compactNumberPair}>
-              {renderFigureBoundsNumberField("X", values.x, "x", false)}
-              {renderFigureBoundsNumberField("Y", values.y, "y", false)}
+              {renderFigureBoundsNumberField("X 坐标", values.x, "x", false)}
+              {renderFigureBoundsNumberField("Y 坐标", values.y, "y", false)}
             </div>
             <div className={css.compactNumberPair}>
-              {renderFigureBoundsNumberField("Width", values.width, "width", false)}
-              {renderFigureBoundsNumberField("Height", values.height, "height", false)}
+              {renderFigureBoundsNumberField("宽度", values.width, "width", false)}
+              {renderFigureBoundsNumberField("高度", values.height, "height", false)}
             </div>
           </>
         ) : null}
@@ -1793,8 +1796,8 @@ export function InspectorPanel() {
   }
 
   function renderGlobalTransformPanel() {
-    const xscale = makeGlobalTransformNumberProperty("xscale", "X scale");
-    const yscale = makeGlobalTransformNumberProperty("yscale", "Y scale");
+    const xscale = makeGlobalTransformNumberProperty("xscale", "X 轴缩放");
+    const yscale = makeGlobalTransformNumberProperty("yscale", "Y 轴缩放");
     return (
       <>
         <SidePanel.Header>tikzpicture</SidePanel.Header>
@@ -1802,13 +1805,13 @@ export function InspectorPanel() {
           <div className={css.elementInfo}>
             <SidePanel.Section>
               <SidePanel.SectionHeader>
-                <span>Transform</span>
+                <span>位置与几何变换</span>
               </SidePanel.SectionHeader>
               <SidePanel.SectionBody>{renderSingleNumberPair(xscale, yscale)}</SidePanel.SectionBody>
             </SidePanel.Section>
             <SidePanel.Section>
               <SidePanel.SectionHeader>
-                <span>Figure Bounds</span>
+                <span>图形边界 (Bounds)</span>
               </SidePanel.SectionHeader>
               <SidePanel.SectionBody>{renderFigureBoundsControls()}</SidePanel.SectionBody>
             </SidePanel.Section>
@@ -1827,7 +1830,7 @@ export function InspectorPanel() {
 
     return (
       <>
-        <SidePanel.Header>{toolLabel} Tool</SidePanel.Header>
+        <SidePanel.Header>{toolLabel} 工具</SidePanel.Header>
         <SidePanel.Content className={css.content}>
           <div className={css.elementInfo}>
             {hint ? (
@@ -1837,14 +1840,14 @@ export function InspectorPanel() {
             {showStroke || showFill ? (
               <SidePanel.Section>
                 <SidePanel.SectionHeader>
-                  <span>Defaults</span>
+                  <span>默认属性</span>
                 </SidePanel.SectionHeader>
                 <SidePanel.SectionBody>
                   {showStroke ? (
                     <div className={css.property}>
-                      <label className={css.propertyLabel}>Stroke</label>
+                      <label className={css.propertyLabel}>描边</label>
                       <ColorPickerField
-                        ariaLabel="Creation stroke color"
+                        ariaLabel="绘图默认描边颜色"
                         value={creationStrokeColor}
                         syntaxValue={creationStrokeColor}
                         options={BASIC_PICKER_COLORS}
@@ -1857,9 +1860,9 @@ export function InspectorPanel() {
                   ) : null}
                   {showFill ? (
                     <div className={css.property}>
-                      <label className={css.propertyLabel}>Fill</label>
+                      <label className={css.propertyLabel}>填充</label>
                       <ColorPickerField
-                        ariaLabel="Creation fill color"
+                        ariaLabel="绘图默认填充颜色"
                         value={creationFillColor === "none" ? "" : creationFillColor}
                         syntaxValue={creationFillColor}
                         options={BASIC_PICKER_COLORS}
@@ -1877,12 +1880,12 @@ export function InspectorPanel() {
             {isFreehand ? (
               <SidePanel.Section>
                 <SidePanel.SectionHeader>
-                  <span>Freehand</span>
+                  <span>手绘设置</span>
                 </SidePanel.SectionHeader>
                 <SidePanel.SectionBody>
                   <div className={css.property}>
                     <label className={css.propertyLabel} htmlFor="inspector-freehand-smoothing">
-                      Smoothing
+                      平滑度
                     </label>
                     <div className={css.toolSliderRow}>
                       <input
@@ -1952,13 +1955,13 @@ export function InspectorPanel() {
 
     return (
       <div className={css.multiArrangeRow}>
-        <div className={css.multiArrangeGroup} role="group" aria-label="Align selection horizontally">
+        <div className={css.multiArrangeGroup} role="group" aria-label="水平对齐选区">
           {alignHorizontalActions.map((action) => renderActionButton(action))}
         </div>
-        <div className={css.multiArrangeGroup} role="group" aria-label="Align selection vertically">
+        <div className={css.multiArrangeGroup} role="group" aria-label="垂直对齐选区">
           {alignVerticalActions.map((action) => renderActionButton(action))}
         </div>
-        <div className={css.multiArrangeGroup} role="group" aria-label="Distribute selection">
+        <div className={css.multiArrangeGroup} role="group" aria-label="等距分布选区">
           {distributeActions.map((action) => renderActionButton(action))}
         </div>
       </div>
@@ -1974,11 +1977,11 @@ export function InspectorPanel() {
       ) : selectedSourceIds.length === 1 ? (
         !renderedDescriptor ? (
           <SidePanel.Content>
-            <p className={css.hint}>Inspector data is unavailable for the current selection.</p>
+            <p className={css.hint}>当前选中元素暂无属性检查器数据。</p>
           </SidePanel.Content>
         ) : (
           <>
-            <SidePanel.Header>{renderedDescriptor.elementKind}</SidePanel.Header>
+            <SidePanel.Header>{localizeElementKind(renderedDescriptor.elementKind)}</SidePanel.Header>
             <SidePanel.Content className={css.content}>
               <div className={css.elementInfo}>
                 {renderedDescriptor.readOnlyReason ? (
@@ -2014,13 +2017,13 @@ export function InspectorPanel() {
       ) : (
         <>
           <SidePanel.Header>
-            {renderedMultiModel?.selectionCount ?? selectedSourceIds.length} selected
+            已选中 {renderedMultiModel?.selectionCount ?? selectedSourceIds.length} 个对象
           </SidePanel.Header>
           <SidePanel.Content className={css.content}>
             <div className={css.elementInfo}>
               {renderMultiArrangeQuickActions()}
               {!renderedMultiModel || renderedMultiModel.sections.length === 0 ? (
-                <p className={css.hint}>No shared editable properties were found across the selected elements.</p>
+                <p className={css.hint}>所选元素之间没有可同时编辑的共有属性。</p>
               ) : (
                 renderedMultiModel.sections.map((section) => (
                   <InspectorMultiSection

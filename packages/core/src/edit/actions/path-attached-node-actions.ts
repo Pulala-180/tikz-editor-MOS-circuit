@@ -40,6 +40,13 @@ export type MovePathAttachedNodeAction = {
   };
   distanceUpdatePt?: number;
   formatPrecision?: DragFormatPrecision;
+  /**
+   * Whether the drop position may be magnetised to a named/normalized position preset
+   * (start / 0.25 / 0.5 / 0.75 / end / ...). Default true. A dragged TEXT label passes false: text
+   * is a free annotation, so it must land exactly where it is dropped instead of being pulled onto a
+   * preset. Components and wires never reach this action, so their snapping is untouched.
+   */
+  snapPosition?: boolean;
 };
 
 type PathAttachedNodeInspectorAction = {
@@ -85,7 +92,7 @@ export function applyMovePathAttachedNodeAction(
   const regime = resolvePathAttachedNodeRegime(resolved.target.options);
 
   const mutations = new Map<string, OptionMutation>();
-  applyPositionMutations(mutations, normalizePathPosition(action.pos));
+  applyPositionMutations(mutations, normalizePathPosition(action.pos), action.snapPosition !== false);
   applySideMutations(mutations, regime, action.sideUpdate);
   applyDistanceMutations(mutations, regime, action);
 
@@ -175,18 +182,19 @@ export function resolveDraggedPathAttachedNodeDirection(
 
 function applyPositionMutations(
   mutations: Map<string, OptionMutation>,
-  rawPosition: number
+  rawPosition: number,
+  snapToPreset = true
 ): void {
   const position = normalizePathPosition(rawPosition);
-  const snapped = resolvePathPositionPreset(position, null);
+  const preset = snapToPreset ? resolvePathPositionPreset(position, null).preset : null;
   for (const key of POSITION_OPTION_KEYS) {
     mutations.set(key, { kind: "remove" });
   }
-  if (snapped.preset === "midway") {
+  if (preset === "midway") {
     return;
   }
-  if (snapped.preset) {
-    mutations.set(snapped.preset, { kind: "set", value: "" });
+  if (preset) {
+    mutations.set(preset, { kind: "set", value: "" });
     return;
   }
   mutations.set("pos", { kind: "set", value: formatNumber(position) });

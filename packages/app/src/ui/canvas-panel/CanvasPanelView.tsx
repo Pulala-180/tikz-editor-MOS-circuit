@@ -6,6 +6,7 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
   type PointerEvent as ReactPointerEvent,
+  type ReactNode,
   type RefObject,
   type SyntheticEvent as ReactSyntheticEvent
 } from "react";
@@ -45,6 +46,13 @@ import type {
   TextSelectionOverlay,
   TextSelectionOverlayBox
 } from "./types";
+import {
+  LATEX_SYMBOLS,
+  resolveLatexToolbarCommandAvailability,
+  resolveSymbolPaletteAvailability,
+  type LatexToolbarCommand
+} from "./latex-label-toolbar";
+import type { LatexPreviewState } from "./latex-label-preview";
 import type { SvgBounds, WorldPoint } from "../coords/types";
 import { fmt, worldToSvgY, type RulerTick, type VisibleRanges } from "./geometry";
 import { CanvasContextMenu } from "../CanvasContextMenu";
@@ -71,6 +79,11 @@ type CanvasPanelViewProps = {
   onTopRulerPointerDown: (event: ReactPointerEvent<SVGSVGElement>) => void;
   onLeftRulerPointerDown: (event: ReactPointerEvent<SVGSVGElement>) => void;
   onCanvasContextMenu: (event: ReactMouseEvent<SVGElement | HTMLDivElement>) => void;
+  /**
+   * Capture-phase companion to `onCanvasContextMenu`: suppresses the menu (and the per-element menus
+   * beneath it) for a right-click the wire tool claims as its 45° gesture.
+   */
+  onInteractionContextMenuCapture: (event: ReactMouseEvent<SVGElement>) => void;
   rulers: { topTicks: RulerTick[]; leftTicks: RulerTick[] };
   LEFT_RULER_DRAG_SOURCE_WIDTH_PX: number;
   toolMode: ToolMode;
@@ -169,7 +182,7 @@ type CanvasPanelViewProps = {
   copyWarningToClipboard: () => void;
   onWarningBarKeyDown: (event: ReactKeyboardEvent<HTMLDivElement>) => void;
   textEditingSession: TextEditingSession | null;
-  textEditPopup: { centerX: number; top: number; maxWidth: number; textareaWidth: number } | null;
+  textEditPopup: { centerX: number; top: number; maxWidth: number; textareaWidth: number; scale: number } | null;
   textEditPopupHeight: number | null;
   textEditPopupRef: RefObject<HTMLDivElement | null>;
   textEditTextareaSizing: { rows: number } | null;
@@ -183,6 +196,11 @@ type CanvasPanelViewProps = {
   onTextEditTextareaPaste: (event: ReactClipboardEvent<HTMLTextAreaElement>) => void;
   onTextEditTextareaDrop: (event: ReactDragEvent<HTMLTextAreaElement>) => void;
   onTextEditTextareaKeyDown: (event: ReactKeyboardEvent<HTMLTextAreaElement>) => void;
+  onTextEditToolbarCommand: (command: LatexToolbarCommand) => void;
+  onTextEditToolbarSymbol: (tex: string) => void;
+  onTextEditToolbarApply: () => void;
+  onTextEditToolbarDelete: () => void;
+  textEditLatexPreview: LatexPreviewState;
   selectionHint: string | null;
   showDevPanel: boolean;
   snapDebugRect: { left: number; top: number; width: number; height: number };
@@ -202,6 +220,7 @@ export function CanvasPanelView(props: CanvasPanelViewProps) {
     onTopRulerPointerDown,
     onLeftRulerPointerDown,
     onCanvasContextMenu,
+    onInteractionContextMenuCapture,
     rulers,
     LEFT_RULER_DRAG_SOURCE_WIDTH_PX,
     toolMode,
@@ -307,6 +326,11 @@ export function CanvasPanelView(props: CanvasPanelViewProps) {
     onTextEditTextareaPaste,
     onTextEditTextareaDrop,
     onTextEditTextareaKeyDown,
+    onTextEditToolbarCommand,
+    onTextEditToolbarSymbol,
+    onTextEditToolbarApply,
+    onTextEditToolbarDelete,
+    textEditLatexPreview,
     selectionHint,
     showDevPanel,
     snapDebugRect,
@@ -333,6 +357,7 @@ export function CanvasPanelView(props: CanvasPanelViewProps) {
       : null;
   const [textCaretBlinkVisible, setTextCaretBlinkVisible] = useState(true);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [symbolPaletteOpen, setSymbolPaletteOpen] = useState(false);
   const shouldBlinkTextCaret = !props.prefersNonBlinkingTextInsertionIndicator && !prefersReducedMotion;
 
   useEffect(() => {
@@ -538,7 +563,14 @@ export function CanvasPanelView(props: CanvasPanelViewProps) {
                 onPointerMove={onInteractionPointerMove}
                 onPointerEnter={onInteractionPointerEnter}
                 onPointerLeave={onInteractionPointerLeave}
-                onContextMenu={onCanvasContextMenu}
+                onContextMenuCapture={onInteractionContextMenuCapture}
+                onContextMenu={(event) => {
+                  // The wire tool's right-click is claimed in the capture phase; don't stack a menu on it.
+                  if (event.defaultPrevented) {
+                    return;
+                  }
+                  onCanvasContextMenu(event);
+                }}
               >
                 {gridLines && (
                   <g className={css.gridOverlay}>
@@ -826,7 +858,8 @@ export function CanvasPanelView(props: CanvasPanelViewProps) {
                 left: textEditPopup.centerX,
                 top: textEditPopup.top,
                 maxWidth: textEditPopup.maxWidth,
-                transform: "translateX(-50%)",
+                transform: `translateX(-50%) scale(${textEditPopup.scale})`,
+                transformOrigin: "top center",
                 visibility: textEditPopupHeight == null ? "hidden" : "visible"
               }}
               onPointerDown={onTextEditPopupPointerDown}
@@ -835,6 +868,142 @@ export function CanvasPanelView(props: CanvasPanelViewProps) {
               {textEditingSession.isForeachTemplateEdit ? (
                 <div className={css.textEditPopupTag} data-testid="canvas-text-edit-foreach-tag">foreach</div>
               ) : null}
+              {(() => {
+                const isForeachTemplateEdit = textEditingSession.isForeachTemplateEdit;
+                const buttons: Array<{ command: LatexToolbarCommand; title: string; content: ReactNode }> = [
+                  { command: "italic", title: String.raw`Italic (\textit{...})`, content: <em>I</em> },
+                  { command: "subscript", title: "Subscript (_{...})", content: <span>X<sub>2</sub></span> },
+                  { command: "superscript", title: "Superscript (^{...})", content: <span>x<sup>2</sup></span> }
+                ];
+                const symbolAvailability = resolveSymbolPaletteAvailability({ isForeachTemplateEdit });
+                return (
+                  <div
+                    className={css.textEditToolbar}
+                    role="toolbar"
+                    aria-label="Label formatting"
+                    data-testid="canvas-text-edit-toolbar"
+                  >
+                    {buttons.map(({ command, title, content }) => {
+                      const availability = resolveLatexToolbarCommandAvailability(command, {
+                        isForeachTemplateEdit
+                      });
+                      const tooltip = availability.disabled ? availability.reason ?? title : title;
+                      return (
+                        <span key={command} className={css.textEditToolbarButtonWrap} title={tooltip}>
+                          <button
+                            type="button"
+                            className={css.textEditToolbarButton}
+                            data-testid={`canvas-text-edit-toolbar-${command}`}
+                            disabled={availability.disabled}
+                            aria-disabled={availability.disabled ? "true" : undefined}
+                            onMouseDown={(event) => {
+                              event.preventDefault();
+                            }}
+                            onClick={() => {
+                              onTextEditToolbarCommand(command);
+                            }}
+                          >
+                            {content}
+                          </button>
+                        </span>
+                      );
+                    })}
+                    <span
+                      className={css.textEditToolbarButtonWrap}
+                      title={symbolAvailability.disabled ? symbolAvailability.reason : "Insert symbol"}
+                    >
+                      <button
+                        type="button"
+                        className={css.textEditToolbarButton}
+                        data-testid="canvas-text-edit-toolbar-symbol"
+                        disabled={symbolAvailability.disabled}
+                        aria-disabled={symbolAvailability.disabled ? "true" : undefined}
+                        aria-expanded={symbolPaletteOpen ? "true" : "false"}
+                        onMouseDown={(event) => {
+                          event.preventDefault();
+                        }}
+                        onClick={() => {
+                          setSymbolPaletteOpen((open) => !open);
+                        }}
+                      >
+                        {"Ω"}
+                      </button>
+                    </span>
+                    {symbolPaletteOpen && !symbolAvailability.disabled ? (
+                      <div
+                        className={css.textEditSymbolPalette}
+                        data-testid="canvas-text-edit-symbol-palette"
+                      >
+                        {LATEX_SYMBOLS.map((symbol) => (
+                          <button
+                            key={symbol.tex}
+                            type="button"
+                            className={css.textEditSymbolButton}
+                            title={`${symbol.title} (${symbol.tex})`}
+                            data-symbol-tex={symbol.tex}
+                            data-testid="canvas-text-edit-symbol-button"
+                            onMouseDown={(event) => {
+                              event.preventDefault();
+                            }}
+                            onClick={() => {
+                              onTextEditToolbarSymbol(symbol.tex);
+                              setSymbolPaletteOpen(false);
+                            }}
+                          >
+                            {symbol.label}
+                          </button>
+                        ))}
+                      </div>
+                    ) : null}
+                    <span className={css.textEditToolbarSpacer} />
+                    <span className={css.textEditToolbarButtonWrap} title="Apply and close">
+                      <button
+                        type="button"
+                        className={[css.textEditToolbarButton, css.textEditToolbarButtonPrimary].join(" ")}
+                        data-testid="canvas-text-edit-toolbar-apply"
+                        onMouseDown={(event) => {
+                          event.preventDefault();
+                        }}
+                        onClick={onTextEditToolbarApply}
+                      >
+                        Apply
+                      </button>
+                    </span>
+                    <span className={css.textEditToolbarButtonWrap} title="Delete label text">
+                      <button
+                        type="button"
+                        className={css.textEditToolbarButton}
+                        data-testid="canvas-text-edit-toolbar-delete"
+                        onMouseDown={(event) => {
+                          event.preventDefault();
+                        }}
+                        onClick={onTextEditToolbarDelete}
+                      >
+                        Delete
+                      </button>
+                    </span>
+                  </div>
+                );
+              })()}
+              <div
+                className={css.textEditPreview}
+                data-testid="canvas-text-edit-preview"
+                data-status={textEditLatexPreview.status}
+              >
+                {textEditLatexPreview.status === "ready" && textEditLatexPreview.html ? (
+                  <div
+                    className={css.textEditPreviewMath}
+                    data-testid="canvas-text-edit-preview-math"
+                    dangerouslySetInnerHTML={{ __html: textEditLatexPreview.html }}
+                  />
+                ) : (
+                  <span className={css.textEditPreviewPlaceholder}>
+                    {textEditLatexPreview.status === "error"
+                      ? textEditLatexPreview.message ?? "Invalid LaTeX"
+                      : "Preview"}
+                  </span>
+                )}
+              </div>
               <div className={css.textEditTextareaLayer}>
                 <textarea
                   ref={textEditTextareaRef}
@@ -861,6 +1030,7 @@ export function CanvasPanelView(props: CanvasPanelViewProps) {
                       .filter(Boolean)
                       .join(" ")}
                     aria-hidden="true"
+                    data-testid="canvas-text-edit-caret-overlay"
                     style={{
                       left: textEditCaretOverlay.left,
                       top: textEditCaretOverlay.top,

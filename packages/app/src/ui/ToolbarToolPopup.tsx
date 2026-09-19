@@ -59,7 +59,7 @@ export function ToolbarToolPopup({
         <div
           className={[css.popup, popupClassName ?? ""].filter(Boolean).join(" ")}
           role="dialog"
-          aria-label="Tool options"
+          aria-label="工具选项"
           data-testid={popupTestId}
         >
           {popup}
@@ -105,7 +105,7 @@ export function ToolbarPopupChoiceList({
   onSelect: (id: string) => void;
 }) {
   return (
-    <div className={css.choiceList} role="listbox" aria-label="Subtools">
+    <div className={css.choiceList} role="listbox" aria-label="子工具列表">
       {choices.map((choice) => {
         const selected = choice.id === selectedId;
         return (
@@ -137,7 +137,7 @@ export function ToolbarPopupVisualChoiceGrid({
   testIdPrefix?: string;
 }) {
   return (
-    <div className={css.visualChoiceGrid} role="listbox" aria-label="Node shapes">
+    <div className={css.visualChoiceGrid} role="listbox" aria-label="节点形状">
       {choices.map((choice) => {
         const selected = choice.id === selectedId;
         const testId = testIdPrefix ? `${testIdPrefix}-${choice.id.replace(/\s+/g, "-")}` : undefined;

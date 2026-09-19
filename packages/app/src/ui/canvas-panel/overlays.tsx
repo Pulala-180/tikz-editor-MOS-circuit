@@ -25,6 +25,62 @@ const TOOL_PREVIEW_NODE_RADIUS_PX = 12;
 const ROTATE_GLYPH_PATH_1 = "M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z";
 const ROTATE_GLYPH_PATH_2 = "M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466";
 
+/**
+ * The "you can connect HERE" marker: a ring with an upright cross (⊕) drawn over a snap target, so
+ * a point a click would actually LAND ON reads differently from a bare cursor cross. Virtuoso shows
+ * the same glyph on an approaching pin.
+ *
+ * Both lengths are multiples of `snapCrossSize`, which the caller passes as 6 screen pixels expressed
+ * in user units (`6 / scale`); every stroke also carries `vector-effect: non-scaling-stroke`. The
+ * marker therefore keeps a fixed size on screen instead of collapsing to an invisible hairline — or
+ * ballooning — as the viewBox scale changes (see the TOOL_PREVIEW_STROKE_PX note below).
+ */
+const CONNECT_MARKER_RADIUS_FACTOR = 2.2;
+const CONNECT_MARKER_ARM_FACTOR = 2.2;
+
+/**
+ * Snap targets a click would actually land ON, in world coordinates.
+ *
+ * Gated on `is2DSnapped` — a coincidence on BOTH axes — so a mere axis alignment (the ordinary single
+ * guide line, which only means "lined up with", not "on") never claims to be connectable. Each
+ * coincident guide contributes one candidate and a target needs confirmations from two lines, so a
+ * single zero-offset axis during a plain drag cannot fake one either.
+ */
+function collectConnectTargets(lines: readonly SnapLine[]): Array<{ x: number; y: number }> {
+  const byKey = new Map<string, { x: number; y: number; confirmations: number }>();
+  const record = (point: { x: number; y: number }) => {
+    const key = snapPointKey(point);
+    const existing = byKey.get(key);
+    if (existing) {
+      existing.confirmations += 1;
+      return;
+    }
+    byKey.set(key, { x: point.x, y: point.y, confirmations: 1 });
+  };
+  for (const line of lines) {
+    if (!line.is2DSnapped) {
+      continue;
+    }
+    if (line.type === "points") {
+      // A coincident guide's ends collapse onto the target, so record it once, not twice.
+      const target = line.points[line.points.length - 1];
+      if (target) {
+        record(target);
+      }
+    } else if (line.type === "pointer") {
+      record(line.to);
+    }
+  }
+  return [...byKey.values()]
+    .filter((entry) => entry.confirmations >= 2)
+    .map(({ x, y }) => ({ x, y }));
+}
+
+/** Identity of a point for "is this the same spot" checks; both sides round the same way. */
+function snapPointKey(point: { x: number; y: number }): string {
+  return `${point.x.toFixed(3)}:${point.y.toFixed(3)}`;
+}
+
 export type ToolPreview =
   | { kind: "cursor"; x: number; y: number }
   | { kind: "circuit"; data: CircuitPreviewData }
@@ -40,6 +96,8 @@ export type ToolPreview =
       strokeWidth?: number;
       strokeLinecap?: "round" | "butt" | "square";
     }
+  /** Multi-leg preview — the whole route a click would commit, not just its first leg. */
+  | { kind: "polyline"; points: Array<{ x: number; y: number }> }
   | { kind: "bezier"; x1: number; y1: number; c1x: number; c1y: number; c2x: number; c2y: number; x2: number; y2: number }
   | {
       kind: "complex-path";
@@ -82,6 +140,12 @@ export function SnapOverlay({
     return null;
   }
 
+  const connectTargets = collectConnectTargets(snapLines);
+  const connectTargetPoints = connectTargets.map((target) => worldToSvgPoint(target, viewBox));
+  const connectTargetKeys = new Set(connectTargetPoints.map((point) => snapPointKey(point)));
+  const connectRingRadius = snapCrossSize * CONNECT_MARKER_RADIUS_FACTOR;
+  const connectArm = snapCrossSize * CONNECT_MARKER_ARM_FACTOR;
+
   return (
     <g className={css.snapOverlay}>
       <defs>
@@ -116,33 +180,29 @@ export function SnapOverlay({
               )}
               {points.map((point, pointIndex) => (
                 <g key={`snap-point-${index}-${pointIndex}`}>
-                  <line
-                    x1={point.x - snapCrossSize}
-                    y1={point.y - snapCrossSize}
-                    x2={point.x + snapCrossSize}
-                    y2={point.y + snapCrossSize}
-                    className={css.snapLine}
-                    strokeWidth={snapCrossStrokeWidth}
-                    strokeLinecap="round"
-                  />
-                  <line
-                    x1={point.x - snapCrossSize}
-                    y1={point.y + snapCrossSize}
-                    x2={point.x + snapCrossSize}
-                    y2={point.y - snapCrossSize}
-                    className={css.snapLine}
-                    strokeWidth={snapCrossStrokeWidth}
-                    strokeLinecap="round"
-                  />
-                  {line.is2DSnapped && (
-                    <circle
-                      cx={point.x}
-                      cy={point.y}
-                      r={snapCrossSize * 1.414}
-                      className={css.snapLine}
-                      fill="none"
-                      strokeWidth={snapCrossStrokeWidth}
-                    />
+                  {/* A connectable target is marked ⊕ below instead of ×, so it reads as
+                      "connect here" rather than as one more alignment cross. */}
+                  {!connectTargetKeys.has(snapPointKey(point)) && (
+                    <>
+                      <line
+                        x1={point.x - snapCrossSize}
+                        y1={point.y - snapCrossSize}
+                        x2={point.x + snapCrossSize}
+                        y2={point.y + snapCrossSize}
+                        className={css.snapLine}
+                        strokeWidth={snapCrossStrokeWidth}
+                        strokeLinecap="round"
+                      />
+                      <line
+                        x1={point.x - snapCrossSize}
+                        y1={point.y + snapCrossSize}
+                        x2={point.x + snapCrossSize}
+                        y2={point.y - snapCrossSize}
+                        className={css.snapLine}
+                        strokeWidth={snapCrossStrokeWidth}
+                        strokeLinecap="round"
+                      />
+                    </>
                   )}
                 </g>
               ))}
@@ -163,33 +223,27 @@ export function SnapOverlay({
                 className={css.snapLine}
                 strokeWidth={snapStrokeWidth}
               />
-              <line
-                x1={from.x - snapCrossSize}
-                y1={from.y - snapCrossSize}
-                x2={from.x + snapCrossSize}
-                y2={from.y + snapCrossSize}
-                className={css.snapLine}
-                strokeWidth={snapCrossStrokeWidth}
-                strokeLinecap="round"
-              />
-              <line
-                x1={from.x - snapCrossSize}
-                y1={from.y + snapCrossSize}
-                x2={from.x + snapCrossSize}
-                y2={from.y - snapCrossSize}
-                className={css.snapLine}
-                strokeWidth={snapCrossStrokeWidth}
-                strokeLinecap="round"
-              />
-              {line.is2DSnapped && (
-                <circle
-                  cx={from.x}
-                  cy={from.y}
-                  r={snapCrossSize * 1.414}
-                  className={css.snapLine}
-                  fill="none"
-                  strokeWidth={snapCrossStrokeWidth}
-                />
+              {!connectTargetKeys.has(snapPointKey(from)) && (
+                <>
+                  <line
+                    x1={from.x - snapCrossSize}
+                    y1={from.y - snapCrossSize}
+                    x2={from.x + snapCrossSize}
+                    y2={from.y + snapCrossSize}
+                    className={css.snapLine}
+                    strokeWidth={snapCrossStrokeWidth}
+                    strokeLinecap="round"
+                  />
+                  <line
+                    x1={from.x - snapCrossSize}
+                    y1={from.y + snapCrossSize}
+                    x2={from.x + snapCrossSize}
+                    y2={from.y - snapCrossSize}
+                    className={css.snapLine}
+                    strokeWidth={snapCrossStrokeWidth}
+                    strokeLinecap="round"
+                  />
+                </>
               )}
             </g>
           );
@@ -218,9 +272,55 @@ export function SnapOverlay({
           </g>
         );
       })}
+      {connectTargetPoints.map((point, index) => (
+        <g
+          key={`snap-connect-${index}`}
+          className={css.connectTargetMarker}
+          data-testid="canvas-connect-target"
+          data-connect-source="snap"
+        >
+          <circle
+            cx={point.x}
+            cy={point.y}
+            r={connectRingRadius}
+            className={css.connectTargetRing}
+            strokeWidth={snapCrossStrokeWidth}
+          />
+          <line
+            x1={point.x - connectArm}
+            y1={point.y}
+            x2={point.x + connectArm}
+            y2={point.y}
+            className={css.snapLine}
+            strokeWidth={snapCrossStrokeWidth}
+            strokeLinecap="round"
+          />
+          <line
+            x1={point.x}
+            y1={point.y - connectArm}
+            x2={point.x}
+            y2={point.y + connectArm}
+            className={css.snapLine}
+            strokeWidth={snapCrossStrokeWidth}
+            strokeLinecap="round"
+          />
+        </g>
+      ))}
     </g>
   );
 }
+
+/**
+ * Preview strokes are measured in SCREEN pixels, not SVG user units.
+ *
+ * `handleStrokeWidth` (= 1.2 / scale) assumed one user unit equals one CSS pixel, which stops being
+ * true once the SVG viewBox is scaled to fit its element — the wire rubber-band rendered at ~0.54px
+ * and was effectively invisible (measured in the browser), which is why the ortho wire felt like it
+ * had no preview at all. `vector-effect: non-scaling-stroke` makes the width zoom-independent.
+ */
+const TOOL_PREVIEW_STROKE_PX = 1.6;
+/** Dashed, so a preview can never be mistaken for a committed element. */
+const TOOL_PREVIEW_DASH = "6 5";
 
 export function ToolPreviewOverlay({
   toolPreview,
@@ -247,7 +347,8 @@ export function ToolPreviewOverlay({
             x2={toolPreview.x + TOOL_PREVIEW_NODE_RADIUS_PX / Math.max(scale, 1e-3)}
             y2={toolPreview.y}
             className={css.toolPreviewStroke}
-            strokeWidth={handleStrokeWidth}
+            strokeWidth={TOOL_PREVIEW_STROKE_PX}
+            vectorEffect="non-scaling-stroke"
           />
           <line
             x1={toolPreview.x}
@@ -255,7 +356,8 @@ export function ToolPreviewOverlay({
             x2={toolPreview.x}
             y2={toolPreview.y + TOOL_PREVIEW_NODE_RADIUS_PX / Math.max(scale, 1e-3)}
             className={css.toolPreviewStroke}
-            strokeWidth={handleStrokeWidth}
+            strokeWidth={TOOL_PREVIEW_STROKE_PX}
+            vectorEffect="non-scaling-stroke"
           />
         </g>
       )}
@@ -266,7 +368,8 @@ export function ToolPreviewOverlay({
             cy={toolPreview.y}
             r={TOOL_PREVIEW_NODE_RADIUS_PX / Math.max(scale, 1e-3)}
             className={css.toolPreviewFill}
-            strokeWidth={handleStrokeWidth}
+            strokeWidth={TOOL_PREVIEW_STROKE_PX}
+            vectorEffect="non-scaling-stroke"
           />
           <line
             x1={toolPreview.x - TOOL_PREVIEW_NODE_RADIUS_PX / Math.max(scale, 1e-3)}
@@ -274,7 +377,8 @@ export function ToolPreviewOverlay({
             x2={toolPreview.x + TOOL_PREVIEW_NODE_RADIUS_PX / Math.max(scale, 1e-3)}
             y2={toolPreview.y}
             className={css.toolPreviewStroke}
-            strokeWidth={handleStrokeWidth}
+            strokeWidth={TOOL_PREVIEW_STROKE_PX}
+            vectorEffect="non-scaling-stroke"
           />
           <line
             x1={toolPreview.x}
@@ -282,7 +386,8 @@ export function ToolPreviewOverlay({
             x2={toolPreview.x}
             y2={toolPreview.y + TOOL_PREVIEW_NODE_RADIUS_PX / Math.max(scale, 1e-3)}
             className={css.toolPreviewStroke}
-            strokeWidth={handleStrokeWidth}
+            strokeWidth={TOOL_PREVIEW_STROKE_PX}
+            vectorEffect="non-scaling-stroke"
           />
         </g>
       )}
@@ -467,8 +572,10 @@ export function ToolPreviewOverlay({
             x2={toolPreview.x2}
             y2={toolPreview.y2}
             className={css.toolPreviewStroke}
-            strokeWidth={toolPreview.strokeWidth ?? handleStrokeWidth}
+            strokeWidth={TOOL_PREVIEW_STROKE_PX}
             strokeLinecap={toolPreview.strokeLinecap ?? "round"}
+            strokeDasharray={toolPreview.arrow ? undefined : TOOL_PREVIEW_DASH}
+            vectorEffect="non-scaling-stroke"
           />
           {toolPreview.arrow && (
             <polygon
@@ -484,6 +591,18 @@ export function ToolPreviewOverlay({
           )}
         </g>
       )}
+      {toolPreview.kind === "polyline" && (
+        <polyline
+          points={toolPreview.points.map((p) => `${p.x},${p.y}`).join(" ")}
+          className={css.toolPreviewStroke}
+          fill="none"
+          strokeWidth={TOOL_PREVIEW_STROKE_PX}
+          strokeDasharray={TOOL_PREVIEW_DASH}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          vectorEffect="non-scaling-stroke"
+        />
+      )}
       {toolPreview.kind === "bezier" && (
         <g>
           <line
@@ -492,7 +611,8 @@ export function ToolPreviewOverlay({
             x2={toolPreview.c1x}
             y2={toolPreview.c1y}
             className={css.curveControlLine}
-            strokeWidth={handleStrokeWidth}
+            strokeWidth={TOOL_PREVIEW_STROKE_PX}
+            vectorEffect="non-scaling-stroke"
           />
           <line
             x1={toolPreview.x2}
@@ -500,12 +620,14 @@ export function ToolPreviewOverlay({
             x2={toolPreview.c2x}
             y2={toolPreview.c2y}
             className={css.curveControlLine}
-            strokeWidth={handleStrokeWidth}
+            strokeWidth={TOOL_PREVIEW_STROKE_PX}
+            vectorEffect="non-scaling-stroke"
           />
           <path
             d={`M ${fmt(toolPreview.x1)},${fmt(toolPreview.y1)} C ${fmt(toolPreview.c1x)},${fmt(toolPreview.c1y)} ${fmt(toolPreview.c2x)},${fmt(toolPreview.c2y)} ${fmt(toolPreview.x2)},${fmt(toolPreview.y2)}`}
             className={css.toolPreviewStroke}
-            strokeWidth={handleStrokeWidth}
+            strokeWidth={TOOL_PREVIEW_STROKE_PX}
+            vectorEffect="non-scaling-stroke"
           />
         </g>
       )}
@@ -520,7 +642,8 @@ export function ToolPreviewOverlay({
                 x2={segment.x2}
                 y2={segment.y2}
                 className={css.toolPreviewStroke}
-                strokeWidth={handleStrokeWidth}
+                strokeWidth={TOOL_PREVIEW_STROKE_PX}
+                vectorEffect="non-scaling-stroke"
               />
             ) : (
               <g key={`complex-bezier-${index}`}>
@@ -530,7 +653,8 @@ export function ToolPreviewOverlay({
                   x2={segment.c1x}
                   y2={segment.c1y}
                   className={css.curveControlLine}
-                  strokeWidth={handleStrokeWidth}
+                  strokeWidth={TOOL_PREVIEW_STROKE_PX}
+                  vectorEffect="non-scaling-stroke"
                 />
                 <line
                   x1={segment.x2}
@@ -538,12 +662,14 @@ export function ToolPreviewOverlay({
                   x2={segment.c2x}
                   y2={segment.c2y}
                   className={css.curveControlLine}
-                  strokeWidth={handleStrokeWidth}
+                  strokeWidth={TOOL_PREVIEW_STROKE_PX}
+                  vectorEffect="non-scaling-stroke"
                 />
                 <path
                   d={`M ${fmt(segment.x1)},${fmt(segment.y1)} C ${fmt(segment.c1x)},${fmt(segment.c1y)} ${fmt(segment.c2x)},${fmt(segment.c2y)} ${fmt(segment.x2)},${fmt(segment.y2)}`}
                   className={css.toolPreviewStroke}
-                  strokeWidth={handleStrokeWidth}
+                  strokeWidth={TOOL_PREVIEW_STROKE_PX}
+                  vectorEffect="non-scaling-stroke"
                 />
               </g>
             )
@@ -553,7 +679,8 @@ export function ToolPreviewOverlay({
             cy={toolPreview.startY}
             r={toolPreview.canClose ? 5 / Math.max(scale, 1e-3) : 3.5 / Math.max(scale, 1e-3)}
             className={toolPreview.closeCandidate ? css.toolPreviewFill : css.toolPreviewStroke}
-            strokeWidth={handleStrokeWidth}
+            strokeWidth={TOOL_PREVIEW_STROKE_PX}
+            vectorEffect="non-scaling-stroke"
           />
         </g>
       )}
@@ -568,14 +695,16 @@ export function ToolPreviewOverlay({
                 x2={segment.x2}
                 y2={segment.y2}
                 className={css.toolPreviewStroke}
-                strokeWidth={handleStrokeWidth}
+                strokeWidth={TOOL_PREVIEW_STROKE_PX}
+                vectorEffect="non-scaling-stroke"
               />
             ) : (
               <path
                 key={`freehand-bezier-${index}`}
                 d={`M ${fmt(segment.x1)},${fmt(segment.y1)} C ${fmt(segment.c1x)},${fmt(segment.c1y)} ${fmt(segment.c2x)},${fmt(segment.c2y)} ${fmt(segment.x2)},${fmt(segment.y2)}`}
                 className={css.toolPreviewStroke}
-                strokeWidth={handleStrokeWidth}
+                strokeWidth={TOOL_PREVIEW_STROKE_PX}
+                vectorEffect="non-scaling-stroke"
               />
             )
           )}
@@ -589,7 +718,8 @@ export function ToolPreviewOverlay({
             width={toolPreview.width}
             height={toolPreview.height}
             className={css.toolPreviewFill}
-            strokeWidth={handleStrokeWidth}
+            strokeWidth={TOOL_PREVIEW_STROKE_PX}
+            vectorEffect="non-scaling-stroke"
           />
           {toolPreview.verticalLines.map((x, index) => (
             <line
@@ -599,7 +729,8 @@ export function ToolPreviewOverlay({
               x2={x}
               y2={toolPreview.y + toolPreview.height}
               className={css.toolPreviewStroke}
-              strokeWidth={handleStrokeWidth}
+              strokeWidth={TOOL_PREVIEW_STROKE_PX}
+              vectorEffect="non-scaling-stroke"
             />
           ))}
           {toolPreview.horizontalLines.map((y, index) => (
@@ -610,7 +741,8 @@ export function ToolPreviewOverlay({
               x2={toolPreview.x + toolPreview.width}
               y2={y}
               className={css.toolPreviewStroke}
-              strokeWidth={handleStrokeWidth}
+              strokeWidth={TOOL_PREVIEW_STROKE_PX}
+              vectorEffect="non-scaling-stroke"
             />
           ))}
         </g>
@@ -622,7 +754,8 @@ export function ToolPreviewOverlay({
           width={toolPreview.width}
           height={toolPreview.height}
           className={css.toolPreviewFill}
-          strokeWidth={handleStrokeWidth}
+          strokeWidth={TOOL_PREVIEW_STROKE_PX}
+          vectorEffect="non-scaling-stroke"
         />
       )}
       {toolPreview.kind === "ellipse" && (
@@ -632,7 +765,8 @@ export function ToolPreviewOverlay({
           rx={toolPreview.rx}
           ry={toolPreview.ry}
           className={css.toolPreviewFill}
-          strokeWidth={handleStrokeWidth}
+          strokeWidth={TOOL_PREVIEW_STROKE_PX}
+          vectorEffect="non-scaling-stroke"
         />
       )}
       {toolPreview.kind === "circle" && (
@@ -641,7 +775,8 @@ export function ToolPreviewOverlay({
           cy={toolPreview.cy}
           r={toolPreview.r}
           className={css.toolPreviewFill}
-          strokeWidth={handleStrokeWidth}
+          strokeWidth={TOOL_PREVIEW_STROKE_PX}
+          vectorEffect="non-scaling-stroke"
         />
       )}
       {toolPreview.kind === "path" && (
@@ -650,7 +785,8 @@ export function ToolPreviewOverlay({
           data-testid="canvas-tool-preview-path"
           className={css.toolPreviewStroke}
           fill="none"
-          strokeWidth={handleStrokeWidth}
+          strokeWidth={TOOL_PREVIEW_STROKE_PX}
+          vectorEffect="non-scaling-stroke"
         />
       )}
     </g>
@@ -1310,9 +1446,20 @@ export function NodeAnchorOverlay({
           anchorOverlay.snappedAnchor?.nodeName === anchor.nodeName &&
           anchorOverlay.snappedAnchor?.nodeSourceId === anchor.nodeSourceId &&
           anchorOverlay.snappedAnchor.anchor === anchor.anchor;
-        const snappedCrossSize = radius * 0.75 * radiusScale;
+        const snappedCrossSize = radius * 1.5 * radiusScale;
         return (
           <g key={`${anchor.nodeName || anchor.nodeSourceId}:${anchor.anchor}`}>
+            {/* Virtuoso 风格的引脚光环：让"此处可起线"一眼可见。纯装饰，pointer-events: none，
+                所以它比圆点大也不会挡住点选。 */}
+            <circle
+              className={`${css.nodeAnchorHalo} ${snapped ? css.nodeAnchorHaloSnapped : ""}`}
+              cx={point.x}
+              cy={point.y}
+              r={(snapped ? radius * 2.6 : radius * 1.9) * radiusScale}
+              strokeWidth={strokeWidth}
+              data-testid="node-anchor-halo"
+              data-anchor-snapped={snapped ? "true" : undefined}
+            />
             <circle
               className={`${css.nodeAnchorPoint} ${snapped ? css.nodeAnchorPointSnapped : ""} ${onAnchorPointerDown || onAnchorClick ? css.nodeAnchorPointInteractive : ""} ${disabled ? css.nodeAnchorPointDisabled : ""}`}
               cx={point.x}
@@ -1347,19 +1494,28 @@ export function NodeAnchorOverlay({
               data-anchor-disabled={disabled ? "true" : undefined}
             />
             {snapped && (
-              <g className={css.snapLine} strokeWidth={strokeWidth * 1.2}>
+              /* The snapped pin is the result a wire click would LAND ON, so it gets the ⊕
+                 "connectable" glyph: the pulsing halo above is the ring, this upright cross the
+                 plus. The ring is `radius * 2.6`, and `radius` is a screen-pixel length divided by
+                 the viewBox scale, so the glyph keeps its size at any zoom. */
+              <g
+                className={css.snapLine}
+                strokeWidth={strokeWidth * 1.2}
+                data-testid="canvas-connect-target"
+                data-connect-source="anchor"
+              >
                 <line
                   x1={point.x - snappedCrossSize}
-                  y1={point.y - snappedCrossSize}
+                  y1={point.y}
                   x2={point.x + snappedCrossSize}
-                  y2={point.y + snappedCrossSize}
+                  y2={point.y}
                   strokeLinecap="round"
                 />
                 <line
-                  x1={point.x - snappedCrossSize}
-                  y1={point.y + snappedCrossSize}
-                  x2={point.x + snappedCrossSize}
-                  y2={point.y - snappedCrossSize}
+                  x1={point.x}
+                  y1={point.y - snappedCrossSize}
+                  x2={point.x}
+                  y2={point.y + snappedCrossSize}
                   strokeLinecap="round"
                 />
               </g>

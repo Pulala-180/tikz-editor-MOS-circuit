@@ -53,12 +53,12 @@ function initialUiState(): WorkspaceEphemeralState {
     snapModes: {
       grid: false,
       guides: false,
-      points: true,
+      points: false,
       gaps: false
     },
     showRulers: true,
     showGuides: true,
-    showDocumentBounds: true,
+    showDocumentBounds: false,
     freehandSmoothingPx: DEFAULT_FREEHAND_SMOOTHING_PX,
     bucketFillColor: DEFAULT_BUCKET_FILL_COLOR,
     selectedAddShape: DEFAULT_ADD_SHAPE_PRESET,
@@ -275,6 +275,10 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
   const previousUi = uiStateFromEditorState(state);
   let workspace = previousWorkspace;
   let ui = previousUi;
+  // Not part of the ephemeral UI slice: it is transient canvas-draft metadata, carried on the
+  // projection tail so it never touches the persisted workspace shape.
+  let wireSource = state.wireSource ?? null;
+  let clipboardPlacementCount = state.clipboardPlacementCount ?? null;
   const activeId = state.activeDocumentId;
 
   const projectedActive = readDocument(workspace.documents, activeId);
@@ -1244,6 +1248,16 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
       ui = { ...ui, canvasStatusHint: action.hint };
       break;
 
+    case "SET_WIRE_SOURCE":
+      if (wireSource === action.source) return state;
+      wireSource = action.source;
+      break;
+
+    case "SET_CLIPBOARD_PLACEMENT":
+      if (clipboardPlacementCount === action.count) return state;
+      clipboardPlacementCount = action.count;
+      break;
+
     case "SYNC_LAYOUT_STATE":
       ui = {
         ...ui,
@@ -1288,8 +1302,13 @@ export function editorReducer(state: EditorState, action: EditorAction): EditorS
       break;
   }
 
-  if (workspace === previousWorkspace && ui === previousUi) {
+  if (
+    workspace === previousWorkspace &&
+    ui === previousUi &&
+    wireSource === (state.wireSource ?? null) &&
+    clipboardPlacementCount === (state.clipboardPlacementCount ?? null)
+  ) {
     return state;
   }
-  return projectState(workspace, ui);
+  return { ...projectState(workspace, ui), wireSource, clipboardPlacementCount };
 }

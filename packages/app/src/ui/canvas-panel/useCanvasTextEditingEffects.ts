@@ -126,6 +126,7 @@ function resolveRegionSelectionOverlay(
 } {
   const ctx = getFallbackOverlayMeasureContext();
   applyFallbackOverlayFont(ctx, target);
+  const contentBox = resolveRectHitRegionContentBox(target.region);
   const layout = createVisualTextLayout(
     target.text,
     target.renderSourceText ?? target.text,
@@ -135,10 +136,9 @@ function resolveRegionSelectionOverlay(
       }
       return ctx.measureText(text).width;
     },
-    { syntax: target.usesMathJax ? "mathjax" : "plain" }
+    { syntax: target.usesMathJax ? "mathjax" : "plain", renderedWidth: contentBox.width }
   );
   const ranges = layout.sourceLineRanges;
-  const contentBox = resolveRectHitRegionContentBox(target.region);
   const fallbackLineBoxes = resolvePlainFallbackLineBoxes(target, ranges.length, ctx);
   if (selectionStart === selectionEnd) {
     const { lineIndex, x, lineWidth } = layout.getCaretPosition(selectionStart);

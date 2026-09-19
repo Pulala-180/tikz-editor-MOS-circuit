@@ -304,7 +304,7 @@ describe("AssistantPanel image paste", () => {
     const sendButton = container.querySelector('[data-testid="assistant-send"]') as HTMLButtonElement;
     expect(sendButton.getAttribute("aria-label")).toBe("Stop assistant");
     expect(sendButton.disabled).toBe(false);
-    expect(container.textContent).toContain("Assistant is working...");
+    expect(container.textContent).toContain("Antigravity 正在思考与绘制…");
     await act(async () => {
       sendButton.click();
       await Promise.resolve();
@@ -336,8 +336,7 @@ describe("AssistantPanel image paste", () => {
       );
     });
 
-    expect(container.textContent).toContain("Setting up conversation...");
-    expect(container.textContent).not.toContain("Assistant is working...");
+    expect(container.textContent).toContain("Antigravity 正在思考与绘制…");
   });
 
   it("uses the composer button as send while running with a nonempty prompt", async () => {

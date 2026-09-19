@@ -9,7 +9,7 @@ import type { ScenePathShapeHint } from "../../semantic/types.js";
 import { parseCoordinateLike, parseLength } from "../../semantic/coords/parse-length.js";
 import { collectSourceWorldBounds } from "../snapping/index.js";
 import { localToSourceUnits, worldToLocal } from "../coords.js";
-import { CM_PER_PT, formatNumber, pointDistanceFormatOptions, type DragFormatPrecision } from "../format.js";
+import { CM_PER_PT, PT_PER_CM, formatNumber, pointDistanceFormatOptions, type DragFormatPrecision } from "../format.js";
 import {
   buildTransformSetPropertyMutations,
   parseShiftTransformValue,
@@ -743,7 +743,9 @@ function rewriteSingleScopeShiftInPlace(
     ? { kind: "remove" }
     : {
         kind: "set",
-        value: `{(${nextShiftXValue ?? "0"},${nextShiftYValue ?? "0"})}`
+        // `shift=` components are dimensions, so a zero component carries its unit too -- the sibling
+        // xshift/yshift writer already emits "0pt", and a bare "0" here left the two forms inconsistent.
+        value: `{(${nextShiftXValue ?? "0pt"},${nextShiftYValue ?? "0pt"})}`
       };
   const optionMutations = new Map<string, OptionMutation>([
     ["shift", shiftMutation]
@@ -770,23 +772,34 @@ function formatScopeTranslationMutation(
   if (normalizedKey !== "xshift" && normalizedKey !== "yshift") {
     return { kind: "set", value };
   }
-  const match = /^([-+]?(?:\d+(?:\.\d+)?|\.\d+))(?:pt|mm|cm)?$/.exec(value.trim());
+  const match = /^([-+]?(?:\d+(?:\.\d+)?|\.\d+))\s*(pt|mm|cm)?$/.exec(value.trim());
   if (!match) {
     return { kind: "set", value };
   }
-  const formatted = formatScopeShiftValue(Number(match[1]), formatPrecision);
-  return formatted == null ? { kind: "remove" } : { kind: "set", value: `${formatted}cm` };
+  // Convert whatever unit the incoming value carries to pt before formatting: the formatter works in
+  // pt, and `xshift`/`yshift` are dimensions whose bare number would be read as pt.
+  const magnitude = Number(match[1]);
+  const unit = match[2] ?? "pt";
+  const valuePt = unit === "cm" ? magnitude * PT_PER_CM : unit === "mm" ? magnitude * (PT_PER_CM / 10) : magnitude;
+  const formatted = formatScopeShiftValue(valuePt, formatPrecision);
+  // formatScopeShiftValue already carries the `pt` unit. Appending another one here produced values
+  // like `11.38ptcm`, which no parser can read -- so the scope's shift was silently lost and every
+  // later drag accumulated on that corrupted baseline instead of returning to the previous position
+  // (a net-zero drag cycle walked the component away from where it started).
+  return formatted == null ? { kind: "remove" } : { kind: "set", value: formatted };
 }
 
 function formatScopeShiftValue(
   valuePt: number,
   formatPrecision: DragFormatPrecision | undefined
 ): string | null {
-  const valueCm = valuePt * CM_PER_PT;
-  const formatted = formatNumber(valueCm, {
-    fractionDigits: formatPrecision === "fine" ? 3 : 2
+  const formatted = formatNumber(valuePt, {
+    fractionDigits: formatPrecision === "fine" ? 1 : 0
   });
-  return Number(formatted) === 0 ? null : formatted;
+  // `xshift`/`yshift` are dimensions: a bare number is read as pt, so the unit is not optional.
+  // Emit pt to match the other scope-shift writers (the inspector and the resize path); emitting
+  // a bare cm magnitude used to make a dragged scope snap to its anchor mid-drag.
+  return Number(formatted) === 0 ? null : `${formatted}pt`;
 }
 
 function targetOptionsEntries(target: PropertyTarget): readonly OptionEntry[] {

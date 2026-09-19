@@ -1173,6 +1173,12 @@ export function canvasDragKindFromDragState(drag: DragState | null): CanvasDragK
   if (drag.kind === "tool-freehand") {
     return "tool-create";
   }
+  // Dragging an implicit `|-` / `-|` corner rewrites one coordinate-like span in place -- the same
+  // incremental-patch shape as a path-point handle drag. Report it as "handle" (a valid
+  // CanvasDragKind) so the drag keeps the handle compute path and its "handle" semantics.
+  if (drag.kind === "ortho-corner") {
+    return "handle";
+  }
   return drag.kind;
 }
 
@@ -1181,6 +1187,9 @@ export function dragCursorForState(drag: DragState | null): string | null {
     return null;
   }
   if (drag.kind === "handle" || drag.kind === "resize" || drag.kind === "rotate") {
+    return drag.cursor;
+  }
+  if (drag.kind === "ortho-corner") {
     return drag.cursor;
   }
   if (drag.kind === "element") {

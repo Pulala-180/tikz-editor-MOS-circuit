@@ -1,5 +1,7 @@
-import { worldBounds, pt } from "tikz-editor/coords/index";
-import type { NodeAnchorTarget } from "tikz-editor/semantic/types";
+import { worldBounds, worldPoint, pt } from "tikz-editor/coords/index";
+import { collectWireSegmentsFromScene, findWireSegmentAtPoint } from "tikz-editor/edit/snapping";
+import type { NodeAnchorTarget, SceneElement } from "tikz-editor/semantic/types";
+import type { WireSourceKind } from "../../store/types";
 import type { WorldBounds, WorldPoint } from "../coords/types";
 
 const NODE_REVEAL_RADIUS_PX = 60;
@@ -274,4 +276,134 @@ function distanceSquaredToBounds(
   const dx = point.x - clampedX;
   const dy = point.y - clampedY;
   return dx * dx + dy * dy;
+}
+
+/** World pt per cm — matches the canvas' TikZ conversion. */
+const PT_PER_CM = 28.4527559;
+/** A junction dot we emit is `circle (0.06)` (≈1.7 world pt); anything up to 3pt reads as one. */
+const JUNCTION_DOT_MAX_RADIUS_WORLD = 3;
+/**
+ * How close (world pt) the resolved wire start must sit to a wire trunk to count as starting on it.
+ * The snap pipeline projects the pointer exactly onto the trunk, so the start is either on it or
+ * nowhere near it — this only absorbs float noise, and stays far below the snap threshold so mere
+ * proximity never mislabels a plain grid point as a route.
+ */
+const ROUTE_ON_TRUNK_TOLERANCE_WORLD = 0.5;
+
+export type WireStartResolution = {
+  kind: WireSourceKind;
+  /** Kind-specific identity: `nodeName:anchor`, a source id, or `x,y` in cm. */
+  id: string;
+  /** Where the wire should actually begin (snapped onto the junction dot when one was hit). */
+  world: WorldPoint;
+};
+
+/**
+ * Classifies where a wire draft is about to start, mirroring the geometry the snap pipeline already
+ * committed to. Priority is specificity: a pin beats a junction dot, a junction dot beats a bare
+ * trunk, and anything else is an empty grid point.
+ */
+export function resolveWireStartSource(input: {
+  pointerWorld: WorldPoint;
+  startWorld: WorldPoint;
+  snappedAnchor: NodeAnchorTarget | null;
+  sceneElements: readonly SceneElement[];
+  zoom: number;
+  thresholdPx?: number;
+}): WireStartResolution {
+  const thresholdWorld = (input.thresholdPx ?? 18) / Math.max(input.zoom, 1e-3);
+
+  if (input.snappedAnchor) {
+    const nodeName = input.snappedAnchor.nodeName?.trim()
+      || input.snappedAnchor.nodeSourceId?.trim()
+      || "?";
+    return {
+      kind: "terminal",
+      id: `${nodeName}:${input.snappedAnchor.anchor}`,
+      world: input.startWorld
+    };
+  }
+
+  const junction = findJunctionDotAt(input.pointerWorld, input.sceneElements, thresholdWorld);
+  if (junction) {
+    return { kind: "junction", id: junction.sourceId, world: junction.center };
+  }
+
+  const trunk = findWireSegmentAtPoint(
+    input.startWorld,
+    collectWireSegmentsFromScene(input.sceneElements),
+    ROUTE_ON_TRUNK_TOLERANCE_WORLD
+  );
+  if (trunk) {
+    return { kind: "route", id: trunk.sourceId, world: input.startWorld };
+  }
+
+  return { kind: "grid", id: formatGridId(input.startWorld), world: input.startWorld };
+}
+
+/**
+ * Junction dots are ordinary scene geometry, so they are addressable by source id rather than being
+ * opaque source text. Depending on whether the fill compounds the subpath, the dot parses either as
+ * a `SceneCircle` or as a `ScenePath` carrying `shapeHint: "circle"` — both are handled. A small
+ * circle near the pointer is the junction it belongs to.
+ */
+function findJunctionDotAt(
+  pointerWorld: WorldPoint,
+  elements: readonly SceneElement[],
+  thresholdWorld: number
+): { sourceId: string; center: WorldPoint } | null {
+  let best: { sourceId: string; center: WorldPoint } | null = null;
+  let bestDistance = thresholdWorld;
+  for (const element of elements) {
+    const disk = elementDisk(element);
+    if (!disk || disk.radius > JUNCTION_DOT_MAX_RADIUS_WORLD) {
+      continue;
+    }
+    const distance = Math.hypot(disk.center.x - pointerWorld.x, disk.center.y - pointerWorld.y);
+    if (distance <= bestDistance) {
+      bestDistance = distance;
+      best = { sourceId: element.sourceRef.sourceId, center: disk.center };
+    }
+  }
+  return best;
+}
+
+/** Center + radius of a circular element, for either its `Circle` or compounded-`Path` form. */
+function elementDisk(element: SceneElement): { center: WorldPoint; radius: number } | null {
+  if (element.kind === "Circle") {
+    return { center: element.center, radius: element.radius };
+  }
+  if (element.kind !== "Path" || element.shapeHint !== "circle") {
+    return null;
+  }
+
+  let minX = Number.POSITIVE_INFINITY;
+  let minY = Number.POSITIVE_INFINITY;
+  let maxX = Number.NEGATIVE_INFINITY;
+  let maxY = Number.NEGATIVE_INFINITY;
+  for (const command of element.commands) {
+    const points =
+      command.kind === "C"
+        ? [command.c1, command.c2, command.to]
+        : command.kind === "M" || command.kind === "L" || command.kind === "A"
+          ? [command.to]
+          : [];
+    for (const point of points) {
+      minX = Math.min(minX, point.x);
+      minY = Math.min(minY, point.y);
+      maxX = Math.max(maxX, point.x);
+      maxY = Math.max(maxY, point.y);
+    }
+  }
+  if (!Number.isFinite(minX)) {
+    return null;
+  }
+  return {
+    center: worldPoint(pt((minX + maxX) / 2), pt((minY + maxY) / 2)),
+    radius: Math.max(maxX - minX, maxY - minY) / 2
+  };
+}
+
+function formatGridId(world: WorldPoint): string {
+  return `${(world.x / PT_PER_CM).toFixed(2)},${(world.y / PT_PER_CM).toFixed(2)}`;
 }

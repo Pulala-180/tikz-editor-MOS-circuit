@@ -26,6 +26,21 @@ export type VisualTextAlign =
 type VisualTextSyntax = "mathjax" | "plain";
 type MathMode = "none" | "dollar" | "paren";
 
+/**
+ * MathJax renders scriptlevel +1 (a sub/superscript) at this fraction of the
+ * base size, while a measuring canvas only ever produces full-size advances.
+ * Modelling the script size keeps caret steps and pointer hit-testing aligned
+ * with what is painted.
+ */
+const MATHJAX_SCRIPT_SCALE = 0.707;
+
+type ScriptFrame = {
+  /** Brace nesting inside a `{...}` script; 0 for a single-token script. */
+  braceDepth: number;
+  /** True when the script is a single token (`x_\alpha`), which ends after one advance. */
+  single: boolean;
+};
+
 const PLAIN_TEXT_SERIF_FONT_STACK = "MJX-NCM, CMU Serif, Latin Modern Roman, Times New Roman, serif";
 const PLAIN_TEXT_SANS_FONT_STACK = "MJX-NCM-Sans, CMU Sans Serif, Latin Modern Sans, Helvetica, Arial, sans-serif";
 const PLAIN_TEXT_MONO_FONT_STACK = "MJX-NCM-Monospace, Latin Modern Mono, CMU Typewriter Text, Courier New, monospace";
@@ -174,9 +189,32 @@ export function buildRenderLinePrefixWidths(
   let width = 0;
   let cursor = 0;
   let mathMode: MathMode = "none";
+  const scriptFrames: ScriptFrame[] = [];
+  let awaitingScript = false;
+
+  const advanceWidth = (raw: number): void => {
+    width += raw * (scriptFrames.length > 0 ? MATHJAX_SCRIPT_SCALE ** scriptFrames.length : 1);
+    const innermost = scriptFrames[scriptFrames.length - 1];
+    if (innermost?.single) {
+      scriptFrames.pop();
+    }
+  };
 
   while (cursor < lineText.length) {
     const char = lineText[cursor] ?? "";
+
+    if (awaitingScript) {
+      awaitingScript = false;
+      if (syntax === "mathjax" && mathMode !== "none" && char !== "$") {
+        if (char === "{") {
+          scriptFrames.push({ braceDepth: 1, single: false });
+          prefix[cursor + 1] = width;
+          cursor += 1;
+          continue;
+        }
+        scriptFrames.push({ braceDepth: 0, single: true });
+      }
+    }
 
     if (syntax === "mathjax" && char === "$" && !isEscapedCharacter(lineText, cursor)) {
       if (mathMode === "dollar") {
@@ -236,26 +274,44 @@ export function buildRenderLinePrefixWidths(
         for (let index = cursor + 1; index < commandEnd; index += 1) {
           prefix[index] = width;
         }
-        width += commandWidth;
+        advanceWidth(commandWidth);
         prefix[commandEnd] = width;
         cursor = commandEnd;
         continue;
       }
 
       prefix[cursor + 1] = width;
-      width += measureVisibleText(measureTextWidth, nextChar, /\s/.test(nextChar) ? 0.5 : 1);
+      advanceWidth(measureVisibleText(measureTextWidth, nextChar, /\s/.test(nextChar) ? 0.5 : 1));
       prefix[cursor + 2] = width;
       cursor += 2;
       continue;
     }
 
-    if (syntax === "mathjax" && mathMode !== "none" && (char === "{" || char === "}" || char === "^" || char === "_" || char === "&")) {
+    if (syntax === "mathjax" && mathMode !== "none" && (char === "^" || char === "_")) {
+      awaitingScript = true;
       prefix[cursor + 1] = width;
       cursor += 1;
       continue;
     }
 
-    width += measureVisibleText(measureTextWidth, char, /\s/.test(char) ? 0.5 : 1);
+    if (syntax === "mathjax" && mathMode !== "none" && (char === "{" || char === "}" || char === "&")) {
+      const innermost = scriptFrames[scriptFrames.length - 1];
+      if (innermost && !innermost.single) {
+        if (char === "{") {
+          innermost.braceDepth += 1;
+        } else if (char === "}" && innermost.braceDepth > 0) {
+          innermost.braceDepth -= 1;
+          if (innermost.braceDepth === 0) {
+            scriptFrames.pop();
+          }
+        }
+      }
+      prefix[cursor + 1] = width;
+      cursor += 1;
+      continue;
+    }
+
+    advanceWidth(measureVisibleText(measureTextWidth, char, /\s/.test(char) ? 0.5 : 1));
     prefix[cursor + 1] = width;
     cursor += 1;
   }
@@ -362,7 +418,7 @@ export function createVisualTextLayout(
   sourceText: string,
   renderText: string,
   measureTextWidth: (text: string) => number,
-  options: { syntax?: VisualTextSyntax } = {}
+  options: { syntax?: VisualTextSyntax; renderedWidth?: number | null } = {}
 ) {
   const syntax = options.syntax ?? "mathjax";
   const offsetMap = createSourceRenderOffsetMap(sourceText, renderText);
@@ -371,6 +427,22 @@ export function createVisualTextLayout(
   const renderPrefixes = renderRanges.map((range) =>
     buildRenderLinePrefixWidths(renderText.slice(range.start, range.end), measureTextWidth, syntax)
   );
+
+  // The measuring canvas can only produce full-size advances, but MathJax lays
+  // sub/superscripts out at a reduced size, so the modelled line runs wider than
+  // what is actually painted (a lone `$I_{SS}$` overshoots by ~29%). Everything
+  // below therefore speaks the *painted* coordinate system: widths are scaled out
+  // by `widthScale` and incoming pointer positions are scaled back in, which
+  // re-anchors the caret to what the user sees instead of the model's guess.
+  const modelBlockWidth = renderPrefixes.reduce(
+    (widest, prefix) => Math.max(widest, prefixWidth(prefix)),
+    0
+  );
+  const renderedWidth = options.renderedWidth;
+  const widthScale =
+    typeof renderedWidth === "number" && Number.isFinite(renderedWidth) && renderedWidth > 0 && modelBlockWidth > 0
+      ? renderedWidth / modelBlockWidth
+      : 1;
 
   const resolveRenderLineRange = (lineIndex: number): LogicalLineRange =>
     lineRangeAt(renderRanges, lineIndex, renderText.length);
@@ -394,8 +466,8 @@ export function createVisualTextLayout(
       return {
         lineIndex,
         ratio: prefixXFromLocalOffset(renderPrefix, localOffset),
-        x: prefixDistanceFromLocalOffset(renderPrefix, localOffset),
-        lineWidth: prefixWidth(renderPrefix)
+        x: prefixDistanceFromLocalOffset(renderPrefix, localOffset) * widthScale,
+        lineWidth: prefixWidth(renderPrefix) * widthScale
       };
     },
     getLineSelectionRatios(
@@ -412,13 +484,13 @@ export function createVisualTextLayout(
       return {
         leftRatio: prefixXFromLocalOffset(renderPrefix, localStart),
         rightRatio: prefixXFromLocalOffset(renderPrefix, localEnd),
-        leftX: prefixDistanceFromLocalOffset(renderPrefix, localStart),
-        rightX: prefixDistanceFromLocalOffset(renderPrefix, localEnd),
-        lineWidth: prefixWidth(renderPrefix)
+        leftX: prefixDistanceFromLocalOffset(renderPrefix, localStart) * widthScale,
+        rightX: prefixDistanceFromLocalOffset(renderPrefix, localEnd) * widthScale,
+        lineWidth: prefixWidth(renderPrefix) * widthScale
       };
     },
     getLineWidth(lineIndex: number): number {
-      return prefixWidth(resolveRenderPrefix(lineIndex));
+      return prefixWidth(resolveRenderPrefix(lineIndex)) * widthScale;
     },
     resolveSourceOffsetFromLineRatio(lineIndex: number, xRatio: number): number {
       const renderRange = resolveRenderLineRange(lineIndex);
@@ -429,7 +501,7 @@ export function createVisualTextLayout(
     resolveSourceOffsetFromLineX(lineIndex: number, x: number): number {
       const renderRange = resolveRenderLineRange(lineIndex);
       const renderPrefix = resolveRenderPrefix(lineIndex);
-      const localOffset = offsetFromPrefixDistance(renderPrefix, x);
+      const localOffset = offsetFromPrefixDistance(renderPrefix, x / widthScale);
       return clamp(offsetMap.renderToSource(renderRange.start + localOffset), 0, sourceText.length);
     }
   };

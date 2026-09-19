@@ -64,7 +64,22 @@ const TOOL_CHECKS: Record<ToolMode, readonly CapabilityCheck[]> = {
   addIoNode_Vout_Top: [],
   addIoNode_Vout_Right: [],
   addIoNode_Vout_Bottom: [],
+  addIoNode_VddPort_Left: [],
+  addIoNode_VddPort_Top: [],
+  addIoNode_VddPort_Right: [],
+  addIoNode_VddPort_Bottom: [],
+  addIoNode_Port_Left: [],
+  addIoNode_Port_Top: [],
+  addIoNode_Port_Right: [],
+  addIoNode_Port_Bottom: [],
   addVDD: [],
+  // Power rail: thick bar + taps. Missing entries here read as "unsupported" and grey out
+  // the insert command, so every orientation must be listed.
+  addPowerRail: [],
+  addPowerRail_H_Left: [],
+  addPowerRail_H_Right: [],
+  addPowerRail_V_Top: [],
+  addPowerRail_V_Bottom: [],
   addCapacitor: [],
   addCapacitor_H_Left: [],
   addCapacitor_H_Right: [],
@@ -86,6 +101,7 @@ const TOOL_CHECKS: Record<ToolMode, readonly CapabilityCheck[]> = {
   addCurrentSource_Down_Bottom: [],
   addCurrentSource_Left_Left: [],
   addCurrentSource_Left_Right: [],
+  addCurrentSource_Right_Left: [],
   addCurrentSource_Right_Right: [],
   addControlledCurrentSource: [],
   addControlledCurrentSource_H_Left: [],
@@ -105,6 +121,16 @@ const TOOL_CHECKS: Record<ToolMode, readonly CapabilityCheck[]> = {
   addVoltageSource_H_Right: [],
   addVoltageSource_V_Top: [],
   addVoltageSource_V_Bottom: [],
+  // The eight remaining orientations were missing, so only 4 of 12 voltage-source placements had an
+  // enabled insert command (a missing entry reads as "unsupported" — see the note on addOrthoWire).
+  addVoltageSource_Up_Top: [],
+  addVoltageSource_Up_Bottom: [],
+  addVoltageSource_Down_Top: [],
+  addVoltageSource_Down_Bottom: [],
+  addVoltageSource_Left_Left: [],
+  addVoltageSource_Left_Right: [],
+  addVoltageSource_Right_Left: [],
+  addVoltageSource_Right_Right: [],
   addCurrentArrow: [],
   addCurrentArrow_H_Left: [],
   addCurrentArrow_H_Right: [],
@@ -175,6 +201,16 @@ const TOOL_CHECKS: Record<ToolMode, readonly CapabilityCheck[]> = {
   ],
   addLine: [
     { feature: "path_operators_basic", layers: ["parser", "semantic", "svg"], label: "line path rendering" }
+  ],
+  // These were absent from TOOL_CHECKS entirely. getToolCapabilityStatus reports a missing entry as
+  // "unsupported", and editor-command-runtime's insertBinding does
+  // `enabled: capability.status !== "unsupported"` — so their insert commands were silently greyed
+  // out in the UI while the keyboard shortcuts kept working.
+  addRoundedLine: [
+    { feature: "path_operators_basic", layers: ["parser", "semantic", "svg"], label: "line path rendering" }
+  ],
+  addOrthoWire: [
+    { feature: "path_operators_basic", layers: ["parser", "semantic", "svg"], label: "wire path rendering" }
   ],
   addArrow: [
     { feature: "path_operators_basic", layers: ["parser", "semantic", "svg"], label: "line path rendering" },

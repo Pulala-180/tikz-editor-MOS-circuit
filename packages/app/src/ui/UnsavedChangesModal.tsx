@@ -15,13 +15,11 @@ export function UnsavedChangesModal({
   const isAllUntitled = documentTitles.every((title) => title.startsWith("Untitled"));
   const label = isExternal
     ? (documentTitles.length === 1
-        ? `文档 "${documentTitles[0]}" 为外部打开的文件。请选择保存到原文件、转存备份到 Sketch 草稿库，或取消：`
-        : `${documentTitles.length} 个外部文档有未保存修改。请选择保存、转存到 Sketch 或取消：`)
+        ? `外部文件 "${documentTitles[0]}" 存在未保存的修改。当前画板有未保存的修改，是否保存后关闭？`
+        : `${documentTitles.length} 个外部文档有未保存的修改。当前画板有未保存的修改，是否保存后关闭？`)
     : (documentTitles.length === 1
-        ? (isAllUntitled
-            ? `临时草稿 "${documentTitles[0]}" 尚未保存到电脑。请选择保存到您的电脑文件夹，或直接删除临时草稿：`
-            : `文档 "${documentTitles[0]}" 存在未保存的修改。请选择保存修改，或放弃本次修改：`)
-        : `${documentTitles.length} 个文档存在未保存修改。请选择保存或放弃修改：`);
+        ? "当前画板有未保存的修改，是否保存后关闭？"
+        : `${documentTitles.length} 个文档有未保存的修改。当前画板有未保存的修改，是否保存后关闭？`);
 
   return (
     <Modal
@@ -32,7 +30,7 @@ export function UnsavedChangesModal({
       dataTestId="unsaved-changes-modal"
     >
       <Modal.Header
-        title={isExternal ? "关闭前确认：是否保存外部文件？" : (isAllUntitled ? "关闭前确认：保存还是删除？" : "关闭前确认：是否保存修改？")}
+        title={isExternal ? "是否保存外部文件？" : "未保存的修改"}
         titleId="unsaved-changes-title"
       />
       <Modal.Body>
@@ -50,7 +48,7 @@ export function UnsavedChangesModal({
           onClick={() => { onChoose("cancel"); }}
           data-testid="unsaved-cancel"
         >
-          取消 (Cancel)
+          取消
         </Modal.SecondaryButton>
 
         {isExternal ? (
@@ -63,14 +61,14 @@ export function UnsavedChangesModal({
               fontWeight: 500
             }}
           >
-            保存在 Sketch 里
+            转存到草稿库
           </Modal.SecondaryButton>
         ) : (
           <Modal.DangerButton
             onClick={() => { onChoose("discard"); }}
             data-testid="unsaved-discard"
           >
-            {isAllUntitled ? "删除草稿 (Delete)" : "放弃修改 (Discard)"}
+            {isAllUntitled ? "删除草稿" : "不保存"}
           </Modal.DangerButton>
         )}
 
@@ -78,7 +76,7 @@ export function UnsavedChangesModal({
           onClick={() => { onChoose("save"); }}
           data-testid="unsaved-save"
         >
-          {isExternal ? "保存到原文件 (Save)" : (isAllUntitled ? "选择位置保存 (Save)" : "保存更改 (Save)")}
+          {isExternal ? "保存到原文件" : "保存"}
         </Modal.PrimaryButton>
       </Modal.Footer>
     </Modal>
