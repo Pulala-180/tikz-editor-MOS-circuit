@@ -24,7 +24,7 @@ import {
   type SnapLine
 } from "tikz-editor/edit/snapping";
 import { parseTikzForEdit } from "tikz-editor/edit/parse-options";
-import { axisAlignedLeg, findAttachedWiresForTransientDrag, findVddRails, repairOrthogonalRoute } from "tikz-editor/edit/actions/wire-follow";
+import { axisAlignedLeg, clampDeltaForAttachedWires, detectRigidLeafBranches, findAttachedWiresForTransientDrag, findVddRails, repairOrthogonalRoute } from "tikz-editor/edit/actions/wire-follow";
 import type { SceneElement } from "tikz-editor/semantic/types";
 import type { WorldPoint, WorldVector } from "../coords/types";
 import { applyMatrix, applyMatrixToVector, inverseMatrix } from "tikz-editor/semantic/transform";
@@ -184,12 +184,35 @@ function buildTranslatedPolylineD(
   movingX: number,
   movingY: number,
   recomputeImplicitCorner = false,
-  repairSkew = false
+  repairSkew = false,
+  staticOffset?: { x: number; y: number }
 ): string {
   const target = movingIndex === 0 ? 0 : points.length - 1;
-  const translated = points.map((point, index) =>
-    index === target ? { x: movingX, y: movingY } : { x: point.x, y: point.y }
-  );
+  const staticIndex = movingIndex === 0 ? points.length - 1 : 0;
+  const staticDx = staticOffset?.x ?? 0;
+  const staticDy = staticOffset?.y ?? 0;
+  const translated = points.map((point, index) => {
+    if (index === target) {
+      return { x: movingX, y: movingY };
+    }
+    if (index === staticIndex && (staticDx !== 0 || staticDy !== 0)) {
+      return { x: point.x + staticDx, y: point.y + staticDy };
+    }
+    return { x: point.x, y: point.y };
+  });
+  if (points.length === 2 && staticOffset) {
+    const isInitiallyHorizontal = Math.abs(points[0].y - points[1].y) <= 1.5;
+    const isInitiallyVertical = Math.abs(points[0].x - points[1].x) <= 1.5;
+    if (isInitiallyHorizontal) {
+      const synchedY = points[0].y + staticDy;
+      translated[target].y = synchedY;
+      translated[staticIndex].y = synchedY;
+    } else if (isInitiallyVertical) {
+      const synchedX = points[0].x + staticDx;
+      translated[target].x = synchedX;
+      translated[staticIndex].x = synchedX;
+    }
+  }
   if (repairSkew) {
     // Attached wire whose legs are already arbitrary diagonals: re-route the whole interior
     // orthogonally between the (moved) ends, mirroring the commit-time repair.
@@ -255,9 +278,28 @@ function resetTransientDomTransforms(drag: DragState | null) {
       drag.transientDomElements = undefined;
       drag.initialTransforms = undefined;
     }
+    if (drag.transientRigidLeafBranches) {
+      for (const branch of drag.transientRigidLeafBranches) {
+        for (const el of branch.leafDomElements) {
+          const base = branch.initialTransforms.get(el);
+          if (base != null) {
+            el.setAttribute("transform", base);
+          } else {
+            el.removeAttribute("transform");
+          }
+        }
+      }
+      drag.transientRigidLeafBranches = undefined;
+    }
     if (drag.transientAttachedWires) {
       for (const wire of drag.transientAttachedWires) {
-        wire.element.setAttribute("d", wire.initialD);
+        if (wire.elements && wire.elements.length > 0) {
+          for (const el of wire.elements) {
+            el.setAttribute("d", wire.initialD);
+          }
+        } else {
+          wire.element.setAttribute("d", wire.initialD);
+        }
       }
       drag.transientAttachedWires = undefined;
     }
@@ -1050,11 +1092,23 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
           formatPrecision === undefined
             ? "fine"
             : formatPrecision;
-        const totalDelta = drag.movementAxis === "locked"
+        let totalDelta = drag.movementAxis === "locked"
           ? makeWorldVector(0, 0)
           : snapped.snappedDelta
             ? makeWorldVector(snapped.snappedDelta.x, snapped.snappedDelta.y)
             : rawTotalDelta;
+
+        if (drag.elementIds.length > 0 && (Math.abs(totalDelta.x) > 1e-6 || Math.abs(totalDelta.y) > 1e-6)) {
+          const scopeIds = drag.elementIds.filter((id) => scopeOverlay.scopesById.has(id));
+          const clamped = clampDeltaForAttachedWires(
+            snapshotSource || source,
+            snapshotEditHandles,
+            scopeIds,
+            drag.elementIds,
+            makeWorldPoint(totalDelta.x, totalDelta.y)
+          );
+          totalDelta = makeWorldVector(clamped.x, clamped.y);
+        }
         setSnapLines(snapped.lines);
         maybeTriggerSnapFeedback(snapped.lines.length > 0);
         logSnapDebug({
@@ -1085,14 +1139,61 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
             drag.initialTransforms.set(el, el.getAttribute("transform"));
           }
 
+          const parsedForRigid = parseTikzForEdit(snapshotSource || source);
+          const rigidBranches = detectRigidLeafBranches(
+            snapshotSource || source,
+            parsedForRigid.figure.body,
+            snapshotEditHandles,
+            drag.elementIds,
+            makeWorldPoint(1, 1)
+          );
+
+          const scopeIds = drag.elementIds.filter((id) => scopeOverlay.scopesById.has(id));
+          const attachedWires = findAttachedWiresForTransientDrag(
+            snapshotSource || source,
+            snapshotEditHandles,
+            drag.elementIds,
+            scopeIds
+          );
+          const directlyAttachedWireIds = new Set(attachedWires.map((w) => w.wireSourceId));
+
+          if (rigidBranches.length > 0) {
+            drag.transientRigidLeafBranches = [];
+            for (const rb of rigidBranches) {
+              const branchSourceIds: string[] = [];
+              if (rb.leafComponentId) {
+                branchSourceIds.push(rb.leafComponentId);
+              }
+              if (rb.wireStatementId && !directlyAttachedWireIds.has(rb.wireStatementId) && !rb.isStretchOnly) {
+                branchSourceIds.push(rb.wireStatementId);
+              }
+              if (rb.associatedDotStatementIds) {
+                branchSourceIds.push(...rb.associatedDotStatementIds);
+              }
+              if (branchSourceIds.length === 0) continue;
+              const leafEls = getDraggedDomElements(
+                branchSourceIds,
+                svgLayerHostRef?.current ?? null,
+                interactionSvgRef.current,
+                scopeOverlay,
+                snapshotScene?.elements
+              );
+              const leafTransforms = new Map<Element, string | null>();
+              for (const el of leafEls) {
+                leafTransforms.set(el, el.getAttribute("transform"));
+              }
+              drag.transientRigidLeafBranches.push({
+                leafDomElements: leafEls,
+                initialTransforms: leafTransforms,
+                orientation: rb.orientation,
+                wireSourceId: rb.wireStatementId,
+                isTapBranch: rb.isTapBranch,
+                isStretchOnly: rb.isStretchOnly
+              });
+            }
+          }
+
           if (svgLayerHostRef?.current && svgResultRef.current?.viewBox) {
-            const scopeIds = drag.elementIds.filter((id) => scopeOverlay.scopesById.has(id));
-            const attachedWires = findAttachedWiresForTransientDrag(
-              snapshotSource || source,
-              snapshotEditHandles,
-              drag.elementIds,
-              scopeIds
-            );
             const transientWires: NonNullable<Extract<DragState, { kind: "element" }>["transientAttachedWires"]> = [];
             for (const wire of attachedWires) {
               let escaped = wire.wireSourceId;
@@ -1101,13 +1202,16 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
               } catch {
                 escaped = escaped.replace(/"/g, '\\"');
               }
-              const pathEl = svgLayerHostRef.current.querySelector<SVGPathElement>(`path[data-source-id="${escaped}"]`);
-              if (pathEl) {
-                const initialD = pathEl.getAttribute("d") ?? "";
+              const pathEls = Array.from(svgLayerHostRef.current.querySelectorAll<SVGPathElement>(`path[data-source-id="${escaped}"]`));
+              if (pathEls.length > 0) {
+                const primaryEl = pathEls[0];
+                const initialD = primaryEl.getAttribute("d") ?? "";
                 const staticSvg = worldToSvgPoint(wire.staticEndpointWorld, svgResultRef.current.viewBox);
                 const movingSvg = worldToSvgPoint(wire.movingEndpointWorld, svgResultRef.current.viewBox);
                 transientWires.push({
-                  element: pathEl,
+                  element: primaryEl,
+                  elements: pathEls,
+                  wireSourceId: wire.wireSourceId,
                   initialD,
                   initialPoints: parsePolylinePoints(initialD),
                   staticSvg,
@@ -1132,10 +1236,42 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
           el.setAttribute("transform", transformValue);
         }
 
+        if (drag.transientRigidLeafBranches) {
+          for (const rb of drag.transientRigidLeafBranches) {
+            const isTap = Boolean(rb.isTapBranch || rb.isStretchOnly);
+            const moveInX = isTap ? (rb.orientation === "h" || (rb.orientation === "v" && Math.abs(svgDx) > 1e-4)) : rb.orientation === "v";
+            const branchSvgDx = moveInX ? svgDx : 0;
+            const branchSvgDy = moveInX ? 0 : svgDy;
+            for (const el of rb.leafDomElements) {
+              const base = rb.initialTransforms.get(el);
+              const transformValue = base
+                ? `${base} translate(${branchSvgDx} ${branchSvgDy})`
+                : `translate(${branchSvgDx} ${branchSvgDy})`;
+              el.setAttribute("transform", transformValue);
+            }
+          }
+        }
+
         if (drag.transientAttachedWires) {
           for (const wire of drag.transientAttachedWires) {
+            const rb = drag.transientRigidLeafBranches?.find((b) => b.wireSourceId === wire.wireSourceId);
+            let staticSvgX = wire.staticSvg.x;
+            let staticSvgY = wire.staticSvg.y;
+            if (rb) {
+              if (rb.orientation === "h") {
+                staticSvgY += svgDy;
+              } else {
+                staticSvgX += svgDx;
+              }
+            }
             const curMovingX = wire.movingSvg.x + svgDx;
             const curMovingY = wire.movingSvg.y + svgDy;
+            const staticOffset = rb
+              ? {
+                  x: rb.orientation === "h" ? 0 : svgDx,
+                  y: rb.orientation === "h" ? svgDy : 0
+                }
+              : undefined;
             const newD = wire.initialPoints
               ? buildTranslatedPolylineD(
                   wire.initialPoints,
@@ -1143,12 +1279,19 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
                   curMovingX,
                   curMovingY,
                   wire.implicitCorner,
-                  wire.skewedRepair
+                  wire.skewedRepair,
+                  staticOffset
                 )
               : wire.movingEndpointIndex === 0
-                ? `M ${curMovingX.toFixed(2)},${curMovingY.toFixed(2)} L ${wire.staticSvg.x.toFixed(2)},${wire.staticSvg.y.toFixed(2)}`
-                : `M ${wire.staticSvg.x.toFixed(2)},${wire.staticSvg.y.toFixed(2)} L ${curMovingX.toFixed(2)},${curMovingY.toFixed(2)}`;
-            wire.element.setAttribute("d", newD);
+                ? `M ${curMovingX.toFixed(2)},${curMovingY.toFixed(2)} L ${staticSvgX.toFixed(2)},${staticSvgY.toFixed(2)}`
+                : `M ${staticSvgX.toFixed(2)},${staticSvgY.toFixed(2)} L ${curMovingX.toFixed(2)},${curMovingY.toFixed(2)}`;
+            if (wire.elements && wire.elements.length > 0) {
+              for (const el of wire.elements) {
+                el.setAttribute("d", newD);
+              }
+            } else {
+              wire.element.setAttribute("d", newD);
+            }
           }
         }
 
@@ -1178,6 +1321,116 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
         return;
       }
 
+      if (drag.kind === "ortho-segment") {
+        setNodeAnchorOverlay(null);
+        setDragTooltip(null);
+        const snapped = drag.snapContext
+          ? snapHandlePosition({
+              context: drag.snapContext,
+              point: world,
+              sourceId: drag.elementId,
+              modifiers: { ctrlOrMeta }
+            })
+          : { snappedPoint: world, offset: undefined, lines: [] as SnapLine[] };
+        const nextWorld = snapped.snappedPoint ?? world;
+        setSnapLines(snapped.lines ?? []);
+        maybeTriggerSnapFeedback((snapped.lines?.length ?? 0) > 0);
+        drag.lastKnownWorld = nextWorld;
+
+        // Initialize transient DOM element on first move (0ms AST / 0ms Re-render)
+        if (drag.transientPathElement === undefined) {
+          let escaped = drag.elementId;
+          try {
+            escaped =
+              typeof CSS !== "undefined" && typeof CSS.escape === "function"
+                ? CSS.escape(escaped)
+                : escaped.replace(/"/g, '\\"');
+          } catch {
+            escaped = escaped.replace(/"/g, '\\"');
+          }
+          const pathEl = svgLayerHostRef?.current?.querySelector<SVGPathElement>(`path[data-source-id="${escaped}"]`);
+          if (pathEl) {
+            drag.transientPathElement = pathEl;
+            drag.initialD = pathEl.getAttribute("d");
+            drag.initialPoints = drag.initialD ? parsePolylinePoints(drag.initialD) : null;
+          } else {
+            drag.transientPathElement = null;
+          }
+        }
+
+        // Direct hardware-accelerated SVG DOM update: 0ms AST / 0ms Re-render
+        if (drag.transientPathElement && drag.initialPoints && svgResultRef.current?.viewBox) {
+          const curSvg = worldToSvgPoint(nextWorld, svgResultRef.current.viewBox);
+          const pts = drag.initialPoints;
+          const k = drag.segmentIndex;
+          let updated: Array<{ x: number; y: number }>;
+
+          if (pts.length === 2) {
+            if (drag.axis === "v") {
+              updated = [
+                pts[0],
+                { x: curSvg.x, y: pts[0].y },
+                { x: curSvg.x, y: pts[1].y },
+                pts[1]
+              ];
+            } else {
+              updated = [
+                pts[0],
+                { x: pts[0].x, y: curSvg.y },
+                { x: pts[1].x, y: curSvg.y },
+                pts[1]
+              ];
+            }
+          } else if (k >= 1 && k <= pts.length - 3) {
+            updated = pts.map((p, idx) => {
+              if (idx === k || idx === k + 1) {
+                return drag.axis === "v" ? { x: curSvg.x, y: p.y } : { x: p.x, y: curSvg.y };
+              }
+              return p;
+            });
+          } else if (k === 0) {
+            if (drag.axis === "v") {
+              updated = [
+                pts[0],
+                { x: curSvg.x, y: pts[0].y },
+                { x: curSvg.x, y: pts[1].y },
+                ...pts.slice(2)
+              ];
+            } else {
+              updated = [
+                pts[0],
+                { x: pts[0].x, y: curSvg.y },
+                { x: pts[1].x, y: curSvg.y },
+                ...pts.slice(2)
+              ];
+            }
+          } else {
+            const lastIdx = pts.length - 1;
+            const prevIdx = lastIdx - 1;
+            if (drag.axis === "v") {
+              updated = [
+                ...pts.slice(0, prevIdx),
+                { x: curSvg.x, y: pts[prevIdx].y },
+                { x: curSvg.x, y: pts[lastIdx].y },
+                pts[lastIdx]
+              ];
+            } else {
+              updated = [
+                ...pts.slice(0, prevIdx),
+                { x: pts[prevIdx].x, y: curSvg.y },
+                { x: pts[lastIdx].x, y: curSvg.y },
+                pts[lastIdx]
+              ];
+            }
+          }
+
+          const newD = formatPolylineD(updated);
+          drag.transientPathElement.setAttribute("d", newD);
+        }
+
+        return;
+      }
+
       const resolvedHandleId = resolveHandleIdForDrag(drag, snapshotEditHandles);
       if (!resolvedHandleId) {
         drag.activeEndpointAnchor = null;
@@ -1188,21 +1441,41 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
         return;
       }
 
+      let effectivePointerWorld = world;
+      if (drag.directionConstraint) {
+        const { anchorWorld, unitVector } = drag.directionConstraint;
+        const vX = world.x - anchorWorld.x;
+        const vY = world.y - anchorWorld.y;
+        const proj = vX * unitVector.x + vY * unitVector.y;
+        const MIN_WIRE_LENGTH_PT = 2.84527559; // 0.1cm = 1mm
+        const clampedProj = Math.max(MIN_WIRE_LENGTH_PT, proj);
+        effectivePointerWorld = makeWorldPoint(
+          anchorWorld.x + clampedProj * unitVector.x,
+          anchorWorld.y + clampedProj * unitVector.y
+        );
+      }
+
       const snapped = drag.snapContext
         ? snapHandlePosition({
             context: drag.snapContext,
-            point: world,
+            point: drag.directionConstraint ? effectivePointerWorld : world,
             sourceId: drag.sourceId,
             modifiers: { ctrlOrMeta }
           })
-        : { snappedPoint: world, offset: undefined, lines: [] as SnapLine[] };
-      let nextWorld = snapped.snappedPoint ?? world;
+        : { snappedPoint: drag.directionConstraint ? effectivePointerWorld : world, offset: undefined, lines: [] as SnapLine[] };
+      let nextWorld = snapped.snappedPoint ?? (drag.directionConstraint ? effectivePointerWorld : world);
       let endpointAnchorOverlay: NodeAnchorOverlayState | null = null;
       if (drag.handleKind === "path-point") {
+        let candidateTargets = nodeAnchorTargets;
+        if (drag.directionConstraint?.connectedComponentId) {
+          candidateTargets = candidateTargets.filter(
+            (t) => t.nodeSourceId !== drag.directionConstraint!.connectedComponentId
+          );
+        }
         endpointAnchorOverlay = resolveEndpointAnchorSnap({
-          pointerWorld: world,
+          pointerWorld: drag.directionConstraint ? effectivePointerWorld : world,
           zoom: drag.snapContext?.zoom ?? 1,
-          nodeAnchorTargets,
+          nodeAnchorTargets: candidateTargets,
           matrixCellAnchorHints,
           previousSnappedAnchor: drag.activeEndpointAnchor
         });
@@ -1210,33 +1483,33 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
         if (endpointAnchorOverlay.snappedAnchor) {
           nextWorld = endpointAnchorOverlay.snappedAnchor.world;
           snapped.lines = [];
-        } else if (!ctrlOrMeta && source) {
-          try {
-            const parsed = parseTikzForEdit(source);
-            if (parsed.figure.body) {
-              const vddRails = findVddRails(parsed.figure.body, snapshotEditHandles, source);
-              const threshold = (drag.snapContext?.settings.thresholdPx ?? 20) / (drag.snapContext?.zoom ?? 1);
-              for (const rail of vddRails) {
-                if (
-                  Math.abs(world.y - rail.y) <= threshold &&
-                  world.x >= rail.minX - threshold &&
-                  world.x <= rail.maxX + threshold
-                ) {
-                  nextWorld = makeWorldPoint(nextWorld.x, rail.y);
-                  snapped.lines.push({
-                    type: "points",
-                    axis: "y",
-                    points: [
-                      makeWorldPoint(rail.minX, rail.y),
-                      makeWorldPoint(rail.maxX, rail.y)
-                    ]
-                  });
-                  break;
-                }
-              }
+        } else if (!ctrlOrMeta) {
+          const rails = drag.cachedVddRails ?? (source ? (() => {
+            try {
+              const parsed = parseTikzForEdit(source);
+              return parsed.figure.body ? findVddRails(parsed.figure.body, snapshotEditHandles, source) : [];
+            } catch {
+              return [];
             }
-          } catch {
-            // Ignore parse errors during drag
+          })() : []);
+          const threshold = (drag.snapContext?.settings.thresholdPx ?? 20) / (drag.snapContext?.zoom ?? 1);
+          for (const rail of rails) {
+            if (
+              Math.abs(world.y - rail.y) <= threshold &&
+              world.x >= rail.minX - threshold &&
+              world.x <= rail.maxX + threshold
+            ) {
+              nextWorld = makeWorldPoint(nextWorld.x, rail.y);
+              snapped.lines.push({
+                type: "points",
+                axis: "y",
+                points: [
+                  makeWorldPoint(rail.minX, rail.y),
+                  makeWorldPoint(rail.maxX, rail.y)
+                ]
+              });
+              break;
+            }
           }
         }
       } else {
@@ -1250,8 +1523,20 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
         }
       }
       const beforeGridResizeWorld = nextWorld;
-      if (drag.gridResizeSnap && !ctrlOrMeta) {
+      if (!endpointAnchorOverlay?.snappedAnchor && drag.gridResizeSnap && !ctrlOrMeta) {
         nextWorld = snapGridResizeWorldPoint(nextWorld, drag.gridResizeSnap);
+      }
+      if (!endpointAnchorOverlay?.snappedAnchor && drag.directionConstraint) {
+        const { anchorWorld, unitVector } = drag.directionConstraint;
+        const vX = nextWorld.x - anchorWorld.x;
+        const vY = nextWorld.y - anchorWorld.y;
+        const proj = vX * unitVector.x + vY * unitVector.y;
+        const MIN_WIRE_LENGTH_PT = 2.84527559; // 0.1cm = 1mm
+        const clampedProj = Math.max(MIN_WIRE_LENGTH_PT, proj);
+        nextWorld = makeWorldPoint(
+          anchorWorld.x + clampedProj * unitVector.x,
+          anchorWorld.y + clampedProj * unitVector.y
+        );
       }
       if (drag.otherEndpointWorld) {
         const MIN_WIRE_LENGTH_PT = 2.84527559; // 0.1cm = 1mm
@@ -1289,12 +1574,79 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
         lines: snapped.lines
       });
 
+      if (drag.handleKind === "path-point") {
+        if (drag.transientPathElement === undefined) {
+          let escaped = drag.sourceId;
+          try {
+            escaped =
+              typeof CSS !== "undefined" && typeof CSS.escape === "function"
+                ? CSS.escape(escaped)
+                : escaped.replace(/"/g, '\\"');
+          } catch {
+            escaped = escaped.replace(/"/g, '\\"');
+          }
+          const pathEl = svgLayerHostRef?.current?.querySelector<SVGPathElement>(`path[data-source-id="${escaped}"]`);
+          if (pathEl) {
+            drag.transientPathElement = pathEl;
+            drag.initialD = pathEl.getAttribute("d");
+            drag.initialPoints = drag.initialD ? parsePolylinePoints(drag.initialD) : null;
+            if (drag.initialPoints && svgResultRef.current?.viewBox) {
+              const handleSvg = worldToSvgPoint(drag.lastKnownWorld, svgResultRef.current.viewBox);
+              const d0 = (drag.initialPoints[0].x - handleSvg.x) ** 2 + (drag.initialPoints[0].y - handleSvg.y) ** 2;
+              const dEnd = (drag.initialPoints[drag.initialPoints.length - 1].x - handleSvg.x) ** 2 + (drag.initialPoints[drag.initialPoints.length - 1].y - handleSvg.y) ** 2;
+              drag.movingEndpointIndex = d0 <= dEnd ? 0 : 1;
+            }
+          } else {
+            drag.transientPathElement = null;
+          }
+        }
+
+        if (drag.transientHandleElement === undefined) {
+          let escapedHandleId = drag.handleId;
+          try {
+            escapedHandleId =
+              typeof CSS !== "undefined" && typeof CSS.escape === "function"
+                ? CSS.escape(escapedHandleId)
+                : escapedHandleId.replace(/"/g, '\\"');
+          } catch {
+            escapedHandleId = escapedHandleId.replace(/"/g, '\\"');
+          }
+          drag.transientHandleElement =
+            interactionSvgRef?.current?.querySelector<SVGElement>(`[data-handle-id="${escapedHandleId}"]`) ??
+            interactionSvgRef?.current?.querySelector<SVGElement>(`[data-source-id="${drag.sourceId}"][data-handle-kind="move-handle"]`);
+        }
+
+        if (drag.transientPathElement && drag.initialPoints && svgResultRef.current?.viewBox) {
+          const curSvg = worldToSvgPoint(nextWorld, svgResultRef.current.viewBox);
+          const newD = buildTranslatedPolylineD(
+            drag.initialPoints,
+            drag.movingEndpointIndex ?? 1,
+            curSvg.x,
+            curSvg.y
+          );
+          drag.transientPathElement.setAttribute("d", newD);
+
+          if (drag.transientHandleElement) {
+            if (drag.transientHandleElement.tagName.toLowerCase() === "rect") {
+              const w = parseFloat(drag.transientHandleElement.getAttribute("width") || "8");
+              const h = parseFloat(drag.transientHandleElement.getAttribute("height") || "8");
+              drag.transientHandleElement.setAttribute("x", (curSvg.x - w / 2).toFixed(2));
+              drag.transientHandleElement.setAttribute("y", (curSvg.y - h / 2).toFixed(2));
+            } else {
+              drag.transientHandleElement.setAttribute("cx", curSvg.x.toFixed(2));
+              drag.transientHandleElement.setAttribute("cy", curSvg.y.toFixed(2));
+            }
+          }
+          drag.lastKnownWorld = nextWorld;
+          return;
+        }
+      }
+
       const ok = applyActionWithFeedback(
         resolveHandleDragAction({
           handleId: resolvedHandleId,
           newWorld: nextWorld,
-          activeEndpointAnchor: drag.activeEndpointAnchor,
-          baselineSource: drag.preEditBaselineSource
+          activeEndpointAnchor: drag.activeEndpointAnchor
         }),
         drag.historyMergeKey
       );
@@ -1564,27 +1916,69 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
         }
       }
 
-      if (
-        drag.kind === "handle" &&
-        shouldCommitHandleAnchorOnPointerUp({
-          snapshotSource,
-          source,
-          activeEndpointAnchor: drag.activeEndpointAnchor
-        })
-      ) {
-        const resolvedHandleId = resolveHandleIdForDrag(drag, snapshotEditHandles);
-        if (resolvedHandleId && drag.activeEndpointAnchor) {
+      if (drag.kind === "ortho-segment") {
+        if (drag.transientPathElement && drag.initialD) {
+          drag.transientPathElement.setAttribute("d", drag.initialD);
+        }
+        const movedDistance = Math.hypot(
+          drag.lastKnownWorld.x - drag.startWorld.x,
+          drag.lastKnownWorld.y - drag.startWorld.y
+        );
+        if (movedDistance > 1e-4) {
           applyActionWithFeedback(
             {
-              kind: "connectHandle",
-              handleId: resolvedHandleId,
-              nodeName: drag.activeEndpointAnchor.nodeName,
-              nodeSourceId: drag.activeEndpointAnchor.nodeSourceId,
-              anchor: drag.activeEndpointAnchor.anchor,
-              baselineSource: drag.preEditBaselineSource
+              kind: "moveOrthoSegment",
+              elementId: drag.elementId,
+              segmentIndex: drag.segmentIndex,
+              axis: drag.axis,
+              newWorld: drag.lastKnownWorld,
+              baselineSource: drag.baselineSource
             },
             drag.historyMergeKey
           );
+        }
+      }
+
+      if (drag.kind === "handle") {
+        if (drag.transientPathElement && drag.initialD) {
+          drag.transientPathElement.setAttribute("d", drag.initialD);
+        }
+        const resolvedHandleId = resolveHandleIdForDrag(drag, snapshotEditHandles);
+        if (
+          shouldCommitHandleAnchorOnPointerUp({
+            snapshotSource,
+            source,
+            activeEndpointAnchor: drag.activeEndpointAnchor
+          })
+        ) {
+          if (resolvedHandleId && drag.activeEndpointAnchor) {
+            applyActionWithFeedback(
+              {
+                kind: "connectHandle",
+                handleId: resolvedHandleId,
+                nodeName: drag.activeEndpointAnchor.nodeName,
+                nodeSourceId: drag.activeEndpointAnchor.nodeSourceId,
+                anchor: drag.activeEndpointAnchor.anchor
+              },
+              drag.historyMergeKey
+            );
+          }
+        } else if (drag.transientPathElement) {
+          const startPt = drag.startWorld ?? drag.lastKnownWorld;
+          const movedDistance = Math.hypot(
+            drag.lastKnownWorld.x - startPt.x,
+            drag.lastKnownWorld.y - startPt.y
+          );
+          if (resolvedHandleId && movedDistance > 1e-4) {
+            applyActionWithFeedback(
+              resolveHandleDragAction({
+                handleId: resolvedHandleId,
+                newWorld: drag.lastKnownWorld,
+                activeEndpointAnchor: null
+              }),
+              drag.historyMergeKey
+            );
+          }
         }
       }
 
@@ -1710,6 +2104,7 @@ function propertyCleanupElementIdsForDrag(drag: DragState): string[] {
     case "handle":
       return [drag.sourceId];
     case "ortho-corner":
+    case "ortho-segment":
       return [];
     case "tool-create":
     case "pan":

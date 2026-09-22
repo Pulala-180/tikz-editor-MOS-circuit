@@ -129,8 +129,18 @@ export type DragState =
       lastMoveFormatPrecision?: "default" | "fine";
       transientDomElements?: Element[];
       initialTransforms?: Map<Element, string | null>;
+      transientRigidLeafBranches?: Array<{
+        leafDomElements: Element[];
+        initialTransforms: Map<Element, string | null>;
+        orientation: "h" | "v";
+        wireSourceId: string;
+        isTapBranch?: boolean;
+        isStretchOnly?: boolean;
+      }>;
       transientAttachedWires?: Array<{
         element: SVGPathElement;
+        elements?: SVGPathElement[];
+        wireSourceId: string;
         initialD: string;
         /** Parsed M/L points of `initialD`; null when the path has curves/arcs, which keeps the 2-point fallback. */
         initialPoints: Array<{ x: number; y: number }> | null;
@@ -229,14 +239,26 @@ export type DragState =
       handleKind: EditHandle["kind"];
       cursor: string;
       lastKnownWorld: WorldPoint;
+      startWorld?: WorldPoint;
       movementAxis?: "x" | "y" | null;
       lockedCoordinate?: number | null;
+      directionConstraint?: {
+        anchorWorld: WorldPoint;
+        unitVector: { x: number; y: number };
+        connectedComponentId?: string | null;
+      } | null;
       snapContext: SnapContext | null;
       gridResizeSnap: GridResizeSnapConfig | null;
       historyMergeKey: string;
       activeEndpointAnchor: NodeAnchorTarget | null;
       otherEndpointWorld?: WorldPoint | null;
       preEditBaselineSource: string;
+      transientPathElement?: SVGPathElement | null;
+      transientHandleElement?: SVGElement | null;
+      initialD?: string | null;
+      initialPoints?: Array<{ x: number; y: number }> | null;
+      movingEndpointIndex?: 0 | 1;
+      cachedVddRails?: Array<{ y: number; minX: number; maxX: number }>;
     }
   | {
       kind: "pan";
@@ -260,6 +282,26 @@ export type DragState =
       lastKnownWorld: WorldPoint;
       historyMergeKey: string;
       baselineSource: string;
+    }
+  | {
+      /**
+       * Dragging an orthogonal segment of a wire/polyline. Endpoints remain fixed,
+       * stretching adjacent segments (Virtuoso-style orthogonal wire drag).
+       */
+      kind: "ortho-segment";
+      pointerId: number;
+      elementId: string;
+      segmentIndex: number;
+      axis: "h" | "v";
+      cursor: string;
+      startWorld: WorldPoint;
+      lastKnownWorld: WorldPoint;
+      historyMergeKey: string;
+      baselineSource: string;
+      snapContext?: SnapContext | null;
+      transientPathElement?: SVGPathElement | null;
+      initialD?: string | null;
+      initialPoints?: Array<{ x: number; y: number }> | null;
     }
   | {
       kind: "marquee";

@@ -1,5 +1,10 @@
 import type { ToolMode } from "../../store/types";
+import { formatNumber } from "tikz-editor/coords/index";
 import { POWER_RAIL_DEFAULT_LENGTH_CM, buildPowerRailSnippet, buildPowerRailSnippetBetween } from "./power-rail";
+
+function fmtOffset(val: number): string {
+  return formatNumber(val, { fractionDigits: 3 });
+}
 
 /**
  * Two-point power-rail template: the click-sequence interaction collects the two rail ends and
@@ -106,54 +111,63 @@ export function getCircuitComponentSnippet(toolMode: ToolMode, xCm: string, yCm:
     return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Mx.s) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0.5,-0.73) -- (0.5,-0.47);\n    \\draw[line width=0.7mm] (0.25,-0.48) -- (0.75,-0.48);\n    \\draw[line width=0.7mm] (0.2,-0.32) -- (0.8,-0.32);\n    \\draw[line width=0.32mm, line cap=round, line join=round] (0.7,-0.33) -- (0.7,0) -- (1.0,0);\n    \\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.3,0) -- (0.3,-0.29);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0.3,0);\n    \\node[node font=\\sffamily\\bfseries] at (0.5,0.31) {$M_{1}$};\n    \\coordinate (node_Mx.g) at (0.5,-0.73);\n    \\coordinate (node_Mx.d) at (1.0,0);\n  \\end{scope}`;
   }
 
-  // Dot Node
-  if (toolMode === "addDotNode") {
-    return `\\draw[line width=0.32mm, fill=black] (${xCm},${yCm}) circle (0.06);`;
+  // Dot Node (支路节点)
+  if (toolMode === "addDotNode" || toolMode === "addDotNode_V_Top") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Dx.dot) at (0,0);\n    \\draw[line width=0.32mm, fill=black] (0,0) circle (0.06);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,0.18);\n    \\coordinate (node_Dx.top) at (0,0.18);\n  \\end{scope}`;
+  }
+  if (toolMode === "addDotNode_V_Bottom") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Dx.dot) at (0,0);\n    \\draw[line width=0.32mm, fill=black] (0,0) circle (0.06);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.18);\n    \\coordinate (node_Dx.bottom) at (0,-0.18);\n  \\end{scope}`;
+  }
+  if (toolMode === "addDotNode_H_Left") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Dx.dot) at (0,0);\n    \\draw[line width=0.32mm, fill=black] (0,0) circle (0.06);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (-0.18,0);\n    \\coordinate (node_Dx.left) at (-0.18,0);\n  \\end{scope}`;
+  }
+  if (toolMode === "addDotNode_H_Right") {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_Dx.dot) at (0,0);\n    \\draw[line width=0.32mm, fill=black] (0,0) circle (0.06);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0.18,0);\n    \\coordinate (node_Dx.right) at (0.18,0);\n  \\end{scope}`;
   }
 
   // IO Nodes
   if (toolMode === "addIoNode" || toolMode === "addIoNode_Vin_Left") {
-    const scopeX = (parseFloat(xCm) - 0.6).toFixed(2);
-    return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (-0.01,-0.30) {$V_{in}$};\n    \\draw[line width=0.32mm, line cap=round] (0.15,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.6,0);\n    \\coordinate (node_IOx.port) at (0.6,0);\n  \\end{scope}`;
+    const scopeX = fmtOffset(parseFloat(xCm) - 0.6);
+    return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (-0.01,-0.30) {$V_{in}$};\n    \\draw[line width=0.32mm] (0.15,0) circle (0.06);\n    \\draw[line width=0.32mm, line cap=round] (0.21,0) -- (0.6,0);\n    \\coordinate (node_IOx.port) at (0.6,0);\n  \\end{scope}`;
   }
   if (toolMode === "addIoNode_Vin_Top") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,0.45) {$V_{in}$};\n    \\draw[line width=0.32mm, line cap=round] (0,0.45) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0,0);\n    \\coordinate (node_IOx.port) at (0,0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,0.45) {$V_{in}$};\n    \\draw[line width=0.32mm] (0,0.45) circle (0.06);\n    \\draw[line width=0.32mm, line cap=round] (0,0.39) -- (0,0);\n    \\coordinate (node_IOx.port) at (0,0);\n  \\end{scope}`;
   }
   if (toolMode === "addIoNode_Vin_Right") {
-    const scopeX = (parseFloat(xCm) - 0.15).toFixed(2);
-    return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (0.85,-0.30) {$V_{in}$};\n    \\draw[line width=0.32mm, line cap=round] (0.6,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.15,0);\n    \\coordinate (node_IOx.port) at (0.15,0);\n  \\end{scope}`;
+    const scopeX = fmtOffset(parseFloat(xCm) - 0.15);
+    return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (0.85,-0.30) {$V_{in}$};\n    \\draw[line width=0.32mm] (0.6,0) circle (0.06);\n    \\draw[line width=0.32mm, line cap=round] (0.54,0) -- (0.15,0);\n    \\coordinate (node_IOx.port) at (0.15,0);\n  \\end{scope}`;
   }
   if (toolMode === "addIoNode_Vin_Bottom") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,-0.45) {$V_{in}$};\n    \\draw[line width=0.32mm, line cap=round] (0,-0.45) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0,0);\n    \\coordinate (node_IOx.port) at (0,0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,-0.45) {$V_{in}$};\n    \\draw[line width=0.32mm] (0,-0.45) circle (0.06);\n    \\draw[line width=0.32mm, line cap=round] (0,-0.39) -- (0,0);\n    \\coordinate (node_IOx.port) at (0,0);\n  \\end{scope}`;
   }
   if (toolMode === "addIoNode_Vout_Left") {
-    const scopeX = (parseFloat(xCm) - 0.6).toFixed(2);
-    return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (-0.01,-0.30) {$V_{out}$};\n    \\draw[line width=0.32mm, line cap=round] (0.15,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.6,0);\n    \\coordinate (node_IOx.port) at (0.6,0);\n  \\end{scope}`;
+    const scopeX = fmtOffset(parseFloat(xCm) - 0.6);
+    return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (-0.01,-0.30) {$V_{out}$};\n    \\draw[line width=0.32mm] (0.15,0) circle (0.06);\n    \\draw[line width=0.32mm, line cap=round] (0.21,0) -- (0.6,0);\n    \\coordinate (node_IOx.port) at (0.6,0);\n  \\end{scope}`;
   }
   if (toolMode === "addIoNode_Vout_Top") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,0.45) {$V_{out}$};\n    \\draw[line width=0.32mm, line cap=round] (0,0.45) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0,0);\n    \\coordinate (node_IOx.port) at (0,0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,0.45) {$V_{out}$};\n    \\draw[line width=0.32mm] (0,0.45) circle (0.06);\n    \\draw[line width=0.32mm, line cap=round] (0,0.39) -- (0,0);\n    \\coordinate (node_IOx.port) at (0,0);\n  \\end{scope}`;
   }
   if (toolMode === "addIoNode_Vout_Right") {
-    const scopeX = (parseFloat(xCm) - 0.15).toFixed(2);
-    return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (0.85,-0.30) {$V_{out}$};\n    \\draw[line width=0.32mm, line cap=round] (0.6,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.15,0);\n    \\coordinate (node_IOx.port) at (0.15,0);\n  \\end{scope}`;
+    const scopeX = fmtOffset(parseFloat(xCm) - 0.15);
+    return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (0.85,-0.30) {$V_{out}$};\n    \\draw[line width=0.32mm] (0.6,0) circle (0.06);\n    \\draw[line width=0.32mm, line cap=round] (0.54,0) -- (0.15,0);\n    \\coordinate (node_IOx.port) at (0.15,0);\n  \\end{scope}`;
   }
   if (toolMode === "addIoNode_Vout_Bottom") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,-0.45) {$V_{out}$};\n    \\draw[line width=0.32mm, line cap=round] (0,-0.45) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0,0);\n    \\coordinate (node_IOx.port) at (0,0);\n  \\end{scope}`;
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,-0.45) {$V_{out}$};\n    \\draw[line width=0.32mm] (0,-0.45) circle (0.06);\n    \\draw[line width=0.32mm, line cap=round] (0,-0.39) -- (0,0);\n    \\coordinate (node_IOx.port) at (0,0);\n  \\end{scope}`;
   }
 
-  // VDD
-  if (toolMode === "addVDD") {
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_VDD.bottom) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,0.22);\n    \\draw[ultra thick] (-0.95,0.22) -- (0.9,0.22);\n    \\node[draw=none] at (1.2,0.22) {$V_{DD}$};\n  \\end{scope}`;
+  // VDD (电源轨)
+  if (toolMode === "addVDD" || toolMode.startsWith("addPowerRail")) {
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\coordinate (node_VDD.bottom) at (0,0);\n    \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,0.22);\n    \\draw[ultra thick] (-0.4,0.22) -- (0.42,0.22);\n    \\node[draw=none] at (0.84,0.03) {$V_{DD}$};\n  \\end{scope}`;
   }
 
-  // Port objects (vdd-port / port). Same lead + hollow-circle silhouette as the IO
+  // Port objects (port). Same lead + hollow-circle silhouette as the IO
   // terminal, but the pin is `node_<family>x.port` so the placement auto-numbers to
-  // VDD1 / VDD2 / Port1 / Port2 and the label stays `$V_{DD}$` (or the net name the user
+  // Port1 / Port2 and the label stays `$V_{in}$` (or the net name the user
   // types for a generic port — `$V_{in}$` by default).
-  const portFamily = toolMode.startsWith("addIoNode_VddPort")
-    ? "VDD"
-    : toolMode.startsWith("addIoNode_Port")
-      ? "Port"
+  const portFamily = toolMode.startsWith("addIoNode_Port")
+    ? "Port"
+    : toolMode.startsWith("addIoNode_VddPort")
+      ? "VDD"
       : null;
   if (portFamily) {
     const portLabel = portFamily === "VDD" ? "$V_{DD}$" : "$V_{in}$";
@@ -161,37 +175,17 @@ export function getCircuitComponentSnippet(toolMode: ToolMode, xCm: string, yCm:
     const isTop = toolMode.endsWith("_Top");
     const isRight = toolMode.endsWith("_Right");
     if (isLeft) {
-      const scopeX = (parseFloat(xCm) - 0.6).toFixed(2);
-      return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (-0.01,-0.30) {${portLabel}};\n    \\draw[line width=0.32mm, line cap=round] (0.15,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.6,0);\n    \\coordinate (node_${portFamily}x.port) at (0.6,0);\n  \\end{scope}`;
+      const scopeX = fmtOffset(parseFloat(xCm) - 0.6);
+      return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (-0.01,-0.30) {${portLabel}};\n    \\draw[line width=0.32mm] (0.15,0) circle (0.06);\n    \\draw[line width=0.32mm, line cap=round] (0.21,0) -- (0.6,0);\n    \\coordinate (node_${portFamily}x.port) at (0.6,0);\n  \\end{scope}`;
     }
     if (isTop) {
-      return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,0.45) {${portLabel}};\n    \\draw[line width=0.32mm, line cap=round] (0,0.45) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0,0);\n    \\coordinate (node_${portFamily}x.port) at (0,0);\n  \\end{scope}`;
+      return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,0.45) {${portLabel}};\n    \\draw[line width=0.32mm] (0,0.45) circle (0.06);\n    \\draw[line width=0.32mm, line cap=round] (0,0.39) -- (0,0);\n    \\coordinate (node_${portFamily}x.port) at (0,0);\n  \\end{scope}`;
     }
     if (isRight) {
-      const scopeX = (parseFloat(xCm) - 0.15).toFixed(2);
-      return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (0.85,-0.30) {${portLabel}};\n    \\draw[line width=0.32mm, line cap=round] (0.6,0) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0.15,0);\n    \\coordinate (node_${portFamily}x.port) at (0.15,0);\n  \\end{scope}`;
+      const scopeX = fmtOffset(parseFloat(xCm) - 0.15);
+      return `\\begin{scope}[shift={(${scopeX},${yCm})}]\n    \\node at (0.85,-0.30) {${portLabel}};\n    \\draw[line width=0.32mm] (0.6,0) circle (0.06);\n    \\draw[line width=0.32mm, line cap=round] (0.54,0) -- (0.15,0);\n    \\coordinate (node_${portFamily}x.port) at (0.15,0);\n  \\end{scope}`;
     }
-    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,-0.45) {${portLabel}};\n    \\draw[line width=0.32mm, line cap=round] (0,-0.45) node[circle, draw=black, fill=white, inner sep=1.5pt] {} -- (0,0);\n    \\coordinate (node_${portFamily}x.port) at (0,0);\n  \\end{scope}`;
-  }
-
-  // Power rails (VDD rail). The single-click tool modes stamp the default-length rail
-  // anchored at the clicked end; the two-point builder lives in ./power-rail and is what
-  // the "click the second end" interaction calls.
-  if (toolMode === "addPowerRail" || toolMode === "addPowerRail_H_Left" || toolMode === "addPowerRail_H_Right") {
-    const anchorX = parseFloat(xCm);
-    const anchoredLeft = toolMode !== "addPowerRail_H_Right";
-    const originX = anchoredLeft ? anchorX : anchorX - POWER_RAIL_DEFAULT_LENGTH_CM;
-    return buildPowerRailSnippet(originX, parseFloat(yCm), POWER_RAIL_DEFAULT_LENGTH_CM, {
-      orientation: "horizontal"
-    });
-  }
-  if (toolMode === "addPowerRail_V_Top" || toolMode === "addPowerRail_V_Bottom") {
-    const anchorY = parseFloat(yCm);
-    const anchoredTop = toolMode === "addPowerRail_V_Top";
-    const originY = anchoredTop ? anchorY : anchorY + POWER_RAIL_DEFAULT_LENGTH_CM;
-    return buildPowerRailSnippet(parseFloat(xCm), originY, POWER_RAIL_DEFAULT_LENGTH_CM, {
-      orientation: "vertical"
-    });
+    return `\\begin{scope}[shift={(${xCm},${yCm})}]\n    \\node at (0.35,-0.45) {${portLabel}};\n    \\draw[line width=0.32mm] (0,-0.45) circle (0.06);\n    \\draw[line width=0.32mm, line cap=round] (0,-0.39) -- (0,0);\n    \\coordinate (node_${portFamily}x.port) at (0,0);\n  \\end{scope}`;
   }
 
   // Capacitors
@@ -328,19 +322,19 @@ export function getCircuitComponentSnippet(toolMode: ToolMode, xCm: string, yCm:
 
   // Wire Leads
   if (toolMode === "addWireLead" || toolMode === "addWireLead_V_Top") {
-    const topY = (parseFloat(yCm) + 0.3).toFixed(2);
+    const topY = fmtOffset(parseFloat(yCm) + 0.3);
     return `\\draw[line width=0.32mm, line cap=round] (${xCm},${yCm}) -- (${xCm},${topY});`;
   }
   if (toolMode === "addWireLead_V_Bottom") {
-    const bottomY = (parseFloat(yCm) - 0.3).toFixed(2);
+    const bottomY = fmtOffset(parseFloat(yCm) - 0.3);
     return `\\draw[line width=0.32mm, line cap=round] (${xCm},${yCm}) -- (${xCm},${bottomY});`;
   }
   if (toolMode === "addWireLead_H_Left") {
-    const leftX = (parseFloat(xCm) - 0.3).toFixed(2);
+    const leftX = fmtOffset(parseFloat(xCm) - 0.3);
     return `\\draw[line width=0.32mm, line cap=round] (${xCm},${yCm}) -- (${leftX},${yCm});`;
   }
   if (toolMode === "addWireLead_H_Right") {
-    const rightX = (parseFloat(xCm) + 0.3).toFixed(2);
+    const rightX = fmtOffset(parseFloat(xCm) + 0.3);
     return `\\draw[line width=0.32mm, line cap=round] (${xCm},${yCm}) -- (${rightX},${yCm});`;
   }
 

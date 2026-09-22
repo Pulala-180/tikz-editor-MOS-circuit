@@ -15,6 +15,7 @@ import {
   parseShiftTransformValue,
   resolveTransformInspectorMutationContextFromOptionEntries
 } from "../property-write-builders.js";
+import { stripEnclosingBraces } from "../../semantic/style/option-utils.js";
 import { replaceSpan } from "../patch.js";
 import { resolvePropertyTarget, type PropertyTarget } from "../property-target.js";
 import { rewriteCoordinate } from "../rewrite.js";
@@ -25,7 +26,13 @@ import { applyOptionMutationsToTarget, rewriteOptionListMutations, type OptionMu
 import { parseTikzForEdit, sourceFingerprintForEdit, type EditParseOptions } from "../parse-options.js";
 import { normalizeOptionKey } from "../option-key.js";
 import { FIT_DIRECT_MANIPULATION_BLOCK_REASON, sourceUsesFitNodeFromParseResult } from "../fit.js";
-import { applyWireEndpointFollowPatches, clampDeltaForAttachedWires } from "./wire-follow.js";
+import {
+  applyWireEndpointFollowPatches,
+  clampDeltaForAttachedWires,
+  detectRigidLeafBranches,
+  findAllInterComponentStraightWires,
+  INTER_COMPONENT_STRAIGHT_WIRE_BLOCK_REASON
+} from "./wire-follow.js";
 
 const ARRANGE_EPSILON = 1e-6;
 const CENTER_PIVOT_EPSILON = 1e-3;
@@ -59,35 +66,67 @@ export function applyMoveElementsAction(
   formatPrecision: DragFormatPrecision | undefined,
   parseOptions: EditParseOptions = {}
 ): EditActionResultLike {
-  const normalizedIds = normalizeElementIds(elementIds);
-  if (normalizedIds.length === 0) {
+  let activeNormalizedIds = normalizeElementIds(elementIds);
+  if (activeNormalizedIds.length === 0) {
     return { kind: "unsupported", reason: "No element ids were provided for moveElements" };
   }
 
   const parsed = parseTikzForEdit(source, {
     ...parseOptions,
   });
-  const fitBlockedId = normalizedIds.find((elementId) =>
+  const fitBlockedId = activeNormalizedIds.find((elementId) =>
     sourceUsesFitNodeFromParseResult(source, parsed, elementId)
   );
   if (fitBlockedId) {
     return { kind: "unsupported", reason: FIT_DIRECT_MANIPULATION_BLOCK_REASON };
   }
-  const matrixElementIds = normalizedIds.filter((elementId) => {
+
+  const scopeElementIdSet = new Set(
+    activeNormalizedIds.filter((elementId) => findScopeStatementById(parsed.figure.body, elementId) != null)
+  );
+  expandDirectlyConnectedScopes(parsed.figure.body, editHandles, scopeElementIdSet);
+
+  const rigidBranches = detectRigidLeafBranches(
+    source,
+    parsed.figure.body,
+    editHandles,
+    [...activeNormalizedIds, ...scopeElementIdSet],
+    delta
+  );
+
+  // Check for inter-component straight wires under the hard invariant:
+  // "如果两个元件之间的连接线只有一段直线的话，是不可以上下左右移动的，只会跟随两端元件的移动而缩短或者拉长"
+  const allInterComponentWires = findAllInterComponentStraightWires(parsed.figure.body, editHandles, source);
+  if (allInterComponentWires.length > 0) {
+    const interWireById = new Map(allInterComponentWires.map((w) => [w.wireSourceId, w]));
+    const targetedInterWires = activeNormalizedIds.filter((id) => interWireById.has(id));
+    if (targetedInterWires.length > 0) {
+      const allMovedIds = new Set([...activeNormalizedIds, ...scopeElementIdSet]);
+      const blockedWires = targetedInterWires.filter((wireId) => {
+        const conn = interWireById.get(wireId)!;
+        return !allMovedIds.has(conn.componentAId) || !allMovedIds.has(conn.componentBId);
+      });
+
+      if (blockedWires.length > 0) {
+        if (activeNormalizedIds.every((id) => blockedWires.includes(id))) {
+          return { kind: "unsupported", reason: INTER_COMPONENT_STRAIGHT_WIRE_BLOCK_REASON };
+        }
+        activeNormalizedIds = activeNormalizedIds.filter((id) => !blockedWires.includes(id));
+      }
+    }
+  }
+
+  const matrixElementIds = activeNormalizedIds.filter((elementId) => {
     const statement = findPathStatementById(parsed.figure.body, elementId);
     return statement != null && isMatrixPathStatement(statement);
   });
-  const treeRootElementIds = normalizedIds.filter((elementId) => {
+  const treeRootElementIds = activeNormalizedIds.filter((elementId) => {
     const statement = findPathStatementById(parsed.figure.body, elementId);
     return statement != null && isTreeRootPathStatement(statement);
   });
-  const scopeElementIdSet = new Set(
-    normalizedIds.filter((elementId) => findScopeStatementById(parsed.figure.body, elementId) != null)
-  );
-  expandDirectlyConnectedScopes(parsed.figure.body, editHandles, scopeElementIdSet);
   const matrixElementIdSet = new Set(matrixElementIds);
   const treeRootElementIdSet = new Set(treeRootElementIds);
-  let changedSourceIds = expandChangedSourceIdsForMovedElements(parsed.figure.body, [...scopeElementIdSet, ...normalizedIds]);
+  let changedSourceIds = expandChangedSourceIdsForMovedElements(parsed.figure.body, [...activeNormalizedIds, ...scopeElementIdSet]);
 
   const scopeDescendantIdSet = new Set<string>();
   for (const scopeId of scopeElementIdSet) {
@@ -105,11 +144,33 @@ export function applyMoveElementsAction(
     source,
     editHandles,
     topLevelScopeElementIds,
-    normalizedIds,
+    activeNormalizedIds,
     delta,
     parseOptions
   );
-  const nonMatrixElementIds = normalizedIds.filter(
+
+  for (const branch of rigidBranches) {
+    if (branch.isTapBranch || branch.isStretchOnly) {
+      const isXMove = Math.abs(delta.x) > 1e-4;
+      const isYMove = Math.abs(delta.y) > 1e-4;
+      if (isXMove && !isYMove) {
+        branch.branchDelta = worldPoint(pt(delta.x), pt(0));
+      } else if (isYMove && !isXMove) {
+        branch.branchDelta = worldPoint(pt(0), pt(delta.y));
+      } else {
+        branch.branchDelta = branch.orientation === "h"
+          ? worldPoint(pt(delta.x), pt(0))
+          : worldPoint(pt(0), pt(delta.y));
+      }
+    } else {
+      branch.branchDelta =
+        branch.orientation === "h"
+          ? worldPoint(pt(0), pt(delta.y))
+          : worldPoint(pt(delta.x), pt(0));
+    }
+  }
+
+  const nonMatrixElementIds = activeNormalizedIds.filter(
     (elementId) =>
       !matrixElementIdSet.has(elementId) &&
       !scopeElementIdSet.has(elementId) &&
@@ -214,6 +275,51 @@ export function applyMoveElementsAction(
     }
   }
 
+  if (rigidBranches.length > 0) {
+    const movedLeafScopeIds = new Set<string>();
+    for (const branch of rigidBranches) {
+      if (
+        !branch.leafComponentId ||
+        movedLeafScopeIds.has(branch.leafComponentId) ||
+        topLevelScopeElementIds.includes(branch.leafComponentId) ||
+        scopeElementIdSet.has(branch.leafComponentId)
+      ) {
+        continue;
+      }
+      movedLeafScopeIds.add(branch.leafComponentId);
+      const leafRewrite = rewriteSingleScopeTransform(
+        source,
+        branch.leafComponentId,
+        branch.branchDelta,
+        formatPrecision,
+        parseOptions
+      );
+      if (leafRewrite.kind === "success") {
+        for (const p of leafRewrite.patches) {
+          let shift = 0;
+          for (const patch of patches) {
+            if (patch.oldSpan.to <= p.oldSpan.from) {
+              shift += patch.replacement.length - (patch.oldSpan.to - patch.oldSpan.from);
+            }
+          }
+          const applied = replaceSpan(
+            currentSource,
+            { from: p.oldSpan.from + shift, to: p.oldSpan.to + shift },
+            p.replacement
+          );
+          patches.push({
+            oldSpan: p.oldSpan,
+            newSpan: applied.changedSpan,
+            replacement: p.replacement
+          });
+          currentSource = applied.source;
+        }
+        movedAny = true;
+        changedSourceIds = [...changedSourceIds, branch.leafComponentId];
+      }
+    }
+  }
+
   if (!movedAny) {
     return {
       kind: "unsupported",
@@ -245,15 +351,18 @@ export function applyMoveElementsAction(
   }
   const shouldApplyWireFollow =
     topLevelScopeElementIds.length > 0 ||
-    normalizedIds.some((elementId) => pathPointSourceIds.has(elementId));
+    rigidBranches.length > 0 ||
+    activeNormalizedIds.some((elementId) => pathPointSourceIds.has(elementId));
   if (shouldApplyWireFollow) {
     const wireFollow = applyWireEndpointFollowPatches(
       source,
       editHandles,
       topLevelScopeElementIds,
-      normalizedIds,
+      activeNormalizedIds,
       delta,
-      parseOptions
+      parseOptions,
+      rigidBranches,
+      formatPrecision
     );
     const sortedPending = [...wireFollow.patches].sort((a, b) => a.span.from - b.span.from);
     for (const pending of sortedPending) {
@@ -277,6 +386,9 @@ export function applyMoveElementsAction(
     }
     if (wireFollow.changedWireSourceIds.length > 0) {
       changedSourceIds = [...changedSourceIds, ...wireFollow.changedWireSourceIds];
+    }
+    for (const b of rigidBranches) {
+      changedSourceIds = [...changedSourceIds, b.wireStatementId, b.leafComponentId];
     }
   }
 
@@ -681,8 +793,20 @@ function rewriteSingleScopeShiftInPlace(
     const context = resolveTransformInspectorMutationContextFromOptionEntries(entries);
     const nextShiftX = context.values.xshift + localDelta.x;
     const nextShiftY = context.values.yshift + localDelta.y;
-    const nextShiftXValue = formatScopeShiftValue(nextShiftX, formatPrecision);
-    const nextShiftYValue = formatScopeShiftValue(nextShiftY, formatPrecision);
+
+    const xEntry = xyTranslationEntries.find((candidate) => {
+      const key = normalizeOptionKey(candidate.entry.key);
+      return key === "xshift" || key === "/tikz/xshift";
+    });
+    const yEntry = xyTranslationEntries.find((candidate) => {
+      const key = normalizeOptionKey(candidate.entry.key);
+      return key === "yshift" || key === "/tikz/yshift";
+    });
+    const xUnit = xEntry?.entry.valueRaw.toLowerCase().includes("cm") ? "cm" : "pt";
+    const yUnit = yEntry?.entry.valueRaw.toLowerCase().includes("cm") ? "cm" : "pt";
+
+    const nextShiftXValue = formatScopeShiftValue(nextShiftX, formatPrecision, xUnit);
+    const nextShiftYValue = formatScopeShiftValue(nextShiftY, formatPrecision, yUnit);
     const optionMutations = new Map<string, OptionMutation>();
     if (!isAnchoredScope || hasXShiftEntry) {
       if (nextShiftXValue != null) {
@@ -692,7 +816,7 @@ function rewriteSingleScopeShiftInPlace(
         });
       } else {
         if (isAnchoredScope) {
-          optionMutations.set("xshift", { kind: "set", value: "0pt" });
+          optionMutations.set("xshift", { kind: "set", value: xUnit === "cm" ? "0cm" : "0pt" });
         } else {
           optionMutations.set("xshift", { kind: "remove" });
         }
@@ -706,7 +830,7 @@ function rewriteSingleScopeShiftInPlace(
         });
       } else {
         if (isAnchoredScope) {
-          optionMutations.set("yshift", { kind: "set", value: "0pt" });
+          optionMutations.set("yshift", { kind: "set", value: yUnit === "cm" ? "0cm" : "0pt" });
         } else {
           optionMutations.set("yshift", { kind: "remove" });
         }
@@ -737,15 +861,52 @@ function rewriteSingleScopeShiftInPlace(
   const context = resolveTransformInspectorMutationContextFromOptionEntries(entries);
   const nextShiftX = context.values.xshift + localDelta.x;
   const nextShiftY = context.values.yshift + localDelta.y;
-  const nextShiftXValue = formatScopeShiftValue(nextShiftX, formatPrecision);
-  const nextShiftYValue = formatScopeShiftValue(nextShiftY, formatPrecision);
-  const shiftMutation: OptionMutation = nextShiftXValue == null && nextShiftYValue == null
+
+  const rawShift = stripEnclosingBraces(lastShift.entry.valueRaw).trim();
+  const hasEnclosingBraces = lastShift.entry.valueRaw.trim().startsWith("{") && lastShift.entry.valueRaw.trim().endsWith("}");
+  const coord = parseCoordinateLike(rawShift);
+  const hasPt = coord
+    ? coord.x.toLowerCase().includes("pt") || coord.y.toLowerCase().includes("pt")
+    : rawShift.toLowerCase().includes("pt");
+  const hasCm = coord
+    ? coord.x.toLowerCase().includes("cm") || coord.y.toLowerCase().includes("cm")
+    : rawShift.toLowerCase().includes("cm");
+
+  let nextShiftXValue: string;
+  let nextShiftYValue: string;
+  let isZeroShift = false;
+
+  if (hasPt) {
+    const fmtX = formatNumber(nextShiftX, { fractionDigits: formatPrecision === "fine" ? 1 : 0 });
+    const fmtY = formatNumber(nextShiftY, { fractionDigits: formatPrecision === "fine" ? 1 : 0 });
+    isZeroShift = Number(fmtX) === 0 && Number(fmtY) === 0;
+    nextShiftXValue = Number(fmtX) === 0 ? "0pt" : `${fmtX}pt`;
+    nextShiftYValue = Number(fmtY) === 0 ? "0pt" : `${fmtY}pt`;
+  } else if (hasCm) {
+    const valCmX = nextShiftX * CM_PER_PT;
+    const valCmY = nextShiftY * CM_PER_PT;
+    const fmtX = formatNumber(valCmX, { fractionDigits: formatPrecision === "fine" ? 3 : 2 });
+    const fmtY = formatNumber(valCmY, { fractionDigits: formatPrecision === "fine" ? 3 : 2 });
+    isZeroShift = Number(fmtX) === 0 && Number(fmtY) === 0;
+    nextShiftXValue = Number(fmtX) === 0 ? "0cm" : `${fmtX}cm`;
+    nextShiftYValue = Number(fmtY) === 0 ? "0cm" : `${fmtY}cm`;
+  } else {
+    // Default TikZ coordinate: dimensionless numbers represent cm!
+    const valCmX = nextShiftX * CM_PER_PT;
+    const valCmY = nextShiftY * CM_PER_PT;
+    const fmtX = formatNumber(valCmX, { fractionDigits: formatPrecision === "fine" ? 3 : 2 });
+    const fmtY = formatNumber(valCmY, { fractionDigits: formatPrecision === "fine" ? 3 : 2 });
+    isZeroShift = Number(fmtX) === 0 && Number(fmtY) === 0;
+    nextShiftXValue = fmtX;
+    nextShiftYValue = fmtY;
+  }
+
+  const coordInner = `(${nextShiftXValue},${nextShiftYValue})`;
+  const shiftMutation: OptionMutation = isZeroShift
     ? { kind: "remove" }
     : {
         kind: "set",
-        // `shift=` components are dimensions, so a zero component carries its unit too -- the sibling
-        // xshift/yshift writer already emits "0pt", and a bare "0" here left the two forms inconsistent.
-        value: `{(${nextShiftXValue ?? "0pt"},${nextShiftYValue ?? "0pt"})}`
+        value: hasEnclosingBraces ? `{${coordInner}}` : coordInner
       };
   const optionMutations = new Map<string, OptionMutation>([
     ["shift", shiftMutation]
@@ -776,29 +937,39 @@ function formatScopeTranslationMutation(
   if (!match) {
     return { kind: "set", value };
   }
-  // Convert whatever unit the incoming value carries to pt before formatting: the formatter works in
-  // pt, and `xshift`/`yshift` are dimensions whose bare number would be read as pt.
   const magnitude = Number(match[1]);
   const unit = match[2] ?? "pt";
   const valuePt = unit === "cm" ? magnitude * PT_PER_CM : unit === "mm" ? magnitude * (PT_PER_CM / 10) : magnitude;
-  const formatted = formatScopeShiftValue(valuePt, formatPrecision);
-  // formatScopeShiftValue already carries the `pt` unit. Appending another one here produced values
-  // like `11.38ptcm`, which no parser can read -- so the scope's shift was silently lost and every
-  // later drag accumulated on that corrupted baseline instead of returning to the previous position
-  // (a net-zero drag cycle walked the component away from where it started).
-  return formatted == null ? { kind: "remove" } : { kind: "set", value: formatted };
+
+  if (unit === "cm") {
+    const valueCm = valuePt * CM_PER_PT;
+    const formatted = formatNumber(valueCm, {
+      fractionDigits: formatPrecision === "fine" ? 3 : 2
+    });
+    return Number(formatted) === 0 ? { kind: "remove" } : { kind: "set", value: `${formatted}cm` };
+  }
+
+  const formatted = formatNumber(valuePt, {
+    fractionDigits: formatPrecision === "fine" ? 1 : 0
+  });
+  return Number(formatted) === 0 ? { kind: "remove" } : { kind: "set", value: `${formatted}pt` };
 }
 
 function formatScopeShiftValue(
   valuePt: number,
-  formatPrecision: DragFormatPrecision | undefined
+  formatPrecision: DragFormatPrecision | undefined,
+  unit: "pt" | "cm" = "pt"
 ): string | null {
+  if (unit === "cm") {
+    const valueCm = valuePt * CM_PER_PT;
+    const formatted = formatNumber(valueCm, {
+      fractionDigits: formatPrecision === "fine" ? 3 : 2
+    });
+    return Number(formatted) === 0 ? null : `${formatted}cm`;
+  }
   const formatted = formatNumber(valuePt, {
     fractionDigits: formatPrecision === "fine" ? 1 : 0
   });
-  // `xshift`/`yshift` are dimensions: a bare number is read as pt, so the unit is not optional.
-  // Emit pt to match the other scope-shift writers (the inspector and the resize path); emitting
-  // a bare cm magnitude used to make a dragged scope snap to its anchor mid-drag.
   return Number(formatted) === 0 ? null : `${formatted}pt`;
 }
 
