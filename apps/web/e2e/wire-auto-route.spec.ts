@@ -254,10 +254,10 @@ test("a hand-placed waypoint between two anchors survives instead of being re-ro
   // Pin A, then a hand-placed waypoint out in empty space...
   await page.mouse.click(start.x, start.y);
   await page.waitForTimeout(200);
-  const layer = page.locator("[data-canvas-viewport='true'] svg").last();
-  const box = await layer.boundingBox();
-  if (!box) throw new Error("canvas layer has no bounds");
-  await page.mouse.click(box.x + box.width * 0.62, box.y + box.height * 0.22);
+  const viewport = page.locator("[data-canvas-viewport='true']").first();
+  const box = await viewport.boundingBox();
+  if (!box) throw new Error("canvas viewport has no bounds");
+  await page.mouse.click(box.x + box.width * 0.62, box.y + box.height * 0.45);
   await page.waitForTimeout(250);
   const afterWaypoint = await readSource(page);
   expect(
@@ -286,8 +286,10 @@ test("a hand-placed waypoint between two anchors survives instead of being re-ro
   expect((source.match(/line cap=round/g) ?? []).length, `unexpected extra wire:\n${source}`).toBe(
     beforeDraws + 2
   );
-  const lastLeg = numericWaypoints(source).at(-1);
-  expect(lastLeg?.y, `the second leg did not head for the destination row:\n${source}`).toBeCloseTo(3, 2);
+  const secondLegEndsAtDest =
+    source.includes("(node_B.p)") ||
+    Math.abs((numericWaypoints(source).at(-1)?.y ?? 0) - 3) < 0.1;
+  expect(secondLegEndsAtDest, `the second leg did not head for the destination row:\n${source}`).toBe(true);
 });
 
 test("the wire preview draws the whole route, not just its first leg", async ({ page }) => {

@@ -119,7 +119,13 @@ function CircuitElementSubmenu({
     currentToolMode === toolModes.hLeft ||
     currentToolMode === toolModes.hRight ||
     currentToolMode === toolModes.vTop ||
-    currentToolMode === toolModes.vBottom;
+    currentToolMode === toolModes.vBottom ||
+    (defaultMode === "addDotNode_V_Top" && currentToolMode === "addDotNode") ||
+    (defaultMode === "addWireLead_V_Top" && currentToolMode === "addWireLead") ||
+    (defaultMode === "addResistor_V_Bottom" && currentToolMode === "addResistor") ||
+    (defaultMode === "addGND_V_Bottom" && currentToolMode === "addGND") ||
+    (defaultMode === "addCapacitor_H_Left" && currentToolMode === "addCapacitor") ||
+    (defaultMode === "addPowerRail_H_Left" && currentToolMode === "addPowerRail");
 
   const handleMouseEnter = () => {
     if (timeoutRef.current != null) {
@@ -1457,7 +1463,6 @@ function IoNodeSubmenu({
 
   const isActive =
     currentToolMode.startsWith("addIoNode") &&
-    !currentToolMode.startsWith("addIoNode_VddPort") &&
     !currentToolMode.startsWith("addIoNode_Port");
 
   const handleMouseEnter = () => {
@@ -1491,7 +1496,7 @@ function IoNodeSubmenu({
         >
           <svg width="18" height="18" viewBox="0 0 18 18" style={{ display: "block" }}>
             <circle cx="4.5" cy="9" r="2.8" fill="none" stroke="currentColor" strokeWidth="1.8" />
-            <line x1="7.3" y1="9" x2="16.5" y2="9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            <line x1="7.3" y1="9" x2="11.9" y2="9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
           </svg>
         </button>
       </RenderedTooltip>
@@ -1530,9 +1535,9 @@ function IoNodeSubmenu({
                 >
                   <svg width="44" height="22" viewBox="0 0 44 22" style={{ display: "block" }}>
                     <circle cx="9" cy="8" r="3" stroke="currentColor" strokeWidth="1.4" fill="none" />
-                    <line x1="12" y1="8" x2="34" y2="8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-                    <line x1="34" y1="5" x2="34" y2="11" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="31" y1="8" x2="37" y2="8" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="12" y1="8" x2="23" y2="8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                    <line x1="23" y1="5" x2="23" y2="11" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="20" y1="8" x2="26" y2="8" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
                     <text x="9" y="19" fontSize="7" fontFamily="serif" textAnchor="middle" fill="currentColor">Vin</text>
                   </svg>
                 </div>
@@ -1551,9 +1556,9 @@ function IoNodeSubmenu({
                   }}
                 >
                   <svg width="44" height="22" viewBox="0 0 44 22" style={{ display: "block" }}>
-                    <line x1="10" y1="5" x2="10" y2="11" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="7" y1="8" x2="13" y2="8" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="10" y1="8" x2="32" y2="8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                    <line x1="21" y1="5" x2="21" y2="11" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="18" y1="8" x2="24" y2="8" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="21" y1="8" x2="32" y2="8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
                     <circle cx="35" cy="8" r="3" stroke="currentColor" strokeWidth="1.4" fill="none" />
                     <text x="35" y="19" fontSize="7" fontFamily="serif" textAnchor="middle" fill="currentColor">Vin</text>
                   </svg>
@@ -1594,9 +1599,9 @@ function IoNodeSubmenu({
                 >
                   <svg width="44" height="22" viewBox="0 0 44 22" style={{ display: "block" }}>
                     <circle cx="9" cy="8" r="3" stroke="currentColor" strokeWidth="1.4" fill="none" />
-                    <line x1="12" y1="8" x2="34" y2="8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-                    <line x1="34" y1="5" x2="34" y2="11" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="31" y1="8" x2="37" y2="8" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="12" y1="8" x2="23" y2="8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                    <line x1="23" y1="5" x2="23" y2="11" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="20" y1="8" x2="26" y2="8" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
                     <text x="9" y="19" fontSize="7" fontFamily="serif" textAnchor="middle" fill="currentColor">Vout</text>
                   </svg>
                 </div>
@@ -1615,9 +1620,9 @@ function IoNodeSubmenu({
                   }}
                 >
                   <svg width="44" height="22" viewBox="0 0 44 22" style={{ display: "block" }}>
-                    <line x1="10" y1="5" x2="10" y2="11" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="7" y1="8" x2="13" y2="8" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="10" y1="8" x2="32" y2="8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+                    <line x1="21" y1="5" x2="21" y2="11" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="18" y1="8" x2="24" y2="8" stroke="#3b82f6" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="21" y1="8" x2="32" y2="8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
                     <circle cx="35" cy="8" r="3" stroke="currentColor" strokeWidth="1.4" fill="none" />
                     <text x="35" y="19" fontSize="7" fontFamily="serif" textAnchor="middle" fill="currentColor">Vout</text>
                   </svg>
@@ -1951,7 +1956,7 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
   const insertIoNode = () => {
     const coord = getPlacementCoord("0.63", "0.38");
     const drawCode = `\\begin{scope}[shift={(${coord.x},${coord.y})}]
-    \\draw[fill=white, thick] (0,0) circle (0.055cm);
+    \\draw[line width=0.32mm] (0,0) circle (0.06);
     \\coordinate (node_IOx.center) at (0,0);
   \\end{scope}`;
     const lastEnd = source.lastIndexOf("\\end{tikzpicture}");
@@ -1971,8 +1976,8 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
     const drawCode = `\\begin{scope}[shift={(${coord.x},${coord.y})}]
     \\coordinate (node_VDD.bottom) at (0,0);
     \\draw[line width=0.32mm, line cap=round] (0,0) -- (0,0.22);
-    \\draw[ultra thick] (-0.95,0.22) -- (0.9,0.22);
-    \\node[draw=none] at (1.2,0.22) {$V_{DD}$};
+    \\draw[ultra thick] (-0.4,0.22) -- (0.42,0.22);
+    \\node[draw=none] at (0.84,0.03) {$V_{DD}$};
   \\end{scope}`;
     const lastEnd = source.lastIndexOf("\\end{tikzpicture}");
     if (lastEnd === -1) {
@@ -2623,33 +2628,17 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
           currentToolMode={toolMode}
           onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
         />
-        <RenderedTooltip content="VDD 电源端 (按住 V+D)">
+        <RenderedTooltip content="VDD 电源轨 (K 或按住 V+D)">
           <button
             type="button"
             className={[css.btn, toolMode === "addVDD" ? css.btnActive : ""].filter(Boolean).join(" ")}
-            aria-label="VDD 电源端"
+            aria-label="VDD 电源轨"
             onClick={() => dispatch({ type: "SET_TOOL_MODE", mode: toolMode === "addVDD" ? "select" : "addVDD" })}
             style={{ fontSize: "12px", fontWeight: "bold", fontFamily: "serif" }}
           >
             VDD
           </button>
         </RenderedTooltip>
-        <PortSubmenu
-          tooltip="VDD 端口 (O)"
-          buttonContent={
-            <span style={{ fontSize: "9.5px", fontWeight: "bold", fontFamily: "serif" }}>
-              V<sub>DD</sub>p
-            </span>
-          }
-          modes={{
-            left: "addIoNode_VddPort_Left",
-            top: "addIoNode_VddPort_Top",
-            right: "addIoNode_VddPort_Right",
-            bottom: "addIoNode_VddPort_Bottom"
-          }}
-          currentToolMode={toolMode}
-          onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
-        />
         <PortSubmenu
           tooltip="通用端口 (J)"
           buttonContent={
@@ -2678,42 +2667,25 @@ export function Toolbar({ updateChip = null }: ToolbarProps) {
           currentToolMode={toolMode}
           onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
         />
-        <RenderedTooltip content="支路节点 (D)">
-          <button
-            type="button"
-            className={[css.btn, toolMode === "addDotNode" ? css.btnActive : ""].filter(Boolean).join(" ")}
-            aria-label="支路节点"
-            onClick={() => dispatch({ type: "SET_TOOL_MODE", mode: toolMode === "addDotNode" ? "select" : "addDotNode" })}
-            style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-          >
+        <CircuitElementSubmenu
+          tooltip="支路节点 (D)"
+          buttonContent={
             <svg width="18" height="18" viewBox="0 0 18 18">
               <circle cx="9" cy="9" r="4" fill="currentColor" />
             </svg>
-          </button>
-        </RenderedTooltip>
-        <IoNodeSubmenu
-          tooltip="I/O 端口 (T)"
+          }
+          toolModes={{
+            hLeft: "addDotNode_H_Left",
+            hRight: "addDotNode_H_Right",
+            vTop: "addDotNode_V_Top",
+            vBottom: "addDotNode_V_Bottom"
+          }}
+          defaultMode="addDotNode_V_Top"
           currentToolMode={toolMode}
           onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
         />
-        <CircuitElementSubmenu
-          tooltip="VDD 电源轨 (K)"
-          buttonContent={
-            <svg width="22" height="16" viewBox="0 0 22 16" style={{ display: "block" }}>
-              <line x1="1.5" y1="5" x2="20.5" y2="5" stroke="currentColor" strokeWidth="2.6" strokeLinecap="butt" />
-              <circle cx="8" cy="5" r="2" fill="none" stroke="currentColor" strokeWidth="1.1" />
-              <circle cx="14" cy="5" r="2" fill="none" stroke="currentColor" strokeWidth="1.1" />
-              <line x1="8" y1="5" x2="8" y2="14" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
-              <line x1="14" y1="5" x2="14" y2="14" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
-            </svg>
-          }
-          toolModes={{
-            hLeft: "addPowerRail_H_Left",
-            hRight: "addPowerRail_H_Right",
-            vTop: "addPowerRail_V_Top",
-            vBottom: "addPowerRail_V_Bottom"
-          }}
-          defaultMode="addPowerRail_H_Left"
+        <IoNodeSubmenu
+          tooltip="I/O 端口 (T)"
           currentToolMode={toolMode}
           onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
         />

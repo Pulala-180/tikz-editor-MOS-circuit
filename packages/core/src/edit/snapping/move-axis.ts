@@ -1,4 +1,4 @@
-import type { EditHandle, SceneElement } from "../../semantic/types.js";
+import type { EditHandle, SceneElement, NodeAnchorTarget } from "../../semantic/types.js";
 import type { WorldPoint } from "../../coords/points.js";
 import { collectPathEndpointSnapPoints } from "./geometry.js";
 
@@ -23,6 +23,7 @@ export function resolveMoveAxisConstraintFromEditHandles(
   options: {
     requireAttachedWire?: boolean;
     sceneElements?: readonly SceneElement[];
+    nodeAnchorTargets?: readonly NodeAnchorTarget[];
   } = {}
 ): MoveAxis | null {
   const selected = sourceIds instanceof Set ? sourceIds : new Set(sourceIds);
@@ -54,7 +55,7 @@ export function resolveMoveAxisConstraintFromEditHandles(
 
   let resolved: MoveAxis | null = null;
   for (const points of pointsBySource.values()) {
-    const axis = resistorMoveAxis(sortPathPoints(points));
+    const axis = resistorMoveAxis(points);
     if (!axis) {
       continue;
     }
@@ -62,6 +63,17 @@ export function resolveMoveAxisConstraintFromEditHandles(
       return null;
     }
     resolved = axis;
+  }
+
+  // 3. Attached straight wire axis inheritance (Trunk interior dots, Terminals VDD/GND/Vin/Vout, wired components)
+  if (!resolved && sceneElements.length > 0) {
+    resolved = attachedWireAxisConstraint(editHandles, selected, sceneElements);
+  }
+
+  // 4. Two-terminal component anchors (Capacitor, Source, Resistor scope, etc.)
+  if (!resolved && options.nodeAnchorTargets && options.nodeAnchorTargets.length > 0) {
+    const selectedHandles = editHandles.filter((h) => selected.has(h.sourceRef.sourceId));
+    resolved = twoTerminalComponentMoveAxis(selectedHandles, options.nodeAnchorTargets);
   }
 
   if (!resolved || !options.requireAttachedWire) {
@@ -170,21 +182,169 @@ function hasAttachedWireEndpoint(
     }
   }
 
+  // Also check if any selected port sits in the interior of a wire segment (T-junction / tap dot)
+  for (const element of sceneElements) {
+    if (element.kind !== "Path" || selected.has(element.sourceRef.sourceId)) {
+      continue;
+    }
+    if (element.commands.some((command) => command.kind === "Z")) {
+      continue;
+    }
+    const handles = editHandles
+      .filter((h) => h.kind === "path-point" && h.sourceRef.sourceId === element.sourceRef.sourceId)
+      .sort((a, b) => a.sourceRef.sourceSpan.from - b.sourceRef.sourceSpan.from);
+    if (handles.length === 2) {
+      const p1 = handles[0]!.world;
+      const p2 = handles[1]!.world;
+      const lineX = (p1.x + p2.x) / 2;
+      const lineY = (p1.y + p2.y) / 2;
+      const minX = Math.min(p1.x, p2.x);
+      const maxX = Math.max(p1.x, p2.x);
+      const minY = Math.min(p1.y, p2.y);
+      const maxY = Math.max(p1.y, p2.y);
+      const isV = Math.abs(p2.x - p1.x) <= 1.0 && Math.abs(p2.y - p1.y) > 1.0;
+      const isH = Math.abs(p2.y - p1.y) <= 1.0 && Math.abs(p2.x - p1.x) > 1.0;
+      for (const port of selectedPorts) {
+        if (
+          isV &&
+          Math.abs(port.x - lineX) <= ATTACHED_WIRE_EPSILON_PT &&
+          port.y >= minY - ATTACHED_WIRE_EPSILON_PT &&
+          port.y <= maxY + ATTACHED_WIRE_EPSILON_PT
+        ) {
+          return true;
+        }
+        if (
+          isH &&
+          Math.abs(port.y - lineY) <= ATTACHED_WIRE_EPSILON_PT &&
+          port.x >= minX - ATTACHED_WIRE_EPSILON_PT &&
+          port.x <= maxX + ATTACHED_WIRE_EPSILON_PT
+        ) {
+          return true;
+        }
+      }
+    }
+  }
+
   return false;
 }
 
-function sortPathPoints(points: WorldPoint[]): WorldPoint[] {
-  return points.slice().sort((left, right) => {
-    // Path-point handles are emitted in source order.  Sorting by coordinate
-    // projection would be ambiguous for tilted symbols; keeping insertion order
-    // is already source order, but make it deterministic for the rare case in
-    // which semantic emission order differs from source traversal.
-    const byX = left.x - right.x;
-    if (Math.abs(byX) > MOVE_AXIS_EPSILON) {
-      return byX;
+function attachedWireAxisConstraint(
+  editHandles: readonly EditHandle[],
+  selected: ReadonlySet<string>,
+  sceneElements: readonly SceneElement[]
+): MoveAxis | null {
+  const selectedPorts = collectPathEndpointSnapPoints(editHandles, selected);
+  if (selectedPorts.length === 0) {
+    return null;
+  }
+
+  // 1. First priority: check if any selected port sits in the interior of a straight trunk wire (T-junction / tap point, e.g. branch dot)
+  for (const element of sceneElements) {
+    if (element.kind !== "Path" || selected.has(element.sourceRef.sourceId)) {
+      continue;
     }
-    return left.y - right.y;
-  });
+    if (element.commands.some((command) => command.kind === "Z")) {
+      continue;
+    }
+
+    const handles = editHandles
+      .filter((h) => h.kind === "path-point" && h.sourceRef.sourceId === element.sourceRef.sourceId)
+      .sort((a, b) => a.sourceRef.sourceSpan.from - b.sourceRef.sourceSpan.from);
+    if (handles.length !== 2) {
+      continue;
+    }
+
+    const p1 = handles[0]!.world;
+    const p2 = handles[1]!.world;
+    const dx = Math.abs(p2.x - p1.x);
+    const dy = Math.abs(p2.y - p1.y);
+    const isV = dx <= 1.0 && dy > 1.0;
+    const isH = dy <= 1.0 && dx > 1.0;
+    if (!isV && !isH) {
+      continue;
+    }
+
+    for (const port of selectedPorts) {
+      if (isV) {
+        const lineX = (p1.x + p2.x) / 2;
+        const minY = Math.min(p1.y, p2.y);
+        const maxY = Math.max(p1.y, p2.y);
+        if (
+          Math.abs(port.x - lineX) <= ATTACHED_WIRE_EPSILON_PT &&
+          port.y >= minY - ATTACHED_WIRE_EPSILON_PT &&
+          port.y <= maxY + ATTACHED_WIRE_EPSILON_PT
+        ) {
+          const distToP1 = Math.hypot(port.x - p1.x, port.y - p1.y);
+          const distToP2 = Math.hypot(port.x - p2.x, port.y - p2.y);
+          if (distToP1 > ATTACHED_WIRE_EPSILON_PT && distToP2 > ATTACHED_WIRE_EPSILON_PT) {
+            return "y";
+          }
+        }
+      } else if (isH) {
+        const lineY = (p1.y + p2.y) / 2;
+        const minX = Math.min(p1.x, p2.x);
+        const maxX = Math.max(p1.x, p2.x);
+        if (
+          Math.abs(port.y - lineY) <= ATTACHED_WIRE_EPSILON_PT &&
+          port.x >= minX - ATTACHED_WIRE_EPSILON_PT &&
+          port.x <= maxX + ATTACHED_WIRE_EPSILON_PT
+        ) {
+          const distToP1 = Math.hypot(port.x - p1.x, port.y - p1.y);
+          const distToP2 = Math.hypot(port.x - p2.x, port.y - p2.y);
+          if (distToP1 > ATTACHED_WIRE_EPSILON_PT && distToP2 > ATTACHED_WIRE_EPSILON_PT) {
+            return "x";
+          }
+        }
+      }
+    }
+  }
+
+  // 2. Second priority: endpoint attached wires (VDD, GND, Vin, Vout, Resistors, etc.)
+  const wireOrientations = new Set<"h" | "v">();
+  for (const element of sceneElements) {
+    if (element.kind !== "Path" || selected.has(element.sourceRef.sourceId)) {
+      continue;
+    }
+    if (element.commands.some((command) => command.kind === "Z")) {
+      continue;
+    }
+
+    const handles = editHandles
+      .filter((h) => h.kind === "path-point" && h.sourceRef.sourceId === element.sourceRef.sourceId)
+      .sort((a, b) => a.sourceRef.sourceSpan.from - b.sourceRef.sourceSpan.from);
+    if (handles.length !== 2) {
+      continue;
+    }
+
+    const p1 = handles[0]!.world;
+    const p2 = handles[1]!.world;
+
+    const touchesP1 = selectedPorts.some(
+      (port) => Math.hypot(port.x - p1.x, port.y - p1.y) <= ATTACHED_WIRE_EPSILON_PT
+    );
+    const touchesP2 = selectedPorts.some(
+      (port) => Math.hypot(port.x - p2.x, port.y - p2.y) <= ATTACHED_WIRE_EPSILON_PT
+    );
+    if (!touchesP1 && !touchesP2) {
+      continue;
+    }
+
+    const dx = Math.abs(p2.x - p1.x);
+    const dy = Math.abs(p2.y - p1.y);
+    if (dx <= 1.0 && dy > 1.0) {
+      wireOrientations.add("v");
+    } else if (dy <= 1.0 && dx > 1.0) {
+      wireOrientations.add("h");
+    }
+  }
+
+  if (wireOrientations.has("v") && !wireOrientations.has("h")) {
+    return "y";
+  }
+  if (wireOrientations.has("h") && !wireOrientations.has("v")) {
+    return "x";
+  }
+  return null;
 }
 
 function resistorMoveAxis(points: readonly WorldPoint[]): MoveAxis | null {
@@ -192,21 +352,22 @@ function resistorMoveAxis(points: readonly WorldPoint[]): MoveAxis | null {
     return null;
   }
 
-  const first = points[0];
-  const last = points[points.length - 1];
+  let ordered = points.slice();
+  let first = ordered[0];
+  let last = ordered[ordered.length - 1];
   if (!first || !last) {
     return null;
   }
 
-  const dx = last.x - first.x;
-  const dy = last.y - first.y;
-  const absDx = Math.abs(dx);
-  const absDy = Math.abs(dy);
-  const length = Math.hypot(dx, dy);
+  let dx = last.x - first.x;
+  let dy = last.y - first.y;
+  let length = Math.hypot(dx, dy);
   if (length <= MOVE_AXIS_EPSILON) {
     return null;
   }
 
+  let absDx = Math.abs(dx);
+  let absDy = Math.abs(dy);
   let axis: MoveAxis;
   let alongSpan: number;
   if (absDx >= absDy) {
@@ -223,9 +384,28 @@ function resistorMoveAxis(points: readonly WorldPoint[]): MoveAxis | null {
     alongSpan = absDy;
   }
 
+  // If points were emitted in reverse order, reverse them along the baseline
+  const ux0 = dx / length;
+  const uy0 = dy / length;
+  const second = ordered[1];
+  if (second) {
+    const projSecond = (second.x - first.x) * ux0 + (second.y - first.y) * uy0;
+    if (projSecond < 0) {
+      ordered.reverse();
+      first = ordered[0]!;
+      last = ordered[ordered.length - 1]!;
+      dx = last.x - first.x;
+      dy = last.y - first.y;
+      absDx = Math.abs(dx);
+      absDy = Math.abs(dy);
+      length = Math.hypot(dx, dy);
+      alongSpan = axis === "x" ? absDx : absDy;
+    }
+  }
+
   const ux = dx / length;
   const uy = dy / length;
-  const middle = points.slice(1, -1);
+  const middle = ordered.slice(1, -1);
   if (middle.length < MIN_RESISTOR_ALTERNATIONS + 1) {
     return null;
   }
@@ -246,7 +426,7 @@ function resistorMoveAxis(points: readonly WorldPoint[]): MoveAxis | null {
     }
     previousProjection = projection;
 
-    // Signed perpendicular distance from the first→last baseline.  Resistor
+    // Signed perpendicular distance from the first→last baseline. Resistor
     // templates contain short collinear lead-in/out segments on the baseline;
     // skip those while still requiring alternating peaks above/below it.
     const perpendicular = relativeX * uy - relativeY * ux;
@@ -261,4 +441,84 @@ function resistorMoveAxis(points: readonly WorldPoint[]): MoveAxis | null {
   }
 
   return alternations >= MIN_RESISTOR_ALTERNATIONS ? axis : null;
+}
+
+function twoTerminalComponentMoveAxis(
+  selectedHandles: readonly EditHandle[],
+  nodeAnchorTargets?: readonly NodeAnchorTarget[]
+): MoveAxis | null {
+  if (!nodeAnchorTargets || nodeAnchorTargets.length === 0) {
+    return null;
+  }
+
+  const selectedHandleWorlds = selectedHandles.map((h) => h.world);
+  if (selectedHandleWorlds.length === 0) {
+    return null;
+  }
+
+  // Find nodeAnchorTargets that coincide with selected handles
+  const matchedTargets: NodeAnchorTarget[] = [];
+  for (const target of nodeAnchorTargets) {
+    const touches = selectedHandleWorlds.some(
+      (w) => Math.hypot(w.x - target.world.x, w.y - target.world.y) <= ATTACHED_WIRE_EPSILON_PT
+    );
+    if (touches) {
+      matchedTargets.push(target);
+    }
+  }
+
+  if (matchedTargets.length === 0) {
+    return null;
+  }
+
+  // Group matched targets by nodeName
+  const targetsByNode = new Map<string, NodeAnchorTarget[]>();
+  for (const t of matchedTargets) {
+    const list = targetsByNode.get(t.nodeName);
+    if (list) {
+      list.push(t);
+    } else {
+      targetsByNode.set(t.nodeName, [t]);
+    }
+  }
+
+  for (const targets of targetsByNode.values()) {
+    const anchors = new Set(targets.map((t) => t.anchor.toLowerCase()));
+    const isV =
+      (anchors.has("t") && anchors.has("b")) ||
+      (anchors.has("top") && anchors.has("bottom"));
+    const isH =
+      (anchors.has("l") && anchors.has("r")) ||
+      (anchors.has("left") && anchors.has("right"));
+
+    if (isV && !isH) {
+      return "y";
+    }
+    if (isH && !isV) {
+      return "x";
+    }
+
+    const isBranchDot = targets.some(
+      (t) => t.anchor.toLowerCase() === "dot" || t.nodeName.toLowerCase().startsWith("d")
+    );
+    if (isBranchDot) {
+      continue;
+    }
+
+    // Geometric fallback: exactly 2 opposite terminal anchors with significant distance along one axis
+    if (targets.length === 2) {
+      const p1 = targets[0]!.world;
+      const p2 = targets[1]!.world;
+      const dx = Math.abs(p2.x - p1.x);
+      const dy = Math.abs(p2.y - p1.y);
+      if (dx <= 1.0 && dy >= 14.0) {
+        return "y";
+      }
+      if (dy <= 1.0 && dx >= 14.0) {
+        return "x";
+      }
+    }
+  }
+
+  return null;
 }

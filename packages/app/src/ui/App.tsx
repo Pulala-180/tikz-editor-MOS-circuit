@@ -336,6 +336,20 @@ export function App() {
     [documents]
   );
 
+  useEffect(() => {
+    const currentDoc = documents[activeDocumentId];
+    if (!currentDoc) return;
+    let targetPath = "";
+    if (currentDoc.fileRef && "path" in currentDoc.fileRef && currentDoc.fileRef.path) {
+      targetPath = currentDoc.fileRef.path;
+    } else if (currentDoc.sketchRelPath) {
+      targetPath = `Sketch/${currentDoc.sketchRelPath}`;
+    } else {
+      targetPath = "apps/web/agent-sync/active-drawing.tex";
+    }
+    import.meta.hot?.send("agent:active-file", { path: targetPath });
+  }, [activeDocumentId, documents]);
+
   function executeCloseIntent(intent: CloseIntent): void {
     if (intent.kind === "close-document") {
       dispatch({ type: "CLOSE_DOCUMENT", documentId: intent.documentId });

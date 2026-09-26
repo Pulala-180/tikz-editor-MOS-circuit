@@ -24,6 +24,8 @@ const COINCIDENCE_PENALTY = 1e3;
  * nothing is in the way the pin directions win.
  */
 const LEADS_PENALTY = 1e4;
+/** Penalty for each extra bend/corner, ensuring 1-corner L-routes beat multi-segment zigzags. */
+const BEND_PENALTY = 5000;
 const LENGTH_WEIGHT = 1;
 /** Gap left between a route and an obstacle edge, in SVG units. */
 const CLEARANCE = 10;
@@ -186,7 +188,8 @@ function orthogonalCandidates(
   e: Pt2,
   obstacles: readonly Rect2[],
   startAxis: LeadAxis | null,
-  endAxis: LeadAxis | null
+  endAxis: LeadAxis | null,
+  explicitOrientation?: OrthoOrientation
 ): RouteCandidate[] {
   const pushing = (target: Pt2[][], points: Pt2[]): void => {
     const deduped = dedupeConsecutive(points);
@@ -211,33 +214,54 @@ function orthogonalCandidates(
   }
 
   const respecting: Pt2[][] = [];
-  if (startAxis === "v" && endAxis === "h") {
+
+  // When the user explicitly chose an orientation (HV or VH via Space toggle):
+  if (explicitOrientation === "HV") {
+    pushing(respecting, [s, { x: e.x, y: s.y }, e]);
+  } else if (explicitOrientation === "VH") {
+    pushing(respecting, [s, { x: s.x, y: e.y }, e]);
+  } else if (startAxis === "v" && endAxis === "h") {
     // Leave vertically, arrive horizontally: the one corner must keep the start's x.
     pushing(respecting, [s, { x: s.x, y: e.y }, e]);
   } else if (startAxis === "h" && endAxis === "v") {
     // Leave horizontally, arrive vertically: the corner must keep the start's y.
     pushing(respecting, [s, { x: e.x, y: s.y }, e]);
   } else if (startAxis === "v" && endAxis === "v") {
-    // Both pins lead vertically. A Z would honour BOTH lead directions, but its two hard-coded
-    // corners go stale the moment either component moves — the wire gets dragged into a trapezoid.
-    // Prefer the fully-relative two-leg corner instead: it is written as TikZ's `|-` / `-|`, so the
-    // bend is recomputed from the endpoints and can never skew. Honouring the source lead wins the
-    // tie; leaving perpendicular at the far pin is a much smaller cost than a wire that drifts.
+    // Both pins lead vertically.
+    // 1) Fully relative 1-corner L-route (written as TikZ |-):
     pushing(respecting, [s, { x: s.x, y: e.y }, e]);
+    // 2) Symmetrical 2-corner Z-route (V-H-V: leave vertical, horizontal mid-trunk, arrive vertical):
+    const midY = s.y + (e.y - s.y) / 2;
+    pushing(respecting, [s, { x: s.x, y: midY }, { x: e.x, y: midY }, e]);
   } else if (startAxis === "h" && endAxis === "h") {
+    // Both pins lead horizontally.
+    // 1) Fully relative 1-corner L-route (written as TikZ -|):
     pushing(respecting, [s, { x: e.x, y: s.y }, e]);
+    // 2) Symmetrical 2-corner Z-route (H-V-H: leave horizontal, vertical mid-trunk, arrive horizontal):
+    const midX = s.x + (e.x - s.x) / 2;
+    pushing(respecting, [s, { x: midX, y: s.y }, { x: midX, y: e.y }, e]);
   }
 
   const fallbacks: Pt2[][] = [];
-  if (respecting.length === 0) {
-    pushing(fallbacks, [s, { x: e.x, y: s.y }, e]);
-    pushing(fallbacks, [s, { x: s.x, y: e.y }, e]);
-  }
-  for (const x of xs) {
-    pushing(fallbacks, [s, { x, y: s.y }, { x, y: e.y }, e]);
-  }
-  for (const y of ys) {
-    pushing(fallbacks, [s, { x: s.x, y }, { x: e.x, y }, e]);
+  // Fallback 1-corner L-routes: always available, highly ranked by bend penalty
+  pushing(fallbacks, [s, { x: e.x, y: s.y }, e]);
+  pushing(fallbacks, [s, { x: s.x, y: e.y }, e]);
+
+  // Order corridors according to start lead direction to prevent perpendicular pin-exit bends
+  if (startAxis === "v") {
+    for (const y of ys) {
+      pushing(fallbacks, [s, { x: s.x, y }, { x: e.x, y }, e]);
+    }
+    for (const x of xs) {
+      pushing(fallbacks, [s, { x, y: s.y }, { x, y: e.y }, e]);
+    }
+  } else {
+    for (const x of xs) {
+      pushing(fallbacks, [s, { x, y: s.y }, { x, y: e.y }, e]);
+    }
+    for (const y of ys) {
+      pushing(fallbacks, [s, { x: s.x, y }, { x: e.x, y }, e]);
+    }
   }
 
   const isSame = (a: Pt2[], b: Pt2[]): boolean =>
@@ -344,7 +368,8 @@ export function planWireRoute(input: WireRoutePlanInput): WorldPoint[] {
       e,
       obstacles,
       input.startLeadAxis ?? null,
-      input.endLeadAxis ?? null
+      input.endLeadAxis ?? null,
+      input.orientation
     );
   }
   if (svgCandidates.length === 0) {
@@ -369,10 +394,12 @@ export function planWireRoute(input: WireRoutePlanInput): WorldPoint[] {
         coincidence += collinearOverlapLength(a, b, segment.a, segment.b);
       }
     }
-    // Ranking: crossing a component ≫ turning at a pin ≫ lying on a wire ≫ length.
+    const bends = Math.max(0, points.length - 2);
+    // Ranking: crossing a component ≫ turning at a pin ≫ extra bends ≫ lying on a wire ≫ length.
     const score =
       obstacleHits * OBSTACLE_PENALTY +
       (candidate.respectsLeads ? 0 : LEADS_PENALTY) +
+      bends * BEND_PENALTY +
       coincidence * COINCIDENCE_PENALTY +
       length * LENGTH_WEIGHT;
     if (score < bestScore) {

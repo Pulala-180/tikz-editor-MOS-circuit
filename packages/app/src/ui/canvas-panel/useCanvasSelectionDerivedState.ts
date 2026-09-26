@@ -3,6 +3,11 @@ import { svgBounds, svgPoint, worldBounds, worldPoint, worldVector, pt } from "t
 import type { NodeItem, PathItem, PathStatement, Statement } from "tikz-editor/ast/types";
 import type { ResizeRole } from "tikz-editor/edit/actions";
 import { FIT_DIRECT_MANIPULATION_BLOCK_REASON, sourceUsesFitNodeFromParseResult } from "tikz-editor/edit/fit";
+import {
+  collectInterComponentStraightWireSourceIds,
+  findAllHalfConnectedStraightWires,
+  INTER_COMPONENT_STRAIGHT_WIRE_BLOCK_REASON
+} from "tikz-editor/index";
 import { resolvePropertyTargetFromParseResult } from "tikz-editor/edit/property-target";
 import { resolveTransformInspectorMutationContextFromOptionEntries } from "tikz-editor/edit/property-write-builders";
 import { collectSourceWorldBounds } from "tikz-editor/edit/snapping";
@@ -133,10 +138,62 @@ export function useCanvasSelectionDerivedState(args: UseCanvasSelectionDerivedSt
     return ids;
   }, [snapshot.scene]);
 
-  const dragCapability = useMemo(
-    () => computeDragCapability(snapshot.editHandles),
-    [snapshot.editHandles]
-  );
+  const interComponentStraightWireSourceIds = useMemo(() => {
+    if (!snapshot.parseResult) {
+      return new Set<string>();
+    }
+    return collectInterComponentStraightWireSourceIds(
+      snapshot.parseResult.figure.body,
+      snapshot.editHandles,
+      snapshot.source
+    );
+  }, [snapshot.parseResult, snapshot.editHandles, snapshot.source]);
+
+  const halfConnectedStraightWires = useMemo(() => {
+    if (!snapshot.parseResult) {
+      return [];
+    }
+    return findAllHalfConnectedStraightWires(
+      snapshot.parseResult.figure.body,
+      snapshot.editHandles,
+      snapshot.source
+    );
+  }, [snapshot.parseResult, snapshot.editHandles, snapshot.source]);
+
+  const halfConnectedLockedHandleIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const wire of halfConnectedStraightWires) {
+      if (wire.connectedHandleId) {
+        ids.add(wire.connectedHandleId);
+      }
+    }
+    return ids;
+  }, [halfConnectedStraightWires]);
+
+  const dragCapability = useMemo(() => {
+    const base = computeDragCapability(snapshot.editHandles);
+    if (interComponentStraightWireSourceIds.size === 0 && halfConnectedLockedHandleIds.size === 0) {
+      return base;
+    }
+    const draggableHandleIds = new Set(base.draggableHandleIds);
+    for (const handle of snapshot.editHandles) {
+      if (interComponentStraightWireSourceIds.has(handle.sourceRef.sourceId)) {
+        draggableHandleIds.delete(handle.id);
+      }
+      if (halfConnectedLockedHandleIds.has(handle.id)) {
+        draggableHandleIds.delete(handle.id);
+      }
+    }
+    const draggableSourceIds = new Set(base.draggableSourceIds);
+    for (const sourceId of interComponentStraightWireSourceIds) {
+      draggableSourceIds.delete(sourceId);
+    }
+    for (const wire of halfConnectedStraightWires) {
+      draggableSourceIds.delete(wire.wireSourceId);
+    }
+    return { draggableHandleIds, draggableSourceIds };
+  }, [snapshot.editHandles, interComponentStraightWireSourceIds, halfConnectedLockedHandleIds, halfConnectedStraightWires]);
+
   const fitNodeSourceIds = useMemo(() => {
     const ids = new Set<string>();
     if (!snapshot.parseResult) {
@@ -165,8 +222,14 @@ export function useCanvasSelectionDerivedState(args: UseCanvasSelectionDerivedSt
     for (const sourceId of fitNodeSourceIds) {
       reasons.set(sourceId, FIT_DIRECT_MANIPULATION_BLOCK_REASON);
     }
+    for (const sourceId of interComponentStraightWireSourceIds) {
+      reasons.set(sourceId, INTER_COMPONENT_STRAIGHT_WIRE_BLOCK_REASON);
+    }
+    for (const wire of halfConnectedStraightWires) {
+      reasons.set(wire.wireSourceId, "导线一端已连接元件，不可整体平移，仅未连接的自由端可沿方向伸缩。");
+    }
     return reasons;
-  }, [fitNodeSourceIds]);
+  }, [fitNodeSourceIds, interComponentStraightWireSourceIds, halfConnectedStraightWires]);
   const adornmentTargetIds = useMemo(() => {
     const ids = new Set<string>();
     for (const element of snapshot.scene?.elements ?? []) {
@@ -293,8 +356,11 @@ export function useCanvasSelectionDerivedState(args: UseCanvasSelectionDerivedSt
     for (const nodeId of pathAttachedNodeSourceIds) {
       ids.add(nodeId);
     }
+    for (const wireId of interComponentStraightWireSourceIds) {
+      ids.delete(wireId);
+    }
     return ids;
-  }, [adornmentTargetIds, dragCapability.draggableSourceIds, fitNodeSourceIds, matrixCellSourceIds, matrixSourceIds, movableScopeSourceIds, pathAttachedNodeSourceIds, treeChildSourceIds, treeRootSourceIds]);
+  }, [adornmentTargetIds, dragCapability.draggableSourceIds, fitNodeSourceIds, interComponentStraightWireSourceIds, matrixCellSourceIds, matrixSourceIds, movableScopeSourceIds, pathAttachedNodeSourceIds, treeChildSourceIds, treeRootSourceIds]);
 
   const selectionBounds = useMemo<SelectionBounds[]>(() => {
     const selected: SelectionBounds[] = [];
@@ -884,7 +950,8 @@ export function useCanvasSelectionDerivedState(args: UseCanvasSelectionDerivedSt
     hitRegions,
     visibleRanges,
     viewportWorldBounds,
-    scopeOverlay
+    scopeOverlay,
+    halfConnectedStraightWires
   };
 }
 

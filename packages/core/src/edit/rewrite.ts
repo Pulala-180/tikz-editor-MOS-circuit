@@ -10,8 +10,28 @@ import { worldPoint, worldVector } from "../coords/points.js";
 import type { WorldPoint } from "../coords/points.js";
 import { ptToCm } from "../coords/source.js";
 import { worldToLocal, worldDeltaToLocalDelta, localToSourceUnits } from "./coords.js";
-import { CM_PER_PT, formatNumber, type NumberFormatOptions } from "./format.js";
+import { CM_PER_PT, formatNumber, type NumberFormatOptions, type DragFormatPrecision } from "./format.js";
 import { formatCoordinate, formatPolarCoordinate } from "./style.js";
+
+function resolveCoordinateFractionDigits(
+  oldRaw: string,
+  formatPrecision?: DragFormatPrecision
+): number {
+  if (formatPrecision === "fine") {
+    return 3;
+  }
+  const decimalMatches = oldRaw.match(/\.\d+/g);
+  if (decimalMatches) {
+    let maxDigits = 2;
+    for (const d of decimalMatches) {
+      maxDigits = Math.max(maxDigits, d.length - 1);
+    }
+    if (maxDigits >= 3) {
+      return Math.min(maxDigits, 4);
+    }
+  }
+  return 2;
+}
 
 /**
  * Compute a replacement source string for moving a handle to a new world position.
@@ -20,23 +40,24 @@ import { formatCoordinate, formatPolarCoordinate } from "./style.js";
 export function rewriteCoordinate(
   newWorld: WorldPoint,
   handle: EditHandle,
-  source: string
+  source: string,
+  options?: { formatPrecision?: DragFormatPrecision }
 ): string | null {
   if (handle.rewriteMode === "positioning") {
     return rewritePositioning(newWorld, handle);
   }
 
   if (handle.rewriteMode === "unsupported") {
-    return rewriteUnsupportedCoordinate(newWorld, handle, source);
+    return rewriteUnsupportedCoordinate(newWorld, handle, source, options?.formatPrecision);
   }
 
   if (handle.rewriteMode === "delta") {
-    return rewriteDelta(newWorld, handle, source);
+    return rewriteDelta(newWorld, handle, source, options?.formatPrecision);
   }
 
   switch (handle.coordinateForm) {
     case "cartesian":
-      return rewriteCartesian(newWorld, handle, source);
+      return rewriteCartesian(newWorld, handle, source, options?.formatPrecision);
     case "polar":
       return rewritePolar(newWorld, handle, source);
     case "xyz":
@@ -59,7 +80,8 @@ function wp(x: number, y: number): WorldPoint {
 function rewriteUnsupportedCoordinate(
   newWorld: WorldPoint,
   handle: EditHandle,
-  source: string
+  source: string,
+  formatPrecision?: DragFormatPrecision
 ): string | null {
   if (!supportsUnsupportedCoordinateDetach(handle)) {
     return null;
@@ -69,7 +91,7 @@ function rewriteUnsupportedCoordinate(
     return rewriteCartesian(newWorld, {
       ...handle,
       coordinateForm: "cartesian"
-    }, source);
+    }, source, formatPrecision);
   }
 
   if (!isCoordinateEditHandle(handle)) {
@@ -81,13 +103,19 @@ function rewriteUnsupportedCoordinate(
     y: ptToCm(newWorld.y)
   };
   const oldRaw = source.slice(handle.sourceRef.sourceSpan.from, handle.sourceRef.sourceSpan.to);
-  return formatCoordinate(oldRaw, formatNumber(cmPoint.x), formatNumber(cmPoint.y));
+  const fractionDigits = resolveCoordinateFractionDigits(oldRaw, formatPrecision);
+  return formatCoordinate(
+    oldRaw,
+    formatNumber(cmPoint.x, { fractionDigits }),
+    formatNumber(cmPoint.y, { fractionDigits })
+  );
 }
 
 function rewriteCartesian(
   newWorld: WorldPoint,
   handle: EditHandle,
-  source: string
+  source: string,
+  formatPrecision?: DragFormatPrecision
 ): string | null {
   if (!isFrameLocalCoordinateEditHandle(handle)) {
     return null;
@@ -98,7 +126,12 @@ function rewriteCartesian(
   }
   const cm = localToSourceUnits(local);
   const oldRaw = source.slice(handle.sourceRef.sourceSpan.from, handle.sourceRef.sourceSpan.to);
-  const coordinate = formatCoordinate(oldRaw, formatNumber(cm.x), formatNumber(cm.y));
+  const fractionDigits = resolveCoordinateFractionDigits(oldRaw, formatPrecision);
+  const coordinate = formatCoordinate(
+    oldRaw,
+    formatNumber(cm.x, { fractionDigits }),
+    formatNumber(cm.y, { fractionDigits })
+  );
   return applyInsertionSyntax(source, handle, coordinate);
 }
 
@@ -124,7 +157,8 @@ function rewritePolar(
 function rewriteDelta(
   newWorld: WorldPoint,
   handle: EditHandle,
-  source: string
+  source: string,
+  formatPrecision?: DragFormatPrecision
 ): string | null {
   if (!isRelativeCoordinateEditHandle(handle)) {
     return null;
@@ -140,15 +174,24 @@ function rewriteDelta(
   }
   const cm = localToSourceUnits(localDelta);
   const oldRaw = source.slice(handle.sourceRef.sourceSpan.from, handle.sourceRef.sourceSpan.to);
+  const fractionDigits = resolveCoordinateFractionDigits(oldRaw, formatPrecision);
   if (handle.coordinateForm === "polar") {
     const { angleDeg, radius } = toPolar(cm);
-    const coordinate = formatPolarCoordinate(oldRaw, formatNumber(angleDeg), formatNumber(radius));
+    const coordinate = formatPolarCoordinate(
+      oldRaw,
+      formatNumber(angleDeg, { fractionDigits }),
+      formatNumber(radius, { fractionDigits })
+    );
     return applyInsertionSyntax(source, handle, coordinate);
   }
   if (handle.coordinateForm === "xyz") {
     return null;
   }
-  const coordinate = formatCoordinate(oldRaw, formatNumber(cm.x), formatNumber(cm.y));
+  const coordinate = formatCoordinate(
+    oldRaw,
+    formatNumber(cm.x, { fractionDigits }),
+    formatNumber(cm.y, { fractionDigits })
+  );
   return applyInsertionSyntax(source, handle, coordinate);
 }
 

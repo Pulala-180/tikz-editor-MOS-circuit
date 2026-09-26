@@ -20,7 +20,7 @@ describe("handle drag actions", () => {
     expect(isResizeHandleAdditiveSelectionModifier(ctrlOnly)).toBe(true);
   });
 
-  it("uses connectHandle during drag when an endpoint anchor is active", () => {
+  it("uses moveHandle during drag to allow smooth stretching and preview snapping", () => {
     const action = resolveHandleDragAction({
       handleId: "handle-1",
       newWorld: wp(10, 20),
@@ -33,10 +33,9 @@ describe("handle drag actions", () => {
     });
 
     expect(action).toEqual({
-      kind: "connectHandle",
+      kind: "moveHandle",
       handleId: "handle-1",
-      nodeName: "A",
-      anchor: "east"
+      newWorld: wp(10, 20)
     });
   });
 
@@ -54,11 +53,11 @@ describe("handle drag actions", () => {
     });
   });
 
-  it("only retries the anchor commit on pointer up when the snapshot is current", () => {
+  it("commits the anchor connection on pointer up when an endpoint anchor is active", () => {
     expect(
       shouldCommitHandleAnchorOnPointerUp({
-        snapshotSource: "\\draw (0,0) -- (A.east);",
-        source: "\\draw (0,0) -- (A.east);",
+        snapshotSource: "\\draw (0,0) -- (1,1);",
+        source: "\\draw (0,0) -- (1,2);",
         activeEndpointAnchor: {
           nodeName: "A",
           anchor: "east",
@@ -71,13 +70,8 @@ describe("handle drag actions", () => {
     expect(
       shouldCommitHandleAnchorOnPointerUp({
         snapshotSource: "\\draw (0,0) -- (1,1);",
-        source: "\\draw (0,0) -- (A.east);",
-        activeEndpointAnchor: {
-          nodeName: "A",
-          anchor: "east",
-          world: wp(1, 2),
-          tier: "basic"
-        }
+        source: "\\draw (0,0) -- (1,2);",
+        activeEndpointAnchor: null
       })
     ).toBe(false);
   });

@@ -1,6 +1,7 @@
 @echo off
 setlocal
-set PYTHON=D:\python-libs\Scripts\python.exe
+set "PYTHON=python"
+where python >nul 2>nul || if exist "D:\python-libs\Scripts\python.exe" set "PYTHON=D:\python-libs\Scripts\python.exe"
 set DIR=%~dp0
 
 "%PYTHON%" "%DIR%generator_v2.py" --spec "%DIR%netlists\slew_rate_enhancer_v2.json"

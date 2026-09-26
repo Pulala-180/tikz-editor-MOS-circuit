@@ -16,10 +16,15 @@ import { cm, expectPatchesReconstructSource } from "./edit-actions-helpers.js";
 function moveElement(source: string, elementIds: string[], dxCm: number, dyCm = 0) {
   const wrapped = `\\begin{tikzpicture}\n${source}\\end{tikzpicture}\n`;
   const parsed = parseTikz(wrapped, { recover: true });
+  const scopes = parsed.figure.body.filter((s: any) => s.kind === "Scope");
+  const resolvedIds = elementIds.map((id) => {
+    if (id === "scope:1" && scopes[1]) return scopes[1].id;
+    return id;
+  });
   const semantic = evaluateTikzFigure(parsed.figure, wrapped);
   const result = applyEditAction(wrapped, semantic.editHandles, {
     kind: "moveElements",
-    elementIds,
+    elementIds: resolvedIds,
     delta: wp(cm(dxCm), cm(dyCm))
   });
   return { result, wrapped, semantic };
@@ -191,6 +196,10 @@ describe("两个电阻连接模型 (Two-Resistor Glue Model)", () => {
       // R2 移动到 shift={(3.3,3.6)}
       expect(moveR2Result.newSource).toContain("\\begin{scope}[shift={(3.3,3.6)}]");
       // 中间的直线被弹性拉长！左端点保持在 R1 的 1.38，右端点自动跟随拉伸到 3.3！
+      expect(moveR2Result.newSource).toContain("(1.38, 3.6) -- (3.3, 3.6)");
+      expectPatchesReconstructSource(w2, moveR2Result);
+    }
+
     // 3. 剧烈向内移动 R1 过猛（从 0.6 猛右移 1.1cm 到 1.7，几乎撞上 R2 的 2.5）
     // 导线端点自动被最小长度限制保护（截停在 2.5 - 0.1 = 2.4），绝不崩塌、绝无重叠乱码！
     const { result: violentMoveResult, wrapped: w3 } = moveElement(twoResistorsWithNumericWire, ["scope:0"], 1.1, 0);

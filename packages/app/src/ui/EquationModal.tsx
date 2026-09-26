@@ -125,8 +125,9 @@ export function EquationModal({ mode, initialLatex = "", onClose, onConfirm, onV
       if (mathFieldRef.current === field) {
         mathFieldRef.current = null;
       }
+      host.innerHTML = "";
     };
-  }, [phase, value]);
+  }, [phase]);
 
   useEffect(() => {
     if (phase !== "ready") {

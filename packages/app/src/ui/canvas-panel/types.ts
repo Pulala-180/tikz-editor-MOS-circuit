@@ -136,6 +136,7 @@ export type DragState =
         wireSourceId: string;
         isTapBranch?: boolean;
         isStretchOnly?: boolean;
+        followAxis?: "x" | "y";
       }>;
       transientAttachedWires?: Array<{
         element: SVGPathElement;

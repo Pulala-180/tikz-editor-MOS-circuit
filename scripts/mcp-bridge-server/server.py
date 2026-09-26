@@ -286,6 +286,8 @@ async def handle_client(websocket):
 
     except websockets.exceptions.ConnectionClosed:
         log_event(f"[Server] 客户端断开连接: {client_addr}")
+    except Exception as e:
+        log_event(f"[Server] 客户端处理异常: {e}")
     finally:
         if websocket in active_procs:
             try:
@@ -298,9 +300,19 @@ async def handle_client(websocket):
             active_tasks.pop(websocket, None)
 
 async def main():
-    server = await websockets.serve(handle_client, "localhost", 3100)
-    print("Antigravity MCP Bridge Server running on ws://localhost:3100")
-    await server.wait_closed()
+    while True:
+        try:
+            async with websockets.serve(handle_client, "0.0.0.0", 3100):
+                print("Antigravity MCP Bridge Server running on ws://localhost:3100")
+                await asyncio.Future()
+        except asyncio.CancelledError:
+            break
+        except Exception as e:
+            log_event(f"[Server] 监听服务异常，1秒后自动恢复: {e}")
+            await asyncio.sleep(1)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        pass

@@ -16,6 +16,7 @@ import type {
   SelectionBoxDisplay
 } from "./types";
 import { fmt, worldToSvgPoint } from "./geometry";
+import { pt, worldPoint } from "tikz-editor/coords/index";
 import type { CircuitPreviewData } from "./circuit-preview-builder";
 import type { ClusterPastePreviewData } from "./paste-cluster-builder";
 import css from "./CanvasPanel.module.css";
@@ -58,7 +59,7 @@ function collectConnectTargets(lines: readonly SnapLine[]): Array<{ x: number; y
     byKey.set(key, { x: point.x, y: point.y, confirmations: 1 });
   };
   for (const line of lines) {
-    if (!line.is2DSnapped) {
+    if (!("is2DSnapped" in line) || !line.is2DSnapped) {
       continue;
     }
     if (line.type === "points") {
@@ -141,7 +142,7 @@ export function SnapOverlay({
   }
 
   const connectTargets = collectConnectTargets(snapLines);
-  const connectTargetPoints = connectTargets.map((target) => worldToSvgPoint(target, viewBox));
+  const connectTargetPoints = connectTargets.map((target) => worldToSvgPoint(worldPoint(pt(target.x), pt(target.y)), viewBox));
   const connectTargetKeys = new Set(connectTargetPoints.map((point) => snapPointKey(point)));
   const connectRingRadius = snapCrossSize * CONNECT_MARKER_RADIUS_FACTOR;
   const connectArm = snapCrossSize * CONNECT_MARKER_ARM_FACTOR;
@@ -420,11 +421,48 @@ export function ToolPreviewOverlay({
                 fontWeight: "bold"
               }}
             >
-              <tspan fontStyle={t.italic === false ? "normal" : "italic"}>{t.main}</tspan>
-              {t.sub && (
-                <tspan fontSize="0.75em" dy="0.25em" fontStyle={t.sub === "1" ? "normal" : "italic"}>
-                  {t.sub}
-                </tspan>
+              {t.tokens && t.tokens.length > 0 ? (
+                t.tokens.map((tok, ti) => {
+                  const prevHadSub = ti > 0 && !!t.tokens![ti - 1].sub;
+                  return (
+                    <Fragment key={ti}>
+                      <tspan
+                        fontStyle={tok.italic === false ? "normal" : "italic"}
+                        dy={prevHadSub ? "-0.25em" : undefined}
+                      >
+                        {tok.text}
+                      </tspan>
+                      {tok.sub && (
+                        <tspan
+                          fontSize="0.75em"
+                          dy="0.25em"
+                          fontStyle={
+                            /^[0-9]+$/.test(tok.sub) ||
+                            tok.sub === "m" ||
+                            tok.sub === "gs" ||
+                            tok.sub === "in" ||
+                            tok.sub === "out" ||
+                            tok.sub === "DD" ||
+                            tok.sub === "D"
+                              ? "normal"
+                              : "italic"
+                          }
+                        >
+                          {tok.sub}
+                        </tspan>
+                      )}
+                    </Fragment>
+                  );
+                })
+              ) : (
+                <>
+                  <tspan fontStyle={t.italic === false ? "normal" : "italic"}>{t.main}</tspan>
+                  {t.sub && (
+                    <tspan fontSize="0.75em" dy="0.25em" fontStyle={t.sub === "1" ? "normal" : "italic"}>
+                      {t.sub}
+                    </tspan>
+                  )}
+                </>
               )}
             </text>
           ))}
@@ -460,11 +498,48 @@ export function ToolPreviewOverlay({
                   fontWeight: "bold"
                 }}
               >
-                <tspan fontStyle={t.italic === false ? "normal" : "italic"}>{t.main || ""}</tspan>
-                {t.sub && (
-                  <tspan fontSize="0.75em" dy="0.25em" fontStyle={t.sub === "1" ? "normal" : "italic"}>
-                    {t.sub}
-                  </tspan>
+                {t.tokens && t.tokens.length > 0 ? (
+                  t.tokens.map((tok, ti) => {
+                    const prevHadSub = ti > 0 && !!t.tokens![ti - 1].sub;
+                    return (
+                      <Fragment key={ti}>
+                        <tspan
+                          fontStyle={tok.italic === false ? "normal" : "italic"}
+                          dy={prevHadSub ? "-0.25em" : undefined}
+                        >
+                          {tok.text}
+                        </tspan>
+                        {tok.sub && (
+                          <tspan
+                            fontSize="0.75em"
+                            dy="0.25em"
+                            fontStyle={
+                              /^[0-9]+$/.test(tok.sub) ||
+                              tok.sub === "m" ||
+                              tok.sub === "gs" ||
+                              tok.sub === "in" ||
+                              tok.sub === "out" ||
+                              tok.sub === "DD" ||
+                              tok.sub === "D"
+                                ? "normal"
+                                : "italic"
+                            }
+                          >
+                            {tok.sub}
+                          </tspan>
+                        )}
+                      </Fragment>
+                    );
+                  })
+                ) : (
+                  <>
+                    <tspan fontStyle={t.italic === false ? "normal" : "italic"}>{t.main || ""}</tspan>
+                    {t.sub && (
+                      <tspan fontSize="0.75em" dy="0.25em" fontStyle={t.sub === "1" ? "normal" : "italic"}>
+                        {t.sub}
+                      </tspan>
+                    )}
+                  </>
                 )}
               </text>
             ))}
@@ -1222,10 +1297,13 @@ export function SelectionDragLayer({
     return null;
   }
 
+  const hasAnyDraggable = selectionBoxes.some((b) => draggableSourceIds.has(b.sourceId));
+
   return (
     <g className={css.selectionDragLayer}>
       {selectionBoxes.map((bounds) => {
-        if (!draggableSourceIds.has(bounds.sourceId)) {
+        const canDrag = draggableSourceIds.has(bounds.sourceId) || (hasAnyDraggable && selectionBoxes.length > 1);
+        if (!canDrag) {
           return null;
         }
         if (bounds.kind === "polygon") {
@@ -1382,6 +1460,7 @@ export function HandleOverlay({
               onContextMenu={onContextMenu}
               data-handle-kind={display.kind}
               data-source-id={display.handle.sourceRef.sourceId}
+              data-handle-id={display.handle.id}
             />
           );
         }
@@ -1405,6 +1484,7 @@ export function HandleOverlay({
             onContextMenu={onContextMenu}
             data-handle-kind={display.kind}
             data-source-id={display.kind === "move-handle" ? display.handle.sourceRef.sourceId : display.elementId}
+            data-handle-id={display.kind === "move-handle" ? display.handle.id : undefined}
             data-resize-role={display.kind === "resize-element" ? display.role : undefined}
           />
         );

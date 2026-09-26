@@ -1,3 +1,4 @@
+/// <reference path="../types/pptx2tikz.d.ts" />
 import type { DocumentFileRef } from "../store/types.js";
 
 type OpenedTextFile = {

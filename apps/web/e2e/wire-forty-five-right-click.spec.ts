@@ -162,9 +162,9 @@ test("a right-click while the wire tool is armed does not open the canvas contex
 
   // The wire tool still opens no menu on empty canvas either -- the gesture owns the button.
   await activateTool(page, "addOrthoWire");
-  const layer = page.locator("[data-canvas-viewport='true'] svg").last();
-  const box = await layer.boundingBox();
-  if (!box) throw new Error("canvas layer bounds missing");
+  const viewport = page.locator("[data-canvas-viewport='true']").first();
+  const box = await viewport.boundingBox();
+  if (!box) throw new Error("canvas viewport bounds missing");
   await page.mouse.click(box.x + box.width * 0.5, box.y + box.height * 0.85, { button: "right" });
   await page.waitForTimeout(200);
   await expect(menu).toHaveCount(0);

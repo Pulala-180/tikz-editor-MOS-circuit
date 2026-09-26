@@ -9,6 +9,7 @@ import { parseStatementSnapshot, statementSnippet } from "tikz-editor/edit/state
 import { renderPathWithArrows } from "tikz-editor/svg/arrows/render";
 import type { SceneFigure, ScenePathCommand } from "tikz-editor/semantic/types";
 import type { CircuitPreviewPath, CircuitPreviewText } from "./circuit-preview-builder";
+import { parseNodeText } from "./circuit-preview-builder";
 import { resolveComponentPort } from "./circuit-node-registry";
 
 export type CandidateAnchor = {
@@ -42,24 +43,6 @@ export type ClusterPastePreviewData = {
     isActive: boolean;
   }>;
 };
-
-function parseNodeText(raw: string | undefined | null): { main: string; sub?: string; italic?: boolean } {
-  if (!raw || typeof raw !== "string") {
-    return { main: "", italic: false };
-  }
-  const textSubMatch = raw.match(/\\textit\{([^}]+)\}\textsubscript\{(?:\s*\\textup\{)?([^}]+)\}?/);
-  if (textSubMatch) {
-    return { main: textSubMatch[1], sub: textSubMatch[2], italic: true };
-  }
-
-  const clean = raw.replace(/\\normalsize/g, "").replace(/[$]/g, "").trim();
-  const subMatch = clean.match(/^([A-Za-z]+)_\{?([A-Za-z0-9]+)\}?$/);
-  if (subMatch) {
-    return { main: subMatch[1], sub: subMatch[2], italic: true };
-  }
-
-  return { main: clean, italic: clean.length <= 2 };
-}
 
 function encodeCommandsWithOffset(
   commands: readonly ScenePathCommand[],
@@ -589,10 +572,11 @@ export function buildClusterPastePreview(
           main: parsed.main,
           sub: parsed.sub,
           italic: parsed.italic,
+          tokens: parsed.tokens,
           x: svgPt.x,
           y: svgPt.y,
           fontSize: el.style.fontSize ?? 11,
-          anchor: el.anchor ?? "center"
+          anchor: "middle"
         });
       }
     }

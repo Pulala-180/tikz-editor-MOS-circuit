@@ -1,28 +1,20 @@
 import type { EditAction } from "tikz-editor/edit/actions";
+import type { DragFormatPrecision } from "tikz-editor/edit/format";
 import type { NodeAnchorTarget } from "tikz-editor/semantic/types";
 import type { WorldPoint } from "../coords/types";
 
 export function resolveHandleDragAction(input: {
   handleId: string;
   newWorld: WorldPoint;
-  activeEndpointAnchor: NodeAnchorTarget | null;
+  activeEndpointAnchor?: NodeAnchorTarget | null;
   baselineSource?: string;
+  formatPrecision?: DragFormatPrecision;
 }): EditAction {
-  if (input.activeEndpointAnchor) {
-    return {
-      kind: "connectHandle",
-      handleId: input.handleId,
-      nodeName: input.activeEndpointAnchor.nodeName,
-      ...(input.activeEndpointAnchor.nodeSourceId ? { nodeSourceId: input.activeEndpointAnchor.nodeSourceId } : {}),
-      anchor: input.activeEndpointAnchor.anchor,
-      ...(input.baselineSource ? { baselineSource: input.baselineSource } : {})
-    };
-  }
-
   return {
     kind: "moveHandle",
     handleId: input.handleId,
-    newWorld: input.newWorld
+    newWorld: input.newWorld,
+    formatPrecision: input.formatPrecision
   };
 }
 
@@ -31,5 +23,5 @@ export function shouldCommitHandleAnchorOnPointerUp(input: {
   source: string;
   activeEndpointAnchor: NodeAnchorTarget | null;
 }): boolean {
-  return input.snapshotSource === input.source && input.activeEndpointAnchor != null;
+  return input.activeEndpointAnchor != null;
 }

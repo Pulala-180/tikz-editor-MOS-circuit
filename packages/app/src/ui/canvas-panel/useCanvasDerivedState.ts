@@ -21,6 +21,7 @@ import type { CanvasSnapshot, DragState, FreehandToolDraft, OrthoWireToolDraft, 
 import type { ToolPreview } from "./overlays";
 import { buildCircuitPreview } from "./circuit-preview-builder";
 import { buildClusterPastePreview, type PastePlacementDraft } from "./paste-cluster-builder";
+import type { NodeTextEngine } from "tikz-editor/text/types";
 
 const TOOL_PREVIEW_CIRCLE_RADIUS_PT = 0.8 * PT_PER_CM;
 const TOOL_PREVIEW_GRID_STEP_PT = PT_PER_CM;
@@ -46,6 +47,8 @@ export type UseCanvasDerivedStateArgs = {
   orthoWireDraft: OrthoWireToolDraft | null;
   canvasTransform: CanvasTransform;
   pastePlacementDraft?: PastePlacementDraft | null;
+  source?: string;
+  textEngine?: NodeTextEngine | null;
 };
 
 export function useCanvasDerivedState(args: UseCanvasDerivedStateArgs) {
@@ -61,8 +64,12 @@ export function useCanvasDerivedState(args: UseCanvasDerivedStateArgs) {
     pathSegmentDraft,
     pendingBezier,
     bezierBendDraft,
+    roundedLineDraft,
+    orthoWireDraft,
     canvasTransform,
-    pastePlacementDraft
+    pastePlacementDraft,
+    source,
+    textEngine
   } = args;
 
   const toolPreview = useMemo((): ToolPreview | null => {
@@ -324,7 +331,7 @@ export function useCanvasDerivedState(args: UseCanvasDerivedStateArgs) {
     }
 
     if (!toolDraft) {
-      const circuitPreview = buildCircuitPreview(toolMode, liveWorld, svgResult.viewBox);
+      const circuitPreview = buildCircuitPreview(toolMode, liveWorld, svgResult.viewBox, source, textEngine);
       if (circuitPreview) {
         return {
           kind: "circuit",
@@ -475,7 +482,7 @@ export function useCanvasDerivedState(args: UseCanvasDerivedStateArgs) {
       cy: start.y,
       r: radius > 1e-4 ? radius : TOOL_PREVIEW_CIRCLE_RADIUS_PT
     };
-  }, [bezierBendDraft, canvasTransform.scale, freehandDraft, freehandSmoothingPx, pastePlacementDraft, pathDraft, pathSegmentDraft, pendingBezier, selectedAddShape, svgResult, toolCursorWorld, toolDraft, toolMode]);
+  }, [bezierBendDraft, canvasTransform.scale, freehandDraft, freehandSmoothingPx, pastePlacementDraft, pathDraft, pathSegmentDraft, pendingBezier, selectedAddShape, source, svgResult, textEngine, toolCursorWorld, toolDraft, toolMode]);
 
   return {
     toolPreview

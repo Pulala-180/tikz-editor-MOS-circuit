@@ -8,6 +8,12 @@
   ],
   "scripts": {
     "dev": "npm run -w @tikz-editor/web dev",
-    "build": "npm run -w @tikz-editor/web build"
+    "build": "npm run -w @tikz-editor/web build",
+    "mcp": "npm run -w @tikz-editor/mcp start",
+    "build:mcp": "npm run -w @tikz-editor/mcp build"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^3.25.76"
   }
 }

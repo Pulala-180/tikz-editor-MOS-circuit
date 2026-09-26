@@ -280,6 +280,34 @@ export function clampDeltaForAttachedWires(
   let deltaX: number = delta.x as number;
   let deltaY: number = delta.y as number;
 
+  // Collect candidate stationary intermediate points (branch dots, junction nodes)
+  const stationaryDots: WorldPoint[] = [];
+  for (const stmt of parsed.figure.body) {
+    if (movedIdSet.has(stmt.id)) continue;
+    if (stmt.kind === "Scope") {
+      const scopeText = source.slice(stmt.span.from, stmt.span.to);
+      if (
+        scopeText.includes(".dot") ||
+        scopeText.includes("_dot") ||
+        (scopeText.includes("circle") && scopeText.includes("coordinate"))
+      ) {
+        const h = editHandles.find(
+          (handle) =>
+            handle.kind === "path-point" &&
+            handle.sourceRef.sourceSpan.from >= stmt.span.from &&
+            handle.sourceRef.sourceSpan.to <= stmt.span.to
+        );
+        if (h) stationaryDots.push(h.world);
+      }
+    } else if (stmt.kind === "Path" && stmt.command === "draw") {
+      const text = source.slice(stmt.span.from, stmt.span.to);
+      if (text.includes("circle") && !text.includes("--")) {
+        const h = editHandles.find((handle) => handle.kind === "path-point" && handle.sourceRef.sourceId === stmt.id);
+        if (h) stationaryDots.push(h.world);
+      }
+    }
+  }
+
   for (const statement of parsed.figure.body) {
     if (statement.kind !== "Path" || statement.command !== "draw") {
       continue;
@@ -297,6 +325,71 @@ export function clampDeltaForAttachedWires(
       continue;
     }
     const endpoints = [statementHandles[0], statementHandles[statementHandles.length - 1]];
+
+    // Check if any moving port is sitting strictly inside this un-moved straight wire segment (e.g. branch dot sliding on trunk)
+    if (endpoints.length === 2) {
+      const p1 = endpoints[0].world;
+      const p2 = endpoints[1].world;
+      const dx = Math.abs(p2.x - p1.x);
+      const dy = Math.abs(p2.y - p1.y);
+      const isV = dx <= 1.0 && dy > 1.0;
+      const isH = dy <= 1.0 && dx > 1.0;
+      if (isV) {
+        const lineX = (p1.x + p2.x) / 2;
+        const minY = Math.min(p1.y, p2.y);
+        const maxY = Math.max(p1.y, p2.y);
+        for (const bucket of portBuckets.values()) {
+          for (const port of bucket) {
+            const distToP1 = Math.hypot(port.x - p1.x, port.y - p1.y);
+            const distToP2 = Math.hypot(port.x - p2.x, port.y - p2.y);
+            if (distToP1 <= MATCH_EPSILON_PT || distToP2 <= MATCH_EPSILON_PT) {
+              continue;
+            }
+            if (
+              Math.abs(port.x - lineX) <= 2.0 &&
+              port.y >= minY + MIN_WIRE_LENGTH_PT &&
+              port.y <= maxY - MIN_WIRE_LENGTH_PT
+            ) {
+              const maxDeltaY = (maxY - port.y) - MIN_WIRE_LENGTH_PT;
+              if (deltaY > maxDeltaY) {
+                deltaY = maxDeltaY;
+              }
+              const minDeltaY = (minY - port.y) + MIN_WIRE_LENGTH_PT;
+              if (deltaY < minDeltaY) {
+                deltaY = minDeltaY;
+              }
+            }
+          }
+        }
+      } else if (isH) {
+        const lineY = (p1.y + p2.y) / 2;
+        const minX = Math.min(p1.x, p2.x);
+        const maxX = Math.max(p1.x, p2.x);
+        for (const bucket of portBuckets.values()) {
+          for (const port of bucket) {
+            const distToP1 = Math.hypot(port.x - p1.x, port.y - p1.y);
+            const distToP2 = Math.hypot(port.x - p2.x, port.y - p2.y);
+            if (distToP1 <= MATCH_EPSILON_PT || distToP2 <= MATCH_EPSILON_PT) {
+              continue;
+            }
+            if (
+              Math.abs(port.y - lineY) <= 2.0 &&
+              port.x >= minX + MIN_WIRE_LENGTH_PT &&
+              port.x <= maxX - MIN_WIRE_LENGTH_PT
+            ) {
+              const maxDeltaX = (maxX - port.x) - MIN_WIRE_LENGTH_PT;
+              if (deltaX > maxDeltaX) {
+                deltaX = maxDeltaX;
+              }
+              const minDeltaX = (minX - port.x) + MIN_WIRE_LENGTH_PT;
+              if (deltaX < minDeltaX) {
+                deltaX = minDeltaX;
+              }
+            }
+          }
+        }
+      }
+    }
 
     for (let index = 0; index < 2; index++) {
       const endpoint = endpoints[index];
@@ -324,25 +417,60 @@ export function clampDeltaForAttachedWires(
       const isVertical = Math.abs(vX) < 1.0;
 
       if (isHorizontal) {
+        const y0 = endpoint.world.y;
         if (vX > 0) {
-          const minDeltaX = MIN_WIRE_LENGTH_PT - vX;
+          // endpoint is to the right of otherEndpoint, moves left (deltaX < 0) towards otherEndpoint
+          // Check for intermediate obstacles between otherEndpoint.x and endpoint.x
+          let closestObstacleX = otherEndpoint.world.x;
+          for (const dot of stationaryDots) {
+            if (Math.abs(dot.y - y0) <= 2.0 && dot.x < endpoint.world.x - 1.0 && dot.x >= otherEndpoint.world.x) {
+              if (dot.x > closestObstacleX) closestObstacleX = dot.x;
+            }
+          }
+          const dist = endpoint.world.x - closestObstacleX;
+          const minDeltaX = MIN_WIRE_LENGTH_PT - dist;
           if (deltaX < minDeltaX) {
             deltaX = minDeltaX;
           }
         } else if (vX < 0) {
-          const maxDeltaX = -vX - MIN_WIRE_LENGTH_PT;
+          // endpoint is to the left of otherEndpoint, moves right (deltaX > 0) towards otherEndpoint
+          let closestObstacleX = otherEndpoint.world.x;
+          for (const dot of stationaryDots) {
+            if (Math.abs(dot.y - y0) <= 2.0 && dot.x > endpoint.world.x + 1.0 && dot.x <= otherEndpoint.world.x) {
+              if (dot.x < closestObstacleX) closestObstacleX = dot.x;
+            }
+          }
+          const dist = closestObstacleX - endpoint.world.x;
+          const maxDeltaX = dist - MIN_WIRE_LENGTH_PT;
           if (deltaX > maxDeltaX) {
             deltaX = maxDeltaX;
           }
         }
       } else if (isVertical) {
+        const x0 = endpoint.world.x;
         if (vY > 0) {
-          const minDeltaY = MIN_WIRE_LENGTH_PT - vY;
+          // endpoint is above otherEndpoint, moves down (deltaY < 0) towards otherEndpoint
+          let closestObstacleY = otherEndpoint.world.y;
+          for (const dot of stationaryDots) {
+            if (Math.abs(dot.x - x0) <= 2.0 && dot.y < endpoint.world.y - 1.0 && dot.y >= otherEndpoint.world.y) {
+              if (dot.y > closestObstacleY) closestObstacleY = dot.y;
+            }
+          }
+          const dist = endpoint.world.y - closestObstacleY;
+          const minDeltaY = MIN_WIRE_LENGTH_PT - dist;
           if (deltaY < minDeltaY) {
             deltaY = minDeltaY;
           }
         } else if (vY < 0) {
-          const maxDeltaY = -vY - MIN_WIRE_LENGTH_PT;
+          // endpoint is below otherEndpoint, moves up (deltaY > 0) towards otherEndpoint
+          let closestObstacleY = otherEndpoint.world.y;
+          for (const dot of stationaryDots) {
+            if (Math.abs(dot.x - x0) <= 2.0 && dot.y > endpoint.world.y + 1.0 && dot.y <= otherEndpoint.world.y) {
+              if (dot.y < closestObstacleY) closestObstacleY = dot.y;
+            }
+          }
+          const dist = closestObstacleY - endpoint.world.y;
+          const maxDeltaY = dist - MIN_WIRE_LENGTH_PT;
           if (deltaY > maxDeltaY) {
             deltaY = maxDeltaY;
           }
@@ -1526,9 +1654,31 @@ export function detectRigidLeafBranches(
       if ((isAInMoved && isBInMoved) || (!isAInMoved && !isBInMoved)) {
         continue;
       }
+      const movingCompId = isAInMoved ? w.compA : w.compB;
       const otherCompId = isAInMoved ? w.compB : w.compA;
       if (!otherCompId || currentMoved.has(otherCompId)) {
         continue;
+      }
+
+      // Boundary terminals (VDD, GND, Vin, Vout, Port) are terminal leaves in the
+      // circuit topology. They must NEVER propagate rigid motion into the circuit
+      // to drag internal components (resistors, capacitors, transistors, etc.).
+      if (movingCompId) {
+        const movingScope = findScopeStatementById(body, movingCompId);
+        if (movingScope) {
+          const movingScopeText = source.slice(movingScope.span.from, movingScope.span.to);
+          const isMovingTerminal =
+            movingScopeText.includes("node_VDD") ||
+            movingScopeText.includes("V_{DD}") ||
+            movingScopeText.includes("VDD") ||
+            movingScopeText.includes("node_GND") ||
+            movingScopeText.includes("GND") ||
+            movingScopeText.includes("node_IO") ||
+            movingScopeText.includes("node_Port");
+          if (isMovingTerminal) {
+            continue;
+          }
+        }
       }
 
       const dx = Math.abs(w.worldB.x - w.worldA.x);

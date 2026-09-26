@@ -1130,4 +1130,149 @@ describe("canvas text edit machine", () => {
       reduceInputIntent(started, "insertOrderedList", 2, 2, "x")
     ).toThrowError(/unsupported inputType/i);
   });
+
+  it("handles typing { to the right of underscore without leaking braces outside formula", () => {
+    const source = "\\begin{tikzpicture}\n  \\node at (0,0) {$M_{}$};\n\\end{tikzpicture}";
+    const target = buildTarget(source, "$M_{}$");
+    const started = reduceCanvasTextEdit(INITIAL_CANVAS_TEXT_EDIT_STATE, {
+      type: "start_session",
+      source,
+      target,
+      selectionStart: 3, // right after _ in "$M_{}$"
+      selectionEnd: 3,
+      historyMergeKey: "test"
+    }).state;
+
+    // Typing "{" when right side already has "{}" steps inside braces without duplication
+    const typedOpenBrace = reduceInputIntent(started, "insertText", 3, 3, "{").state;
+    expect(typedOpenBrace.session?.text).toBe("$M_{}$");
+    expect(typedOpenBrace.session?.selectionStart).toBe(4); // inside braces: $M_{|}$
+    expect(typedOpenBrace.session?.selectionEnd).toBe(4);
+
+    // Typing "{}" when right side already has "{}" also steps inside braces
+    const typedPairedBrace = reduceInputIntent(started, "insertText", 3, 3, "{}").state;
+    expect(typedPairedBrace.session?.text).toBe("$M_{}$");
+    expect(typedPairedBrace.session?.selectionStart).toBe(4);
+    expect(typedPairedBrace.session?.selectionEnd).toBe(4);
+
+    const typedS = reduceInputIntent(typedOpenBrace, "insertText", 4, 4, "s").state;
+    console.log("typedS text:", typedS.session?.text, "caret:", typedS.session?.selectionStart);
+  });
+
+  it("auto-pairs braces when typing { after underscore before closing $", () => {
+    const source = "\\begin{tikzpicture}\n  \\node at (0,0) {$M_$};\n\\end{tikzpicture}";
+    const target = buildTarget(source, "$M_$");
+    const started = reduceCanvasTextEdit(INITIAL_CANVAS_TEXT_EDIT_STATE, {
+      type: "start_session",
+      source,
+      target,
+      selectionStart: 3, // right after _ before closing $
+      selectionEnd: 3,
+      historyMergeKey: "test"
+    }).state;
+
+    const typedBrace = reduceInputIntent(started, "insertText", 3, 3, "{").state;
+    expect(typedBrace.session?.text).toBe("$M_{}$");
+    expect(typedBrace.session?.selectionStart).toBe(4); // inside braces: $M_{|}$
+    expect(typedBrace.session?.selectionEnd).toBe(4);
+  });
+
+  it("absorbs trailing underscore at end of single math label inside closing $", () => {
+    const source = "\\begin{tikzpicture}\n  \\node at (0,0) {$M$};\n\\end{tikzpicture}";
+    const target = buildTarget(source, "$M$");
+    const started = reduceCanvasTextEdit(INITIAL_CANVAS_TEXT_EDIT_STATE, {
+      type: "start_session",
+      source,
+      target,
+      selectionStart: 3, // after closing $
+      selectionEnd: 3,
+      historyMergeKey: "test"
+    }).state;
+
+    const typedUnderscore = reduceInputIntent(started, "insertText", 3, 3, "_").state;
+    expect(typedUnderscore.session?.text).toBe("$M_$");
+    expect(typedUnderscore.session?.selectionStart).toBe(3); // right after _ before closing $
+    expect(typedUnderscore.session?.selectionEnd).toBe(3);
+  });
+
+  it("keeps caret inside subscript braces when typing characters", () => {
+    const source = "\\begin{tikzpicture}\n  \\node at (0,0) {$M_{}$};\n\\end{tikzpicture}";
+    const target = buildTarget(source, "$M_{}$");
+    const started = reduceCanvasTextEdit(INITIAL_CANVAS_TEXT_EDIT_STATE, {
+      type: "start_session",
+      source,
+      target,
+      selectionStart: 4, // inside braces: $M_{|}$
+      selectionEnd: 4,
+      historyMergeKey: "test"
+    }).state;
+
+    // Type 's' at offset 4 inside braces
+    const typedS = reduceInputIntent(started, "insertText", 4, 4, "s").state;
+    expect(typedS.session?.text).toBe("$M_{s}$");
+    expect(typedS.session?.selectionStart).toBe(5); // inside braces: $M_{s|}$
+    expect(typedS.session?.selectionEnd).toBe(5);
+
+    // Type '1' following 's'
+    const typed1 = reduceInputIntent(typedS, "insertText", 5, 5, "1").state;
+    expect(typed1.session?.text).toBe("$M_{s1}$");
+    expect(typed1.session?.selectionStart).toBe(6); // inside braces: $M_{s1|}$
+    expect(typed1.session?.selectionEnd).toBe(6);
+  });
+
+  it("inserts character into empty subscript even if cursor is after closing brace or closing dollar", () => {
+    const source = "\\begin{tikzpicture}\n  \\node at (0,0) {$M_{}$};\n\\end{tikzpicture}";
+    const target = buildTarget(source, "$M_{}$");
+
+    // Case 1: Cursor right after } (offset 5)
+    const startedAfterBrace = reduceCanvasTextEdit(INITIAL_CANVAS_TEXT_EDIT_STATE, {
+      type: "start_session",
+      source,
+      target,
+      selectionStart: 5,
+      selectionEnd: 5,
+      historyMergeKey: "test"
+    }).state;
+    const typedAfterBrace = reduceInputIntent(startedAfterBrace, "insertText", 5, 5, "s").state;
+    expect(typedAfterBrace.session?.text).toBe("$M_{s}$");
+    expect(typedAfterBrace.session?.selectionStart).toBe(5);
+
+    // Case 2: Cursor after closing $ (offset 6)
+    const startedAfterDollar = reduceCanvasTextEdit(INITIAL_CANVAS_TEXT_EDIT_STATE, {
+      type: "start_session",
+      source,
+      target,
+      selectionStart: 6,
+      selectionEnd: 6,
+      historyMergeKey: "test"
+    }).state;
+    const typedAfterDollar = reduceInputIntent(startedAfterDollar, "insertText", 6, 6, "s").state;
+    expect(typedAfterDollar.session?.text).toBe("$M_{s}$");
+    expect(typedAfterDollar.session?.selectionStart).toBe(5);
+  });
+
+  it("protects cursor inside math formula from browser synthetic selection jumps to end", () => {
+    const source = "\\begin{tikzpicture}\n  \\node at (0,0) {$M_{s}$};\n\\end{tikzpicture}";
+    const target = buildTarget(source, "$M_{s}$");
+    const started = reduceCanvasTextEdit(INITIAL_CANVAS_TEXT_EDIT_STATE, {
+      type: "start_session",
+      source,
+      target,
+      selectionStart: 5, // inside braces after s: $M_{s|}$
+      selectionEnd: 5,
+      historyMergeKey: "test"
+    }).state;
+
+    // Browser value assignment triggers selectionchange with selection = 7 (end of $M_{s}$)
+    const spuriousSelection = reduceCanvasTextEdit(started, {
+      type: "textarea_selection",
+      selectionStart: 7,
+      selectionEnd: 7
+    }).state;
+
+    // Selection should remain at 5 inside formula rather than leaking to 7
+    expect(spuriousSelection.session?.selectionStart).toBe(5);
+    expect(spuriousSelection.session?.selectionEnd).toBe(5);
+  });
 });
+

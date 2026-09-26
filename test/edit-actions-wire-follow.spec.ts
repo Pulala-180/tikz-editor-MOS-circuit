@@ -146,8 +146,12 @@ describe("applyEditAction – wire follow (橡皮筋导线)", () => {
     \\draw (2,-0.4) -- (4,0);`;
     const { result } = move(source, ["scope:0"], 0, 0);
 
-    // delta=0：scope 分支可能做 shift 文本规范化，但导线不得有任何改写
-    expect(result.newSource).toContain("\\draw (2,-0.4) -- (4,0);");
+    // delta=0：若 scope 坐标格式未变则直接识别为 no-op (unsupported)，若触发规范化重写则导线不得有任何改写
+    if (result.kind === "success") {
+      expect(result.newSource).toContain("\\draw (2,-0.4) -- (4,0);");
+    } else {
+      expect(result.kind).toBe("unsupported");
+    }
   });
 });
 

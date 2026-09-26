@@ -2,7 +2,8 @@ import { defineConfig, devices } from "@playwright/test";
 import os from "node:os";
 import path from "node:path";
 
-const withoutColorEnv = "env -u NO_COLOR -u FORCE_COLOR";
+const withoutColorEnv = process.platform === "win32" ? "" : "env -u NO_COLOR -u FORCE_COLOR ";
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:4173";
 const outputDir = process.env.PLAYWRIGHT_OUTPUT_DIR ??
   path.join(os.tmpdir(), "tikz-editor-playwright-results", "web");
 const browserProjects = {
@@ -48,15 +49,20 @@ export default defineConfig({
   retries: 0,
   reporter: "list",
   use: {
-    baseURL: "http://127.0.0.1:4173",
+    baseURL,
     trace: "retain-on-failure"
   },
-  webServer: {
-    command: `${withoutColorEnv} npm run build -- --base / && ${withoutColorEnv} npx vite preview --host 127.0.0.1 --port 4173`,
-    cwd: ".",
-    url: "http://127.0.0.1:4173",
-    reuseExistingServer: false,
-    timeout: 120_000
-  },
+  webServer: process.env.PLAYWRIGHT_BASE_URL
+    ? undefined
+    : {
+        command:
+          process.platform === "win32"
+            ? `npm run build -- --base / && npx vite preview --host 127.0.0.1 --port 4173`
+            : `${withoutColorEnv}npm run build -- --base / && ${withoutColorEnv}npx vite preview --host 127.0.0.1 --port 4173`,
+        cwd: ".",
+        url: "http://127.0.0.1:4173",
+        reuseExistingServer: true,
+        timeout: 120_000
+      },
   projects: getBrowserProjects()
 });

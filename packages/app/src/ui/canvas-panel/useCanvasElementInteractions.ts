@@ -14,10 +14,16 @@ import {
   type SnapSettingsPatch
 } from "tikz-editor/edit/snapping";
 import type { EditHandle, SceneElement } from "tikz-editor/semantic/types";
-import type { PathStatement, Statement } from "tikz-editor/ast/types";
+import type { CoordinateItem, PathKeywordItem, PathStatement, Statement } from "tikz-editor/ast/types";
 import type { ClientPoint, WorldBounds, WorldPoint } from "../coords/types";
 import { resolveEligibleExplicitPath, type ExplicitPathAnalysis } from "tikz-editor/edit/path-editing";
 import { closestPointOnLine, closestPointOnCubic } from "tikz-editor/edit/curve-math";
+import {
+  findAllInterComponentStraightWires,
+  findInterComponentStraightWireConnection,
+  findHalfConnectedStraightWireConnection
+} from "tikz-editor/index";
+import { detectRigidLeafBranches, findAttachedWiresForTransientDrag } from "tikz-editor/edit/actions/wire-follow";
 import type { CanvasTransform, ToolMode } from "../../store/types";
 import { clientToWorldPoint } from "./geometry";
 import { makeMergeKey, selectionAnchorRatioFromPoint } from "./panel-helpers";
@@ -153,6 +159,209 @@ function resolveImplicitOrthoCornerTarget(
   return { cornerWorld };
 }
 
+/**
+ * Detect if the cursor is directly on an orthogonal wire segment (not on a handle/corner).
+ */
+function resolveOrthoSegmentTarget(
+  parseResult: CanvasSnapshot["parseResult"],
+  editHandles: readonly EditHandle[],
+  targetId: string,
+  world: WorldPoint,
+  thresholdWorld: number
+): { segmentIndex: number; axis: "h" | "v" } | null {
+  const figure = parseResult?.figure;
+  if (!figure) {
+    return null;
+  }
+  const statement = findPathStatementBySourceId(figure.body, targetId);
+  if (!statement || statement.command !== "draw") {
+    return null;
+  }
+  // Reject non-wire shapes
+  const hasShape = statement.items.some(
+    (item) =>
+      item.kind === "PathKeyword" &&
+      (item.keyword === "circle" ||
+        item.keyword === "rectangle" ||
+        item.keyword === "ellipse" ||
+        item.keyword === "arc" ||
+        item.keyword === "grid")
+  );
+  if (hasShape) {
+    return null;
+  }
+
+  // Reject single straight wire connecting two components or half-connected straight wire (死命令：禁止推拉变折线，仅随元件移动伸缩或自由端沿方向伸缩)
+  const sourceText = parseResult?.source ?? "";
+  if (
+    findInterComponentStraightWireConnection(statement, figure.body, editHandles, sourceText) ||
+    findHalfConnectedStraightWireConnection(statement, figure.body, editHandles, sourceText)
+  ) {
+    return null;
+  }
+
+  const coordinates = statement.items.filter((item): item is CoordinateItem => item.kind === "Coordinate");
+  if (coordinates.length < 2) {
+    return null;
+  }
+
+  const operator = statement.items.find(
+    (item): item is PathKeywordItem => item.kind === "PathKeyword" && (item.keyword === "|-" || item.keyword === "-|")
+  );
+
+  // 任何仅有两个端点且非 |- / -| 的普通直连导线，绝不存在中间正交段，严禁启动正交推拉（彻底杜绝误触被拉出凹坑台阶）
+  if (coordinates.length === 2 && !operator) {
+    return null;
+  }
+
+  const statementHandles = editHandles
+    .filter((handle) => handle.kind === "path-point" && handle.sourceRef.sourceId === targetId)
+    .sort((left, right) => left.sourceRef.sourceSpan.from - right.sourceRef.sourceSpan.from);
+
+  // If 2 coordinates with implicit operator |- or -|
+  if (operator && coordinates.length === 2 && statementHandles.length >= 2) {
+    const p0 = statementHandles[0].world;
+    const p1 = statementHandles[statementHandles.length - 1].world;
+    const corner =
+      operator.keyword === "|-"
+        ? worldPoint(pt(p0.x), pt(p1.y))
+        : worldPoint(pt(p1.x), pt(p0.y));
+
+    const segments: Array<{ segIdx: number; pA: WorldPoint; pB: WorldPoint; axis: "h" | "v" }> = [
+      {
+        segIdx: 0,
+        pA: p0,
+        pB: corner,
+        axis: operator.keyword === "|-" ? "v" : "h"
+      },
+      {
+        segIdx: 1,
+        pA: corner,
+        pB: p1,
+        axis: operator.keyword === "|-" ? "h" : "v"
+      }
+    ];
+
+    let bestMatch: { segmentIndex: number; axis: "h" | "v"; dist: number } | null = null;
+    for (const seg of segments) {
+      const dx = seg.pB.x - seg.pA.x;
+      const dy = seg.pB.y - seg.pA.y;
+      const lenSq = dx * dx + dy * dy;
+      if (lenSq < 1e-4) continue;
+      const t = ((world.x - seg.pA.x) * dx + (world.y - seg.pA.y) * dy) / lenSq;
+      if (t < 0.05 || t > 0.95) continue;
+      const projX = seg.pA.x + t * dx;
+      const projY = seg.pA.y + t * dy;
+      const dist = Math.hypot(world.x - projX, world.y - projY);
+      if (dist <= thresholdWorld && (!bestMatch || dist < bestMatch.dist)) {
+        bestMatch = { segmentIndex: seg.segIdx, axis: seg.axis, dist };
+      }
+    }
+    if (bestMatch) {
+      return { segmentIndex: bestMatch.segmentIndex, axis: bestMatch.axis };
+    }
+    return null;
+  }
+
+  // Explicit polyline
+  const pts: WorldPoint[] = [];
+  for (const coord of coordinates) {
+    const handle = statementHandles.find((h) => h.sourceRef.sourceSpan.from === coord.span.from);
+    if (handle) {
+      pts.push(handle.world);
+    } else if (coord.form === "cartesian") {
+      pts.push(worldPoint(pt(parseFloat(coord.x) * 28.4527559), pt(parseFloat(coord.y) * 28.4527559)));
+    }
+  }
+
+  if (pts.length < 2 || pts.length !== coordinates.length) {
+    return null;
+  }
+
+  let bestMatch: { segmentIndex: number; axis: "h" | "v"; dist: number } | null = null;
+  for (let k = 0; k < pts.length - 1; k++) {
+    const pA = pts[k];
+    const pB = pts[k + 1];
+    const dx = pB.x - pA.x;
+    const dy = pB.y - pA.y;
+    const lenSq = dx * dx + dy * dy;
+    if (lenSq < 1e-4) continue;
+
+    const isVertical = Math.abs(dx) <= 1.0;
+    const isHorizontal = Math.abs(dy) <= 1.0;
+    if (!isVertical && !isHorizontal) continue;
+
+    const t = ((world.x - pA.x) * dx + (world.y - pA.y) * dy) / lenSq;
+    if (t < 0.05 || t > 0.95) continue;
+    const projX = pA.x + t * dx;
+    const projY = pA.y + t * dy;
+    const dist = Math.hypot(world.x - projX, world.y - projY);
+    if (dist <= thresholdWorld && (!bestMatch || dist < bestMatch.dist)) {
+      bestMatch = { segmentIndex: k, axis: isVertical ? "v" : "h", dist };
+    }
+  }
+
+  if (bestMatch) {
+    return { segmentIndex: bestMatch.segmentIndex, axis: bestMatch.axis };
+  }
+  return null;
+}
+
+export function resolveEffectiveDraggedIds(input: {
+  draggedIds: readonly string[];
+  draggableSourceIds: ReadonlySet<string>;
+  snapshot: CanvasSnapshot;
+  scopeOverlay: ScopeOverlayIndex;
+}): string[] {
+  const { draggedIds, draggableSourceIds, snapshot, scopeOverlay } = input;
+  if (draggedIds.length <= 1) {
+    return draggedIds.filter((id) => draggableSourceIds.has(id));
+  }
+
+  const draggedIdSet = new Set(draggedIds);
+
+  const isComponentInSelection = (compId: string): boolean => {
+    if (draggedIdSet.has(compId)) return true;
+    const ancestors = scopeOverlay.ancestorScopeIdsBySourceId.get(compId) ?? [];
+    return ancestors.some((a) => draggedIdSet.has(a));
+  };
+
+  const interWires = snapshot.parseResult
+    ? findAllInterComponentStraightWires(
+        snapshot.parseResult.figure.body,
+        snapshot.editHandles,
+        snapshot.source
+      )
+    : [];
+
+  const internalWireIds = new Set<string>();
+  for (const conn of interWires) {
+    if (
+      draggedIdSet.has(conn.wireSourceId) &&
+      isComponentInSelection(conn.componentAId) &&
+      isComponentInSelection(conn.componentBId)
+    ) {
+      internalWireIds.add(conn.wireSourceId);
+    }
+  }
+
+  const effective: string[] = [];
+  for (const id of draggedIds) {
+    if (draggableSourceIds.has(id)) {
+      effective.push(id);
+    } else if (internalWireIds.has(id)) {
+      effective.push(id);
+    }
+  }
+
+  // Filter out any child ID whose ancestor scope is already in effective
+  const effectiveSet = new Set(effective);
+  return effective.filter((id) => {
+    const ancestors = scopeOverlay.ancestorScopeIdsBySourceId.get(id) ?? [];
+    return !ancestors.some((a) => effectiveSet.has(a));
+  });
+}
+
 export function useCanvasElementInteractions(args: UseCanvasElementInteractionsArgs) {
   const {
     svgResult,
@@ -217,7 +426,14 @@ export function useCanvasElementInteractions(args: UseCanvasElementInteractionsA
       draggedIds: string[],
       options: { adornmentDragFromText?: boolean } = {}
     ) => {
-      if (draggedIds.some((id) => !draggableSourceIds.has(id))) {
+      const effectiveDraggedIds = resolveEffectiveDraggedIds({
+        draggedIds,
+        draggableSourceIds,
+        snapshot,
+        scopeOverlay
+      });
+
+      if (effectiveDraggedIds.length === 0) {
         const reason = draggedIds
           .map((id) => directManipulationDisabledReasonBySourceId?.get(id))
           .find((candidate): candidate is string => Boolean(candidate && candidate.trim().length > 0));
@@ -242,9 +458,40 @@ export function useCanvasElementInteractions(args: UseCanvasElementInteractionsA
         return;
       }
 
-      const snapExcludedSourceIds = collectSnapExcludedSourceIds(draggedIds, scopeOverlay, snapshot.scene?.elements);
+      const snapExcludedSourceIds = collectSnapExcludedSourceIds(effectiveDraggedIds, scopeOverlay, snapshot.scene?.elements);
       const scopeInternalSourceIds = collectAllScopeDescendantSourceIds(scopeOverlay);
       const selectedForSnap = new Set(snapExcludedSourceIds);
+
+      // Exclude attached wires and intermediate collinear branch dots from snap targets
+      // so dragging a transistor/component does NOT magnetically snap to its own connected branch dots or lines.
+      if (snapshot.source && snapshot.parseResult && snapshot.editHandles) {
+        const attachedWires = findAttachedWiresForTransientDrag(
+          snapshot.source,
+          snapshot.editHandles,
+          effectiveDraggedIds,
+          effectiveDraggedIds.filter((id) => scopeOverlay.scopesById.has(id))
+        );
+        for (const w of attachedWires) {
+          selectedForSnap.add(w.wireSourceId);
+        }
+        const rigidBranches = detectRigidLeafBranches(
+          snapshot.source,
+          snapshot.parseResult.figure.body,
+          snapshot.editHandles,
+          effectiveDraggedIds,
+          worldPoint(pt(1), pt(1))
+        );
+        for (const rb of rigidBranches) {
+          if (rb.leafComponentId) selectedForSnap.add(rb.leafComponentId);
+          if (rb.wireStatementId) selectedForSnap.add(rb.wireStatementId);
+          if (rb.associatedDotStatementIds) {
+            for (const dotId of rb.associatedDotStatementIds) {
+              selectedForSnap.add(dotId);
+            }
+          }
+        }
+      }
+
       const endpointSourceIds = snapshot.scene
         ? collectOpenPathEndpointSourceIds(snapshot.scene.elements, snapshot.editHandles)
         : new Set<string>();
@@ -260,13 +507,13 @@ export function useCanvasElementInteractions(args: UseCanvasElementInteractionsA
           .map((element) => element.sourceRef.sourceId)
       );
       const dragIsTextOnly =
-        draggedIds.length > 0 &&
-        draggedIds.every((id) => textSourceIds.has(id) || id.startsWith("node-adornment:"));
+        effectiveDraggedIds.length > 0 &&
+        effectiveDraggedIds.every((id) => textSourceIds.has(id) || id.startsWith("node-adornment:"));
 
       const snapContext = snapshot.scene && !dragIsTextOnly
         ? buildSnapContext({
             sceneElements: snapshot.scene.elements,
-            selectedSourceIds: snapExcludedSourceIds,
+            selectedSourceIds: [...selectedForSnap],
             editHandles: snapshot.editHandles,
             guides: snapGuideInput,
             settings: snapSettingsPatch,
@@ -306,7 +553,7 @@ export function useCanvasElementInteractions(args: UseCanvasElementInteractionsA
         ), { sourceId: scopeId }));
       }
 
-      const initialSelection = collectSelectionGeometryFromBounds(worldInteractionBoundsBySource, draggedIds);
+      const initialSelection = collectSelectionGeometryFromBounds(worldInteractionBoundsBySource, effectiveDraggedIds);
       if (initialSelection) {
         // 端点吸附：把被拖动元件（含 scope 子元素）的首末 path-point 端口
         // 加入 movable snap points，这样电阻/直线的端口能吸到其他端口上。
@@ -319,17 +566,23 @@ export function useCanvasElementInteractions(args: UseCanvasElementInteractionsA
           selectedEndpointPoints
         );
       }
-      const movementAxis = resolveMoveAxisConstraintFromEditHandles(
-        snapshot.editHandles,
-        selectedForSnap,
-        {
-          requireAttachedWire: true,
-          sceneElements: snapshot.scene?.elements ?? []
-        }
-      );
+      const movementAxis =
+        effectiveDraggedIds.length <= 1
+          ? resolveMoveAxisConstraintFromEditHandles(
+              snapshot.editHandles,
+              selectedForSnap,
+              {
+                requireAttachedWire: true,
+                sceneElements: snapshot.scene?.elements ?? [],
+                nodeAnchorTargets: snapshot.semanticResult?.nodeAnchorTargets ?? []
+              }
+            )
+          : null;
 
       let finalMovementAxis: "x" | "y" | "orthogonal" | "locked" | null = movementAxis;
-      if (!finalMovementAxis && snapshot.source) {
+      if (effectiveDraggedIds.length > 1) {
+        finalMovementAxis = "orthogonal";
+      } else if (!finalMovementAxis && snapshot.source) {
         const isMosfet =
           snapshot.editHandles.some((h) => {
             if (!selectedForSnap.has(h.sourceRef.sourceId)) return false;
@@ -339,7 +592,7 @@ export function useCanvasElementInteractions(args: UseCanvasElementInteractionsA
             );
             return spanText.includes("node_Mx") || spanText.includes("node_M");
           }) ||
-          draggedIds.some((id) => {
+          effectiveDraggedIds.some((id) => {
             const handles = snapshot.editHandles.filter((h) => h.sourceRef.sourceId === id);
             return handles.some((h) => {
               const spanText = snapshot.source.slice(
@@ -362,10 +615,10 @@ export function useCanvasElementInteractions(args: UseCanvasElementInteractionsA
       setDragState({
         kind: "element",
         pointerId,
-        elementIds: draggedIds,
+        elementIds: effectiveDraggedIds,
         startWorld: world,
         adornmentDragFromText:
-          draggedIds.length === 1 && draggedIds[0]?.startsWith("node-adornment:")
+          effectiveDraggedIds.length === 1 && effectiveDraggedIds[0]?.startsWith("node-adornment:")
             ? options.adornmentDragFromText === true
             : undefined,
         lastAppliedTotalDelta: worldVector(pt(0), pt(0)),
@@ -375,7 +628,7 @@ export function useCanvasElementInteractions(args: UseCanvasElementInteractionsA
         selectionAnchorRatio,
         historyMergeKey: makeMergeKey(
           "drag-element",
-          draggedIds.slice().sort().join(","),
+          effectiveDraggedIds.slice().sort().join(","),
           pointerId
         )
       });
@@ -740,6 +993,52 @@ export function useCanvasElementInteractions(args: UseCanvasElementInteractionsA
         }
       }
 
+      if (!additiveSelection && (!alreadySelected || selectedElementIds.size <= 1)) {
+        const orthoSegment = resolveOrthoSegmentTarget(
+          snapshot.parseResult,
+          snapshot.editHandles,
+          resolvedTargetId,
+          world,
+          15 / Math.max(canvasTransform.scale || 1, 1e-3)
+        );
+        if (orthoSegment) {
+          if (!alreadySelected) {
+            dispatch({ type: "SELECT", id: resolvedTargetId, additive: false });
+            dispatch({
+              type: "SET_FOCUSED_SCOPE",
+              scopeId: resolveFocusedScopeIdForSelection(resolvedTargetId, scopeOverlay)
+            });
+          }
+          setSnapLines([]);
+          const orthoSnapContext = snapshot.scene
+            ? buildSnapContext({
+                sceneElements: snapshot.scene.elements,
+                selectedSourceIds: [resolvedTargetId],
+                editHandles: snapshot.editHandles,
+                guides: snapGuideInput,
+                settings: snapSettingsPatch,
+                zoom: canvasTransform.scale,
+                viewportWorld: viewportWorldBounds,
+                excludedSourceIds: []
+              })
+            : null;
+          setDragState({
+            kind: "ortho-segment",
+            pointerId: event.pointerId,
+            elementId: resolvedTargetId,
+            segmentIndex: orthoSegment.segmentIndex,
+            axis: orthoSegment.axis,
+            cursor: orthoSegment.axis === "v" ? "ew-resize" : "ns-resize",
+            startWorld: world,
+            lastKnownWorld: world,
+            historyMergeKey: makeMergeKey("drag-ortho-segment", resolvedTargetId, event.pointerId),
+            baselineSource: source,
+            snapContext: orthoSnapContext
+          });
+          return;
+        }
+      }
+
       const draggedIds = alreadySelected && selectedElementIds.size > 0 ? [...selectedElementIds] : [resolvedTargetId];
       if (!alreadySelected) {
         dispatch({ type: "SELECT", id: resolvedTargetId, additive: false });
@@ -904,10 +1203,14 @@ export function collectSnapExcludedSourceIds(
   }
 
   if (sceneElements && sceneElements.length > 0) {
-    const candidateSourceIds = new Set(sceneElements.map((element) => element.sourceRef.sourceId));
-    for (const candidateSourceId of candidateSourceIds) {
+    const candidateElements = sceneElements;
+    for (const candidate of candidateElements) {
+      const candidateSourceId = candidate.sourceRef.sourceId;
+      if (selectedForSnap.has(candidateSourceId)) {
+        continue;
+      }
       for (const selectedSourceId of selectedForSnap) {
-        if (isSyntheticTreeDescendantSourceId(candidateSourceId, selectedSourceId)) {
+        if (isSyntheticTreeDescendantSourceId(candidateSourceId, selectedSourceId, candidate, sceneElements)) {
           selectedForSnap.add(candidateSourceId);
           break;
         }
@@ -918,8 +1221,37 @@ export function collectSnapExcludedSourceIds(
   return [...selectedForSnap];
 }
 
-function isSyntheticTreeDescendantSourceId(candidateSourceId: string, selectedSourceId: string): boolean {
-  return candidateSourceId.startsWith(`${selectedSourceId}:tree-child:`);
+function isSyntheticTreeDescendantSourceId(
+  candidateSourceId: string,
+  selectedSourceId: string,
+  candidateElement?: SceneElement,
+  sceneElements?: readonly SceneElement[]
+): boolean {
+  if (candidateSourceId.startsWith(`${selectedSourceId}:tree-child:`)) {
+    return true;
+  }
+  if (candidateSourceId.startsWith(`${selectedSourceId}:`) || candidateSourceId.startsWith(`${selectedSourceId}-`)) {
+    return true;
+  }
+  const pathMatch = /^path:(\d+)$/.exec(selectedSourceId);
+  if (pathMatch) {
+    const stmtIdx = pathMatch[1];
+    if (candidateSourceId.startsWith(`node:${stmtIdx}:`)) {
+      return true;
+    }
+  }
+  if (candidateElement && sceneElements) {
+    const cSpan = candidateElement.sourceRef.sourceSpan;
+    for (const sEl of sceneElements) {
+      if (sEl.sourceRef.sourceId === selectedSourceId) {
+        const sSpan = sEl.sourceRef.sourceSpan;
+        if (cSpan.from >= sSpan.from && cSpan.to <= sSpan.to) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
 }
 
 function findClosestSegmentWorldPoint(

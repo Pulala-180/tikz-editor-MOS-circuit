@@ -1188,7 +1188,8 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
                 orientation: rb.orientation,
                 wireSourceId: rb.wireStatementId,
                 isTapBranch: rb.isTapBranch,
-                isStretchOnly: rb.isStretchOnly
+                isStretchOnly: rb.isStretchOnly,
+                followAxis: rb.branchDelta.x !== 0 ? "x" : "y"
               });
             }
           }
@@ -1238,10 +1239,9 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
 
         if (drag.transientRigidLeafBranches) {
           for (const rb of drag.transientRigidLeafBranches) {
-            const isTap = Boolean(rb.isTapBranch || rb.isStretchOnly);
-            const moveInX = isTap ? (rb.orientation === "h" || (rb.orientation === "v" && Math.abs(svgDx) > 1e-4)) : rb.orientation === "v";
-            const branchSvgDx = moveInX ? svgDx : 0;
-            const branchSvgDy = moveInX ? 0 : svgDy;
+            const followAxis = rb.followAxis ?? (rb.orientation === "v" ? "x" : "y");
+            const branchSvgDx = followAxis === "x" ? svgDx : 0;
+            const branchSvgDy = followAxis === "y" ? svgDy : 0;
             for (const el of rb.leafDomElements) {
               const base = rb.initialTransforms.get(el);
               const transformValue = base
@@ -1258,7 +1258,8 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
             let staticSvgX = wire.staticSvg.x;
             let staticSvgY = wire.staticSvg.y;
             if (rb) {
-              if (rb.orientation === "h") {
+              const followAxis = rb.followAxis ?? (rb.orientation === "v" ? "x" : "y");
+              if (followAxis === "y") {
                 staticSvgY += svgDy;
               } else {
                 staticSvgX += svgDx;
@@ -1266,10 +1267,11 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
             }
             const curMovingX = wire.movingSvg.x + svgDx;
             const curMovingY = wire.movingSvg.y + svgDy;
-            const staticOffset = rb
+            const followAxis = rb ? (rb.followAxis ?? (rb.orientation === "v" ? "x" : "y")) : null;
+            const staticOffset = followAxis
               ? {
-                  x: rb.orientation === "h" ? 0 : svgDx,
-                  y: rb.orientation === "h" ? svgDy : 0
+                  x: followAxis === "x" ? svgDx : 0,
+                  y: followAxis === "y" ? svgDy : 0
                 }
               : undefined;
             const newD = wire.initialPoints
@@ -1642,11 +1644,16 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
         }
       }
 
+      const handleFormatPrecision =
+        (drag.movementAxis != null || formatPrecision === "fine")
+          ? "fine"
+          : undefined;
       const ok = applyActionWithFeedback(
         resolveHandleDragAction({
           handleId: resolvedHandleId,
           newWorld: nextWorld,
-          activeEndpointAnchor: drag.activeEndpointAnchor
+          activeEndpointAnchor: drag.activeEndpointAnchor,
+          formatPrecision: handleFormatPrecision
         }),
         drag.historyMergeKey
       );
@@ -1970,11 +1977,16 @@ export function useCanvasDragController(params: UseCanvasDragControllerParams) {
             drag.lastKnownWorld.y - startPt.y
           );
           if (resolvedHandleId && movedDistance > 1e-4) {
+            const handleFormatPrecision =
+              (drag.movementAxis != null || (event.altKey ? "fine" : undefined) === "fine")
+                ? "fine"
+                : undefined;
             applyActionWithFeedback(
               resolveHandleDragAction({
                 handleId: resolvedHandleId,
                 newWorld: drag.lastKnownWorld,
-                activeEndpointAnchor: null
+                activeEndpointAnchor: null,
+                formatPrecision: handleFormatPrecision
               }),
               drag.historyMergeKey
             );

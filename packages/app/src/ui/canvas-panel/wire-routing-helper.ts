@@ -1,4 +1,4 @@
-import { worldPoint, pt } from "tikz-editor/coords/index";
+import { worldPoint, pt, formatNumber } from "tikz-editor/coords/index";
 import type { WorldPoint } from "tikz-editor/coords/index";
 
 export type WireRoutingMode = "orthogonal" | "octagonal45" | "anyAngle";
@@ -6,8 +6,9 @@ export type OrthoOrientation = "HV" | "VH";
 
 const PT_TO_CM = 28.4527559;
 
-export function formatCm(pointsPt: number): string {
-  return (pointsPt / PT_TO_CM).toFixed(2);
+export function formatCm(pointsPt: number, maxDigits: number = 3): string {
+  const cmVal = pointsPt / PT_TO_CM;
+  return formatNumber(cmVal, { fractionDigits: maxDigits });
 }
 
 /**

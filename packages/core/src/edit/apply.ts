@@ -144,7 +144,12 @@ function applyMoveIntent(
     return { kind: "error", message: "Handle span content mismatch (stale handle)." };
   }
 
-  const replacement = rewriteCoordinate(intent.newWorld, rewriteHandle, source);
+  const replacement = rewriteCoordinate(
+    intent.newWorld,
+    rewriteHandle,
+    source,
+    intent.formatPrecision ? { formatPrecision: intent.formatPrecision } : undefined
+  );
   if (replacement === null) {
     return {
       kind: "unsupported",

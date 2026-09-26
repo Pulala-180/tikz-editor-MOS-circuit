@@ -1014,7 +1014,7 @@ describe("editorReducer – layout", () => {
     const initial = makeInitialState();
     expect(initial.showGrid).toBe(true);
     expect(initial.showTransparencyGrid).toBe(false);
-    expect(initial.snapModes).toEqual({ grid: false, guides: false, points: false, gaps: false });
+    expect(initial.snapModes).toEqual({ grid: false, guides: false, points: true, gaps: false });
     expect(initial.showRulers).toBe(true);
     expect(initial.showGuides).toBe(true);
     expect(initial.showDocumentBounds).toBe(false);
@@ -1039,7 +1039,7 @@ describe("editorReducer – layout", () => {
     expect(afterGuides.showRulers).toBe(false);
     expect(afterGuides.showGuides).toBe(false);
     expect(afterGuides.showDocumentBounds).toBe(false);
-    expect(afterGuides.snapModes).toEqual({ grid: false, guides: false, points: false, gaps: false });
+    expect(afterGuides.snapModes).toEqual({ grid: false, guides: false, points: true, gaps: false });
 
     const afterTransparencyGrid = editorReducer(afterGuides, { type: "TOGGLE_CANVAS_AID", aid: "transparencyGrid" });
     expect(afterTransparencyGrid.showTransparencyGrid).toBe(true);
@@ -1053,24 +1053,24 @@ describe("editorReducer – layout", () => {
   it("TOGGLE_SNAP_MODE toggles each snapping mode independently", () => {
     const initial = makeInitialState();
     expect(initial.showGrid).toBe(true);
-    expect(initial.snapModes).toEqual({ grid: false, guides: false, points: false, gaps: false });
+    expect(initial.snapModes).toEqual({ grid: false, guides: false, points: true, gaps: false });
 
     const hiddenGrid = editorReducer(initial, { type: "TOGGLE_CANVAS_AID", aid: "grid" });
     expect(hiddenGrid.showGrid).toBe(false);
-    expect(hiddenGrid.snapModes).toEqual({ grid: false, guides: false, points: false, gaps: false });
+    expect(hiddenGrid.snapModes).toEqual({ grid: false, guides: false, points: true, gaps: false });
 
     const snapOn = editorReducer(hiddenGrid, { type: "TOGGLE_SNAP_MODE", mode: "grid" });
     expect(snapOn.showGrid).toBe(false);
-    expect(snapOn.snapModes).toEqual({ grid: true, guides: false, points: false, gaps: false });
+    expect(snapOn.snapModes).toEqual({ grid: true, guides: false, points: true, gaps: false });
 
     const guidesOn = editorReducer(snapOn, { type: "TOGGLE_SNAP_MODE", mode: "guides" });
-    expect(guidesOn.snapModes).toEqual({ grid: true, guides: true, points: false, gaps: false });
+    expect(guidesOn.snapModes).toEqual({ grid: true, guides: true, points: true, gaps: false });
 
-    const pointsOn = editorReducer(guidesOn, { type: "TOGGLE_SNAP_MODE", mode: "points" });
-    expect(pointsOn.snapModes).toEqual({ grid: true, guides: true, points: true, gaps: false });
+    const pointsOff = editorReducer(guidesOn, { type: "TOGGLE_SNAP_MODE", mode: "points" });
+    expect(pointsOff.snapModes).toEqual({ grid: true, guides: true, points: false, gaps: false });
 
-    const gapsOn = editorReducer(pointsOn, { type: "TOGGLE_SNAP_MODE", mode: "gaps" });
-    expect(gapsOn.snapModes).toEqual({ grid: true, guides: true, points: true, gaps: true });
+    const gapsOn = editorReducer(pointsOff, { type: "TOGGLE_SNAP_MODE", mode: "gaps" });
+    expect(gapsOn.snapModes).toEqual({ grid: true, guides: true, points: false, gaps: true });
   });
 
   it("REQUEST_FIT_TO_CONTENT increments request token", () => {

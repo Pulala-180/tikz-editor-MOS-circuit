@@ -3,11 +3,12 @@ import type {
   EvaluateOptions
 } from "../semantic/types.js";
 import type { WorldPoint, WorldBounds } from "../coords/points.js";
-import type { NodeItem, PathItem, PathStatement, Statement, Span } from "../ast/types.js";
+import type { CoordinateItem, NodeItem, PathItem, PathKeywordItem, PathStatement, Statement, Span } from "../ast/types.js";
 import type { SourcePatch } from "./types.js";
 import { applyEditIntent } from "./apply.js";
 import { replaceSpan } from "./patch.js";
 import { PT_PER_CM, formatNumber, type DragFormatPrecision } from "./format.js";
+import { formatCoordinate } from "./style.js";
 import { ptToCm } from "../coords/source.js";
 import { worldPoint } from "../coords/points.js";
 import {
@@ -20,7 +21,8 @@ import { resolvePropertyTarget } from "./property-target.js";
 import type { AlignMode, DistributeAxis } from "./arrange.js";
 import {
   applyTextReplacements,
-  parseStatementSnapshot
+  parseStatementSnapshot,
+  type StatementRef
 } from "./statement-ops.js";
 import type { PathPointKind } from "./path-editing.js";
 import {
@@ -113,8 +115,9 @@ export type EditAction =
   | { kind: "moveElements"; elementIds: string[]; delta: WorldPoint; formatPrecision?: DragFormatPrecision }
   | { kind: "alignElements"; elementIds: string[]; mode: AlignMode }
   | { kind: "distributeElements"; elementIds: string[]; axis: DistributeAxis }
-  | { kind: "moveHandle"; handleId: string; newWorld: WorldPoint; baselineSource?: string }
+  | { kind: "moveHandle"; handleId: string; newWorld: WorldPoint; baselineSource?: string; formatPrecision?: DragFormatPrecision }
   | { kind: "rewriteImplicitOrthoCorner"; elementId: string; corner: WorldPoint; baselineSource?: string }
+  | { kind: "moveOrthoSegment"; elementId: string; segmentIndex: number; axis: "h" | "v"; newWorld: WorldPoint; baselineSource?: string }
   | { kind: "connectHandle"; handleId: string; nodeName: string; nodeSourceId?: string; anchor: string; baselineSource?: string }
   | { kind: "splitPath"; elementId: string; handleId: string }
   | { kind: "joinPaths"; elementIds: [string, string] }
@@ -253,9 +256,11 @@ export function applyEditAction(
   const rawResult = (() : EditActionResult => {
     switch (action.kind) {
       case "moveHandle":
-        return applyMoveHandle(source, editHandles, action.handleId, action.newWorld, parseOptions, action.baselineSource);
+        return applyMoveHandle(source, editHandles, action.handleId, action.newWorld, parseOptions, action.baselineSource, action.formatPrecision);
       case "rewriteImplicitOrthoCorner":
         return applyRewriteImplicitOrthoCornerAction(source, action, parseOptions);
+      case "moveOrthoSegment":
+        return applyMoveOrthoSegmentAction(source, editHandles, action, parseOptions);
       case "connectHandle":
         return applyConnectHandle(source, editHandles, action.handleId, action.nodeName, action.nodeSourceId, action.anchor, parseOptions, action.baselineSource);
       case "splitPath":
@@ -458,7 +463,8 @@ function applyMoveHandle(
   handleId: string,
   newWorld: WorldPoint,
   parseOptions: EditParseOptions,
-  baselineSource?: string
+  baselineSource?: string,
+  formatPrecision?: DragFormatPrecision
 ): EditActionResult {
   const baseSource = baselineSource ?? source;
   const baseFingerprint =
@@ -466,10 +472,39 @@ function applyMoveHandle(
       ? (editHandles.find((h) => h.sourceRef.sourceFingerprint)?.sourceRef.sourceFingerprint ?? sourceFingerprintForEdit(baseSource, parseOptions))
       : sourceFingerprintForEdit(source, parseOptions);
 
+  const handle = editHandles.find((h) => h.id === handleId);
+  let effectiveWorld = newWorld;
+  let effectivePrecision = formatPrecision;
+
+  if (handle && handle.kind === "path-point") {
+    const sibling = editHandles.find(
+      (h) => h.id !== handleId && h.sourceRef.sourceId === handle.sourceRef.sourceId && h.kind === "path-point"
+    );
+    if (sibling) {
+      const wasHorizontal = Math.abs(handle.world.y - sibling.world.y) <= 1.0;
+      const isNearHorizontal = Math.abs(newWorld.y - sibling.world.y) <= 1.5;
+      if (wasHorizontal && isNearHorizontal) {
+        effectiveWorld = { ...effectiveWorld, y: sibling.world.y };
+        if (effectivePrecision === undefined && /\.\d{3,}/.test(sibling.sourceText)) {
+          effectivePrecision = "fine";
+        }
+      }
+
+      const wasVertical = Math.abs(handle.world.x - sibling.world.x) <= 1.0;
+      const isNearVertical = Math.abs(newWorld.x - sibling.world.x) <= 1.5;
+      if (wasVertical && isNearVertical) {
+        effectiveWorld = { ...effectiveWorld, x: sibling.world.x };
+        if (effectivePrecision === undefined && /\.\d{3,}/.test(sibling.sourceText)) {
+          effectivePrecision = "fine";
+        }
+      }
+    }
+  }
+
   const result = applyEditIntent(
     baseSource,
     editHandles,
-    { kind: "move", handleId, newWorld },
+    { kind: "move", handleId, newWorld: effectiveWorld, formatPrecision: effectivePrecision },
     { ...parseOptions, sourceFingerprint: baseFingerprint }
   );
   if (result.kind === "success") {
@@ -530,6 +565,153 @@ function applyRewriteImplicitOrthoCornerAction(
       ? [computeReplacementPatch(source, updated.source)]
       : [{ oldSpan: operator.span, newSpan: updated.changedSpan, replacement }];
   return { kind: "success", newSource: updated.source, patches, changedSourceIds: [action.elementId] };
+}
+
+function getCoordinateWorldForAction(
+  coord: CoordinateItem,
+  statementId: string,
+  editHandles: readonly EditHandle[]
+): { x: string; y: string } {
+  const matchingHandle = editHandles.find(
+    (h) =>
+      h.kind === "path-point" &&
+      h.sourceRef.sourceId === statementId &&
+      h.sourceRef.sourceSpan.from === coord.span.from
+  );
+  if (matchingHandle) {
+    return {
+      x: formatNumber(ptToCm(matchingHandle.world.x)),
+      y: formatNumber(ptToCm(matchingHandle.world.y))
+    };
+  }
+  if (coord.form === "cartesian") {
+    return {
+      x: coord.x,
+      y: coord.y
+    };
+  }
+  return { x: "0", y: "0" };
+}
+
+/**
+ * Move an orthogonal segment of a wire / polyline while keeping endpoints fixed.
+ * Cadence Virtuoso style orthogonal wire stretching.
+ */
+function applyMoveOrthoSegmentAction(
+  source: string,
+  editHandles: readonly EditHandle[],
+  action: Extract<EditAction, { kind: "moveOrthoSegment" }>,
+  parseOptions: EditParseOptions
+): EditActionResult {
+  const baseSource = action.baselineSource ?? source;
+  const parsed = parseTikzForEdit(baseSource, parseOptions);
+  const statement = findPathStatementBySourceId(parsed.figure.body, action.elementId);
+  if (!statement || statement.command !== "draw") {
+    return { kind: "unsupported", reason: "Ortho segment move requires a draw statement." };
+  }
+
+  const coordinates = statement.items.filter((item): item is CoordinateItem => item.kind === "Coordinate");
+  const operator = statement.items.find(
+    (item): item is PathKeywordItem =>
+      item.kind === "PathKeyword" && (item.keyword === "|-" || item.keyword === "-|" || item.keyword === "--")
+  );
+
+  const newCmX = formatNumber(ptToCm(action.newWorld.x));
+  const newCmY = formatNumber(ptToCm(action.newWorld.y));
+
+  // Case 1: 2-point wire (implicit |- / -|)
+  if (coordinates.length === 2 && operator) {
+    if (operator.keyword === "--") {
+      return { kind: "unsupported", reason: "两点单段直连导线不可推拉折弯，仅跟随两端元件移动伸缩。" };
+    }
+    const c0 = coordinates[0];
+    const c1 = coordinates[1];
+    const p0 = getCoordinateWorldForAction(c0, action.elementId, editHandles);
+    const p1 = getCoordinateWorldForAction(c1, action.elementId, editHandles);
+
+    let replacement = "";
+    if (action.axis === "v") {
+      replacement = `-- (${newCmX},${p0.y}) -- (${newCmX},${p1.y}) --`;
+    } else {
+      replacement = `-- (${p0.x},${newCmY}) -- (${p1.x},${newCmY}) --`;
+    }
+    const updated = replaceSpan(baseSource, operator.span, replacement);
+    const patches = [computeReplacementPatch(source, updated.source)];
+    return { kind: "success", newSource: updated.source, patches, changedSourceIds: [action.elementId] };
+  }
+
+  const m = coordinates.length;
+  if (m < 2 || action.segmentIndex < 0 || action.segmentIndex >= m - 1) {
+    return { kind: "unsupported", reason: `Invalid segmentIndex ${action.segmentIndex} for polyline with ${m} coordinates` };
+  }
+
+  const k = action.segmentIndex;
+  const ck = coordinates[k];
+  const ck1 = coordinates[k + 1];
+
+  let updatedSource = baseSource;
+
+  // Case 2: Internal segment (1 <= k <= m - 3)
+  if (k >= 1 && k <= m - 3) {
+    const rawK = baseSource.slice(ck.span.from, ck.span.to);
+    const rawK1 = baseSource.slice(ck1.span.from, ck1.span.to);
+
+    const newKText = action.axis === "v" ? formatCoordinate(rawK, newCmX, ck.y) : formatCoordinate(rawK, ck.x, newCmY);
+    const newK1Text = action.axis === "v" ? formatCoordinate(rawK1, newCmX, ck1.y) : formatCoordinate(rawK1, ck1.x, newCmY);
+
+    const r2 = replaceSpan(baseSource, ck1.span, newK1Text);
+    const r1 = replaceSpan(r2.source, ck.span, newKText);
+    updatedSource = r1.source;
+  } else if (k === 0) {
+    // Case 3: Boundary segment k === 0 (start endpoint ck to intermediate corner ck1)
+    const pk = getCoordinateWorldForAction(ck, action.elementId, editHandles);
+    const rawK1 = baseSource.slice(ck1.span.from, ck1.span.to);
+    if (action.axis === "v") {
+      const newK1Text = formatCoordinate(rawK1, newCmX, ck1.y);
+      const newCorner = ` -- (${newCmX},${pk.y})`;
+      const r2 = replaceSpan(baseSource, ck1.span, newK1Text);
+      const r1 = replaceSpan(r2.source, { from: ck.span.to, to: ck.span.to }, newCorner);
+      updatedSource = r1.source;
+    } else {
+      const newK1Text = formatCoordinate(rawK1, ck1.x, newCmY);
+      const newCorner = ` -- (${pk.x},${newCmY})`;
+      const r2 = replaceSpan(baseSource, ck1.span, newK1Text);
+      const r1 = replaceSpan(r2.source, { from: ck.span.to, to: ck.span.to }, newCorner);
+      updatedSource = r1.source;
+    }
+  } else if (k === m - 2) {
+    // Case 4: Boundary segment k === m - 2 (intermediate corner ck to end endpoint ck1)
+    const pk1 = getCoordinateWorldForAction(ck1, action.elementId, editHandles);
+    const rawK = baseSource.slice(ck.span.from, ck.span.to);
+    if (action.axis === "v") {
+      const newKText = formatCoordinate(rawK, newCmX, ck.y);
+      const newCorner = `(${newCmX},${pk1.y}) -- `;
+      const r2 = replaceSpan(baseSource, { from: ck1.span.from, to: ck1.span.from }, newCorner);
+      const r1 = replaceSpan(r2.source, ck.span, newKText);
+      updatedSource = r1.source;
+    } else {
+      const newKText = formatCoordinate(rawK, ck.x, newCmY);
+      const newCorner = `(${pk1.x},${newCmY}) -- `;
+      const r2 = replaceSpan(baseSource, { from: ck1.span.from, to: ck1.span.from }, newCorner);
+      const r1 = replaceSpan(r2.source, ck.span, newKText);
+      updatedSource = r1.source;
+    }
+  } else {
+    // Fallback
+    const rawK = baseSource.slice(ck.span.from, ck.span.to);
+    const rawK1 = baseSource.slice(ck1.span.from, ck1.span.to);
+    const newKText = action.axis === "v" ? formatCoordinate(rawK, newCmX, ck.y) : formatCoordinate(rawK, ck.x, newCmY);
+    const newK1Text = action.axis === "v" ? formatCoordinate(rawK1, newCmX, ck1.y) : formatCoordinate(rawK1, ck1.x, newCmY);
+    const r2 = replaceSpan(baseSource, ck1.span, newK1Text);
+    const r1 = replaceSpan(r2.source, ck.span, newKText);
+    updatedSource = r1.source;
+  }
+
+  if (updatedSource === source) {
+    return { kind: "success", newSource: source, patches: [], changedSourceIds: [action.elementId] };
+  }
+  const patches = [computeReplacementPatch(source, updatedSource)];
+  return { kind: "success", newSource: updatedSource, patches, changedSourceIds: [action.elementId] };
 }
 
 function findPathStatementBySourceId(
@@ -1064,20 +1246,20 @@ function moveStatementAfterNamedDefinition(
     return null;
   }
 
-  const producerRef = snapshot.byId.get(producerId)!;
-
-  if (movingRef.parentKey !== producerRef.parentKey) {
+  const rawProducerRef = snapshot.byId.get(producerId)!;
+  const effectiveProducerRef = findAncestorInParentKey(snapshot, rawProducerRef, movingRef.parentKey);
+  if (!effectiveProducerRef) {
     return null;
   }
 
-  if (movingRef.index > producerRef.index) {
+  if (movingRef.index > effectiveProducerRef.index) {
     return null;
   }
 
   const parentRefs = snapshot.byParentKey.get(movingRef.parentKey)!;
   const ids = parentRefs.map((ref) => ref.id);
   const withoutMoving = ids.filter((id) => id !== movingStatementId);
-  const producerIndexInFiltered = withoutMoving.indexOf(producerId);
+  const producerIndexInFiltered = withoutMoving.indexOf(effectiveProducerRef.id);
   const nextOrder = [...withoutMoving];
   nextOrder.splice(producerIndexInFiltered + 1, 0, movingStatementId);
 
@@ -1094,6 +1276,28 @@ function moveStatementAfterNamedDefinition(
     source: applied.source,
     patches: applied.patches
   };
+}
+
+function findAncestorInParentKey(
+  snapshot: ReturnType<typeof parseStatementSnapshot>,
+  targetRef: StatementRef,
+  targetParentKey: string
+): StatementRef | null {
+  if (targetRef.parentKey === targetParentKey) {
+    return targetRef;
+  }
+  const prefix = targetParentKey === "" ? "" : `${targetParentKey}/`;
+  if (!targetRef.parentKey.startsWith(prefix)) {
+    return null;
+  }
+  const remaining = targetRef.parentKey.slice(prefix.length);
+  const topIndexStr = remaining.split("/")[0];
+  const topIndex = parseInt(topIndexStr, 10);
+  if (Number.isNaN(topIndex)) {
+    return null;
+  }
+  const siblings = snapshot.byParentKey.get(targetParentKey);
+  return siblings?.[topIndex] ?? null;
 }
 
 function findNamedDefinitionStatementId(
@@ -1118,21 +1322,34 @@ function statementDeclaresName(statement: Statement, name: string): boolean {
   if (statement.kind !== "Path") {
     return false;
   }
+  if (statement.command === "coordinate") {
+    for (const item of statement.items) {
+      if (item.kind === "Coordinate") {
+        const coordName = normalizeNodeNameCandidate(item.x || item.raw?.replace(/[()]/g, ""));
+        if (coordName === name || (coordName && (coordName.startsWith(name + ".") || coordName.startsWith(name + "_")))) {
+          return true;
+        }
+      }
+    }
+  }
   for (const item of statement.items) {
     if (item.kind === "Node") {
-      if (normalizeNodeNameCandidate(item.name) === name) {
+      const nodeName = normalizeNodeNameCandidate(item.name);
+      if (nodeName === name || (nodeName && (nodeName.startsWith(name + ".") || nodeName.startsWith(name + "_")))) {
         return true;
       }
       const aliases = item.aliases ?? [];
       for (const alias of aliases) {
-        if (normalizeNodeNameCandidate(alias) === name) {
+        const aliasName = normalizeNodeNameCandidate(alias);
+        if (aliasName === name || (aliasName && (aliasName.startsWith(name + ".") || aliasName.startsWith(name + "_")))) {
           return true;
         }
       }
       continue;
     }
     if (item.kind === "CoordinateOperation") {
-      if (normalizeNodeNameCandidate(item.name) === name) {
+      const coordName = normalizeNodeNameCandidate(item.name);
+      if (coordName === name || (coordName && (coordName.startsWith(name + ".") || coordName.startsWith(name + "_")))) {
         return true;
       }
     }

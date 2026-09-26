@@ -1,5 +1,5 @@
 $currentPath = [Environment]::GetEnvironmentVariable('Path', 'User')
-$tikzDir = 'E:\tikz-editor-master\tikz-editor-master'
+$tikzDir = (Resolve-Path "$PSScriptRoot\..").Path
 if ($currentPath -notlike "*$tikzDir*") {
     [Environment]::SetEnvironmentVariable('Path', "$currentPath;$tikzDir", 'User')
     Write-Host 'Added to PATH successfully'

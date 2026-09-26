@@ -2,8 +2,23 @@ export { FeatureFlags } from "./ast/features.js";
 export * from "./coords/index.js";
 export { parseTikz, createIncrementalParseSession } from "./parser/index.js";
 export { applyEdit, applyEditIntent } from "./edit/apply.js";
-export { clampDeltaForAttachedWires, findVddRails, isPointOnVddRail } from "./edit/actions/wire-follow.js";
-export type { VddRail } from "./edit/actions/wire-follow.js";
+export {
+  clampDeltaForAttachedWires,
+  findVddRails,
+  isPointOnVddRail,
+  INTER_COMPONENT_STRAIGHT_WIRE_BLOCK_REASON,
+  findInterComponentStraightWireConnection,
+  findAllInterComponentStraightWires,
+  collectInterComponentStraightWireSourceIds,
+  findHalfConnectedStraightWireConnection,
+  findAllHalfConnectedStraightWires,
+  collectHalfConnectedStraightWireLockedHandleIds
+} from "./edit/actions/wire-follow.js";
+export type {
+  VddRail,
+  InterComponentStraightWireConnection,
+  HalfConnectedStraightWireConnection
+} from "./edit/actions/wire-follow.js";
 export { EditorSession } from "./edit/session.js";
 export { createEditAnalysisSession } from "./edit/analysis.js";
 export {
@@ -38,6 +53,7 @@ export {
   DEFAULT_STANDALONE_LATEX_EXPORT_FILE_NAME
 } from "./export/index.js";
 export { EDIT_ACTION_IDS, getEditActionAvailability } from "./edit/action-availability.js";
+export { formatNumber, PT_PER_CM, CM_PER_PT } from "./edit/format.js";
 export {
   buildSnapContext,
   snapSelectionTranslation,

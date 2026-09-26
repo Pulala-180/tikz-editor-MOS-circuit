@@ -65,6 +65,19 @@ export default function agentSyncPlugin(): Plugin {
         }
       });
 
+      server.ws.on("agent:active-file", (data: { path: string }, client) => {
+        try {
+          if (!data?.path) return;
+          const fullPath = path.isAbsolute(data.path)
+            ? data.path
+            : path.resolve(__dirname, "../../", data.path);
+          const activeFileRecord = path.resolve(syncDirWeb, "current-active-file.txt");
+          fs.writeFileSync(activeFileRecord, fullPath, "utf-8");
+        } catch (e) {
+          console.error("Failed to update active file path", e);
+        }
+      });
+
       let currentSketchDir = path.resolve(__dirname, "../../Sketch");
       if (!fs.existsSync(currentSketchDir)) {
         fs.mkdirSync(currentSketchDir, { recursive: true });
@@ -314,6 +327,8 @@ export default function agentSyncPlugin(): Plugin {
           const filePath = path.resolve(currentSketchDir, data.relPath);
           if (fs.existsSync(filePath)) {
             const content = fs.readFileSync(filePath, "utf-8");
+            const activeFileRecord = path.resolve(syncDirWeb, "current-active-file.txt");
+            fs.writeFileSync(activeFileRecord, filePath, "utf-8");
             client.send("sketch:file-data", {
               name: path.basename(data.relPath),
               relPath: data.relPath,

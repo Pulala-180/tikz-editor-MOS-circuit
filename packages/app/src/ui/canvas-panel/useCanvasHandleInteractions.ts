@@ -8,8 +8,10 @@ import { buildSnapContext, type SnapGuideInput, type SnapLine, type SnapSettings
 import type { ResizeRole } from "tikz-editor/edit/actions";
 import type { EditHandle, NodeAnchorTarget, SceneElement, ScenePath } from "tikz-editor/semantic/types";
 import type { WorldBounds, WorldPoint } from "../coords/types";
-import type { NodeItem } from "tikz-editor/ast/types";
+import type { NodeItem, Statement } from "tikz-editor/ast/types";
 import { resolvePropertyTarget } from "tikz-editor/edit/property-target";
+import { findHalfConnectedStraightWireConnection } from "tikz-editor/index";
+import { findVddRails } from "tikz-editor/edit/actions/wire-follow";
 import type { CanvasTransform, ToolMode } from "../../store/types";
 import { clientToWorldPoint } from "./geometry";
 import { isAdditiveSelectionModifier, isResizeHandleAdditiveSelectionModifier } from "./selection-modifiers";
@@ -105,29 +107,96 @@ function normalizeResizeRoleForNodeShapeFrame(role: ResizeRole, frame: ResizeFra
 
 function resolveHandleMovementConstraint(
   handle: EditHandle,
-  editHandles: readonly EditHandle[]
-): { axis: "x" | "y" | null; lockedCoordinate: number | null } {
+  editHandles: readonly EditHandle[],
+  source?: string,
+  body?: readonly Statement[]
+): {
+  axis: "x" | "y" | null;
+  lockedCoordinate: number | null;
+  directionConstraint: {
+    anchorWorld: WorldPoint;
+    unitVector: { x: number; y: number };
+    connectedComponentId?: string | null;
+  } | null;
+} {
   if (handle.kind !== "path-point") {
-    return { axis: null, lockedCoordinate: null };
+    return { axis: null, lockedCoordinate: null, directionConstraint: null };
   }
+
+  // First check if this statement is a half-connected straight wire
+  if (body && source) {
+    const stmt = body.find((s) => s.id === handle.sourceRef.sourceId);
+    if (stmt) {
+      const halfConn = findHalfConnectedStraightWireConnection(stmt, body, editHandles, source);
+      if (halfConn && halfConn.freeHandleId === handle.id) {
+        return {
+          axis: halfConn.isAxisAligned === "h" ? "x" : halfConn.isAxisAligned === "v" ? "y" : null,
+          lockedCoordinate:
+            halfConn.isAxisAligned === "h"
+              ? halfConn.anchorWorld.y
+              : halfConn.isAxisAligned === "v"
+                ? halfConn.anchorWorld.x
+                : null,
+          directionConstraint: {
+            anchorWorld: halfConn.anchorWorld,
+            unitVector: { x: halfConn.directionVector.x, y: halfConn.directionVector.y },
+            connectedComponentId: halfConn.connectedComponentId
+          }
+        };
+      }
+    }
+  }
+
   const sourceId = handle.sourceRef.sourceId;
   const pathHandles = editHandles.filter(
     (h) => h.kind === "path-point" && h.sourceRef.sourceId === sourceId
   );
   if (pathHandles.length === 2) {
-    const otherHandle = pathHandles.find((h) => h.id !== handle.id) ?? (pathHandles[0].id === handle.id ? pathHandles[1] : pathHandles[0]);
+    const otherHandle =
+      pathHandles.find((h) => h.id !== handle.id) ??
+      (pathHandles[0].id === handle.id ? pathHandles[1] : pathHandles[0]);
     if (otherHandle) {
+      const dx = handle.world.x - otherHandle.world.x;
+      const dy = handle.world.y - otherHandle.world.y;
+      const dist = Math.hypot(dx, dy);
+      const unitVector = dist > 1e-6
+        ? { x: dx / dist, y: dy / dist }
+        : { x: 1, y: 0 };
+
       // Check if horizontal line (|y1 - y2| <= 1.0pt / ~0.35mm)
-      if (Math.abs(handle.world.y - otherHandle.world.y) <= 1.0) {
-        return { axis: "x", lockedCoordinate: otherHandle.world.y };
+      if (Math.abs(handle.world.y - otherHandle.world.y) <= 1.0 || Math.abs(unitVector.y) <= 0.05) {
+        return {
+          axis: "x",
+          lockedCoordinate: otherHandle.world.y,
+          directionConstraint: {
+            anchorWorld: otherHandle.world,
+            unitVector: { x: unitVector.x >= 0 ? 1 : -1, y: 0 }
+          }
+        };
       }
       // Check if vertical line (|x1 - x2| <= 1.0pt / ~0.35mm)
-      if (Math.abs(handle.world.x - otherHandle.world.x) <= 1.0) {
-        return { axis: "y", lockedCoordinate: otherHandle.world.x };
+      if (Math.abs(handle.world.x - otherHandle.world.x) <= 1.0 || Math.abs(unitVector.x) <= 0.05) {
+        return {
+          axis: "y",
+          lockedCoordinate: otherHandle.world.x,
+          directionConstraint: {
+            anchorWorld: otherHandle.world,
+            unitVector: { x: 0, y: unitVector.y >= 0 ? 1 : -1 }
+          }
+        };
       }
+
+      return {
+        axis: null,
+        lockedCoordinate: null,
+        directionConstraint: {
+          anchorWorld: otherHandle.world,
+          unitVector
+        }
+      };
     }
   }
-  return { axis: null, lockedCoordinate: null };
+  return { axis: null, lockedCoordinate: null, directionConstraint: null };
 }
 
 export function useCanvasHandleInteractions(args: UseCanvasHandleInteractionsArgs) {
@@ -223,11 +292,24 @@ export function useCanvasHandleInteractions(args: UseCanvasHandleInteractionsArg
         snapshot.editHandles,
         snapshot.parseResult?.figure.body
       );
-      const constraint = resolveHandleMovementConstraint(handle, snapshot.editHandles);
+      const constraint = resolveHandleMovementConstraint(
+        handle,
+        snapshot.editHandles,
+        snapshot.source,
+        snapshot.parseResult?.figure.body
+      );
       const pathHandles = snapshot.editHandles.filter(
         (h) => h.kind === "path-point" && h.sourceRef.sourceId === handle.sourceRef.sourceId
       );
       const otherHandle = pathHandles.find((h) => h.id !== handle.id);
+      let cachedVddRails: Array<{ y: number; minX: number; maxX: number }> = [];
+      if (snapshot.parseResult?.figure.body) {
+        try {
+          cachedVddRails = findVddRails(snapshot.parseResult.figure.body, snapshot.editHandles, snapshot.source);
+        } catch {
+          // ignore
+        }
+      }
       setDragState({
         kind: "handle",
         pointerId: event.pointerId,
@@ -235,15 +317,18 @@ export function useCanvasHandleInteractions(args: UseCanvasHandleInteractionsArg
         sourceId: handle.sourceRef.sourceId,
         handleKind: handle.kind,
         cursor: handleCursor,
+        startWorld: { ...handle.world },
         lastKnownWorld: { ...handle.world },
         movementAxis: constraint.axis,
         lockedCoordinate: constraint.lockedCoordinate,
+        directionConstraint: constraint.directionConstraint,
         snapContext,
         gridResizeSnap,
         historyMergeKey: makeMergeKey("drag-handle", handle.id, event.pointerId),
         activeEndpointAnchor: null,
         otherEndpointWorld: otherHandle ? { ...otherHandle.world } : null,
-        preEditBaselineSource: snapshot.source
+        preEditBaselineSource: snapshot.source,
+        cachedVddRails
       });
       logSnapDebug({
         phase: "drag-start-handle",

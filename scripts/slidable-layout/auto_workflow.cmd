@@ -1,8 +1,9 @@
 @echo off
 setlocal
-set "PYTHON=D:\python-libs\Scripts\python.exe"
-set "NODE=D:\Program Files\nodejs\node.exe"
-if not exist "%NODE%" set "NODE=node"
+set "PYTHON=python"
+where python >nul 2>nul || if exist "D:\python-libs\Scripts\python.exe" set "PYTHON=D:\python-libs\Scripts\python.exe"
+set "NODE=node"
+where node >nul 2>nul || if exist "D:\Program Files\nodejs\node.exe" set "NODE=D:\Program Files\nodejs\node.exe"
 set "DIR=%~dp0"
 set "ORIG=%~1"
 

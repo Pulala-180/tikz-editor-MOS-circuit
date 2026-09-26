@@ -51,6 +51,15 @@ export function rotateCircuitToolMode(mode: ToolMode): ToolMode | null {
     return "addWireLead_V_Top";
   }
 
+  // 1.5 支路节点 (Dot Node)
+  if (mode.startsWith("addDotNode")) {
+    if (mode === "addDotNode" || mode === "addDotNode_V_Top") return "addDotNode_H_Right";
+    if (mode === "addDotNode_H_Right") return "addDotNode_V_Bottom";
+    if (mode === "addDotNode_V_Bottom") return "addDotNode_H_Left";
+    if (mode === "addDotNode_H_Left") return "addDotNode_V_Top";
+    return "addDotNode_V_Top";
+  }
+
   // 2. 电阻 (Resistor)
   if (mode.startsWith("addResistor")) {
     if (mode === "addResistor" || mode === "addResistor_V_Top") return "addResistor_H_Right";
@@ -174,8 +183,8 @@ export function rotateCircuitToolMode(mode: ToolMode): ToolMode | null {
     return `addPMOS_Top_${anchor}` as ToolMode;
   }
 
-  // 11. VDD & 实心节点 (不可旋转)
-  if (mode === "addVDD" || mode === "addDotNode") {
+  // 11. VDD (不可旋转)
+  if (mode === "addVDD") {
     return null;
   }
 
@@ -282,6 +291,12 @@ export function flipCircuitToolModeHorizontal(mode: ToolMode): ToolMode | null {
     if (mode === "addWireLead_H_Left") return "addWireLead_H_Right";
     if (mode === "addWireLead_H_Right") return "addWireLead_H_Left";
     return "addWireLead_H_Left";
+  }
+  // 10.5 支路节点
+  if (mode.startsWith("addDotNode")) {
+    if (mode === "addDotNode_H_Left") return "addDotNode_H_Right";
+    if (mode === "addDotNode_H_Right") return "addDotNode_H_Left";
+    return "addDotNode_H_Left";
   }
   return null;
 }
@@ -390,6 +405,12 @@ export function flipCircuitToolModeVertical(mode: ToolMode): ToolMode | null {
     if (mode === "addWireLead_V_Bottom") return "addWireLead_V_Top";
     return "addWireLead_V_Top";
   }
+  // 10.5 支路节点
+  if (mode.startsWith("addDotNode")) {
+    if (mode === "addDotNode" || mode === "addDotNode_V_Top") return "addDotNode_V_Bottom";
+    if (mode === "addDotNode_V_Bottom") return "addDotNode_V_Top";
+    return "addDotNode_V_Top";
+  }
   return null;
 }
 
@@ -481,6 +502,14 @@ export function switchCircuitToolModeWithKey(currentMode: ToolMode, key: string)
     if (k === "d") return "addWireLead_H_Right";
   }
 
+  // 3.5 支路节点
+  if (currentMode.startsWith("addDotNode")) {
+    if (k === "w") return "addDotNode_V_Top";
+    if (k === "s") return "addDotNode_V_Bottom";
+    if (k === "a") return "addDotNode_H_Left";
+    if (k === "d") return "addDotNode_H_Right";
+  }
+
   // 4. 电阻
   if (currentMode.startsWith("addResistor")) {
     if (k === "w") return "addResistor_V_Top";
@@ -557,10 +586,8 @@ export function switchCircuitToolModeWithKey(currentMode: ToolMode, key: string)
       if (k === "a") return `${prefix}_Left` as ToolMode;
       if (k === "s") return `${prefix}_Bottom` as ToolMode;
       if (k === "d") return `${prefix}_Right` as ToolMode;
-      // Pressing the port's own summon key (o = vdd-port, j = generic port) re-arms it at the
-      // default Left orientation. Needed now that placement is sticky: without it a re-arm would
-      // keep the previous orientation (and `o` alone would otherwise be swallowed).
-      if (k === "o") return "addIoNode_VddPort_Left";
+      // Pressing the port's own summon key (j = generic port) re-arms it at the
+      // default Left orientation.
       if (k === "j") return "addIoNode_Port_Left";
       // Swallow every other key: without this the `addIoNode` block below would hijack the
       // port with its Vin/Vout state machine (e.g. `o` would turn a vdd-port into Vout).
@@ -632,20 +659,18 @@ export function resolveSelectModeInitialTool(key: string, vKeyDown: boolean): To
   // 10. IO 端口 (T - Terminal)
   if (k === "t") return "addIoNode_Vin_Left";
 
-  // 10.1 端口对象: O = vdd-port ($V_{DD}$, 自动命名 VDD1/VDD2...), J = 通用 port
-  // (O/J 在 TOOL_BUTTONS 与本文的按键表里都未被占用；P 已被 Path 工具占用)
-  if (k === "o") return "addIoNode_VddPort_Left";
+  // 10.1 端口对象: J = 通用 port (通用端口元件)
   if (k === "j") return "addIoNode_Port_Left";
 
-  // 10.2 电源轨 (K - 空余黄金键): 单点落一条默认长度的粗导轨
-  if (k === "k") return "addPowerRail_H_Left";
+  // 10.2 VDD 电源轨 (K - 空余黄金键): 放置 VDD 电源符号
+  if (k === "k") return "addVDD";
 
-  // 11. D 键: 若按住 V 则为 VDD，否则为实心节点 (●)
+  // 11. D 键: 若按住 V 则为 VDD，否则为支路节点 (默认加号在上端引线)
   if (k === "d") {
     if (vKeyDown) {
       return "addVDD";
     }
-    return "addDotNode";
+    return "addDotNode_V_Top";
   }
 
   return null;

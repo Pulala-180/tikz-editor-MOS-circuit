@@ -5,3 +5,4 @@ export * from "./source.js";
 export * from "./svg.js";
 export * from "./transforms.js";
 export * from "./ui.js";
+export { formatNumber } from "../edit/format.js";

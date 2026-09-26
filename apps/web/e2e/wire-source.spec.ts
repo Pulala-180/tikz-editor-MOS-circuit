@@ -124,9 +124,8 @@ test("starting on empty space reports grid:<x>,<y> and clears when the draft end
 
   const viewport = canvasViewport(page);
   await viewport.focus();
-  const layer = page.locator("[data-canvas-viewport='true'] svg").last();
-  const box = await layer.boundingBox();
-  if (!box) throw new Error("canvas layer has no bounds");
+  const box = await viewport.boundingBox();
+  if (!box) throw new Error("canvas viewport has no bounds");
   await activateOrthoWire(page);
 
   await page.mouse.click(box.x + 140, box.y + 120);

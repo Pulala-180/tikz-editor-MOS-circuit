@@ -738,7 +738,7 @@ export function CanvasPanelView(props: CanvasPanelViewProps) {
                   toolMode={toolMode}
                   selectionBoxes={selectionBoxes}
                   dragStrokeWidth={selectionDragStrokeWidth}
-                  draggableSourceIds={matrixSelectionSourceIds}
+                  draggableSourceIds={draggableSourceIds}
                   onElementPointerDown={onElementPointerDown}
                   onElementContextMenu={onElementContextMenu}
                   onElementDoubleClick={onElementDoubleClick}
@@ -1009,6 +1009,7 @@ export function CanvasPanelView(props: CanvasPanelViewProps) {
                   ref={textEditTextareaRef}
                   className={[css.textEditTextarea, hideNativeTextEditCaret ? css.textEditTextareaHideNativeCaret : ""].filter(Boolean).join(" ")}
                   value={textEditingSession.text}
+                  onChange={() => {}}
                   spellCheck={false}
                   rows={textEditTextareaSizing?.rows}
                   style={textEditTextareaSizing != null ? { width: textEditPopup.textareaWidth } : undefined}

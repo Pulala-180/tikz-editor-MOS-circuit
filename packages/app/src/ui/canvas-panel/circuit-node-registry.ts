@@ -19,6 +19,11 @@ export const CIRCUIT_PORT_DEFINITIONS: Record<string, CircuitPortDescriptor> = {
   "bottom": { portKey: "bottom", nameZh: "底端口 (bottom)", nameEn: "Bottom", priority: 2 },
   "l": { portKey: "l", nameZh: "左端口 (l)", nameEn: "Left (l)", priority: 1 },
   "r": { portKey: "r", nameZh: "右端口 (r)", nameEn: "Right (r)", priority: 2 },
+  "left": { portKey: "left", nameZh: "左端口 (left)", nameEn: "Left (left)", priority: 1 },
+  "right": { portKey: "right", nameZh: "右端口 (right)", nameEn: "Right (right)", priority: 2 },
+
+  // Dot Node
+  "dot": { portKey: "dot", nameZh: "节点 (dot)", nameEn: "Dot (dot)", priority: 1 },
 
   // Sources & Power
   "vdd": { portKey: "vdd", nameZh: "电源 (VDD)", nameEn: "VDD", priority: 1 },
@@ -63,11 +68,14 @@ export function resolveComponentPort(nodeName: string, anchorName?: string | nul
   if (cleanNode.includes(".b") || cleanNode.endsWith("_b") || cleanNode.includes(".bottom") || cleanNode.endsWith("_bottom")) {
     return { label: "底端口 (bottom)", priority: 2 };
   }
-  if (cleanNode.includes(".l") || cleanNode.endsWith("_l")) {
+  if (cleanNode.includes(".l") || cleanNode.endsWith("_l") || cleanNode.includes(".left") || cleanNode.endsWith("_left")) {
     return { label: "左端口 (l)", priority: 1 };
   }
-  if (cleanNode.includes(".r") || cleanNode.endsWith("_r")) {
+  if (cleanNode.includes(".r") || cleanNode.endsWith("_r") || cleanNode.includes(".right") || cleanNode.endsWith("_right")) {
     return { label: "右端口 (r)", priority: 2 };
+  }
+  if (cleanNode.includes(".dot") || cleanNode.endsWith("_dot")) {
+    return { label: "节点 (dot)", priority: 1 };
   }
   if (cleanNode.includes("vdd")) {
     return { label: "电源 (VDD)", priority: 1 };

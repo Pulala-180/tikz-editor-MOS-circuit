@@ -12,8 +12,10 @@ TikZ Editor 是一款直观、高性能的可视化 TikZ 编辑器，专为**电
 
 | 文档名称 | 形式 | 核心内容 |
 | :--- | :---: | :--- |
-| 📄 [**TikZ Editor 电路绘制简易教程与使用指南.pdf**](./TikZ%20Editor%20电路绘制简易教程与使用指南.pdf) | **PDF 图文指南** | **从零开始的电路绘制图文全流程、快捷键使用、极速拖拽微调技巧与 BJT 接入实战** |
+| 📄 [**TikZ Editor 电路绘制简易教程与使用指南.pdf**](./TikZ%20Editor%20电路绘制简易教程与使用指南.pdf) | **PDF 图文指南** | **从零开始的电路绘制图文全流程、快捷键使用、极速拖拽微调技巧与 MOS 核心器件绘制实战** |
+| 🔌 [**MCP 官方服务端接入与配置指引**](./packages/mcp/README.md) | **Markdown 指南** | **Claude Desktop / Cursor / Antigravity 原生 MCP 接入、10 大绘图与电路工具使用说明** |
 | 📖 [**元器件扩展开发与引脚节点标准指南 (SOP)**](./docs/COMPONENT_DEVELOPMENT_GUIDE.md) | **Markdown 规范** | **自定义新元件、引脚命名军规、快捷键分配与 6 步接入流水线 CheckList** |
+| 🔤 [**TikZ Arial 字体配置与独立编译方案**](#-tikz-arial-字体配置与编译方案-typography--standalone-workflow) | **Markdown 规范** | **工业级 Arial 粗斜体公式排版、XeLaTeX 引擎配置、独立单文件编译与高清导出** |
 | 🤖 [**AI Agent 协同与系统指令**](./AGENTS.md) | **Markdown 指令** | **AI 助手（Cursor / Claude / Copilot）自动化开发与热重载规范** |
 
 ---
@@ -31,13 +33,13 @@ TikZ Editor 是一款直观、高性能的可视化 TikZ 编辑器，专为**电
 
 ---
 
-## 🤖 AI Agent 协同与自动执行 (AI Assistant Guide)
+## 🤖 AI Agent 协同与 MCP 服务 (AI Assistant Guide)
 
-如果您使用 **Cursor / Claude Code / Antigravity / GitHub Copilot** 等 AI 助手打开本项目：
-- **依赖安装**：`npm install`
-- **启动服务**：`npm run dev`（内置 Vite `open: true`，启动后自动拉起浏览器）
-- **AI 系统指令**：详见项目根目录下的 [`AGENTS.md`](./AGENTS.md)。
-- **双向实时同步**：外部 Agent 写入 `Sketch/active-drawing/active-drawing.tex` 时，浏览器画布会自动触发 120 FPS 极速热重载。
+如果您使用 **Claude Desktop / Cursor / Claude Code / Antigravity / Windsurf** 等 AI 助手：
+- **原生 MCP 支持**：运行 `npm run mcp`，或直接在 Claude Desktop / Cursor 配置文件中挂载 `packages/mcp/dist/index.js`（详见 [`packages/mcp/README.md`](./packages/mcp/README.md)）。
+- **AI 随时感知与操控画板**：AI 具备 10 个专属工具与资源（读取源码、一键排版电路、语法校验、SVG导出、草稿箱管理）。
+- **启动网页开发服务**：`npm run dev`（内置 Vite `open: true`，启动后自动拉起浏览器）。
+- **双向实时同步**：MCP 或外部 Agent 写入 `Sketch/active-drawing/active-drawing.tex` 时，浏览器画布会自动触发 160+ FPS 极速热重载。
 
 ---
 
@@ -212,6 +214,174 @@ if (toolMode === "addMyComponent") {
 | **`S`** *(MOS模式下)* | **切到 Source 源极锚点** | 将 MOS 放置吸附锚点切换到**源极 (Source)** |
 | **`A` / `D`** *(IO模式下)* | **$V_{in}$ 端口左右朝向** | 切换为 $V_{in}$ 端口（左开 / 右开） |
 | **`W` / `S`** *(IO模式下)* | **$V_{out}$ 端口左右朝向** | 切换为 $V_{out}$ 端口（左开 / 右开） |
+
+---
+
+## 🔤 TikZ Arial 字体配置与编译方案 (Typography & Standalone Workflow)
+
+在集成电路（IC）、电子工程与期刊工业标准原理图中，元器件标识与电路节点公式普遍采用 **Arial / 无衬线加粗（Sans-serif Bold）** 风格（例如 $V_{\mathrm{DD}}$、$R_D$、$W/L$、$M_1$），以获得清晰锐利、工业感极强的视觉层次。
+
+本方案提炼自高端微电子作业与讲义工程实践，利用 `fontspec` 与 `etoolbox` 在 `tikzpicture` 环境中动态注入独立的 `arialmath` 数学版本，实现**正文保持经典学术衬线字体（如 Times / NewTX），而电路图中源码 `$R_D$` 无需任何修改即可自动呈现 Arial 粗直体/粗斜体**。
+
+---
+
+### 1. 核心设计与引擎要求
+
+- **编译器引擎**：必须使用 **XeLaTeX** 或 **LuaLaTeX**（传统 pdflatex 不支持 `fontspec` 与直接调用 TTF/OTF 系统字体）。
+- **必备宏包**：
+  - `fontspec`：管理系统字体与定义 NFSS 字体族；
+  - `etoolbox`：利用 `\AtBeginEnvironment` 环境钩子实现环境级作用域切换；
+  - `tikz`：绘图引擎及配套库；
+  - `amsmath`：基础数学符号与排版支持。
+
+---
+
+### 2. Arial 字体与公式映射代码解析
+
+在导言区加入如下全局声明：
+
+```latex
+\usepackage{fontspec}
+\usepackage{etoolbox}
+
+% 1. 声明 Arial 字体族并映射到 NFSS 族名 arialx
+% （Windows 平台可直接指定 C:/Windows/Fonts/ 路径，跨平台亦可直接使用字体名称 "Arial"）
+\newfontfamily\ArialFont[
+  Path = C:/Windows/Fonts/,
+  Extension = .ttf,
+  UprightFont = arial,
+  BoldFont = arialbd,
+  ItalicFont = ariali,
+  BoldItalicFont = arialbi,
+  NFSSFamily = arialx
+]{arial}
+
+% 2. 声明专属数学版本 arialmath
+\DeclareMathVersion{arialmath}
+
+% 3. 将公式中的数字/运算符与字母变量绑定到 Arial 字体
+\SetSymbolFont{operators}{arialmath}{TU}{arialx}{b}{n}   % 数字与标准函数名 -> Arial 粗体
+\SetSymbolFont{letters}  {arialmath}{TU}{arialx}{b}{it}  % 变量字母（如 R, C, V, L） -> Arial 粗斜体
+
+% 4. 自动环境钩子：进入 tikzpicture 时自动激活 arialmath 并将文本设为 Arial
+\AtBeginEnvironment{tikzpicture}{%
+  \mathversion{arialmath}%
+  \ArialFont%
+}
+```
+
+> 💡 **原理优势**：
+> 1. **零代码侵入**：TikZ 源码内的公式书写完全遵循标准 LaTeX 格式（直接写 `$R_D$`、`$V_{\mathrm{in}}$`），无需手动套用 `\mathbf` 或 `\text`。
+> 2. **精准区分直体与斜体**：数字、括号保持粗直体，物理量变量自动转为粗斜体，完全符合 IEEE / JSSC 芯片顶级期刊排版规范。
+> 3. **局部隔离**：仅在 `tikzpicture` 内部生效，绝不污染正文的正规公式字体（如 Times / Computer Modern）。
+
+---
+
+### 3. 强烈工程建议：每个 TikZ 独立为一个单文件 (`.tex`)
+
+在实际芯片工程图和讲义排版中，**强烈建议使用者为每个电路图单独创建一个 `.tex` 文件**，采用 `standalone` 文档类进行维护，而不要将庞大的 TikZ 代码直接堆砌在主文档正文中。
+
+#### 为什么必须采用“一图一文件”独立编译架构？
+1. **⚡ 编译提速百倍**：主文档如果包含数十幅复杂电路图，全量编译将极度缓慢。独立成单文件后，单个图编译耗时通常在 0.5 秒以内，微调修改瞬间出图。
+2. **🛡️ 杜绝全局字体与样式冲突**：大型论文或讲义往往加载大量格式包（`newtxtext`, `ctex`, `bm` 等），容易与 TikZ 图形设置发生字体抢跑或宏冲突。独立文件拥有纯净闭环的编译环境。
+3. **🎯 完美契合 TikZ Editor 与 Git 协同**：在 TikZ Editor 中通过左侧 Sketch 工程面板或 MCP 实时读写单个电路文件；Git 提交时每个电路的变更历史独立清晰，合并冲突概率几乎为零。
+4. **🖼️ 高清导出与多格式无缝复用**：
+   - 独立编译出的 PDF 为严格按图形外接矩形紧凑裁切的单页矢量文件；
+   - 可一键使用命令行无损导出为 600 DPI / 1200 DPI 超高清 PNG，用于 PPT 汇报或 Word 文档：
+     ```bash
+     pdftoppm -png -r 600 circuit_demo.pdf circuit_demo_hd
+     ```
+5. **🚀 双模灵活引入（编译缓存优化）**：
+   在主文档宏包（如 `Command.tex`）中定义智能引入命令：
+   ```latex
+   \newcommand{\InputCircuit}[1]{%
+     \IfFileExists{#1.pdf}{%
+       \includegraphics{#1.pdf}% 如果已编译出独立矢量 PDF，直接极速包含（秒级加载）
+     }{%
+       \IfFileExists{#1.tex}{%
+         \input{#1.tex}% 否则动态编译 tex 源码
+       }{%
+         \input{#1}%
+       }%
+     }%
+   }
+   ```
+
+---
+
+### 4. 完整独立单文件模板 (`standalone` 示例)
+
+新建单独文件（例如 `circuit_demo.tex`），可直接使用如下完整模板独立编译：
+
+```latex
+\documentclass[tikz, border=2mm]{standalone}
+
+% --- 基础宏包 ---
+\usepackage{amsmath, amssymb}
+\usepackage{fontspec}
+\usepackage{etoolbox}
+\usepackage{tikz}
+\usetikzlibrary{calc, arrows.meta}
+
+% ============================================================
+% Arial 字体与公式数学版本配置
+% ============================================================
+\newfontfamily\ArialFont[
+  Path = C:/Windows/Fonts/,
+  Extension = .ttf,
+  UprightFont = arial,
+  BoldFont = arialbd,
+  ItalicFont = ariali,
+  BoldItalicFont = arialbi,
+  NFSSFamily = arialx
+]{arial}
+
+\DeclareMathVersion{arialmath}
+\SetSymbolFont{operators}{arialmath}{TU}{arialx}{b}{n}   % 数字与符号 -> Arial 粗体
+\SetSymbolFont{letters}  {arialmath}{TU}{arialx}{b}{it}  % 变量       -> Arial 粗斜体
+
+% 挂载到 tikzpicture 环境
+\AtBeginEnvironment{tikzpicture}{%
+  \mathversion{arialmath}%
+  \ArialFont%
+}
+
+\begin{document}
+\begin{tikzpicture}[>=latex, line cap=round, line join=round]
+
+  % 1. 电源轨 VDD
+  \draw[thick] (-0.8, 4.0) -- (0.8, 4.0);
+  \node[above, font=\large] at (0, 4.0) {$V_{\mathrm{DD}}$};
+  \draw[thick] (0, 4.0) -- (0, 3.2);
+
+  % 2. 负载电阻 RD
+  \draw[thick] (-0.25, 2.2) rectangle (0.25, 3.2);
+  \node[right=4pt] at (0.25, 2.7) {$R_D = 5\,\mathrm{k}\Omega$};
+  \draw[thick] (0, 2.2) -- (0, 1.4);
+
+  % 3. 输出端口 Vout
+  \draw[thick] (0, 1.4) -- (1.2, 1.4);
+  \filldraw[black] (0, 1.4) circle (1.5pt);
+  \node[right] at (1.2, 1.4) {$V_{\mathrm{out}}$};
+
+  % 4. nMOS 放大管 M1
+  \draw[thick] (0, 1.4) -- (0, 1.1) -- (-0.35, 1.1);       % 漏极 Drain
+  \draw[thick] (-0.35, 0.4) -- (-0.35, 1.2);              % 沟道板
+  \draw[thick] (-0.5, 0.5) -- (-0.5, 1.1);                % 栅极板 Gate
+  \draw[thick] (-0.5, 0.8) -- (-1.2, 0.8);                % 栅极端子
+  \node[left] at (-1.2, 0.8) {$V_{\mathrm{in}}$};
+  \node[left=3pt] at (-0.55, 0.4) {$M_1$};
+  \draw[thick] (-0.35, 0.5) -- (0, 0.5) -- (0, 0.2);       % 源极 Source
+
+  % 5. 接地端 GND
+  \draw[thick] (0, 0.2) -- (0, 0);
+  \draw[thick] (-0.4, 0) -- (0.4, 0);
+  \draw[thick] (-0.25, -0.08) -- (0.25, -0.08);
+  \draw[thick] (-0.1, -0.16) -- (0.1, -0.16);
+
+\end{tikzpicture}
+\end{document}
+```
 
 ---
 

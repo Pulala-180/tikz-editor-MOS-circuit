@@ -289,18 +289,186 @@ function withUndoCheckpoint(state: CanvasTextEditState, session: TextEditingSess
   };
 }
 
+export function sanitizeFormulaBraces(text: string): string {
+  if (!text.includes("$")) {
+    return text;
+  }
+  let result = text.trim();
+
+  // 1. $...$ followed by stray braces/subscripts outside:
+  // e.g. "$M_{}$${}" -> "$M_{}$"
+  // e.g. "$M_{}${}" -> "$M_{}$"
+  // e.g. "$M_{}$ {}" -> "$M_{}$"
+  // e.g. "$M$_{}" -> "$M_{}$"
+  // e.g. "$M$_{1}" -> "$M_{1}$"
+  // e.g. "$M$ $_{}$" -> "$M_{}$"
+  // e.g. "$M$ $_{1}$" -> "$M_{1}$"
+  const matchWithClosing = /^(\$[^$]+\$)\s*(.*)$/.exec(result);
+  if (matchWithClosing) {
+    const mathPart = matchWithClosing[1];
+    const tail = matchWithClosing[2].trim();
+    if (tail.length > 0 && (tail.includes("{") || tail.includes("}") || tail.includes("_"))) {
+      const subMatch = /^(?:\$)?_?\{?([a-zA-Z0-9]*)\}?(?:\$)?$/.exec(tail);
+      if (subMatch) {
+        const subContent = subMatch[1];
+        if (subContent.length > 0) {
+          if (mathPart.includes("_{}")) {
+            return mathPart.replace("_{}", `_{${subContent}}`);
+          } else {
+            return mathPart.slice(0, -1) + `_{${subContent}}$`;
+          }
+        } else {
+          // Stray empty braces outside formula, e.g. `${}`, `{}`, `_{}`, `$_{}$`
+          if (tail.includes("_") && !mathPart.includes("_")) {
+            return mathPart.slice(0, -1) + `_{}$`;
+          }
+          return mathPart;
+        }
+      }
+    }
+  }
+
+  // 2. Remove duplicate consecutive empty braces inside math: _{}{} -> _{}
+  result = result.replace(/_\{([a-zA-Z0-9]*)\}\{+\}/g, "_{$1}");
+
+  return result;
+}
+
 function applyInsertIntent(
   text: string,
   selectionStart: number,
   selectionEnd: number,
   insertedText: string
 ): { nextText: string; nextSelectionStart: number; nextSelectionEnd: number } {
-  const nextText = `${text.slice(0, selectionStart)}${insertedText}${text.slice(selectionEnd)}`;
-  const caret = selectionStart + insertedText.length;
+  const before = text.slice(0, selectionStart);
+  const after = text.slice(selectionEnd);
+
+  // Scenario A: User types "{" or "{}" right after "_" or "^"
+  if (insertedText === "{" || insertedText === "{}") {
+    if (before.endsWith("_") || before.endsWith("^")) {
+      // If "after" already starts with "{}" or "{"
+      if (after.startsWith("{}") || after.startsWith("{")) {
+        // Step into existing braces without duplicating!
+        return {
+          nextText: text,
+          nextSelectionStart: selectionStart + 1,
+          nextSelectionEnd: selectionStart + 1
+        };
+      }
+      // If "after" starts with "$" (math close delimiter) or is empty
+      if (after.startsWith("$") || after.length === 0) {
+        const paired = "{}";
+        const rawNext = `${before}${paired}${after}`;
+        const sanitized = sanitizeFormulaBraces(rawNext);
+        const caret = selectionStart + 1;
+        return {
+          nextText: sanitized,
+          nextSelectionStart: caret,
+          nextSelectionEnd: caret
+        };
+      }
+    }
+  }
+
+  // Scenario B: User types "}" when already inside a brace pair right before "}"
+  if (insertedText === "}") {
+    if (after.startsWith("}")) {
+      return {
+        nextText: text,
+        nextSelectionStart: selectionStart + 1,
+        nextSelectionEnd: selectionStart + 1
+      };
+    }
+  }
+
+  // Scenario C: User types "_" or "^" at the end of a single-math label "$M$|"
+  if (insertedText === "_" || insertedText === "^") {
+    if (
+      selectionStart === selectionEnd &&
+      selectionStart === text.length &&
+      text.startsWith("$") &&
+      text.endsWith("$") &&
+      text.length >= 2
+    ) {
+      // Insert before closing "$"
+      const rawNext = `${text.slice(0, -1)}${insertedText}$`;
+      const caret = rawNext.length - 1; // right after "_" before "$"
+      return {
+        nextText: rawNext,
+        nextSelectionStart: caret,
+        nextSelectionEnd: caret
+      };
+    }
+  }
+
+  // Scenario D: User types text when label ends with empty braces, e.g. "$M_{}$|" or "$M_{}|$" or "$M_{|}$"
+  if (
+    insertedText !== "{" &&
+    insertedText !== "}" &&
+    insertedText !== "$" &&
+    text.startsWith("$") &&
+    text.endsWith("$")
+  ) {
+    const emptyBraceMatch = /^(.*(?:_|\^)\{)(\})(\$)$/.exec(text);
+    if (emptyBraceMatch) {
+      const prefix = emptyBraceMatch[1]; // e.g. "$M_{"
+      const closingBrace = emptyBraceMatch[2]; // "}"
+      const closingDollar = emptyBraceMatch[3]; // "$"
+      if (
+        selectionStart === selectionEnd &&
+        (selectionStart === prefix.length ||
+          selectionStart === prefix.length + 1 ||
+          selectionStart === text.length)
+      ) {
+        const nextText = `${prefix}${insertedText}${closingBrace}${closingDollar}`;
+        const caret = prefix.length + insertedText.length;
+        return {
+          nextText,
+          nextSelectionStart: caret,
+          nextSelectionEnd: caret
+        };
+      }
+    }
+  }
+
+  // Scenario E: If editing at the end of a single math formula "$...$|", keep input inside closing $
+  if (
+    selectionStart === selectionEnd &&
+    selectionStart === text.length &&
+    text.startsWith("$") &&
+    text.endsWith("$") &&
+    text.length >= 2 &&
+    insertedText !== "$"
+  ) {
+    const rawNext = `${text.slice(0, -1)}${insertedText}$`;
+    const sanitized = sanitizeFormulaBraces(rawNext);
+    const caret = sanitized.endsWith("$") ? sanitized.length - 1 : sanitized.length;
+    return {
+      nextText: sanitized,
+      nextSelectionStart: caret,
+      nextSelectionEnd: caret
+    };
+  }
+
+  const rawNext = `${before}${insertedText}${after}`;
+  const sanitized = sanitizeFormulaBraces(rawNext);
+  let caret = selectionStart + insertedText.length;
+  // If editing inside a single math formula "$...$", keep caret before closing "$"
+  if (
+    text.startsWith("$") &&
+    text.endsWith("$") &&
+    text.length >= 2 &&
+    sanitized.startsWith("$") &&
+    sanitized.endsWith("$") &&
+    sanitized.length >= 2 &&
+    caret >= sanitized.length
+  ) {
+    caret = sanitized.length - 1;
+  }
   return {
-    nextText,
-    nextSelectionStart: caret,
-    nextSelectionEnd: caret
+    nextText: sanitized,
+    nextSelectionStart: Math.min(caret, sanitized.length),
+    nextSelectionEnd: Math.min(caret, sanitized.length)
   };
 }
 
@@ -561,6 +729,8 @@ function applySessionTextUpdate(
   if (!current) {
     return { state, effects: [] };
   }
+  const sanitized = sanitizeFormulaBraces(nextText);
+  nextText = sanitized;
   const selection = normalizeSelection(nextText.length, selectionStart, selectionEnd);
   const currentTextHasUnstableTrailingEscape = hasUnstableTrailingEscape(current.text);
   const nextTextHasUnstableTrailingEscape = hasUnstableTrailingEscape(nextText);
@@ -938,7 +1108,23 @@ export function reduceCanvasTextEdit(
       if (!session) {
         return { state, effects: [] };
       }
-      const selection = normalizeSelection(session.text.length, action.selectionStart, action.selectionEnd);
+      let selection = normalizeSelection(session.text.length, action.selectionStart, action.selectionEnd);
+      // If editing a single math formula "$...$", and the cursor was previously inside the formula,
+      // prevent the browser's native DOM value-setter artifact from jumping the cursor to the end (outside "$")
+      if (
+        session.text.startsWith("$") &&
+        session.text.endsWith("$") &&
+        session.text.length >= 2 &&
+        selection.start === session.text.length &&
+        selection.end === session.text.length &&
+        session.selectionStart > 0 &&
+        session.selectionStart < session.text.length
+      ) {
+        selection = {
+          start: Math.min(session.selectionStart, session.text.length - 1),
+          end: Math.min(session.selectionEnd, session.text.length - 1)
+        };
+      }
       if (session.selectionStart === selection.start && session.selectionEnd === selection.end) {
         return { state, effects: [] };
       }

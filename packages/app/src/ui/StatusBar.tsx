@@ -399,7 +399,11 @@ function resolvePlacementHint(
   if (isCircuitPlacementMode(toolMode)) {
     // Matches the reference tool's placement banner; `R` alone still rotates, H/Y and V/X keep
     // their existing mirrors, and W/A/S/D keep switching orientation.
-    return "Place component mirrored left/right · R rotates · Shift+R / Ctrl+R mirrors · click to place another · Esc exits";
+    const isSticky = toolMode.startsWith("addNMOS") || toolMode.startsWith("addPMOS");
+    if (isSticky) {
+      return "Place component mirrored left/right · R rotates · Shift+R / Ctrl+R mirrors · click to place another · Esc exits";
+    }
+    return "Place component mirrored left/right · R rotates · Shift+R / Ctrl+R mirrors · click to place · Esc exits";
   }
   return null;
 }

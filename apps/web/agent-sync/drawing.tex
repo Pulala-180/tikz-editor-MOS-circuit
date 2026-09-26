@@ -4,44 +4,186 @@
 \usetikzlibrary{arrows.meta}
 \usetikzlibrary{positioning}
 \begin{document}
-\begin{tikzpicture}[>=Stealth, scale=1.1, every node/.style={transform shape}]
-  % 坐标轴
-  \draw[->, line width=1.0pt] (0, 0) -- (7.5, 0) node[below right, font=\large] {$V_{in}$};
-  \draw[->, line width=1.0pt] (0, 0) -- (0, 6.0) node[above left, font=\large] {$V_{out}$};
+\begin{tikzpicture}
+  % --- VDD Power Rail ---
+  \begin{scope}[shift={(4.2,6.4)}]
+    \coordinate (node_VDD.bottom) at (0,0);
+    \draw[ultra thick] (-1.8,0) -- (1.8,0);
+    \node[draw=none] at (2.15,0) {$V_{DD}$};
+  \end{scope}
 
-  % 辅助黄色/橙色虚线
-  \draw[dashed, orange!90!black, line width=0.6pt, dash pattern=on 4pt off 2.5pt] (0.8, 4.68) -- (0, 4.68);
-  \draw[dashed, orange!90!black, line width=0.6pt, dash pattern=on 4pt off 2.5pt] (2.2, 4.25) -- (0, 4.25);
-  \draw[dashed, orange!90!black, line width=0.6pt, dash pattern=on 4pt off 2.5pt] (3.2, 1.1) -- (0, 1.1);
-  \draw[dashed, orange!90!black, line width=0.6pt, dash pattern=on 4pt off 2.5pt] (5.2, 0.65) -- (0, 0.65);
+  % --- Wires from VDD to M3.s and M4.s ---
+  \draw[line width=0.32mm, line cap=round] (3.0,6.4) -- (3.0,5.8);
+  \draw[line width=0.32mm, line cap=round] (5.4,6.4) -- (5.4,5.8);
 
-  % 辅助灰色垂直投影实线
-  \draw[gray!60, line width=0.5pt] (2.2, 4.25) -- (2.2, 0);
-  \draw[gray!60, line width=0.5pt] (3.2, 1.1) -- (3.2, 0);
+  % --- Vb Bias Terminal and Wire to M3.g ---
+  \draw[line width=0.32mm, fill=black] (1.2,5.3) circle (0.05);
+  \node[left] at (1.1,5.3) {$V_b$};
+  \draw[line width=0.32mm, line cap=round] (1.2,5.3) -- (2.27,5.3);
 
-  % 坐标轴刻度标签
-  \node[left=3pt, font=\large\bfseries] at (0, 4.25) {$V_{OH}$};
-  \node[left=3pt, font=\large\bfseries] at (0, 1.1) {$V_{OL}$};
-  \node[below=4pt, font=\large\bfseries] at (2.2, 0) {$V_{IL}$};
-  \node[below=4pt, font=\large\bfseries] at (3.2, 0) {$V_{IH}$};
+  % --- Gate Bus between M3 and M4 ---
+  \draw[line width=0.32mm, line cap=round] (2.27,5.3) -- (4.67,5.3);
 
-  % 切线 (斜率 = -1)
-  \draw[gray!70, line width=0.6pt] (1.3, 5.15) -- (3.0, 3.45);
-  \node[above right, font=\normalsize] at (1.65, 4.8) {$\mathrm{d}V_{\mathrm{out}}/\mathrm{d}V_{\mathrm{in}} = -1$};
+  % --- M3 (pMOS Active Load, Left) ---
+  % Gate at (2.27, 5.3), Source at (3.0, 5.8), Drain at (3.0, 4.8)
+  \begin{scope}[shift={(2.27,5.3)}]
+    \coordinate (node_M3.g) at (0,0);
+    \draw[line width=0.32mm, line cap=round] (0,0) -- (0.26,0);
+    \draw[line width=0.7mm] (0.25,-0.25) -- (0.25,0.25);
+    \draw[line width=0.7mm] (0.41,-0.3) -- (0.41,0.3);
+    \draw[line width=0.32mm, line cap=round, line join=round] (0.40,-0.2) -- (0.73,-0.2) -- (0.73,-0.5);
+    \draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.73,0.2) -- (0.44,0.2);
+    \draw[line width=0.32mm, line cap=round] (0.73,0.5) -- (0.73,0.2);
+    \node[node font=\sffamily\bfseries] at (0.35,0.35) {$M_{3}$};
+    \coordinate (node_M3.d) at (0.73,-0.5);
+    \coordinate (node_M3.s) at (0.73,0.5);
+  \end{scope}
 
-  \draw[gray!70, line width=0.6pt] (2.3, 2.0) -- (4.1, 0.2);
-  \node[above right, font=\normalsize] at (3.0, 1.3) {$\mathrm{d}V_{\mathrm{out}}/\mathrm{d}V_{\mathrm{in}} = -1$};
+  % --- M4 (pMOS Active Load, Right) ---
+  % Gate at (4.67, 5.3), Source at (5.4, 5.8), Drain at (5.4, 4.8)
+  \begin{scope}[shift={(4.67,5.3)}]
+    \coordinate (node_M4.g) at (0,0);
+    \draw[line width=0.32mm, line cap=round] (0,0) -- (0.26,0);
+    \draw[line width=0.7mm] (0.25,-0.25) -- (0.25,0.25);
+    \draw[line width=0.7mm] (0.41,-0.3) -- (0.41,0.3);
+    \draw[line width=0.32mm, line cap=round, line join=round] (0.40,-0.2) -- (0.73,-0.2) -- (0.73,-0.5);
+    \draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.73,0.2) -- (0.44,0.2);
+    \draw[line width=0.32mm, line cap=round] (0.73,0.5) -- (0.73,0.2);
+    \node[node font=\sffamily\bfseries] at (-0.35,0.35) {$M_{4}$};
+    \coordinate (node_M4.d) at (0.73,-0.5);
+    \coordinate (node_M4.s) at (0.73,0.5);
+  \end{scope}
 
-  % VTC 特性曲线 (平滑贝塞尔曲线，过渡区陡峭)
-  \draw[line width=1.4pt, line cap=round] 
-    (0, 4.8) 
-    .. controls (1.0, 4.75) and (1.6, 4.55) .. (2.2, 4.25)
-    .. controls (2.55, 3.9) and (2.5, 1.7) .. (3.2, 1.1)
-    .. controls (3.6, 0.8) and (4.5, 0.7) .. (6.2, 0.6);
+  % --- Left Branch: M3.d to M1.d ---
+  \draw[line width=0.32mm, line cap=round] (3.0,4.8) -- (3.0,3.4);
+  \draw[line width=0.32mm, fill=black] (3.0,4.1) circle (0.06);
 
-  % 状态点 (实心黑色圆点)
-  \fill (0.8, 4.68) circle (3pt);
-  \fill (5.2, 0.65) circle (3pt);
+  % --- Left Output Line to Vout1 & CL ---
+  \draw[line width=0.32mm, line cap=round] (3.0,4.1) -- (0.8,4.1);
+  \draw[line width=0.32mm, fill=black] (0.8,4.1) circle (0.06);
+  \draw[line width=0.32mm, line cap=round] (0.8,4.1) -- (0.1,4.1);
+  \draw[line width=0.32mm, fill=white] (0.1,4.1) circle (0.06);
+  \node[left] at (0.0,4.1) {$v_{\text{out1}}$};
+
+  % --- Left Load Capacitor CL ---
+  \draw[line width=0.32mm, line cap=round] (0.8,4.1) -- (0.8,3.6);
+  \begin{scope}[shift={(0.8,3.6)}]
+    \coordinate (node_CL1.t) at (0,0);
+    \draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.2);
+    \draw[ultra thick] (-0.25,-0.2) -- (0.25,-0.2);
+    \draw[ultra thick] (-0.25,-0.36) -- (0.25,-0.36);
+    \draw[line width=0.32mm, line cap=round] (0,-0.36) -- (0,-0.56);
+    \coordinate (node_CL1.b) at (0,-0.56);
+    \node[left] at (-0.35,-0.28) {$C_L$};
+  \end{scope}
+  \draw[line width=0.32mm, line cap=round] (0.8,3.04) -- (0.8,2.5);
+  \begin{scope}[shift={(0.8,2.5)}]
+    \coordinate (node_GND_L.top) at (0,0);
+    \draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.21);
+    \draw[ultra thick] (-0.17,-0.21) -- (0.17,-0.21);
+    \draw[ultra thick] (-0.11,-0.35) -- (0.11,-0.35);
+    \draw[ultra thick] (-0.08,-0.49) -- (0.08,-0.49);
+  \end{scope}
+
+  % --- Right Branch: M4.d to M2.d ---
+  \draw[line width=0.32mm, line cap=round] (5.4,4.8) -- (5.4,3.4);
+  \draw[line width=0.32mm, fill=black] (5.4,4.1) circle (0.06);
+
+  % --- Right Output Line to Vout2 & CL ---
+  \draw[line width=0.32mm, line cap=round] (5.4,4.1) -- (7.6,4.1);
+  \draw[line width=0.32mm, fill=black] (7.6,4.1) circle (0.06);
+  \draw[line width=0.32mm, line cap=round] (7.6,4.1) -- (8.3,4.1);
+  \draw[line width=0.32mm, fill=white] (8.3,4.1) circle (0.06);
+  \node[right] at (8.4,4.1) {$v_{\text{out2}}$};
+
+  % --- Right Load Capacitor CL ---
+  \draw[line width=0.32mm, line cap=round] (7.6,4.1) -- (7.6,3.6);
+  \begin{scope}[shift={(7.6,3.6)}]
+    \coordinate (node_CL2.t) at (0,0);
+    \draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.2);
+    \draw[ultra thick] (-0.25,-0.2) -- (0.25,-0.2);
+    \draw[ultra thick] (-0.25,-0.36) -- (0.25,-0.36);
+    \draw[line width=0.32mm, line cap=round] (0,-0.36) -- (0,-0.56);
+    \coordinate (node_CL2.b) at (0,-0.56);
+    \node[right] at (0.35,-0.28) {$C_L$};
+  \end{scope}
+  \draw[line width=0.32mm, line cap=round] (7.6,3.04) -- (7.6,2.5);
+  \begin{scope}[shift={(7.6,2.5)}]
+    \coordinate (node_GND_R.top) at (0,0);
+    \draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.21);
+    \draw[ultra thick] (-0.17,-0.21) -- (0.17,-0.21);
+    \draw[ultra thick] (-0.11,-0.35) -- (0.11,-0.35);
+    \draw[ultra thick] (-0.08,-0.49) -- (0.08,-0.49);
+  \end{scope}
+
+  % --- M1 (nMOS Differential Pair, Left) ---
+  % Gate at (2.27, 2.9), Drain at (3.0, 3.4), Source at (3.0, 2.4)
+  \begin{scope}[shift={(2.27,2.9)}]
+    \coordinate (node_M1.g) at (0,0);
+    \draw[line width=0.32mm, line cap=round] (0,0) -- (0.26,0);
+    \draw[line width=0.7mm] (0.25,-0.25) -- (0.25,0.25);
+    \draw[line width=0.7mm] (0.41,-0.3) -- (0.41,0.3);
+    \draw[line width=0.32mm, line cap=round, line join=round] (0.40,0.2) -- (0.73,0.2) -- (0.73,0.5);
+    \draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.40,-0.2) -- (0.70,-0.2);
+    \draw[line width=0.32mm, line cap=round] (0.73,-0.21) -- (0.73,-0.5);
+    \node[node font=\sffamily\bfseries] at (1.04,0) {$M_{1}$};
+    \coordinate (node_M1.d) at (0.73,0.5);
+    \coordinate (node_M1.s) at (0.73,-0.5);
+  \end{scope}
+
+  % --- Vin1 Input Terminal ---
+  \draw[line width=0.32mm, line cap=round] (1.6,2.9) -- (2.27,2.9);
+  \draw[line width=0.32mm, fill=white] (1.6,2.9) circle (0.06);
+  \node[left] at (1.5,2.9) {$v_{\text{in1}}$};
+
+  % --- M2 (nMOS Differential Pair, Right) ---
+  % Gate at (6.13, 2.9), Drain at (5.4, 3.4), Source at (5.4, 2.4)
+  \begin{scope}[shift={(6.13,2.9)}]
+    \coordinate (node_M2.g) at (0,0);
+    \draw[line width=0.32mm, line cap=round] (0,0) -- (-0.26,0);
+    \draw[line width=0.7mm] (-0.25,-0.25) -- (-0.25,0.25);
+    \draw[line width=0.7mm] (-0.41,-0.3) -- (-0.41,0.3);
+    \draw[line width=0.32mm, line cap=round, line join=round] (-0.40,0.2) -- (-0.73,0.2) -- (-0.73,0.5);
+    \draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (-0.40,-0.2) -- (-0.70,-0.2);
+    \draw[line width=0.32mm, line cap=round] (-0.73,-0.21) -- (-0.73,-0.5);
+    \node[node font=\sffamily\bfseries] at (-1.04,0) {$M_{2}$};
+    \coordinate (node_M2.d) at (-0.73,0.5);
+    \coordinate (node_M2.s) at (-0.73,-0.5);
+  \end{scope}
+
+  % --- Vin2 Input Terminal ---
+  \draw[line width=0.32mm, line cap=round] (6.13,2.9) -- (6.8,2.9);
+  \draw[line width=0.32mm, fill=white] (6.8,2.9) circle (0.06);
+  \node[right] at (6.9,2.9) {$v_{\text{in2}}$};
+
+  % --- Common Source Routing to Tail Node ---
+  \draw[line width=0.32mm, line cap=round] (3.0,2.4) -- (3.0,2.0);
+  \draw[line width=0.32mm, line cap=round] (5.4,2.4) -- (5.4,2.0);
+  \draw[line width=0.32mm, line cap=round] (3.0,2.0) -- (5.4,2.0);
+  \draw[line width=0.32mm, fill=black] (4.2,2.0) circle (0.06);
+  \draw[line width=0.32mm, line cap=round] (4.2,2.0) -- (4.2,1.5);
+
+  % --- Tail Current Source ISS ---
+  \begin{scope}[shift={(4.2,1.5)}]
+    \coordinate (node_ISS.top) at (0,0);
+    \draw[line width=0.32mm] (0,0) -- (0,-0.15);
+    \draw[line width=0.32mm] (0,-0.4) circle (0.25cm);
+    \draw[-{Triangle[length=1.8mm, width=1.7mm]}, line width=0.32mm] (0,-0.25) -- (0,-0.55);
+    \node[right=0.15cm] at (0.35,-0.4) {\normalsize $I_{SS}$};
+    \draw[line width=0.32mm, line cap=round] (0,-0.65) -- (0,-0.8);
+    \coordinate (node_ISS.bottom) at (0,-0.8);
+  \end{scope}
+
+  % --- Wire from ISS to GND ---
+  \draw[line width=0.32mm, line cap=round] (4.2,0.7) -- (4.2,0.4);
+
+  % --- GND Ground ---
+  \begin{scope}[shift={(4.2,0.4)}]
+    \coordinate (node_GND.top) at (0,0);
+    \draw[line width=0.32mm, line cap=round] (0,0) -- (0,-0.21);
+    \draw[ultra thick] (-0.17,-0.21) -- (0.17,-0.21);
+    \draw[ultra thick] (-0.11,-0.35) -- (0.11,-0.35);
+    \draw[ultra thick] (-0.08,-0.49) -- (0.08,-0.49);
+  \end{scope}
 \end{tikzpicture}
-
 \end{document}

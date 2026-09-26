@@ -12,6 +12,7 @@
   - [1. 节点声明标准语法](#1-节点声明标准语法)
   - [2. 标准引脚后缀与自动识别映射表](#2-标准引脚后缀与自动识别映射表)
   - [3. 新引脚类型扩展方法](#3-新引脚类型扩展方法)
+  - [4. 引脚命名对拖拽轴向与拓扑行为的影响 (避坑须知)](#4-引脚命名对拖拽轴向与拓扑行为的影响-避坑须知)
 - [五、 新增/修改元件的标准 8 步流水线 (CheckList)](#五-新增修改元件的标准-8-步流水线-checklist)
   - [Step 1: 声明工具模式枚举 (types.ts)](#step-1-声明工具模式枚举-typests)
   - [Step 2: 注册工具能力 (capabilities.ts)](#step-2-注册工具能力-capabilitiests)
@@ -52,7 +53,7 @@
 
 为确保新元件快捷键不发生冲突，以下是当前系统 **26 个英文字母的全面分配与空闲状态**：
 
-### 1. 选择模式下已占用的“一键呼出”主键 (15个)
+### 1. 选择模式下已占用的“一键呼出”主键 (16个)
 
 | 按键 | 触发元件 / 对应工具 | 英文助记 |
 | :---: | :--- | :--- |
@@ -63,6 +64,7 @@
 | **`F`** | **自适应画布内容聚焦** (`Fit to Content`) | Fit view |
 | **`G`** | **接地端 GND** (`addGND`) | Ground |
 | **`I`** | **理想电流源 (别名)** (`addCurrentSource`) | Current $i$ |
+| **`J`** | **通用端口 Port** (`addIoNode_Port_Left`) | Junction / Port |
 | **`K`** | **VDD 电源轨** (`addPowerRail`) | Power rail (K) |
 | **`M`** | **正交多段折线导线** (`addOrthoWire`) | Multiline Wire |
 | **`N`** | **普通文本节点** (`addNode`) | Node |
@@ -89,11 +91,10 @@
 
 | 推荐主键 | 推荐适用的元件类型 | 推荐理由与行业标准 |
 | :---: | :--- | :--- |
+| **`B`** | **三极管 (BJT) / 电池 (Battery) / 偏置 (Bias)** | ⭐ **首选黄金键**。完全空闲，BJT / Base 首字母 |
 | **`L`** | **电感 (Inductor)** | ⭐ **首选黄金键**。完全空闲，电感国际标准符号为 $L_1$ |
-| **`B`** | **三极管 (BJT) / 电池 (Battery) / 偏置 (Bias)** | ⭐ **首选黄金键**。完全空闲，BJT / Battery 首字母 |
 | **`O`** | **运算放大器 (Op-Amp)** | ⭐ **首选黄金键**。完全空闲，Op-Amp 首字母 |
 | **`P`** | **电位器 (Potentiometer) / 探针 (Probe)** | ⭐ **首选黄金键**。完全空闲（因 pMOS 使用 Q 键） |
-| **`J`** | **结型场效应管 (JFET)** | 完全空闲，JFET 首字母 |
 | **`U`** | **集成芯片 (IC Unit) / 变压器 (Transformer)** | 完全空闲，芯片在原理图中常用 $U_1$ 代号 |
 | **`S`** | **开关 (Switch) / 信号源 (Signal)** | 备选。选择模式下尚未绑定呼出工具 |
 
@@ -158,6 +159,12 @@ export const CIRCUIT_PORT_DEFINITIONS: Record<string, CircuitPortDescriptor> = {
 };
 ```
 
+### 4. 引脚命名对拖拽轴向与拓扑行为的影响 (避坑须知)
+元件被连线后的拖拽移动特性直接取决于引脚命名规范，添加新元件时必须遵守以下规则：
+* **双端元件（阻容/电感/二极管/源）**：垂直放置时引脚名必须严格成对使用 `.t` 与 `.b`；水平放置时必须严格使用 `.l` 与 `.r`。系统据此识别其物理轴向并在连线后自动开启“防扯歪轴向锁定”（垂直只能上下动、水平只能左右动）。切勿随意起名（如 `.1`/`.2`），否则拖动时会丢失轴向锁定被斜扯成 45° 歪线。
+* **边界终端元件（VDD / GND / 信号端口）**：节点命名标识必须包含 `node_VDD`、`node_GND` 或 `node_IO`（如 `(node_IO1.port)`）。系统据此将其判定为单向拉伸的终端叶子，拖拽时仅拉伸自身引线，绝不会反向拉扯内部的核心晶体管或电路网络。
+* **支路抽头节点（如 Dot 黑点、变压器抽头）**：坐落在主干线上的引脚必须使用 `.dot`。系统会将其识别为主干抽头，允许沿主干滑动调节抽头位置，同时死锁垂直于主干的自由度（严禁横向脱轨）。
+
 ---
 
 ## 五、 新增/修改元件的标准 8 步流水线 (CheckList)
@@ -181,9 +188,9 @@ export type ToolMode =
 
 ### Step 2: 注册工具能力 (capabilities.ts)
 📁 **文件**：`packages/app/src/ui/capabilities.ts`
-在 `TOOL_CAPABILITIES` 对象中注册新定义的每个模式：
+在 `TOOL_CHECKS` 对象中注册新定义的每个模式（若遗漏，系统会将该模式标记为 `"unsupported"` 并在菜单/交互中置灰禁用）：
 ```ts
-export const TOOL_CAPABILITIES: Record<ToolMode, readonly ToolCapability[]> = {
+const TOOL_CHECKS: Record<ToolMode, readonly CapabilityCheck[]> = {
   // ...
   addInductor: [],
   addInductor_H_Left: [],
@@ -197,7 +204,14 @@ export const TOOL_CAPABILITIES: Record<ToolMode, readonly ToolCapability[]> = {
 
 ### Step 3: 编写标准 TikZ 模板 (circuit-snippets.ts)
 📁 **文件**：`packages/app/src/ui/canvas-panel/circuit-snippets.ts`
-在 `getCircuitComponentSnippet(toolMode, xCm, yCm)` 中补充各子模式对应的标准 TikZ 代码：
+在 `getCircuitComponentSnippet(toolMode, xCm, yCm)` 中补充各子模式对应的标准 TikZ 代码。
+
+⚠️ **两大核心语法铁律（直接影响序号自增与标称渲染）**：
+1. **坐标占位符必须以小写 `x` 结尾 (`node_<family>x`)**：
+   - 源码正则为 `/\bnode_([A-Za-z]+)x\b/`；必须写成 `node_Lx.l`, `node_Rx.t`, `node_Qx.b` 等格式，系统才能提取出 `family` 并在放置时自增为 `node_L1`, `node_L2`。切勿写成 `node_OA` 或 `node_L_1`。
+2. **标称文字与序号自增正则对齐**：
+   - 源码通过 `new RegExp(\`\\$${family}_(?:\\{\\d+\\}|\\d+)\\$\`, "g")` 进行文本自增替换；模板标签中的公式代号必须与 `node_<family>x` 的字母一致（例如 `node_Qx` 配对 `$Q_{1}$`，`node_Lx` 配对 `$L_1$`）。
+
 ```ts
 // 电感 - 水平左锚点
 if (toolMode === "addInductor" || toolMode === "addInductor_H_Left") {
@@ -223,40 +237,64 @@ if (toolMode === "addInductor_V_Top") {
 
 ### Step 4: 注册引脚中文名与优先级 (circuit-node-registry.ts)
 📁 **文件**：`packages/app/src/ui/canvas-panel/circuit-node-registry.ts`
-* 若使用的引脚已在标准表（如 `.l`, `.r`, `.t`, `.b`）中，**无需修改任何代码**；
-* 若有特殊引脚，按 [四、3](#3-新引脚类型扩展方法) 添加映射。
+* 系统标准引脚表为 `.l`, `.r`, `.t`, `.b`, `.dot`, `.vdd`, `.gnd`, `.port`。
+* **新增特殊引脚后缀**：若新元件包含全新引脚（如三极管的集电极 `.c` 与发射极 `.e`），必须在 `CIRCUIT_PORT_DEFINITIONS` 中注册：
+  ```ts
+  "c": { portKey: "c", nameZh: "集电极 (c)", nameEn: "Collector (c)", priority: 1 },
+  "e": { portKey: "e", nameZh: "发射极 (e)", nameEn: "Emitter (e)", priority: 3 },
+  ```
+* **同名冲突上下文消歧**：如三极管基极也是 `.b`，但标准表中 `"b"` 默认为 `"底端口 (b)"`。必须在 `resolveComponentPort` 中根据节点族前缀消歧：
+  ```ts
+  if (cleanNode.includes(".b") || cleanNode.endsWith("_b")) {
+    if (cleanNode.startsWith("node_q") || cleanNode.includes("bjt")) {
+      return { label: "基极 (b)", priority: 2 };
+    }
+    return { label: "底端口 (bottom)", priority: 2 };
+  }
+  ```
 
 ---
 
-### Step 5: 注册画布点击捕获 (useCanvasToolInteractions.ts)
+### Step 5: 注册画布点击捕获与连放 (useCanvasToolInteractions.ts)
 📁 **文件**：`packages/app/src/ui/canvas-panel/useCanvasToolInteractions.ts`
-在鼠标点击插入判断条件中（约 600 行和 645 行），添加对新工具前缀的匹配：
-```ts
-toolMode.startsWith("addInductor") ||
-```
+必须在以下三处守卫中同步注册新工具前缀：
+1. **第 890 行附近 (MouseDown 事件)**：
+   ```ts
+   toolMode.startsWith("addInductor") ||
+   ```
+   *说明：此处的守卫负责拦截原生拖拽并激活鼠标指针端点吸附（Snap）。若遗漏，点击放置将无法吸附对齐！*
+2. **第 940 行附近 (MouseUp 事件)**：
+   ```ts
+   toolMode.startsWith("addInductor") ||
+   ```
+   *说明：负责在鼠标松开时向文档提交插入操作与派发历史记录。*
+3. **第 1016 行附近 (连放模式 Sticky Placement)**：
+   *说明：默认单次放置后退回选择模式；若希望像 MOS 管或三极管一样连续点击盖章放置，在 `isMos` 或连放白名单中包含新模式前缀。*
 
 ---
 
 ### Step 6: 挂载工具栏与快捷键 (Toolbar.tsx & circuit-hotkeys.ts)
 📁 **文件 1**：`packages/app/src/ui/Toolbar.tsx`
-在电路工具栏中添加按钮或子菜单：
-```tsx
-<CircuitElementSubmenu
-  tooltip="电感 (L)"
-  buttonContent="L"
-  toolModes={{
-    hLeft: "addInductor_H_Left",
-    hRight: "addInductor_H_Right",
-    vTop: "addInductor_V_Top",
-    vBottom: "addInductor_V_Bottom"
-  }}
-  currentToolMode={toolMode}
-  onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
-/>
-```
+* **双端元件**：直接使用通用 `CircuitElementSubmenu`（提供 H/V 四向切换）：
+  ```tsx
+  <CircuitElementSubmenu
+    tooltip="电感 (L)"
+    buttonContent="L"
+    toolModes={{
+      hLeft: "addInductor_H_Left",
+      hRight: "addInductor_H_Right",
+      vTop: "addInductor_V_Top",
+      vBottom: "addInductor_V_Bottom"
+    }}
+    currentToolMode={toolMode}
+    onSelectMode={(mode) => dispatch({ type: "SET_TOOL_MODE", mode })}
+  />
+  ```
+* **三端/多端元件（MOS、BJT、运放）**：需参照 `MosfetElementSubmenu`，定制包含端子级联（如 C/B/E 或 D/G/S）的下拉面板组件。
+* **高亮激活映射**：在 `Toolbar.tsx` 约 120 行的 `isActive` 判断中，补充裸模式名（如 `currentToolMode === "addInductor"`）的高亮映射。
 
-📁 **文件 2 (快捷键与旋转/镜像/WASD交互)**：`packages/app/src/ui/canvas-panel/circuit-hotkeys.ts`
-必须实现以下 **4 大朝向状态机函数**，为新元件提供完整的快捷键交互能力：
+📁 **文件 2 (快捷键与旋转/镜像状态机)**：`packages/app/src/ui/canvas-panel/circuit-hotkeys.ts`
+必须接入以下 **4 大状态机函数**：
 * **1. 单键快速呼出 (`resolveSelectModeInitialTool`)**：
   ```ts
   if (k === "l") return "addInductor_H_Left";
@@ -285,7 +323,7 @@ toolMode.startsWith("addInductor") ||
     return mode;
   }
   ```
-* **4. WASD 四向直达切换 (`selectCircuitDirectionByWASD`)**：
+* **4. 辅助按键直达切换 (`switchCircuitToolModeWithKey`)**：
   ```ts
   if (currentMode.startsWith("addInductor")) {
     if (k === "w") return "addInductor_V_Top";
@@ -299,28 +337,34 @@ toolMode.startsWith("addInductor") ||
 
 ### Step 7: 注册状态栏操作提示 (StatusBar.tsx)
 📁 **文件**：`packages/app/src/ui/StatusBar.tsx`
-为新元件增加底部状态栏引导文案，使用户一目了然快捷键操作：
-```tsx
-if (toolMode.startsWith("addInductor")) {
-  return "点击画布放置电感 (R 旋转 / WASD 选朝向 / X 上下翻转 / Y 左右翻转)";
-}
-```
+1. 将新元件的前缀加入第 370 行附近的 `CIRCUIT_PLACEMENT_MODES` 数组：
+   ```ts
+   const CIRCUIT_PLACEMENT_MODES = [
+     // ...
+     "addInductor",
+   ] as const;
+   ```
+2. 系统会自动调用 `resolvePlacementHint` 输出标准的 `点击画布放置... (R 旋转 / WASD 选朝向 / X 上下翻转 / Y 左右翻转)` 操作指引。
 
 ---
 
 ### Step 8 (可选): 同步 Python MCP 助手元件库 (components.py)
 📁 **文件**：`scripts/circuit-mcp/circuit/components.py`
-若需要让 Antigravity 外部 AI 桥接助手也能通过自然语言指令生成该元件，在 `components.py` 中注册 `ComponentTemplate`：
+若需要让 Antigravity 外部 AI 桥接助手也能通过自然语言指令生成该元件，在 `components.py` 中注册：
 ```python
 _INDUCTOR_BODY = r"""\draw[thick, line cap=round] (0,0) -- (0.15,0) arc[start angle=180, end angle=0, radius=0.1] arc[start angle=180, end angle=0, radius=0.1] arc[start angle=180, end angle=0, radius=0.1] -- (0.9,0);"""
 
-COMPONENTS["inductor"] = ComponentTemplate(
+TEMPLATES["inductor"] = ComponentTemplate(
     type="inductor",
     ports=(Port("l", 0.0, 0.0), Port("r", 0.9, 0.0)),
     tikz_body=_INDUCTOR_BODY,
     default_label="L_1",
     description="电感器 (Inductor)",
 )
+
+PIN_SUFFIXES["inductor"] = {"L": "l", "R": "r"}
+DEFAULT_LABELS["inductor"] = r"$L$"
+```
 ```
 
 ---

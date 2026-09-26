@@ -36,7 +36,7 @@ import type {
   OrthoWireToolDraft
 } from "./types";
 import { unwrapPasteClusterSnippets, type PastePlacementDraft } from "./paste-cluster-builder";
-import { computeWireWaypoints, formatJunctionDotSnippet, formatTikzWireSnippet } from "./wire-routing-helper";
+import { computeWireWaypoints, formatCm, formatJunctionDotSnippet, formatTikzWireSnippet } from "./wire-routing-helper";
 import { leadAxisAt, planWireRoute } from "./wire-auto-route";
 import { collectSourceBounds } from "./panel-helpers";
 
@@ -547,7 +547,7 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
             return;
           }
 
-          const snippet = `\\draw[thick, line cap=round] (${activeDraft.startWorld.x.toFixed(2)},${activeDraft.startWorld.y.toFixed(2)}) -- (${resolvedStart.x.toFixed(2)},${resolvedStart.y.toFixed(2)});\n`;
+          const snippet = `\\draw[thick, line cap=round] (${formatCm(activeDraft.startWorld.x)},${formatCm(activeDraft.startWorld.y)}) -- (${formatCm(resolvedStart.x)},${formatCm(resolvedStart.y)});\n`;
           const ok = applyActionWithFeedback({
             kind: "pasteStatements",
             snippets: [snippet],
@@ -669,8 +669,19 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
                 ]
               : computeWireWaypoints(activeDraft.currentWorld, resolvedStart, mode, orientation ?? "HV");
 
-          // 正交保持"点一次出一段"的老手感；45°/任意角一次走完整条路径，再从末端继续。
-          const leg = mode === "orthogonal" ? waypoints.slice(0, 2) : waypoints;
+          const originAnchor = activeDraft.startAnchor ?? null;
+          const anchorKey = (
+            anchor: { nodeSourceId?: string | null; nodeName?: string } | null | undefined
+          ): string => (anchor ? `${anchor.nodeSourceId || ""}\u0000${anchor.nodeName ?? ""}` : "");
+
+          // Virtuoso-aligned wire handfeel:
+          // 1. If clicking in empty space, user is dropping a corner waypoint: commit the first leg and continue.
+          // 2. If clicking directly onto a pin (isEndingOnPin), commit the entire route to the pin in one atomic action!
+          const isEndingOnPin =
+            startEndpointAnchor != null &&
+            anchorKey(startEndpointAnchor) !== anchorKey(originAnchor);
+
+          const leg = mode === "orthogonal" && !isEndingOnPin ? waypoints.slice(0, 2) : waypoints;
           const nextPoint = leg[leg.length - 1];
           if (Math.abs(nextPoint.x - activeDraft.currentWorld.x) < 1e-3 && Math.abs(nextPoint.y - activeDraft.currentWorld.y) < 1e-3) {
             return;
@@ -678,7 +689,6 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
 
           // 首尾写成锚点引用，让导线真正"长在引脚上"——挪动元件时跟着走。
           // 起点锚点只属于第一段；之后各段从上一段末端（普通坐标）续画。
-          const originAnchor = activeDraft.startAnchor ?? null;
           const fromAnchor =
             emittedLegs === 0 && originAnchor
               ? { nodeName: originAnchor.nodeName, anchor: originAnchor.anchor }
@@ -687,9 +697,6 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
           // 本段末端正落在某个引脚上时，写成锚点引用并收线。
           // 身份比较以 nodeName 兜底：纯 \coordinate 引脚的 nodeSourceId 是空串，
           // 只比 sourceId 会把两个不同引脚误认成同一个。
-          const anchorKey = (
-            anchor: { nodeSourceId?: string | null; nodeName?: string } | null | undefined
-          ): string => (anchor ? `${anchor.nodeSourceId || ""}\u0000${anchor.nodeName ?? ""}` : "");
           const endsOnPin =
             startEndpointAnchor != null &&
             Math.abs(startEndpointAnchor.world.x - nextPoint.x) < 1e-6 &&
@@ -886,7 +893,7 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
           toolMode.startsWith("addResistor") ||
           toolMode.startsWith("addNMOS") ||
           toolMode.startsWith("addPMOS") ||
-          toolMode === "addDotNode" ||
+          toolMode.startsWith("addDotNode") ||
           toolMode.startsWith("addIoNode") ||
           toolMode === "addVDD" ||
           toolMode.startsWith("addCapacitor") ||
@@ -933,7 +940,7 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
             toolMode.startsWith("addResistor") ||
             toolMode.startsWith("addNMOS") ||
             toolMode.startsWith("addPMOS") ||
-            toolMode === "addDotNode" ||
+            toolMode.startsWith("addDotNode") ||
             toolMode.startsWith("addIoNode") ||
             toolMode === "addVDD" ||
             toolMode.startsWith("addCapacitor") ||
@@ -982,15 +989,15 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
                 return;
               }
               suppressNextBackgroundClickRef.current = true;
-              // Stay armed so the next pair of clicks lays another rail; Esc exits.
               powerRailStartRef.current = null;
+              dispatch({ type: "SET_TOOL_MODE", mode: "select" });
               setToolCursorWorld(null);
               setSnapLines([]);
               return;
             }
 
-            const xCm = (nodeAt.x / 28.4527559).toFixed(2);
-            const yCm = (nodeAt.y / 28.4527559).toFixed(2);
+            const xCm = formatCm(nodeAt.x);
+            const yCm = formatCm(nodeAt.y);
             const rawSnippet = getCircuitComponentSnippet(toolMode, xCm, yCm);
             if (!rawSnippet) return;
             const snippet = assignUniqueCircuitInstanceIndex(rawSnippet, source);
@@ -1006,9 +1013,12 @@ export function useCanvasToolInteractions(args: UseCanvasToolInteractionsArgs) {
             }
             if (ok.sourceChanged) {
               suppressNextBackgroundClickRef.current = true;
-              // Sticky placement: stay armed so the next click stamps another part, matching the
-              // reference tool's "Added <part> · click to place another · Esc exits". Esc (which
-              // still routes through the SET_TOOL_MODE → select path) is the way out.
+              const isSticky = toolMode.startsWith("addNMOS") || toolMode.startsWith("addPMOS");
+              if (!isSticky) {
+                dispatch({ type: "SET_TOOL_MODE", mode: "select" });
+              }
+              // Sticky placement: nMOS and pMOS stay armed so the next click stamps another part;
+              // other components exit back to select mode so ghost preview does not appear again.
               setToolDraft(null);
               setToolCursorWorld(null);
               setSnapLines([]);

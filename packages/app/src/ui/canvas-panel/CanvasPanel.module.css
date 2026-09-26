@@ -691,6 +691,7 @@
 .marqueeRect {
   fill: rgba(40, 122, 212, 0.12);
   stroke: none;
+  pointer-events: none;
 }
 
 .curveControlOverlay {

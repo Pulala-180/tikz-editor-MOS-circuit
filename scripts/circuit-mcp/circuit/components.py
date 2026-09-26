@@ -108,6 +108,25 @@ _CARROW_BODY = "\n".join([
     r"\draw[line width=0.32mm, line cap=round] (0,-0.1) -- (0,-0.4);",
 ])
 _CARROW_LABEL = r"""\node[right=0.15cm] at (-0.07, -0.04) {{LABEL}};"""
+
+_NPN_BODY = "\n".join([
+    r"\draw[line width=0.32mm, line cap=round] (0,0) -- (0.35,0);",
+    r"\draw[line width=0.7mm] (0.35,-0.25) -- (0.35,0.25);",
+    r"\draw[line width=0.32mm, line cap=round] (0.35,0.12) -- (0.73,0.35) -- (0.73,0.5);",
+    r"\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.35,-0.12) -- (0.60,-0.27);",
+    r"\draw[line width=0.32mm, line cap=round] (0.58,-0.26) -- (0.73,-0.35) -- (0.73,-0.5);",
+])
+_NPN_LABEL = r"""\node[node font=\sffamily\bfseries] at (1.04,0) {{LABEL}};"""
+
+_PNP_BODY = "\n".join([
+    r"\draw[line width=0.32mm, line cap=round] (0,0) -- (0.35,0);",
+    r"\draw[line width=0.7mm] (0.35,-0.25) -- (0.35,0.25);",
+    r"\draw[line width=0.32mm, line cap=round] (0.35,0.12) -- (0.73,0.35) -- (0.73,0.5);",
+    r"\draw[-{Triangle[length=2mm, width=1.5mm, sep=-1.2pt]}, line width=0.32mm, line cap=round] (0.73,-0.35) -- (0.48,-0.20);",
+    r"\draw[line width=0.32mm, line cap=round] (0.50,-0.21) -- (0.35,-0.12);",
+    r"\draw[line width=0.32mm, line cap=round] (0.73,-0.5) -- (0.73,-0.35);",
+])
+_PNP_LABEL = r"""\node[node font=\sffamily\bfseries] at (1.04,0) {{LABEL}};"""
 # fmt: on
 
 TEMPLATES: dict[str, ComponentTemplate] = {
@@ -135,6 +154,22 @@ TEMPLATES: dict[str, ComponentTemplate] = {
         label_node=_PMOS_LABEL,
         default_label=r"$M$",
         description="pMOS 晶体管，栅极 G（左侧中部）、漏极 D（右下）、源极 S（右上）。",
+    ),
+    "npn": ComponentTemplate(
+        type="npn",
+        ports=(Port("B", 0.0, 0.0), Port("C", 0.73, 0.5), Port("E", 0.73, -0.5)),
+        tikz_body=_NPN_BODY,
+        label_node=_NPN_LABEL,
+        default_label=r"$Q$",
+        description="NPN 双极型晶体管，基极 B (0,0)、集电极 C (0.73,0.5)、发射极 E (0.73,-0.5)。",
+    ),
+    "pnp": ComponentTemplate(
+        type="pnp",
+        ports=(Port("B", 0.0, 0.0), Port("C", 0.73, 0.5), Port("E", 0.73, -0.5)),
+        tikz_body=_PNP_BODY,
+        label_node=_PNP_LABEL,
+        default_label=r"$Q$",
+        description="PNP 双极型晶体管，基极 B (0,0)、集电极 C (0.73,0.5)、发射极 E (0.73,-0.5)。",
     ),
     "current_source": ComponentTemplate(
         type="current_source",
@@ -172,6 +207,8 @@ PIN_SUFFIXES: dict[str, dict[str, str]] = {
     "resistor": {"P1": "l", "P2": "r"},
     "nmos": {"G": "g", "D": "d", "S": "s"},
     "pmos": {"G": "g", "D": "d", "S": "s"},
+    "npn": {"B": "b", "C": "c", "E": "e"},
+    "pnp": {"B": "b", "C": "c", "E": "e"},
     "current_source": {"top": "t", "bottom": "b"},
     "voltage_source": {"top": "t", "bottom": "b"},
     "current_arrow": {"bottom": "b"},
@@ -187,6 +224,8 @@ DEFAULT_LABELS = {
     "resistor": r"$R$",
     "nmos": r"$M$",
     "pmos": r"$M$",
+    "npn": r"$Q$",
+    "pnp": r"$Q$",
     # 小信号模型符号：电流源/电压源/电流箭头只用于小信号，标注必须小写
     "current_source": r"$i$",
     "voltage_source": r"$v$",

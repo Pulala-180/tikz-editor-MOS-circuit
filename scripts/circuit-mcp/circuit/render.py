@@ -70,7 +70,7 @@ def _parse_log(log_text: str) -> list[dict]:
     return errors
 
 
-def render_tikz_to_png(source: str, out_dir: str | None = None) -> dict:
+def render_tikz_to_png(source: str, out_dir: str | None = None, dpi: int = 150) -> dict:
     """编译 TikZ 源码为 PNG。
 
     返回 {"ok": True, "png": <绝对路径>, "log": []}；
@@ -147,7 +147,7 @@ def render_tikz_to_png(source: str, out_dir: str | None = None) -> dict:
                 pdftoppm,
                 "-png",
                 "-r",
-                "150",
+                str(dpi),
                 _tool_path(pdf_path),
                 _tool_path(png_base),
             ],

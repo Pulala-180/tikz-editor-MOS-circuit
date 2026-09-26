@@ -1867,7 +1867,9 @@ export const CanvasPanel = memo(function CanvasPanel({
     roundedLineDraft,
     orthoWireDraft,
     canvasTransform,
-    pastePlacementDraft
+    pastePlacementDraft,
+    source,
+    textEngine: activeTextEngine
   });
 
   const { maxZoomScale } = useCanvasViewportPersistence({
@@ -2788,7 +2790,7 @@ export const CanvasPanel = memo(function CanvasPanel({
     return () => { textarea.removeEventListener("beforeinput", handleBeforeInput); };
   }, [dispatchTextEditBeforeInputIntent, textEditingSession]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const textarea = textEditTextareaRef.current;
     if (!textEditingSession || !textarea) {
       return;

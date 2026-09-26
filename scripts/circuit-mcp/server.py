@@ -310,16 +310,20 @@ async def validate_drawing(source: str | None = None) -> dict[str, Any]:
 
 
 @server.tool()
-async def render_preview() -> dict[str, Any]:
+async def render_preview(dpi: int = 150) -> dict[str, Any]:
     """把同步文件当前的 TikZ 编译渲染成 PNG（pdflatex → pdftoppm），返回图片路径。
 
-    供"多次识图"自检：交付前调用本工具查看渲染结果，与用户提供的电路
-    图片逐元件、逐端口、逐连线对比；有偏差就修正源码，重新校验、重新渲染，
-    直到一致。编译失败时返回 ok=false、错误信息和错误行号，需修复后重试。
+    供"视觉负反馈与多次识图"自检：交付前调用本工具查看渲染结果，与用户提供的目标电路
+    或参考图片逐元件、逐端口、逐连线对比；有偏差就修正源码，重新校验、重新渲染，
+    直到完全一致。编译失败时返回 ok=false、错误信息和错误行号，需修复后重试。
+    
+    参数：
+      dpi: 图像分辨率，默认 150。若需要比对微小连线细节、文字标号，可调大至 300 或 600。
+    
     PNG 写到同步文件目录下的 active-drawing-preview.png。
     """
     sync_dir = os.path.dirname(os.path.abspath(sync_file_path()))
-    result = render_tikz_to_png(current_source(), out_dir=sync_dir)
+    result = render_tikz_to_png(current_source(), out_dir=sync_dir, dpi=dpi)
     if not result["ok"]:
         stray = os.path.join(sync_dir, "drawing-1.png")
         if os.path.isfile(stray):
@@ -331,6 +335,7 @@ async def render_preview() -> dict[str, Any]:
         result["png"] = png
     except OSError:
         pass
+    result["dpi"] = dpi
     return result
 
 

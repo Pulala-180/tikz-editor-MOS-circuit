@@ -163,14 +163,27 @@ function buildMathScopedInsertion(
   selectionEnd: number,
   buildCore: (operand: string, hasSelection: boolean) => string
 ): LatexToolbarResult {
-  const before = text.slice(0, selectionStart);
-  const selected = text.slice(selectionStart, selectionEnd);
-  const after = text.slice(selectionEnd);
+  let adjStart = selectionStart;
+  let adjEnd = selectionEnd;
+  if (
+    adjStart === adjEnd &&
+    adjStart === text.length &&
+    text.endsWith("$") &&
+    text.startsWith("$") &&
+    text.length >= 2
+  ) {
+    adjStart = text.length - 1;
+    adjEnd = text.length - 1;
+  }
+
+  const before = text.slice(0, adjStart);
+  const selected = text.slice(adjStart, adjEnd);
+  const after = text.slice(adjEnd);
   const hasSelection = selected.length > 0;
   const operand = hasSelection ? stripMathDelimiters(selected) : CARET_MARKER;
   const core = buildCore(operand, hasSelection);
   const trailing = hasSelection ? CARET_MARKER : "";
-  const stateBefore = isInsideMath(text, selectionStart);
+  const stateBefore = isInsideMath(text, adjStart);
   const stateAfter = stateBefore !== (countUnescapedDollars(selected) % 2 === 1);
 
   // No math anywhere near the insertion: wrap the whole label in one run.
@@ -293,10 +306,22 @@ export function insertLatexSymbol(
   selectionEnd: number,
   tex: string
 ): LatexToolbarResult {
-  const before = text.slice(0, selectionStart);
-  const selected = text.slice(selectionStart, selectionEnd);
-  const after = text.slice(selectionEnd);
-  const stateBefore = isInsideMath(text, selectionStart);
+  let adjStart = selectionStart;
+  let adjEnd = selectionEnd;
+  if (
+    adjStart === adjEnd &&
+    adjStart === text.length &&
+    text.endsWith("$") &&
+    text.startsWith("$") &&
+    text.length >= 2
+  ) {
+    adjStart = text.length - 1;
+    adjEnd = text.length - 1;
+  }
+  const before = text.slice(0, adjStart);
+  const selected = text.slice(adjStart, adjEnd);
+  const after = text.slice(adjEnd);
+  const stateBefore = isInsideMath(text, adjStart);
   const stateAfter = stateBefore !== (countUnescapedDollars(selected) % 2 === 1);
 
   if (!stateBefore && !stateAfter && !hasUnescapedDollar(`${before}${after}`)) {
